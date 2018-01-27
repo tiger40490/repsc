@@ -8,6 +8,8 @@
 //
 //global collection is simpler than stack variables. Easier to visualize
 //and uses less memory
+//
+//See https://bintanvictor.wordpress.com/2017/11/12/algo-practice-generate-combo3-using5distinct-chars/
 #include <iostream>
 #include <sstream>
 #include <vector>
