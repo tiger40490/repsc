@@ -1,0 +1,18 @@
+--A1: Recursive algo builds a deep stack. The depth of the stack is the depth of recursion.
+In quicksort of N items, as in other divide-and-conquer algos, this stack depth can 
+grow up to log(2,N) i.e. 2-based-log-N. In big-O, it is O(log N). On each 
+stack frame, there will be typically 3 (or may be 2 or 4) local variables. 
+Therefore, the storage requirement at the worst point would be 3*log N, i.e O(log N).
+
+Note the number of local variables is determined by the quicksort implementation. 
+At runtime, every stack frame has exactly the same number of local variables. That number
+is completely deterministic.
+
+
+--A2: Decorator is the design pattern. The decorator class implements the same interface 
+as the decoratee but adds additional functionalities or (as with FilterInterator) 
+modifies the original behavior.
+
+
+--Coding question. 
+Documentation is provided in package-info.java and source code.
