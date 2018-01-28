@@ -1,0 +1,24 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+ http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+ http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.0.xsd">
+	<bean id="exporter" class="org.springframework.jmx.export.MBeanExporter">
+		<property name="assembler" ref="assembler" />
+		<property name="namingStrategy" ref="namingStrategy" />
+		<property name="autodetect" value="true" />
+	</bean>
+	<bean id="jmxAttributeSource" 
+	    class="org.springframework.jmx.export.annotation.AnnotationJmxAttributeSource" />
+	<!-- will create management interface using annotation metadata -->
+	<bean id="assembler" class="org.springframework.jmx.export.assembler.MetadataMBeanInfoAssembler">
+		<property name="attributeSource" ref="jmxAttributeSource" />
+	</bean>
+	<!-- will pick up ObjectName from annotation -->
+	<bean id="namingStrategy" class="org.springframework.jmx.export.naming.MetadataNamingStrategy">
+		<property name="attributeSource" ref="jmxAttributeSource" />
+	</bean>
+	<bean id="testBean" class="AnnotationTestBean">
+		<property name="age" value="100" />
+	</bean>
+</beans>
