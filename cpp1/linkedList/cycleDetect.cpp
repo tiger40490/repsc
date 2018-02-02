@@ -25,19 +25,22 @@ void dump(string const& headline){ //doesn't work with cycle
 Can determine loop size :)
 */
 bool hasLoopBrent(){
-	int power = 1, loopsz = 1;
+	int power = 1, loopLenGuess = 1;
     Node* tortoise = head;
 	Node* hare = tortoise->next;
     for (; tortoise != hare; hare = hare->next){
         if (hare == NULL) return false;
-        if (power == loopsz){ 
-            tortoise = hare; //?
+		cout<<hare->data<<" checking against tortoise; loopLenGuess = "<<loopLenGuess<<endl; 
+        if (power == loopLenGuess){ //We should try to prove -- 
+		//if power > loopLen and power > mu then we must have found the loop already
+            tortoise = hare;
             power *= 2;
-            loopsz = 0;
+            loopLenGuess = 0;
+			cout<<"   "<<tortoise->data<<" set as (payload of) new tortoise ptr, with power set to "<<power<<endl;
 		}
-        loopsz++;
+        loopLenGuess++;
 	}
-	cout<<"    Loop size = "<<loopsz<<endl;
+	cout<<"    Loop size = "<<loopLenGuess<<endl;
 	return true;
 }
 bool hasLoopBrent2(){
@@ -60,6 +63,6 @@ bool hasLoopBrent2(){
   return false;
 }
 int main(){
-	_5.next = &_0; //creating a loop
+	_5.next = &_4; //creating a loop
 	cout<<hasLoopBrent();
 }
