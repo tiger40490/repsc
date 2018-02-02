@@ -6,12 +6,13 @@ struct Node{
   Node * next;
   Node (char payload, Node* n=NULL): data(payload), next(n){}
 };
-Node _1('4'); //tail
-Node _2('3', &_1);
-Node _3('2', &_2);
-Node _4('1', &_3);
-Node _5('0', &_4);
-Node * head = &_5;
+Node _5('5');
+Node _4('4', &_5);
+Node _3('3', &_4);
+Node _2('2', &_3);
+Node _1('1', &_2); 
+Node _0('0', &_1); 
+Node * head = &_0;
 void dump(string const& headline){ //doesn't work with cycle
    cout<<headline<<endl<<"New head: ";
    for (Node* t=head; t; t=t->next)
@@ -42,6 +43,6 @@ bool hasLoopBrent(){
   return false;
 }
 int main(){
-	_1.next = &_5; //creating a loop
+	_5.next = &_0; //creating a loop
 	cout<<hasLoopBrent();
 }
