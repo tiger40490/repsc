@@ -1,0 +1,42 @@
+class Node(object):
+    def __init__(self, data, next_node=None):
+        self.data = data
+        self.next = next_node
+_7 = Node(7)
+_6 = Node(6, _7)
+_5 = Node(5, _6)
+_4 = Node(4, _5)
+_3 = Node(3, _4)
+_2 = Node(2, _3)
+_1 = Node(1, _2)
+root = _1
+### above is reusable set-up
+
+def dump():
+    node = root
+    while(1):
+        print node.data, '->',
+        node = node.next
+        if node is None:
+            print 'end'
+            break
+def rev():
+    global root #otherwise, compiler gives misleading errors
+    pre = root
+    me = root    
+    while(1):
+        tmp = me.next
+        me.next = pre;print me.data, ' <- internal link fixed'
+        if tmp is None:
+            root.next = None
+            root = me
+            break
+        pre = me
+        me = tmp
+
+def main():
+    dump()
+    rev()
+    dump()
+
+main()
