@@ -25,14 +25,14 @@ def rev():
     pre = root
     me = root    
     while(1):
-        tmp = me.next
-        me.next = pre;print me.data, ' <- internal link fixed'
-        if tmp is None:
+        ne = me.next
+        me.next = pre;print me.data, '<- link fixed internally'
+        if ne is None: # exit condition
             root.next = None
             root = me
             break
         pre = me
-        me = tmp
+        me = ne
 
 def main():
     dump()
