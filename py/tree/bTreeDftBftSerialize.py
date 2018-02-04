@@ -11,7 +11,7 @@ class Node(object):
 _9=Node(9)
 _8=Node(8, None, _9)
 _7=Node(7, None, _8)
-_a=Node(6)
+_a=Node(3)
 _1=Node(1)
 _2=Node(2, _1, _a)
 _5=Node(5, _2, _7) 
@@ -47,7 +47,16 @@ def bftWithLevel():
         if (node.le): q.enq(node.le)
         if (node.ri): q.enq(node.ri)
 
+def visit(node):
+    if node is None: return
+    if node.le: visit(node.le)
+    print node.data
+    if node.ri: visit(node.ri)
+        
+def inOrderDftRecursive():
+    visit(root)
+    
 def main():
-    bftWithLevel()
+    inOrderDftRecursive()
 
 main()
