@@ -22,7 +22,6 @@ def partL(le, ri):
     swap(anchor+1, anchor)
     anchor += 1
   return anchor
-    
 def qsort(le, ri):
   length = ri-le+1
   if length <= 1: return
@@ -31,10 +30,9 @@ def qsort(le, ri):
   qsort(le, anchor-1)
   qsort(anchor+1, ri)
   dump(le, ri, ', after sorting both sections')
-
 def main():
   qsort(0, len(arr)-1)
   for i in range(len(arr)-1):
-    assert arr[i] <= arr[i+1]
+    assert arr[i] <= arr[i+1] # verify
 
 main()
