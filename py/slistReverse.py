@@ -9,17 +9,17 @@ _4 = Node(4, _5)
 _3 = Node(3, _4)
 _2 = Node(2, _3)
 _1 = Node(1, _2)
-root = _1
+root = _7
 ### above is reusable set-up
 
 def dump():
     node = root
     while(1):
-        print node.data, '->',
-        node = node.next
         if node is None:
             print 'end'
             break
+        print node.data, '->',
+        node = node.next
 def rev():
     global root #otherwise, compiler gives misleading errors
     pre = root
