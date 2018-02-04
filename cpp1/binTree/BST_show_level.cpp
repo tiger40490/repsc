@@ -39,12 +39,16 @@ void BFT(){
         }
         n = dequeue(q);
         q.push(&marker); //move the marker to end of queue
-        cout<<"starting height # "<<++height<<endl; } int dataL = 0, dataR=0; if (n->left){
+        cout<<"starting height # "<<++height<<endl; 
+    } 
+    int dataL = 0, dataR=0; 
+    if (n->left){
         cout<<"pushing "<<n->left->data<<endl; q.push(n->left);
         dataL = n->left->data;
     }
     if (n->right){
-        cout<<"pushing "<<n->right->data<<endl; q.push(n->right);
+        cout<<"pushing "<<n->right->data<<endl; 
+        q.push(n->right);
         dataR = n->right->data;
     }
     cout<<dataL<<" <- "<<n->data<<" -> "<<dataR<<endl;// "  #  next is "<<dataN<<endl;
