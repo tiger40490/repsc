@@ -45,7 +45,8 @@ def findLoopByReversing():
         me = ne
 		
 def main():
-    _7.next = _7 # create a loop
+    #_7.next = _7 # create a loop at tend of the list, where #7 points to itself.
+    _7.next = _3 # create a loop where #7 points back to #3.
     dump()
     isLooping = findLoopByReversing()
     if not isLooping: dump()
