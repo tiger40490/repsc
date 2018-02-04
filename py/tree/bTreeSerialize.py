@@ -16,7 +16,7 @@ _1=Node(1)
 _2=Node(2, _1, _a)
 _5=Node(5, _2, _7) 
 root = _5
-marker=Node(9999) # should be a special value like None
+marker=Node(None) # should be a special value like None
 ### above is reusable set-up, and happens to be a BST
 
 class Q: #simple class
