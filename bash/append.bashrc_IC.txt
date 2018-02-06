@@ -19,6 +19,7 @@ alias ps4="ps auxwww|grep --color -P '(s2o|c2o|f2s|f2c|pbflow|sendmc|xtap|rebus|
 exa         /home/vtan/bin
 exa         /home/vtan/lab
 exa cap     /home/vtan/captured/tw
+exa -t logbase  /tmp/vtan
 exa -t ax   /home/vtan/repo/tp/plugins/xtap/arcabookxdp_parser
 exa -t nx   /home/vtan/repo/tp/plugins/xtap/nysemkt_integrated_parser
 exa -t aq   /home/vtan/repo/tp/plugins/xtap/aquis
@@ -28,13 +29,11 @@ exa         /home/vtan/repo/tp/plugins/xtap/apa_tw/src
 exa inc     /home/vtan/repo/tp/plugins/xtap/apa_tw/include
 exa naetc   /home/vtan/repo/tp/rebus/nactf/etc
 exa aqetc   /home/vtan/repo/tp/rebus/aquis/etc
-#
 exa relaq   /home/vtan/release/tp/plugins/xtap/aquis
 exa reltw   /home/vtan/release/tp/plugins/xtap/apa_tw
-#
 exa varnx   /var/opt/nysemkt_integrated_parser/
 exa varaq   /var/opt/aquis_parser/
-exa -t logbase  /tmp/vtan
+#
 exa depth ~/repo/tp/scripts/depthcleaner
 exa holiday ~/repo/tp/holiday_updater/etc
 exa dividend ~/repo/tp/scripts/load_dividend/etc
@@ -48,7 +47,6 @@ alias l1="less -N $l1"
 alias s1="less -N $s1"
       s2=~/repo/tp/plugins/xtap/aquis/src/CTFAquisPlugin.C
 alias s2="less -N $s2"
-
       c1=~/repo/tp/plugins/xtap/aquis/etc/test_replay.cfg
 alias c1="less -N $c1"
 
@@ -73,7 +71,7 @@ cleann(){
   /bin/rm src/*.o
   popd
 }
-diaq(){
+diff2dir(){
   pushd ~/repo/tp/plugins/xtap/
   diff -w -r -x CVS -x shared -x lib -x *.o -x '*.b4vtanedit*' aquis aquis1 | less -E
 }
@@ -81,10 +79,8 @@ g1(){ # single-hit
   find .|scan_c_src.pl "$@"
 }
 g(){ # multi-hit
-
-# the trailing q(less) is for the normal "multi-hit" case. In the single-hit case, it would mess up the exec(less ....)
-
-  g1 "$@" |less -ER
+ # the trailing q(less) is for the normal "multi-hit" case. In the single-hit case, it would mess up the exec(less ....)
+ g1 "$@" |less -ER
 }
 tok(){
   grep -i $1     ~/.cdd.cfg |grep -v price=1
@@ -92,5 +88,5 @@ tok(){
   grep -i "=$1|" ~/.cdd.cfg |grep -v price=1
 }
 
-alias|grep prj=
+# show important shell variables
 set|grep --color -P '^[a-z]\d+='
