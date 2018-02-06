@@ -1,0 +1,190 @@
+<< ______________end_of_comment_1________________
+last uploaded to blog in May 2017
+______________end_of_comment_1________________
+[ -z "$(echo $- | grep i)" ] && return # this same line should be on top of append.bashrc_citi.txt
+# # # # # # # # # # # # # # # # # #
+#
+#     << var assignment >> should be first
+#
+# # # # # # # # # # # # # # # # # # # # # #
+export PS1='\n\s!\! \u@\h [ \t \d ] \w/ \n\$ '
+export EDITOR=vi # primarily for sqlplus
+export VIMINIT=":se nu | :map v :w!"
+export EXINIT=$VIMINIT # ignored if .vimrc found!
+LESS="--ignore-case"
+export TMOUT=987654; [ $root ] && export TMOUT=100600
+HISTSIZE=900
+set -o emacs
+set +o nounset
+export PATH=/usr/xpg4/bin:$PATH; [ $(id -u) = 0 ] && root=yesur
+set +o noclobber; [ $root ] && set -o noclobber
+sav=$LOGNAME
+# # # # # # # # # # # # # # # # # # # # # #
+#
+#            PAGER and TERM:
+#
+# # # # # # # # # # # # # # # # # # # # # #
+export PAGER=more
+export PAGERE=more
+if [ -z "$(which less |grep '^no less')" ]; then
+  export PAGER="less"  # breaking some x terminals but ok in "console"
+  export PAGERE="less -E" # -E needed for dir-viewing, file-viewing but affects man
+fi
+export TERM=vt100 # vt100 is acceptable; 'linux' breaks vi in gnome-terminal;
+export TERM=xterm-256color # suggested by a console color veteran. useless
+export TERM=linux
+# # # # # # # # # # # # # # # # # # # # # #
+#
+#     << aliases >> ... sortable
+#
+# # # # # # # # # # # # # # # # # # # # # #
+alias %=cd_l # typing trainer
+alias ..='cd .. ; ls1page'
+alias cp='cp -i'  # defuse
+alias diff='diff -W $(( $(tput cols) - 2 ))' # make use of full scren width
+alias hgi="history |grep -i"
+alias j1="fg %1"
+alias j2="fg %2"
+alias j3="fg %3"
+alias j4="fg %4"
+alias j5="fg %5"
+alias j6="fg %6"
+alias j7="fg %7"
+alias killthem="perl -pe 's/^\S+(\s+\d+).*/\1/ or s/.*//'|xargs -pt kill" # p str1 | killthem
+alias m=$PAGER
+alias mv='mv -i'  # defuse
+alias p=ps_grep
+alias path="  echo \$PATH |perl -pe 's/:/\n/g' |sort -u|$PAGERE  "
+alias rm=myrm
+alias s='  source   $HOME/.bashrc  '
+alias t='l -t'
+# # # # # # # # # # # # # # # # # # # # # #
+#
+#     << functions >> ... difficult to sort
+#
+# # # # # # # # # # # # # # # # # # # # # #
+cvs-untrack(){
+  # won't recurse into untracked sub-dir
+  cvs -Q st|grep ^?
+  echo
+  echo -n "Comparing st vs up:  "
+
+  # perl to remove last newline
+  cvs -Q st |grep ^?|wc -l|perl -pe 'chomp if eof'
+  echo -n " ^ "
+  cvs -nq up|grep ^?|wc -l
+}
+cd_l(){
+  [ $# -eq 0 ] && l && return
+  [ -n "$( file $* | grep directory    )" ] && cd $* && l && return
+  [ -n "$( file $* | perl -ne 'print if /text|script/' )" ] && m $* &&
+/bin/echo -e "\n\n" && l $*
+}
+d(){
+  [ $# -ne 0 ] && cd $*
+  [ `pwd` = '/' ] && target=/ && echo I am in /
+  echo "In MB :"
+  eval du -ks * |sort -n|perl -pe 's|^(\d+)|$1/1000|e'
+}
+diff1(){ # remove trailing #-comments
+  diff $* |perl -pe 's/\s*#.*// and chomp'
+}
+egi(){
+  needle=` echo $1 | perl -pe 's/-/_/g' ` # replace dash
+  export |grep -i $needle
+}
+ls1page(){
+  /bin/ls -ahlF --color=always $*
+}
+l(){ # can't be completely replaced by 'cd_l' or ']', because "cd_l -tr dir1" is confusing and should be avoided
+ ls1page $* |$PAGERE -r # -r will interpret the --color
+}
+myrm(){
+  cmd="mv -i $* /var/tmp/$sav/ "
+  /usr/bin/printf '%s\n'  "cmd=__$cmd __"
+  eval $cmd
+}
+ps_grep(){
+  ## cmd1='/bin/ps -ef' # truncation risk
+  # ps auxwww : inconsistent for root vs non-root
+  cmd1='ps auxwww' # |grep -v grep -- no cos some real commands contain grep
+  for f in $*; do
+    cmd1="$cmd1 | grep $f"
+  done
+  eval $cmd1
+}
+sav(){ # proven since 2007, never had a problem
+  suffix=$RANDOM$(date +"%H%d%b") # to avoid misleading readers,make the suffix ambiguous
+  for f in $*; do
+    f=$(echo $f|perl -pe 's|/$||')   # sav dir/
+    b=`basename $f`
+    (
+      cd `dirname $f` ;
+      tar cf - $b | (cd /tmp; tar xpf -)
+      /bin/mv -i /tmp/$b $b.b4${sav}edit$suffix
+      [ -d $f ] && opt=' -d'
+      eval ls -lt $opt $b $b.b4*
+    )
+  done
+}
+# # # # # # # # # # # # # # # # # # #
+#
+#     << exa group of companies >> ... an exercise in grouping
+#
+# # # # # # # # # # # # # # # # # # # # # #
+exa(){ #testing: exa -t ss ~/.ssh
+  local ops
+  while is_opt=`echo $1 |perl -ne 'print if /^-/'  ` && [ "$is_opt" ]; do
+    ops="$ops $1"; shift
+  done
+
+  if [ $# -eq 1 ]; then
+    fullpath=$1
+    shortname=`echo $1|perl -pe 's|/$||;s|^.*/||'   `
+  else
+    fullpath=$2
+    shortname=$1
+  fi
+
+  [ -x $fullpath ] || return
+  # export "$shortname"="$fullpath"
+  set $shortname="$fullpath" # not working as of 2017
+  eval $shortname="$fullpath"
+  echo -e $shortname '\t' now set to $fullpath
+  prj="$fullpath"
+  alias  "$shortname"="cd $fullpath;l $ops"
+  alias  prj=$shortname # USE MORE
+}
+exa /tmp/
+# # # # # # # # # # # # # # # # # # #
+#
+#   << path stuff, potentially dangerous >>
+#
+# # # # # # # # # # # # # # # # # # # # # #
+add_path(){
+  [ -r $1 ] || return
+  [ "$(echo $PATH|grep :$1)" ] && return
+  # check world write perm, esp for root
+  PATH=$PATH:$1
+}
+set_manpath(){ # very slow on some systems. Run this when u need it.
+  for d in `ls -d /[uo]*/*/man /[uo]*/*/*/man /[uo]*/*/*/*/man`; do
+    export MANPATH=$MANPATH:$d
+  done
+}
+set_path(){
+  add_path /usr/sbin
+  add_path /usr/bin
+  add_path /sbin
+  add_path /usr/local/bin
+  add_path /usr/cluster/bin
+  add_path /usr/openwin/bin/
+  add_path /usr/ucb
+  add_path $ORACLE_HOME/bin
+  add_path /usr/sfw/bin  # pre-installed
+  add_path /opt/csw/bin
+  [ $root ] && return
+  add_path .
+  add_path $HOME/bin
+}
+set_path
