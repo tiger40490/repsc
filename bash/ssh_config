@@ -1,0 +1,9 @@
+# should copy to ~/.ssh/config
+# without this config, rtdevfrh333 name could be unrecognized
+
+Host rtppeslo222
+User support
+# Using different user. Without this line, current user is used.
+
+ProxyCommand ssh -q 172.24.241.44 nc rtppeslo222 22
+#  prefer broker IP 172.24.241.44 since broker hostname is unrecognized
