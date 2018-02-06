@@ -1,0 +1,96 @@
+[ -z "$(echo $- | grep i)" ] && return
+
+export NO_COMPILE=1 # 1 to speed up dependency module compilation
+#unset NO_COMPILE
+
+alias  y^="pushd /home/vtan/repo/tp/plugins/xtap/aquis/; cvs dif|less -E; popd "
+alias  y^="pushd /home/vtan/repo/tp/plugins/xtap/apa_tw/; cvs dif|less -E; popd "
+alias  s+="vi     ~/append.bashrc_ice.txt"
+alias aq-="source ~/bin/driver/aq.sh"
+alias aq+="vi     ~/bin/driver/aq.sh"
+alias nx-="source ~/bin/driver/nx2.sh"
+alias nx+="vi     ~/bin/driver/nx2.sh"
+alias tw-="source ~/bin/driver/tw.sh"
+alias tw+="vi     ~/bin/driver/tw.sh"
+alias rb-="source ~/bin/driver/rebus.sh"
+alias rb+="vi     ~/bin/driver/rebus.sh"
+alias ps4="ps auxwww|grep --color -P '(s2o|c2o|f2s|f2c|pbflow|sendmc|xtap|rebus|aquis_parser|nysemkt_integrated_parser[1-8]) ' "
+
+exa         /home/vtan/bin
+exa         /home/vtan/lab
+exa cap     /home/vtan/captured/tw
+exa -t ax   /home/vtan/repo/tp/plugins/xtap/arcabookxdp_parser
+exa -t nx   /home/vtan/repo/tp/plugins/xtap/nysemkt_integrated_parser
+exa -t aq   /home/vtan/repo/tp/plugins/xtap/aquis
+exa -t tw   /home/vtan/repo/tp/plugins/xtap/apa_tw
+exa         /home/vtan/repo/tp/plugins/xtap/apa_tw/etc
+exa         /home/vtan/repo/tp/plugins/xtap/apa_tw/src
+exa inc     /home/vtan/repo/tp/plugins/xtap/apa_tw/include
+exa naetc   /home/vtan/repo/tp/rebus/nactf/etc
+exa aqetc   /home/vtan/repo/tp/rebus/aquis/etc
+#
+exa relaq   /home/vtan/release/tp/plugins/xtap/aquis
+exa reltw   /home/vtan/release/tp/plugins/xtap/apa_tw
+#
+exa varnx   /var/opt/nysemkt_integrated_parser/
+exa varaq   /var/opt/aquis_parser/
+exa -t logbase  /tmp/vtan
+exa depth ~/repo/tp/scripts/depthcleaner
+exa holiday ~/repo/tp/holiday_updater/etc
+exa dividend ~/repo/tp/scripts/load_dividend/etc
+exa simpleproxy ~/repo/tp/scripts/simpleproxy/etc/
+exa tpconsole ~/repo/tp/scripts/tpconsole/etc/
+
+# s\d+ are source code; l\d+ are log files; f\d+ are regular files:
+      l1=$logbase/xtap_vtan.log
+alias l1="less -N $l1"
+      s1=~/repo/tp/plugins/xtap/apa_tw/src/CTFAquisPlugin.C
+alias s1="less -N $s1"
+      s2=~/repo/tp/plugins/xtap/aquis/src/CTFAquisPlugin.C
+alias s2="less -N $s2"
+
+      c1=~/repo/tp/plugins/xtap/aquis/etc/test_replay.cfg
+alias c1="less -N $c1"
+
+add_path /var/opt/rpmadmin/bin
+add_path /var/opt/muxtools/bin
+add_path ~vtan/bin/driver
+add_path $HOME/bin/compiled
+add_path $HOME/bin/searcher
+
+attach(){
+ pushd $aq
+ set -x
+ gdb --tui -p $(ps auxwww|grep -P ' /home/vtan/repo/tp/plugins/xtap/.*/shared/tp_xtap/bin/xtap(_d)? '|grep -v grep|grep -v tcp|perl -pe 's/vtan\s+(\d+).*/\1/')
+ #gdb --tui -p $(ps auxwww|grep -P ' /home/vtan/repo/tp/rebus/nactf/bin/.*/nactf_rebus '|grep -v grep|perl -pe 's/vtan\s+(\d+).*/\1/')
+ set +x
+ popd
+}
+
+cleann(){
+  pushd $tw
+  chmod -R u+w *
+  /bin/rm src/*.o
+  popd
+}
+diaq(){
+  pushd ~/repo/tp/plugins/xtap/
+  diff -w -r -x CVS -x shared -x lib -x *.o -x '*.b4vtanedit*' aquis aquis1 | less -E
+}
+g1(){ # single-hit
+  find .|scan_c_src.pl "$@"
+}
+g(){ # multi-hit
+
+# the trailing q(less) is for the normal "multi-hit" case. In the single-hit case, it would mess up the exec(less ....)
+
+  g1 "$@" |less -ER
+}
+tok(){
+  grep -i $1     ~/.cdd.cfg |grep -v price=1
+  echo "----------------- v   v   v"
+  grep -i "=$1|" ~/.cdd.cfg |grep -v price=1
+}
+
+alias|grep prj=
+set|grep --color -P '^[a-z]\d+='
