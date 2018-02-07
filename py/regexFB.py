@@ -11,16 +11,12 @@ def match(haystack, regex):
  
       assert c != '*', "regex first char is star -- illegal"
 
-      '''if d != '*' :
+      if d != '*' :
           if len(haystack) == 0: return False  
           if c!= '.' and c!= haystack[0]: return False
-          return match(haystack[1:], regex[1:])'''
+          return match(haystack[1:], regex[1:])
       
       if    c != '.' :
-         if d != '*' : # alphanumeric without star
-              if len(haystack) == 0: return False
-              if c!= haystack[0]: return False
-              return match(haystack[1:], regex[1:])
          assert d == '*' # Example: Q* eating up none to all leading Q's, if any
          if 0==len(haystack): return match(haystack, regex[2:])
           
@@ -35,13 +31,7 @@ def match(haystack, regex):
            i+=1 
          print '      ^^^^^ ending * loop ^^^  bad'
          return False
-                 
-      assert c == '.'
-       
-      if d != '*' : # dot without star matches any single character
-          if len(haystack) == 0: return False  
-          return match(haystack[1:], regex[1:])
- 
+                         
       assert c == '.' and d == '*' # dot * requires iteration over haystack
       print '   v v v v v   starting  .* loop with haystack %s vs %s' %(haystack, regex)
       for i in [0]+range(1,len(haystack)): # 0 to len-1 but never empty loop
