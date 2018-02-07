@@ -7,11 +7,15 @@ Detailed requirements https://wp.me/p74oew-32
 def match(haystack, regex):
       print   'regex = ', regex, '   haystack = ', haystack
       if 0==len(regex): return 0==len(haystack)
-       
       c,d = (regex[0],'') if len(regex)==1 else regex[0:2]
  
       assert c != '*', "regex first char is star -- illegal"
-       
+
+      '''if d != '*' :
+          if len(haystack) == 0: return False  
+          if c!= '.' and c!= haystack[0]: return False
+          return match(haystack[1:], regex[1:])'''
+      
       if    c != '.' :
          if d != '*' : # alphanumeric without star
               if len(haystack) == 0: return False
@@ -35,6 +39,7 @@ def match(haystack, regex):
       assert c == '.'
        
       if d != '*' : # dot without star matches any single character
+          if len(haystack) == 0: return False  
           return match(haystack[1:], regex[1:])
  
       assert c == '.' and d == '*' # dot * requires iteration over haystack
@@ -47,6 +52,7 @@ def match(haystack, regex):
       print '      ^^^^^ ending .* loop ^^^  bad'
       return False
  
+assert not match('', '.')
 assert match('xyab-abc', '.*ab.*c.*x*')
 assert match('xyab-abc', '.*ab.*c.*.*')
 assert match('xyab-abc', '.*ab.*c')
