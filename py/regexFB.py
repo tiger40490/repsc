@@ -15,7 +15,7 @@ def match(haystack, regex):
           if c!= '.' and c!= haystack[0]: return False
           return match(haystack[1:], regex[1:])
       
-      if c != '.' : # Example: Q* eating up none to all leading Q's, if any
+      if c != '.' : # literal-star. Example: Q* eating up none to all leading Q's, if any
          if 0==len(haystack): return match(haystack, regex[2:])
          print '   v v v v v   starting * loop with haystack %s vs %s' %(haystack, regex)
          i = 0
