@@ -24,7 +24,6 @@ def match(haystack, regex):
            if match(haystack[i:], regex[2:]): 
               if len(haystack): print '  ^^^^^ ending * loop ^^^ good haystack %s vs %s' %(haystack[i:], regex[2:])
               return True
-           assert haystack[i] == c 
            i+=1 
          print '      ^^^^^ ending * loop ^^^  bad'
          return False
