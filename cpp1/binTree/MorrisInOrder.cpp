@@ -1,3 +1,6 @@
+/* no recursion no stack, only extra storate for 2 extra pointers!
+ * I think the small code size gives a false impression of simplicity
+ */
 #include <cstdio>
 #include <assert.h>
 struct Node {
@@ -20,27 +23,25 @@ https://en.wikipedia.org/wiki/Threaded_binary_tree#Non_recursive_Inorder_travers
     Node _8(8, &_7, &_9);
     Node _6(6, NULL, &_8);
     Node root(5, &_4, &_6);
-void MorrisTraversal(Node * const root) { //no recursion, no stack, extra storate for 2 extra pointers
+void MorrisTraversal(Node * const root) {
  Node *cur = root;
  while (cur != NULL) {
     if (cur->le == NULL) { // cur is the lowest remaining value!
-        printf("%d \n", cur->val);
+        printf("%d\n", cur->val);
         cur = cur->ri;
         continue;
     }
     // Now cur is not the lowest. Now locate predecessor and set prev to the predecessor.
     // To construct a threaded BST, we will need to set prev->ri to cur
-    // ( In a Backward traversal, we would find successor instead. )
-
     Node * prev=cur->le; //purpose of prev: create/remove thread link prev->ri=cur
     for (; (prev->ri != NULL && prev->ri != cur); prev = prev->ri) {}
 
-    printf("   %d is the predecessor of %d\n", prev->val, cur->val);
+    printf("\t\t\t%d is predecessor of %d\n", prev->val, cur->val);
 
     assert(cur->le != NULL);
     if (prev->ri == NULL) {
         prev->ri = cur; //create thread link
-        printf(" %d 's right child set to   %d\n", prev->val, cur->val);
+        printf(" %d 's right child set to %d\n", prev->val, cur->val);
 
         // not ready to print cur, because cur has left child.
         cur = cur->le;
@@ -52,7 +53,7 @@ void MorrisTraversal(Node * const root) { //no recursion, no stack, extra storat
 
         //after printing cur, no need to move left. Must move right!
         cur = cur->ri;
-        prev = NULL; // optionally nullify prev as it is invalidated
+        //prev = NULL; // optionally nullify prev as it is invalidated
     }
  }//while
  printf("\n");
