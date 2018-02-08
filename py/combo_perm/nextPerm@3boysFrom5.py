@@ -2,12 +2,12 @@
 
 pool = 'abcde'
 
-def perm(A, p): #return a list of two strings -- p boys, and A-P boys
-  if p==0: 
-    return [('', pool)]
+def perm(total, pick):
+  '''return a list of two strings -- pick chars, and total-pick chars'''
+  if pick==0: return [('', pool)]
 
   ret = []
-  li = perm(A, p-1)
+  li = perm(total, pick-1)
   for incompleteStr, unused in li:
     print 'in outer loop ', incompleteStr, unused
     for i in xrange(len(unused)):
