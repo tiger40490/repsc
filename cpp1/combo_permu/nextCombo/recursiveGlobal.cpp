@@ -6,6 +6,8 @@
 //global objects but with higher complexity
 //
 //However, global variables actually simplify the logic!
+//
+// 51 calls to recursive func
 #include <iostream>
 #include <sstream>
 #include <deque>
