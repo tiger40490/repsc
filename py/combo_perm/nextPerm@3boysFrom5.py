@@ -1,4 +1,10 @@
-'''5P3 == 60 line-ups expected, ascending'''
+'''Requirement: print all line-ups of 5 boys, in ascending order of shortcode
+5P3 == 60 line-ups expected
+
+This solution showcases
+* assigning a pair (vector of 2 items) to two variables.
+* taking out an item from vector by index.
+'''
 
 pool = 'abcde'
 
