@@ -1,4 +1,4 @@
-'''5P3 == 60 line-ups expected'''
+'''5P3 == 60 line-ups expected, ascending'''
 
 pool = 'abcde'
 
@@ -8,20 +8,20 @@ def perm(total, pick):
 
   ret = []
   li = perm(total, pick-1)
-  for incompleteStr, unused in li:
-    print 'in outer loop ', incompleteStr, unused
+  for partial, unused in li:
+    print 'in outer loop ', partial, unused
     for i in xrange(len(unused)):
       clone = list(unused)
       ch = clone.pop(i)
-      newpair = (incompleteStr+ch, clone)
+      newpair = (partial+ch, clone)
       ret.append(newpair)
   print 'after outerloop, return a list of len =', len(ret)
   return ret
 
 def main():
   lastPrint = ''
-  for completeStr, unused in perm(len(pool),3):
+  for completeStr, _ in perm(len(pool),3):
     assert lastPrint < completeStr
-    print completeStr,
+    # print completeStr,
     lastPrint = completeStr
 main()
