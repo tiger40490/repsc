@@ -5,6 +5,7 @@
 #include <list>
 #include <vector>
 #include <unordered_map>
+//#include <map>
 #include <iostream>
 #include <assert.h>
 #define ss if(2>1) cout
@@ -22,7 +23,7 @@ struct Status{
     assert(color == Color::Green); //Color:: is required for c++11 scoped enum
     return _itr;
   }
-//  Status()...//no-arg ctor needed if we use op[]
+  //Status(){assert(1==0);}//no-arg ctor needed by compiler not runtime, if we use op[] even for a lookup hit!
 private:
   Itr _itr;
 };
@@ -46,9 +47,9 @@ void firstLoneWolf(){
       ss<<" was already brown\n";
       continue;
     }
+    //cout<<endl<<*(lookup[num].itr());
     ss<<" is turning Brown!\n";
-    auto where = status.itr();
-    //ss<<*where<<" <- where\n";
+    auto where = status.itr(); //ss<<*where<<" <- where\n";
     greens.erase(where); //ss<<greens.size()<<" = greens.size()\n";
     status.color = Color::Brown;
   }
