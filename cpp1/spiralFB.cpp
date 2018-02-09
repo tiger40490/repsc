@@ -1,4 +1,4 @@
-//todo: avoid the cloning
+//todo: avoid the matrix cloning
 //todo: the ALL and dump() should be optional in #ifdef
 #include <iostream>
 #include <vector>
