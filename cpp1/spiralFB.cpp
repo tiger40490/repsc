@@ -1,4 +1,5 @@
-//todo: //we can get rid of this ALL thing and avoid the cloning
+//todo: avoid the cloning
+//todo: the ALL and dump() should be optional in #ifdef
 #include <iostream>
 #include <vector>
 #include <deque>
