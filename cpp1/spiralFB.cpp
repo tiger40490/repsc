@@ -12,16 +12,15 @@ Square seed1 = {{1}};
 Square seed2 = {{4,3},{1,2}};
 vector<Square> All(99); 
 
-void dump(int const n){
-  assert (n > 0 && "bad input");
-  Square arr = All[n];
+void dump(Square & arr){
+  size_t const n = arr.size();
   for(int row=0; row<n; ++row){
    for(int col=0; col<n; ++col) cout<<arr[row][col]<<"\t";
    cout<<endl;
   }
 }
-void shiftCopy(int const n){
-  Square clone = All[n];
+void inPlace(){
+  Square & clone = seed2; //seed1
   size_t const len = clone.size();
   for (int row = 0; row <len; ++row){
 	  clone[row].push_front(0);
@@ -36,16 +35,12 @@ void shiftCopy(int const n){
   for(int col=1; col<newlen; ++col) clone[newlen-1][col] = i++;  
   for(int row=newlen-2; row>=0; --row) clone[row][newlen-1] = i++;
   for(int col=newlen-2; col>=0; --col) clone[0][col] = i++;  
-  
-  All[clone.size()]=(clone);
-  dump(len+2);
+  dump(clone);
 }	
 
 int main(){
-	All[1] = seed1;
-	All[2] = seed2;
-	dump(2);
-	shiftCopy(2);
+    inPlace();
+    inPlace();
 }
 /*Requirement: https://wp.me/p74oew-4ae
 */
