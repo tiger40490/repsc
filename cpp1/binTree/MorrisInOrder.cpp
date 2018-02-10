@@ -2,12 +2,20 @@
  * I think the small code size gives a false impression of simplicity
  */
 #include <cstdio>
+#include <cstring> //memset
+#include <iostream>
+#include <vector>
 #include <assert.h>
+using namespace std;
 struct Node {
     int val;
     Node *le, *ri;
-    Node(int x, Node * _le = NULL, Node * _ri = NULL) : val(x), le(_le), ri(_ri) {}
+    Node(int x, Node * _le = NULL, Node * _ri = NULL) : val(x), le(_le), ri(_ri) {
+		registry.push_back(this);
+	}
+	static vector<Node*> registry;
 };
+vector<Node*> Node::registry;
 /*    5
     4   6
   2       8
@@ -66,10 +74,18 @@ void Morris3pass(Node * const root) { //buggy
 	printf("%d\n\n", cur->val);
 } //func Morris3pass()
  
-void SimpleMorris(Node * const root) {
- Node *cur = root;
+string fromat(void* p){
+  static size_t const targetLen=3;
+  char buf[16];
+  size_t written = sprintf(buf, "%p\0", p);
+  return string(buf).substr(written-targetLen);
+}
+void print1(Node *p){
+	if (p) printf("[ %d ]", p->val);
+}
+void SimpleMorris(Node * cur) { //any branch node
  while (cur != NULL) {
-    if (cur->le == NULL) { // cur is the lowest remaining value!
+    if (cur->le == NULL){//lowest remaining value
         printf("%d\n", cur->val);
         cur = cur->ri;
         continue;
@@ -84,14 +100,13 @@ void SimpleMorris(Node * const root) {
     assert(cur->le != NULL);
     if (prev->ri == NULL) {
         prev->ri = cur; //create thread link
-        printf(" %d 's right child set to %d\n", prev->val, cur->val);
+        printf(" %d 's NULL right child set to %d\n", prev->val, cur->val);
 
         // not ready to print cur, because cur has left child.
         cur = cur->le;
         prev = NULL; // optionally nullify prev as it is invalidated
     }else{
         //prev->ri = NULL; //optionally remove threadlink
-        //printf(" %d 's right thread link removed\n", prev->val);
         printf("%d \n", cur->val);
 
         //after printing cur, no need to move left. Must move right!
@@ -99,6 +114,19 @@ void SimpleMorris(Node * const root) {
         //prev = NULL; // optionally nullify prev as it is invalidated
     }
  }//while
- printf("\n");
 }// func SimpleMorris()
-int main() { SimpleMorris(&root); }
+void dump(){
+ cout<<"---- all the nodes in registry ----\n";
+ for (auto n: Node::registry){
+    cout<<fromat(n)<<" : "<<fromat(n->le);
+	print1(n->le);
+	cout<<"\t<= "<< n->val <<" => ";
+	print1(n->ri);
+	cout<<fromat(n->ri)<<endl;
+ }
+}
+int main() { 
+ dump();
+ SimpleMorris(&root); 
+ dump();
+}
