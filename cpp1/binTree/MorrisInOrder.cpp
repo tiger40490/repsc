@@ -50,7 +50,7 @@ void dump(){
 	cout<<format(n->ri)<<endl;
  }
 }
-void Morris3pass(Node * const root) { //buggy
+void m3(Node * const root) { //Morris3pass
 	Node *cur = root;
 	 /*first pass (arguable trickiest) -- add thread link to each node without a right child.  Until now I don't understand how this little loop works:) Sometimes we keep moving left; sometimes we keep moving right! Cur is like the current suspect. There are tricky rules how to locate the next suspect.
 	Once we confirm a suspect is "HLC" i.e. has left-child, we lock down this node and drive the prev pointer to Descend and locate its predecessor. (Predecessor is always in the left sub-tree.)
@@ -86,9 +86,9 @@ void Morris3pass(Node * const root) { //buggy
 	
 	// 3rd pass to print in-order, using the thread links. Never follow left-child link
 	for(Node* printer = start;printer ;printer=printer->ri) cout<<printer->val<<endl;
-} //func Morris3pass()
+} //func m3()
  
-void SimpleMorris(Node * cur) { //any branch node
+void m1(Node * cur) { //simpleMorris. cur is any branch node
  while (cur != NULL) {
     if (cur->le == NULL){//lowest remaining value
         printf("%d\n", cur->val);
@@ -104,25 +104,19 @@ void SimpleMorris(Node * cur) { //any branch node
 
     assert(cur->le != NULL);
     if (prev->ri == NULL) {
-        prev->ri = cur; //create thread link
+        prev->ri = cur; 
         printf(" %d 's NULL right child set to %d\n", prev->val, cur->val);
-
-        // not ready to print cur, because cur has left child.
-        cur = cur->le;
-        //prev = NULL; // optionally nullify prev as it is invalidated
+        cur = cur->le; // not ready to print cur, because cur has left child.
     }else{
         //prev->ri = NULL; //optionally remove threadlink
         printf("%d \n", cur->val);
-
-        //after printing cur, no need to move left. Must move right!
-        cur = cur->ri;
-        //prev = NULL; // optionally nullify prev as it is invalidated
+        cur = cur->ri; //after printing cur, no need to move left. Must move right!
     }
  }//while
-}// func SimpleMorris()
+}// func m1()
 
 int main() { 
  dump();
- Morris3pass(&root); 
+ m1(&root); 
  dump();
 }
