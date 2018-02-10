@@ -1,25 +1,24 @@
-#include <iostream> //size_t
 #include <assert.h>
 template<typename T> struct ControlBlock{
-  ControlBlock(T* raw): _rptr(raw), _cnt(1){  }
+  ControlBlock(T* raw): _rawPtr(raw), _clubSize(1) {}
   ~ControlBlock(){
-      assert(_cnt ==0);
-      delete _rptr;
+      assert(_clubSize ==0);
+      delete _rawPtr;
   }
   void inc(){
       //aquirelock();
-      ++ this->_cnt;     
+      ++ this->_clubSize;     
       //relLock();
   }
   void dec(){
       //aquirelock();
-      -- this->_cnt;     
+      -- this->_clubSize;     
       //relLock();
   }
-  size_t cnt(){return _cnt;}
+  size_t cnt(){return _clubSize;}
 private:
-  T* _rptr; //could be null
-  size_t _cnt;
+  T* _rawPtr; //could be null
+  size_t _clubSize;
 };
 
 template<typename T> struct sptr{
