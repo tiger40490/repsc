@@ -52,14 +52,14 @@ void dump(){
 }
 void m3(Node * const root) { //Morris3pass
 	/*first pass (trickiest) -- add thread link to any node without a right child.  */
-	for (Node * cur = root; cur; ) {
-		printf("checking %d\n", cur->val);
-		if (cur->le == NULL) {
-		//cur is no Honey node
-			cur = cur->ri; //?
+	for (Node * HCL_suspect = root; HCL_suspect; ) {
+		printf("checking %d\n", HCL_suspect->val);
+		if (HCL_suspect->le == NULL) {
+		//HCL_suspect is no Honey node
+			HCL_suspect = HCL_suspect->ri; //?
 			continue;
 		}
-		Node * const HLC = cur;
+		Node * const HLC = HCL_suspect;
 		printf("%d (HLC) is temporarily locked down while we Descend to locate its predecessor\n", HLC->val);
 		Node * prev = HLC->le; //purpose of prev: create thread link prev->ri=HLC
 		for (; (prev->ri && prev->ri != HLC); prev = prev->ri) {}
@@ -68,10 +68,10 @@ void m3(Node * const root) { //Morris3pass
 		if (prev->ri == NULL) {
 			prev->ri = HLC; //create thread link
 			printf(".. %d 's right child set to %d..Now Descend Right\n", prev->val, HLC->val);
-			cur = HLC->le; // ? moving right would likely skip the left subtree!
+			HCL_suspect = HLC->le; // ? moving right would likely skip the left subtree!
 		}else {
 			assert(prev->ri == HLC); //thread link already created
-			cur = HLC->ri; //?
+			HCL_suspect = HLC->ri; //?
 		}
 	}// 1st while loop
 	printf("-------1st pass done: thread links created -------\n");
