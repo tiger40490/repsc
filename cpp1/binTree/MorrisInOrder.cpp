@@ -14,16 +14,59 @@ struct Node {
  1 3     7 9
 https://en.wikipedia.org/wiki/Threaded_binary_tree#Non_recursive_Inorder_traversal_for_a_Threaded_Binary_Tree
 */
-    Node _1(1);
-    Node _3(3);
-    Node _2(2, &_1, &_3);
-    Node _4(4, &_2);
-    Node _7(7);
-    Node _9(9);
-    Node _8(8, &_7, &_9);
-    Node _6(6, NULL, &_8);
-    Node root(5, &_4, &_6);
-void MorrisTraversal(Node * const root) {
+    Node _1(-1);
+    Node _3(-3);
+    Node _2(-2, &_1, &_3);
+    Node _4(-4, &_2);
+    Node _7(-7);
+    Node _9(-9);
+    Node _8(-8, &_7, &_9);
+    Node _6(-6, NULL, &_8);
+    Node root(-5, &_4, &_6);
+void Morris3pass(Node * const root) { //buggy
+	Node *cur = root;
+	 /*first pass (arguable trickiest) -- add thread link to each node without a right child.  Until now I don't understand how this little loop works:) Sometimes we keep moving left; sometimes we keep moving right! Cur is like the current suspect. There are tricky rules how to locate the next suspect.
+	Once we confirm a suspect is "HLC" i.e. has left-child, we lock down this node and drive the prev pointer to Descend and locate its predecessor. (Predecessor is always in the left sub-tree.)
+	Recursion is avoided because when cur is at a lower node we can traverse up using the thread link.	*/
+	while (cur) {
+		printf("checking %d\n", cur->val);
+		if (cur->le == NULL) {
+			cur = cur->ri;
+			continue;
+		}
+		Node * const HLC = cur;
+		printf("%d (HLC) is temporarily locked down while we Descend to locate its predecessor\n", HLC->val);
+		Node * prev = HLC->le; //purpose of prev: create thread link prev->ri=HLC
+		for (; (prev->ri && prev->ri != HLC); prev = prev->ri) {}
+		printf(". %d (prev) is the predecessor of %d (HLC)..", prev->val, HLC->val);
+		printf(" If prev has no right child, then set the right child to HCL\n");
+		if (prev->ri == NULL) {
+			prev->ri = HLC; //create thread link
+			printf(".. %d 's right child set to %d..Now Descend Right\n",
+			prev->val, HLC->val);
+			cur = HLC->le; // moving right would likely skip the left subtree!
+		}else {
+			assert(prev->ri == HLC); //thread link already created
+			cur = HLC->ri;
+		}
+	}// 1st while loop to create the thread links. 2nd while loop would locate lowest value then ...
+	printf("-------1st pass done: thread links created -------\n");
+	for (cur=root; cur->le; cur = cur->le) {}
+	printf("-------2nd pass done: left-most node found -------> %d\n", cur->val);
+	
+	// 3rd pass to print in-order, using the thread links.
+	int lastPrinted = cur->val;
+	for(;cur->ri != NULL ;cur=cur->ri){
+		// if we found a left child, then descend Left all the way.
+		if (cur->le && cur->le->val > lastPrinted )
+			for (; cur->le; cur = cur->le) {}
+		printf("%d\n", cur->val);
+		lastPrinted = cur->val;
+	} // 3rd pass
+	printf("%d\n\n", cur->val);
+} //func Morris3pass()
+ 
+void SimpleMorris(Node * const root) {
  Node *cur = root;
  while (cur != NULL) {
     if (cur->le == NULL) { // cur is the lowest remaining value!
@@ -57,5 +100,5 @@ void MorrisTraversal(Node * const root) {
     }
  }//while
  printf("\n");
-}
-int main() { MorrisTraversal(&root); }
+}// func SimpleMorris()
+int main() { SimpleMorris(&root); }
