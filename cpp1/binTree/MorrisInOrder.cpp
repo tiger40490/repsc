@@ -55,23 +55,24 @@ void m3(Node * const root) { //Morris3pass
 	for (Node * HCL_suspect = root; HCL_suspect; ) {
 		printf("checking %d\n", HCL_suspect->val);
 		if (HCL_suspect->le == NULL) {
-		//HCL_suspect is no Honey node
-			HCL_suspect = HCL_suspect->ri; //?
+//HCL_suspect is no Honey node. Look for next Honey node on the right (subtree or ancestor node)
+			HCL_suspect = HCL_suspect->ri; //
 			continue;
 		}
 		Node * const HLC = HCL_suspect;
-		printf("%d (HLC) is temporarily locked down while we Descend to locate its predecessor\n", HLC->val);
-		Node * prev = HLC->le; //purpose of prev: create thread link prev->ri=HLC
+		printf("%d (HLC) is temporarily locked down while we Descend Left to locate its predecessor. We will either find it or come back to HLC.\n", HLC->val);
+		Node * prev = HLC->le; 
 		for (; (prev->ri && prev->ri != HLC); prev = prev->ri) {}
-		printf(". %d (prev) is the predecessor of %d (HLC), so %d should not have original right-child", prev->val, HLC->val);
+		printf(". %d (prev) is the predecessor of %d (HLC)\n", prev->val, HLC->val, prev->val);
 		
 		if (prev->ri == NULL) {
 			prev->ri = HLC; //create thread link
-			printf(".. %d 's right child set to %d..Now Descend Right\n", prev->val, HLC->val);
+			printf(".. %d 's NULL right child set to %d (HLC). This is first time we hit this HLC, so now we Descend Left from HLC looking for next HLC.\n", prev->val, HLC->val);
 			HCL_suspect = HLC->le; // ? moving right would likely skip the left subtree!
 		}else {
 			assert(prev->ri == HLC); //thread link already created
-			HCL_suspect = HLC->ri; //?
+			cout<<HLC->val<<" (HLC) is already target of a right-up link. This is 2nd time we hit this HLC. Somehow, HLC's left subtree is all fixed, so we move right (either up or down)\n";
+			HCL_suspect = HLC->ri; 
 		}
 	}// 1st while loop
 	printf("-------1st pass done: thread links created -------\n");
