@@ -31,6 +31,25 @@ https://en.wikipedia.org/wiki/Threaded_binary_tree#Non_recursive_Inorder_travers
     Node _8(-8, &_7, &_9);
     Node _6(-6, NULL, &_8);
     Node root(-5, &_4, &_6);
+string format(void* p){
+  static size_t const targetLen=3;
+  char buf[16];
+  size_t written = sprintf(buf, "%p\0", p);
+  return string(buf).substr(written-targetLen);
+}
+void print1(Node *p){
+	if (p) printf("[ %d ]", p->val);
+}
+void dump(){
+ cout<<"---- all the nodes in registry ----\n";
+ for (auto n: Node::registry){
+    cout<<format(n)<<" : "<<format(n->le);
+	print1(n->le);
+	cout<<"\t<= "<< n->val <<" => ";
+	print1(n->ri);
+	cout<<format(n->ri)<<endl;
+ }
+}
 void Morris3pass(Node * const root) { //buggy
 	Node *cur = root;
 	 /*first pass (arguable trickiest) -- add thread link to each node without a right child.  Until now I don't understand how this little loop works:) Sometimes we keep moving left; sometimes we keep moving right! Cur is like the current suspect. There are tricky rules how to locate the next suspect.
@@ -48,10 +67,11 @@ void Morris3pass(Node * const root) { //buggy
 		for (; (prev->ri && prev->ri != HLC); prev = prev->ri) {}
 		printf(". %d (prev) is the predecessor of %d (HLC)..", prev->val, HLC->val);
 		printf(" If prev has no right child, then set the right child to HCL\n");
+		
+		assert(HLC->le);
 		if (prev->ri == NULL) {
 			prev->ri = HLC; //create thread link
-			printf(".. %d 's right child set to %d..Now Descend Right\n",
-			prev->val, HLC->val);
+			printf(".. %d 's right child set to %d..Now Descend Right\n", prev->val, HLC->val);
 			cur = HLC->le; // moving right would likely skip the left subtree!
 		}else {
 			assert(prev->ri == HLC); //thread link already created
@@ -62,6 +82,7 @@ void Morris3pass(Node * const root) { //buggy
 	for (cur=root; cur->le; cur = cur->le) {}
 	printf("-------2nd pass done: left-most node found -------> %d\n", cur->val);
 	
+	return;
 	// 3rd pass to print in-order, using the thread links.
 	int lastPrinted = cur->val;
 	for(;cur->ri != NULL ;cur=cur->ri){
@@ -74,15 +95,6 @@ void Morris3pass(Node * const root) { //buggy
 	printf("%d\n\n", cur->val);
 } //func Morris3pass()
  
-string fromat(void* p){
-  static size_t const targetLen=3;
-  char buf[16];
-  size_t written = sprintf(buf, "%p\0", p);
-  return string(buf).substr(written-targetLen);
-}
-void print1(Node *p){
-	if (p) printf("[ %d ]", p->val);
-}
 void SimpleMorris(Node * cur) { //any branch node
  while (cur != NULL) {
     if (cur->le == NULL){//lowest remaining value
@@ -104,7 +116,7 @@ void SimpleMorris(Node * cur) { //any branch node
 
         // not ready to print cur, because cur has left child.
         cur = cur->le;
-        prev = NULL; // optionally nullify prev as it is invalidated
+        //prev = NULL; // optionally nullify prev as it is invalidated
     }else{
         //prev->ri = NULL; //optionally remove threadlink
         printf("%d \n", cur->val);
@@ -115,16 +127,7 @@ void SimpleMorris(Node * cur) { //any branch node
     }
  }//while
 }// func SimpleMorris()
-void dump(){
- cout<<"---- all the nodes in registry ----\n";
- for (auto n: Node::registry){
-    cout<<fromat(n)<<" : "<<fromat(n->le);
-	print1(n->le);
-	cout<<"\t<= "<< n->val <<" => ";
-	print1(n->ri);
-	cout<<fromat(n->ri)<<endl;
- }
-}
+
 int main() { 
  dump();
  SimpleMorris(&root); 
