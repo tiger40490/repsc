@@ -22,15 +22,15 @@ vector<Node*> Node::registry;
  1 3     7 9
 https://en.wikipedia.org/wiki/Threaded_binary_tree#Non_recursive_Inorder_traversal_for_a_Threaded_Binary_Tree
 */
-    Node _1(-1);
-    Node _3(-3);
-    Node _2(-2, &_1, &_3);
-    Node _4(-4, &_2);
-    Node _7(-7);
-    Node _9(-9);
-    Node _8(-8, &_7, &_9);
-    Node _6(-6, NULL, &_8);
-    Node root(-5, &_4, &_6);
+    Node _1(1);
+    Node _3(3);
+    Node _2(2, &_1, &_3);
+    Node _4(4, &_2);
+    Node _7(7);
+    Node _9(9);
+    Node _8(8, &_7, &_9);
+    Node _6(6, NULL, &_8);
+    Node root(5, &_4, &_6);
 string format(void* p){
   static size_t const targetLen=3;
   char buf[16];
@@ -68,11 +68,12 @@ void m3(Node * const root) { //Morris3pass
 		if (prev->ri == NULL) {
 			prev->ri = HLC; //create thread link
 			printf(".. %d 's NULL right child set to %d (HLC). This is first time we hit this HLC, so now we Descend Left from HLC looking for next HLC.\n", prev->val, HLC->val);
-			HCL_suspect = HLC->le; // ? moving right would likely skip the left subtree!
+			HCL_suspect = HLC->le; // moving right would skip the left-subtree unfixed!
 		}else {
 			assert(prev->ri == HLC); //thread link already created
 			cout<<HLC->val<<" (HLC) is already target of a right-up link. This is 2nd time we hit this HLC. Somehow, HLC's left subtree is all fixed, so we move right (either up or down)\n";
-			HCL_suspect = HLC->ri; 
+			assert(HLC->ri);
+			HCL_suspect = HLC->ri; // moving left would skip the right-subtree.
 		}
 	}// 1st while loop
 	printf("-------1st pass done: thread links created -------\n");
@@ -114,5 +115,5 @@ void m1(Node * cur) { //simpleMorris. cur is any branch node
 int main() { 
  dump();
  m3(&root); 
- //dump();
+ dump();
 }
