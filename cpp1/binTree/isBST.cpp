@@ -30,7 +30,9 @@ void recur(Node * n){
 
   // used to be open(Node *):
   if (!isAscending) return; //check before opening any node
-  cout<<"opening "<<n->data<<endl; if (!isFirstNodeDone){ isFirstNodeDone = true; }else if (lastSeen > n->data){
+  cout<<"opening "<<n->data<<endl; 
+  if (!isFirstNodeDone){ isFirstNodeDone = true; 
+  }else if (lastSeen > n->data){
         isAscending=false;
         return; //early return to save time
   }
