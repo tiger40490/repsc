@@ -51,34 +51,29 @@ void dump(){
  }
 }
 void m3(Node * const root) { //Morris3pass
-	Node *cur = root;
-	 /*first pass (arguable trickiest) -- add thread link to each node without a right child.  Until now I don't understand how this little loop works:) Sometimes we keep moving left; sometimes we keep moving right! Cur is like the current suspect. There are tricky rules how to locate the next suspect.
-	Once we confirm a suspect is "HLC" i.e. has left-child, we lock down this node and drive the prev pointer to Descend and locate its predecessor. (Predecessor is always in the left sub-tree.)
-	Recursion is avoided because when cur is at a lower node we can traverse up using the thread link.	*/
-	while (cur) {
+	/*first pass (trickiest) -- add thread link to any node without a right child.  */
+	for (Node * cur = root; cur; ) {
 		printf("checking %d\n", cur->val);
 		if (cur->le == NULL) {
-			cur = cur->ri;
+		//cur is no Honey node
+			cur = cur->ri; //?
 			continue;
 		}
 		Node * const HLC = cur;
 		printf("%d (HLC) is temporarily locked down while we Descend to locate its predecessor\n", HLC->val);
 		Node * prev = HLC->le; //purpose of prev: create thread link prev->ri=HLC
 		for (; (prev->ri && prev->ri != HLC); prev = prev->ri) {}
-		printf(". %d (prev) is the predecessor of %d (HLC)..", prev->val, HLC->val);
-		printf(" If prev has no right child, then set the right child to HCL\n");
+		printf(". %d (prev) is the predecessor of %d (HLC), so %d should not have original right-child", prev->val, HLC->val);
 		
-		assert(HLC->le);
 		if (prev->ri == NULL) {
 			prev->ri = HLC; //create thread link
 			printf(".. %d 's right child set to %d..Now Descend Right\n", prev->val, HLC->val);
-			cur = HLC->le; // moving right would likely skip the left subtree!
+			cur = HLC->le; // ? moving right would likely skip the left subtree!
 		}else {
 			assert(prev->ri == HLC); //thread link already created
-			cur = HLC->ri;
+			cur = HLC->ri; //?
 		}
-	}// 1st while loop to create the thread links. 2nd while loop would locate lowest value then ...
-	cur = NULL; // no longer needed
+	}// 1st while loop
 	printf("-------1st pass done: thread links created -------\n");
 	Node* start = root;
 	for (; start->le; start = start->le) {}
@@ -117,6 +112,6 @@ void m1(Node * cur) { //simpleMorris. cur is any branch node
 
 int main() { 
  dump();
- m1(&root); 
- dump();
+ m3(&root); 
+ //dump();
 }
