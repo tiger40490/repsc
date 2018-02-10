@@ -1,38 +1,33 @@
 #include <assert.h>
 template<typename T> struct ControlBlock{
-  ControlBlock(T* raw): _rawPtr(raw), _clubSize(1) {}
+  ControlBlock(T* raw): _rawPtr(raw), _clubSize(1) {
+    assert(raw && "Programmer error: null raw ptr passed in");
+  }
+  
   ~ControlBlock(){
-      assert(_clubSize ==0);
+      assert(_clubSize == 0);
       delete _rawPtr;
   }
-  void inc(){
-      //aquirelock();
-      ++ this->_clubSize;     
-      //relLock();
-  }
-  void dec(){
-      //aquirelock();
-      -- this->_clubSize;     
-      //relLock();
-  }
+  void inc(){ ++ this->_clubSize; } //atomic update
+  void dec(){ -- this->_clubSize; }
   size_t cnt(){return _clubSize;}
 private:
-  T* _rawPtr; //could be null
+  T* _rawPtr; 
   size_t _clubSize;
 };
-
-template<typename T> struct sptr{
-  //creates a new club without an existing contol block
-  sptr(T * raw): _block(new ControlBlock<T>(raw)){}
+template<typename T> struct ShPtr{
+  //start new club
+  ShPtr(T* raw): _cblock(new ControlBlock<T>(raw)) {}
   
   //join existing club
-  sptr(sptr const & other):_block(other._block){
-      _block->inc();
+  ShPtr(ShPtr const & other): _cblock(other._cblock){
+      assert(_cblock);
+      _cblock->inc();
   }
-  ~sptr(){
-      _block->dec();
-      if (_block->cnt() == 0) delete _block;
+  ~ShPtr(){
+      _cblock->dec();
+      if (_cblock->cnt() == 0) 
+	    delete _cblock;//better than "delete this" in ControlBlock
   }
-private:
-  ControlBlock<T>* _block;
+private: ControlBlock<T>* _cblock; //never null, always on heap
 };
