@@ -78,21 +78,14 @@ void Morris3pass(Node * const root) { //buggy
 			cur = HLC->ri;
 		}
 	}// 1st while loop to create the thread links. 2nd while loop would locate lowest value then ...
+	cur = NULL; // no longer needed
 	printf("-------1st pass done: thread links created -------\n");
-	for (cur=root; cur->le; cur = cur->le) {}
-	printf("-------2nd pass done: left-most node found -------> %d\n", cur->val);
+	Node* start = root;
+	for (; start->le; start = start->le) {}
+	printf("-------2nd pass done: left-most node found -------> %d\n", start->val);
 	
-	return;
-	// 3rd pass to print in-order, using the thread links.
-	int lastPrinted = cur->val;
-	for(;cur->ri != NULL ;cur=cur->ri){
-		// if we found a left child, then descend Left all the way.
-		if (cur->le && cur->le->val > lastPrinted )
-			for (; cur->le; cur = cur->le) {}
-		printf("%d\n", cur->val);
-		lastPrinted = cur->val;
-	} // 3rd pass
-	printf("%d\n\n", cur->val);
+	// 3rd pass to print in-order, using the thread links. Never follow left-child link
+	for(Node* printer = start;printer ;printer=printer->ri) cout<<printer->val<<endl;
 } //func Morris3pass()
  
 void SimpleMorris(Node * cur) { //any branch node
@@ -130,6 +123,6 @@ void SimpleMorris(Node * cur) { //any branch node
 
 int main() { 
  dump();
- SimpleMorris(&root); 
+ Morris3pass(&root); 
  dump();
 }
