@@ -52,7 +52,7 @@ def watermark1pass(deltas): # watermark -- my intuitive algo on list of deltas
   ret = maxSubsum, lowWaterMark; print ret; 
   return ret
 
-def disposableCurSubarr(deltas): 
+def disposableCurSubarr(deltas): # Based on ideas in https://en.wikipedia.org/wiki/Maximum_subarray_problem#Kadane's_algorithm_(Algorithm_3:_Dynamic_Programming)
   #le is the starting index of the best sub-array so far
   le = bestLe = bestRi = 0; 
   currentSubsum = bestSum = float('-inf')
