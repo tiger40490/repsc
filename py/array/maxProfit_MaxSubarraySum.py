@@ -1,7 +1,7 @@
 def maxProf_maxSubSum(deltas):
-  return [ maxEither('profit', deltas),
-           maxEither('segSum', deltas)]
-def maxEither(mode, deltas):
+  return [ maxByDelta('profit', deltas),
+           maxByDelta('segSum', deltas)]
+def maxByDelta(mode, deltas):
   print deltas, 'are deltas; mode is', mode
   levels = list() # in profit mode, level starts at delta[0]
   if mode.startswith('s'):
@@ -29,13 +29,13 @@ def maxEither(mode, deltas):
       print watermark, 'previous low watermark updating to', L
       watermark=L
 
-  ret = maxProfit, watermark
-  print ret; return ret
+  ret = maxProfit, watermark; print ret; 
+  return ret
 def test():
   assert [(-1,-21), (-1,-21)]==maxProf_maxSubSum((-2, -3, -4, -1, -2, -1, -5, -3))
   assert [(6,1), (9,0)]==maxProf_maxSubSum((4,5,-6,4,1,-6,4,-1,3,-7,3,1,1,-1))
   assert [(7,-5), (7,-5)]==maxProf_maxSubSum((-2, -3, 4, -1, -2, 1, 5, -3))
-  assert [(7,7), (14,0)]==maxProf_maxSubSum((10, -3, 4, -1, -2, 1, 5, -3))
+  assert [(7,7), (14,0)] ==maxProf_maxSubSum((10, -3, 4, -1, -2, 1, 5, -3))
 
 test()
 ''' Requirement: given a list of price deltas, print
@@ -46,4 +46,7 @@ Can't buy before first delta.
 Subarray must have 0< length <= original_length.
 
 https://www.geeksforgeeks.org/largest-sum-contiguous-subarray/ has a simpler algo
+
+todo: have a one-pass maxProfit() algo that work with levels; have another one-pass maxSubsum() algo that work with deltas
+
 '''
