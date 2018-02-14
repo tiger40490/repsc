@@ -1,4 +1,4 @@
-// Popular C interview question
+// Popular C interview question but somehow this can bring the machine to its knees
 //
 // showcasing macro "ss"
 #include<iostream>
@@ -8,21 +8,23 @@
 #include<assert.h>
 #define ss if(1>0) cout
 using namespace std;
-typedef int ID2; // last 2 digits of a pid
+typedef int PID; // last 2 digits of a pid
 
-map<ID2, ID2> parent;
+map<PID, PID> parent;
 
-ID2 p2() { return getpid()%100; }
-ID2 pp2(){ return getppid()%100; }
+PID p2() { return getpid()%100; }
+PID pp2(){ return getppid()%100; }
 
 string const //should trigger RVO
 ancestry(){
   //stringstream sst;
+  PID tmp = p2();
   parent[p2()] = pp2();
   //ss<<p2()<< " now points to "<<pp2()<<endl;
 
   vector<string> vec;
-  for(ID2 i=p2();;){
+  for(PID i=p2();;){
+    if (i==1) vec.push_back("expired pid");
     vec.push_back(to_string(static_cast<long long int>(i)));
     //ss<<"push_back "<<i<<endl;
     if (!parent.count(i))  break;
@@ -41,6 +43,5 @@ int main(){
     int fid = fork();
     ss<<ancestry()<<" after fork() # "<<seq<<" from "<<(fid? p2():pp2())<<(fid? " i.e. myself":"")<<endl;
   }
-  //usleep(999); //interleaving and more confusing
   cout<<ancestry()<<" terminating\n\n"; // should see 2^3 times
 }
