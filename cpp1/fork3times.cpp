@@ -36,11 +36,11 @@ ancestry(){
   return ret+"\t";
 }
 int main(){
-  cout<<ancestry()<<" born # should show up once only"<<endl;
-  int fid;
-  fid = fork(); ss<<ancestry()<<" after 1st fork from "<<(fid? p2():pp2())<<endl;
-  fid = fork(); ss<<ancestry()<<" after 2nd fork from "<<(fid? p2():pp2())<<endl;
-  fid = fork(); ss<<ancestry()<<" after 3rd fork from "<<(fid? p2():pp2())<<endl;
-  //usleep(999); //interleaving
+  cout<<ancestry()<<" born # should show up once only\n\n";
+  for (int seq=1; seq<=2; ++seq){
+    int fid = fork();
+    ss<<ancestry()<<" after fork() # "<<seq<<" from "<<(fid? p2():pp2())<<(fid? " i.e. myself":"")<<endl;
+  }
+  //usleep(999); //interleaving and more confusing
   cout<<ancestry()<<" terminating\n\n"; // should see 2^3 times
 }
