@@ -16,7 +16,7 @@ def maxByDeltaOld(mode, deltas):
     levels.append(currentLevel)
   print 'levels are', levels
 
-  deltas=None # not needed any more
+  del deltas # not needed any more, so remove the variable name from idic/namespace
   assert len(levels)
   return byLevel(levels)
 def byLevel(levels):  
