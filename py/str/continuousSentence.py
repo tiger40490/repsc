@@ -29,8 +29,8 @@ def parse(remain):
         return False;
   return False      
 def main():
-  result = parse('aliceal')
-  print result, matched
+  result = parse('alicealx')
+  print result, (matched if result else '')
 main()
 '''I think this is a classic algo question
 Given a English dictionary of words (no numbers no underscores) and a long sentence. Someone has removed all the spaces. Now restore it by adding the spaces. If there's no way to parse the sentence just return False, otherwise return True. 
