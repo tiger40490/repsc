@@ -1,25 +1,28 @@
 sz=4
-#r2,c2=0,0 # global rw vars
+rNext,cNext=0,0 # global rw vars
 m = [[0 for _ in range(sz)] for _ in range(sz)]
 
 def f(r,c): # fill 1 cell. Return True if game won
-  global m
+  #print 'entering f() with', r,c
+  global m, rNext,cNext
   m[r][c]=-1 # tmp
-  r2,c2=nextCell2fill() # no need to get this every time
+  nextCell2fill() 
   for v in range(1,sz+1):
     m[r][c]=v
     dump()
     if failed(): continue # next value
-    if r2 < 0: return True
-    if f(r2,c2): return True
+    if rNext < 0: return True
+    if f(rNext,cNext): return True
   return False # all values tried
 def nextCell2fill(): # return 0 to indicate no more
+  global rNext,cNext
   for r in range(sz):
     for c in range(sz):
       if m[r][c] == 0: 
         print 'nextCell2fill returning', r,c
-        return r,c
-  return -1,-1
+        rNext,cNext = r,c
+        return
+  rNext,cNext = -1,-1
 def failed():
   if groupFailed(m[0][0], m[0][1], m[1][1], m[1][0]): return True
   if groupFailed(m[0][2], m[0][3], m[1][3], m[1][2]): return True
@@ -49,8 +52,8 @@ def dump():
     print m[r]  
   print '--------'    
 def main():
-  r,c = nextCell2fill()
-  print f(r,c)
+  nextCell2fill()
+  print f(rNext,cNext)
 main()
 '''Every empty cell should start a new stack frame
 '''
