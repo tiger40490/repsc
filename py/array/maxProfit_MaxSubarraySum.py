@@ -2,8 +2,8 @@ def maxProf_maxSubSum(deltas):
   print '------------------------------'  
   return [ maxByDeltaOld('profit', deltas),
            maxByDeltaOld('segSum', deltas),
-		   watermark1pass(deltas),
-		   disposableCurSubarr(deltas)]
+           watermark1pass(deltas),
+           disposableCurSubarr(deltas)]
 def maxByDeltaOld(mode, deltas):
   print deltas, 'are deltas; mode is', mode
   levels = list() # in profit mode, level starts at delta[0]
