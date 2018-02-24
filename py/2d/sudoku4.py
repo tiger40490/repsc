@@ -18,7 +18,9 @@ def fill1cell(r,c): # fill 1 cell. Return True if game won
     Mat[r][c]=guess
     if failedSomething(): continue # next guess
     if rNext == GAME_OVER: return True
-    if fill1cell(rNext,cNext): return True
+    if fill1cell(rNext,cNext): 
+      assert findNextCell2fill() == (GAME_OVER, GAME_OVER)
+      return True
   Mat[r][c] = UNFILLED_COLOR # restore
   #return None i.e. False by default
 
