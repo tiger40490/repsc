@@ -1,6 +1,6 @@
 SZ=5
-UNFILLED = 0
-Q = 1
+UNFILLED = '|'
+Q = 'Q'
 Mat = [[UNFILLED for _ in range(SZ)] for _ in range(SZ)]
 
 def p(r): # place the queue on row r, assuming all previous rows are done
@@ -28,17 +28,17 @@ def failed1group(cells):
   sum=0
   for r,c in cells:
     if 0<=r and r<SZ and 0<=c and c<SZ:
-      sum += Mat[r][c]
-      if sum > 1: return True
-  #print 'no violation... returning False'
+      if Mat[r][c] == Q: 
+        sum +=1
+        if sum > 1: return True
   # return False by default    
 def failed():
   for c in range(0,SZ):
     if failed1group([(r,c) for r in range(0,SZ)]): 
       return True
   #check all diagnal  
-  for ad in range(2-SZ,SZ-1): 
-    if failed1group([(r,r+ad)   for r in range(0,SZ)]):
+  for dif in range(2-SZ,SZ-1): 
+    if failed1group([(r,r+dif)   for r in range(0,SZ)]):
       return True          
   for sum in range(1,2*SZ-2): 
     if failed1group([(sum-c, c)   for c in range(0,SZ)]):
@@ -46,7 +46,7 @@ def failed():
     
 def dump():
  for r in range(0,SZ):
-   print Mat[r]
+   print ' '.join(Mat[r])
 
 def main():
   ok = p(0)
