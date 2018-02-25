@@ -1,5 +1,3 @@
-'''showcase: how to copy-truncate a list
-'''
 def f1(a,b):
   if len(a) > len(b):
     l = list(a)
@@ -10,18 +8,15 @@ def f1(a,b):
     
   for i in range(len(s)):
     if l[i] != s[i]:
-      s.insert(i, l[i])
-      return s == l
+      return s[i:] == l[i+1:]
   assert s == l[:-1] # modified copy with last 1 char chopped
   return True
 
 def f0(a,b):
-  cnt=0
   for i in range(len(a)):
-    if a[i] == b[i]: continue
-    cnt += 1
-    #if cnt > 1: return False # I didn't add this because it's a low-value optimization but takes time and can create bug if not careful
-  return cnt == 1
+    if a[i] != b[i]: 
+      return a[i+1:]==b[i+1:]    
+  return False
 
 def OneEditApart(a,b):
   diff = abs(len(a) - len(b))
@@ -31,6 +26,9 @@ def OneEditApart(a,b):
   
 def main():
   assert OneEditApart('a','b')  
+  assert OneEditApart('a','')  
+  assert not OneEditApart('','')  
+  assert not OneEditApart("cat", "cat") 
   assert not OneEditApart("cat", "dog") 
   assert OneEditApart("cat", "cats") 
   assert OneEditApart("cat", "cut") 
