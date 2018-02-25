@@ -23,16 +23,20 @@ def f0(a,b):
     #if cnt > 1: return False # I didn't add this because it's a low-value optimization but takes time and can create bug if not careful
   return cnt == 1
 
-def oneEditApart(a,b):
+def OneEditApart(a,b):
   diff = abs(len(a) - len(b))
   if diff > 1 : return False
   if diff == 1: return f1(a,b)
   return f0(a,b)
   
 def main():
-  a='cat'
-  b='cat'
-  print oneEditApart(a,b)  
+  assert OneEditApart('a','b')  
+  assert not OneEditApart("cat", "dog") 
+  assert OneEditApart("cat", "cats") 
+  assert OneEditApart("cat", "cut") 
+  assert OneEditApart("cat", "cast") 
+  assert OneEditApart("cat", "at")
+  assert not OneEditApart("cat", "act") 
 main()
 '''see https://bintanvictor.wordpress.com/2018/02/07/edit-distance-fb80/ is the requirement
 
