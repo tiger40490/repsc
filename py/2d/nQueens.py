@@ -1,7 +1,12 @@
-SZ=5
+'''The only important function is placeOnRow()
+showcase: deepcopy of 2D array
+'''
+from copy import copy, deepcopy
 UNFILLED = '|'
 Q = 'Q'
-Mat = [[UNFILLED for _ in range(SZ)] for _ in range(SZ)]
+SZ=0
+Mat = list()
+sols = list()
 
 def placeOnRow(r): # place the queue on row r, assuming all previous rows are done
   for c in range (0, SZ):
@@ -9,15 +14,13 @@ def placeOnRow(r): # place the queue on row r, assuming all previous rows are do
     if failedSomething(): 
       Mat[r][c] = UNFILLED
       continue
-    if r == SZ-1: 
-      print 'solution found'
-      dump()
-      return True
+    if r == SZ-1: #print 'solution found:'; dump(Mat)
+      sols.append(deepcopy(Mat))
+      Mat[r][c] = UNFILLED
+      continue
     ok = placeOnRow(r+1)
     if ok: return True
-    else: 
-      Mat[r][c] = UNFILLED
-      continue # not needed, but nice documentation
+    else: Mat[r][c] = UNFILLED
   Mat[r][c] = UNFILLED
   # return False by default
 
@@ -42,12 +45,28 @@ def failedSomething():
     if failed1group([(sum-c, c)   for c in range(0,SZ)]):
       return True      
     
-def dump():
- for r in range(0,SZ):
-   print ' '.join(Mat[r])
-
+def dump(m):
+  for r in range(0,SZ):
+    print ' '.join(m[r])
+  print '------------'
+def countSol(queens):
+  global SZ, sols
+  SZ=queens
+  sols[:]=[]
+  Mat[:]=[]
+  Mat.extend([[UNFILLED for _ in range(SZ)] for _ in range(SZ)])
+  placeOnRow(0)  
+  repeat=3
+  header =' v ' * repeat
+  footer =' ^ ' * repeat
+  print header, len(sols), 'solutions found', header
+  for mat in sols:
+    dump(mat)
+  print footer, len(sols), 'solutions found', footer
+  return len(sols)
 def main():
-  if not placeOnRow(0):
-    print 'impossible'
-
+  assert 10 == countSol(5)
+  assert 4  == countSol(6)
+  assert 40 == countSol(7)
+  assert 92 == countSol(8)
 main()    
