@@ -6,7 +6,7 @@ Mat = [[UNFILLED for _ in range(SZ)] for _ in range(SZ)]
 def placeOnRow(r): # place the queue on row r, assuming all previous rows are done
   for c in range (0, SZ):
     Mat[r][c] = Q
-    if failed(): 
+    if failedSomething(): 
       Mat[r][c] = UNFILLED
       continue
     if r == SZ-1: 
@@ -30,7 +30,7 @@ def failed1group(cells):
         sum +=1
         if sum > 1: return True
   # return False by default    
-def failed():
+def failedSomething():
   for c in range(0,SZ):
     if failed1group([(r,c) for r in range(0,SZ)]): 
       return True
