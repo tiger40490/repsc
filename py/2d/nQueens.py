@@ -3,9 +3,7 @@ UNFILLED = '|'
 Q = 'Q'
 Mat = [[UNFILLED for _ in range(SZ)] for _ in range(SZ)]
 
-def p(r): # place the queue on row r, assuming all previous rows are done
-  #if r == SZ: return True
-  global Mat
+def placeOnRow(r): # place the queue on row r, assuming all previous rows are done
   for c in range (0, SZ):
     Mat[r][c] = Q
     if failed(): 
@@ -15,7 +13,7 @@ def p(r): # place the queue on row r, assuming all previous rows are done
       print 'solution found'
       dump()
       return True
-    ok = p(r+1)
+    ok = placeOnRow(r+1)
     if ok: return True
     else: 
       Mat[r][c] = UNFILLED
@@ -49,8 +47,7 @@ def dump():
    print ' '.join(Mat[r])
 
 def main():
-  ok = p(0)
-  if not ok: 
+  if not placeOnRow(0):
     print 'impossible'
 
 main()    
