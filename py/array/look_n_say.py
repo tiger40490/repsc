@@ -2,6 +2,10 @@
 showcase simple VO class to simplify design and encapsulate.
 showcase list clearing without rebinding the variable
 
+global vs arg -- In most cases global var is simpler for timed coding
+tests, but in this case, passing (by value) input list and  output list 
+every time is simpler. Here's the more efficient design --
+
 Since Vo.save() needs to update "line", it should be a global var (i.e. module variable), so next() should not take in arg
 '''
 line=[1]
