@@ -1,5 +1,5 @@
 '''
-showcase simple VO class to simplify design
+showcase simple VO class to simplify design and encapsulate.
 showcase list clearing without rebinding the variable
 
 Since Vo.save() needs to update "line", it should be a global var (i.e. module variable), so next() should not take in arg
