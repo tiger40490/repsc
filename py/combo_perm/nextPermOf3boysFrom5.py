@@ -8,6 +8,10 @@ This solution showcases
 pool = 'abcde'
 total = len(pool)
 
+def shift1char(src, dest, i):
+      srcClone = list(src)
+      ch = srcClone.pop(i)
+      return dest+ch, srcClone
 # recursive
 def perm(pick): 
   '''return a list of two strings -- pick chars, and (total - pick) chars'''
@@ -18,9 +22,7 @@ def perm(pick):
   for partial, unused in li:
     print 'in outer loop ', partial, unused
     for i in xrange(len(unused)):
-      clone = list(unused)
-      ch = clone.pop(i)
-      newpair = (partial+ch, clone)
+      newpair = shift1char(unused, partial, i)
       ret.append(newpair)
   print 'after outerloop, return a list of len =', len(ret)
   return ret
