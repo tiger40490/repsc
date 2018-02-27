@@ -17,7 +17,9 @@ def fill1cell(r,c): # fill 1 cell. Return True if game won
   for guess in range(1,COLORS+1):
     Mat[r][c]=guess
     if failedSomething(): continue # next guess
-    if rNext == GAME_OVER: return True
+      
+    # no violation of any rule
+    if rNext == GAME_OVER: return True # this happens after entire board completed
     if fill1cell(rNext,cNext): 
       assert findNextCell2fill() == (GAME_OVER, GAME_OVER)
       return True
