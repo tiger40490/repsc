@@ -1,5 +1,5 @@
-li = [12,312,4,81,6,89,8,708,183,4]
-sz = len(li)
+li = [12,312,4,81,6,89,8,708,183,4] # mutable
+sz = len(li) # const
 
 def classify(item):
   assert item > 0
