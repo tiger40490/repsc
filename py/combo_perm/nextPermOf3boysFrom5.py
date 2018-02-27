@@ -5,11 +5,12 @@ This solution showcases
 * assigning a pair (vector of 2 items) to two variables.
 * taking out an item from vector by index.
 '''
-
 pool = 'abcde'
+sz = len(pool)
 
-def perm(total, pick):
-  '''return a list of two strings -- pick chars, and total-pick chars'''
+# recursive
+def perm(total, pick): # perhaps we dont' need total as a param?
+  '''return a list of two strings -- pick chars, and (total - pick) chars'''
   if pick==0: return [('', pool)]
 
   ret = []
