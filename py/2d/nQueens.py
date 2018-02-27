@@ -1,4 +1,5 @@
 '''The only important function is placeOnRow()
+
 showcase: deepcopy of 2D array
 '''
 from copy import copy, deepcopy
@@ -18,11 +19,9 @@ def placeOnRow(r): # place the queue on row r, assuming all previous rows are do
       sols.append(deepcopy(Mat))
       Mat[r][c] = UNFILLED
       continue
-    ok = placeOnRow(r+1)
-    if ok: return True
-    else: Mat[r][c] = UNFILLED
-  Mat[r][c] = UNFILLED
-  # return False by default
+    placeOnRow(r+1)
+    Mat[r][c] = UNFILLED
+  # return None by default
 
 def failed1group(cells):
   #dump(); print 'checking', cells  
