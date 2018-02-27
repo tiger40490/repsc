@@ -6,16 +6,17 @@ we only append a single Higher character.
 Many of the 15 combos are worthless -- See the "continue".
 '''
 pool = list('abcdef')
+total = len(pool)
 C = 3
 
-def combo(total, pp):
+def combo(pp):
   '''return a list of two items --
   1) a string of pp chars
   2) a list of higher chars'''
   if pp==0: return [('', pool)]
 
   ret = []
-  li = combo(total, pp-1)
+  li = combo(pp-1)
   for partial, higherChars in li:
     print 'in outer loop ', partial, higherChars
     for i in xrange(len(higherChars)):
@@ -30,7 +31,7 @@ def combo(total, pp):
 
 def main():
   lastPrint = ''
-  for completeStr, _ in combo(len(pool),C):
+  for completeStr, _ in combo(C):
     assert lastPrint < completeStr
     print completeStr,
     lastPrint = completeStr
