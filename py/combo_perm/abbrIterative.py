@@ -17,7 +17,7 @@ def add1char(ch):
   dump()
   
 def main():
-  for ch in word:
+  for ch in word: # I would now avoid this in favor of the more common for i in range(len(word))
     add1char(ch)
   
 main()
