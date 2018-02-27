@@ -6,15 +6,15 @@ This solution showcases
 * taking out an item from vector by index.
 '''
 pool = 'abcde'
-sz = len(pool)
+total = len(pool)
 
 # recursive
-def perm(total, pick): # perhaps we dont' need total as a param?
+def perm(pick): 
   '''return a list of two strings -- pick chars, and (total - pick) chars'''
   if pick==0: return [('', pool)]
 
   ret = []
-  li = perm(total, pick-1)
+  li = perm(pick-1)
   for partial, unused in li:
     print 'in outer loop ', partial, unused
     for i in xrange(len(unused)):
@@ -27,7 +27,7 @@ def perm(total, pick): # perhaps we dont' need total as a param?
 
 def main():
   lastPrint = ''
-  for completeStr, _ in perm(len(pool),3):
+  for completeStr, _ in perm(3):
     assert lastPrint < completeStr
     # print completeStr,
     lastPrint = completeStr
