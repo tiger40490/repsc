@@ -9,19 +9,19 @@ pool = list('abcdef')
 total = len(pool)
 C = 3
 
-def combo(pp):
+def combo(Taken):
   '''return a list of two items --
-  1) a string of pp chars
+  1) a string of Taken chars
   2) a list of higher chars'''
-  if pp==0: return [('', pool)]
+  if Taken==0: return [('', pool)]
 
   ret = []
-  li = combo(pp-1)
+  li = combo(Taken-1)
   for partial, higherChars in li:
     print 'in outer loop ', partial, higherChars
     for i in xrange(len(higherChars)):
       ch=higherChars.pop(0)
-      if len(higherChars) == 0 and pp < C: continue 
+      if len(higherChars) == 0 and Taken < C: continue 
       newpair = (partial+ch, list(higherChars))
       #print 'appending ', newpair
       ret.append(newpair)
