@@ -21,7 +21,7 @@
  * my job to offer any protection.
  * 
  * Concurrent access to the same filtering iterator object is indeed 
- * supported and protected using a simmple lock.
+ * supported and protected using a simple lock.
  * 
  * If 2 unrelated filtering iterator objects are scanning the same 
  * collection,
