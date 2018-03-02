@@ -136,7 +136,7 @@ int main(){
         run( {10,30,53, 12});
         run( {105,305,312}); // N only
 }
-/*https://wp.me/p74oew-4Cj is requirement
+/*https://wp.me/p74oew-4Cj is requirement, but here I support four categories -- L M N H
  * First initialize the pL and pM pointers.
  * * If no L section, then pL remains UNSET.
  * * If no M sectino, then pM remains UNSET
