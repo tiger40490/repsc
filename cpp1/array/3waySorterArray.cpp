@@ -48,7 +48,7 @@ void dump(){
         else cout<<li[pN];
         ss<<" <-pN\n";
 }
-bool swp(Index a, Index b){
+bool swp(Index a, Index b){ // returns true if a/b are "similar", which tells me to move on to next unclassified item
   if (a == b || li[a] == li[b]){ return true; }
   Item tmp = li[a]; li[a] = li[b]; li[b] = tmp;
   return false;
