@@ -13,5 +13,5 @@ def main():
       pairs.append(newPair)
       print newPair
 main()
-'''Requirement: 
+'''Requirement: https://bintanvictor.wordpress.com/2018/03/03/find-triplet-x-divide-y-y-divides-z/
 '''
