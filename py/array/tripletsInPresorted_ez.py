@@ -13,5 +13,5 @@ def main():
       pairs.append(newPair)
       print newPair
 main()
-'''Requirement: Within a sequence of natural numbers with no duplicates, count the occurrence of so-called triplets of (a,b,c) where a divides b and b divides c. 
+'''Requirement: 
 '''
