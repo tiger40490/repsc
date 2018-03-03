@@ -25,5 +25,5 @@ def main():
     do1(i)
 
 main()  
-'''
+'''https://bintanvictor.wordpress.com/2018/03/03/convert-to-0-using4transformations-trexquant/
 '''
