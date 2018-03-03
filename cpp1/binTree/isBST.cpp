@@ -6,16 +6,16 @@ struct Node {
     int data;
     Node *le, *ri;
     Node(int x, Node * left = NULL, Node * right = NULL) : data(x), le(left), ri(right){}
-};
+}
 /*    5
   2       7
  1 a
 */
-Node _7(7);
-Node _a(6);
-Node _1(1);
-Node _2(2, &_1, &_a);
-Node _5(5, &_2, &_7); //root
+_7(7),
+_a(6),
+_1(1),
+_2(2, &_1, &_a),
+_5(5, &_2, &_7); //root
 
 bool isAscending = true; //first assume this tree is BST
 void recur(Node * n){
