@@ -15,7 +15,6 @@ struct mapped {
   long long        version;
   pthread_mutex_t  mutex; //embeded, not a pointer
 };
-//mapped * shmem = NULL;
 void die(char const *msg) {
   perror(msg);
   exit(1);
@@ -81,4 +80,5 @@ int main() {
   else processB(shmem);
 }
 /* based on https://stackoverflow.com/questions/5656530/how-to-use-shared-memory-with-linux-in-c
+g++ -std=c++0x -lpthread this_file.cpp && ./a.out
 */
