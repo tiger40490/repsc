@@ -5,10 +5,10 @@
 #include<vector>
 using namespace std;
 
-typedef int Deadline; //deadline
+typedef int Deadline;
 struct Job {
     char id;
-    Deadline dead;    // Deadline
+    Deadline dead;
     int profit;  // Profit if job is over before or on deadline
     friend ostream & operator<<(ostream & os, Job const & j){
       os<<"$"<<j.profit<<"  by Deadline #"<<j.dead;
