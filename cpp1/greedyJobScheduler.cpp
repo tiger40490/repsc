@@ -1,4 +1,5 @@
 // showcase initializer for struct without ctor
+// showcase sort with global operator<()
 #include <iostream>
 #include<algorithm>
 #include<set>
@@ -15,33 +16,27 @@ struct Job {
       return os;
     }
 };
-vector<Job> arr ={{'a', 3, 30},
+bool operator<(Job const & a, Job const& b){ return a.dead>b.dead;}
+vector<Job> arr ={{'a', 2, 100},
                   {'b', 1, 19},
-                  {'c', 3, 27},
+                  {'c', 2, 27},
                   {'d', 1, 25},
-                  {'e', 3, 15}};
+                  {'e', 4, 45},
+                  {'f', 4, 29},
+                  {'g', 2, 26},
+                  {'z', 3, 15}};
 size_t const sz = arr.size();
 void run() {
-  Deadline level=0;
-  for(int i=0; i<sz; ++i) {
-    if (level < arr[i].dead) level = arr[i].dead;
-  }
-  cout<<level<<" is longest deadline\n\n";
+  sort(arr.begin(), arr.end());
 
-  for(; level >0; --level){
-//    cout<<level<<" is current deadline level\n";
-    int max=0;
-    size_t maxWhere=arr.size();
+  for(Deadline level=arr[0].dead; level >0; --level){
+    size_t mx=0;
     for(int i=0; i<arr.size(); ++i){
-      if (arr[i].dead<level ) continue; //job can't wait till this long
-      if (arr[i].profit > max){
-        maxWhere = i;
-        max = arr[i].profit;
-      }
+      if (arr[i].dead<level ) break; //all subsequent jobs can't wait till this long
+      if (arr[i].profit > arr[mx].profit) mx = i;
     }
-    cout<<arr[maxWhere]<<" <-picked to be done by #"<<level<<endl;
-    arr.erase(arr.begin()+maxWhere);
-//    cout<<arr.size()<<endl;;
+    cout<<arr[mx]<<" <-picked to be done by #"<<level<<endl;
+    arr.erase(arr.begin()+mx);
   }
 }
 int main() {
