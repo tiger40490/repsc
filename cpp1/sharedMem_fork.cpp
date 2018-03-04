@@ -17,6 +17,8 @@ void* create_shared_memory(size_t size) {
   return mmap(NULL, size, protection, visibility, 0, 0);
 }
 void processB(){
+    char const* parent_message = "hello";  // parent process will write this message
+    memcpy(shmem, parent_message, sizeof(parent_message));
     printf("B picked up: %s\n", shmem);
     sleep(1);
     printf("After 1s, B picked up: %s\n", shmem);
@@ -29,11 +31,7 @@ void processA(){
 }
 
 int main() {
-  char const* parent_message = "hello";  // parent process will write this message
-
   shmem = create_shared_memory(128);
-
-  memcpy(shmem, parent_message, sizeof(parent_message));
 
   int pid = fork();
 
