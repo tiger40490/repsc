@@ -1,9 +1,13 @@
 #include <stdio.h>
 #include <sys/mman.h>
 #include <string.h>
+#include <string>
 #include <unistd.h>
+using namespace std;
 
 void* shmem;
+int const MAX=9;
+int sleepMultiplier=1;
 void* create_shared_memory(size_t size) {
   int protection = PROT_READ | PROT_WRITE; //rw access
 
@@ -17,21 +21,28 @@ void* create_shared_memory(size_t size) {
   return mmap(NULL, size, protection, visibility, 0, 0);
 }
 void processB(){
-    char const* parent_message = "hello";  // parent process will write this message
-    memcpy(shmem, parent_message, sizeof(parent_message));
+  for(long long i=0; i<MAX; i+= 2){
     printf("B picked up: %s\n", shmem);
-    sleep(1);
-    printf("After 1s, B picked up: %s\n", shmem);
+    char const* msg = to_string(i).c_str();
+    memcpy(shmem, msg, sizeof(msg));
+    printf("B wrote: %s\n", shmem);
+    usleep(3*sleepMultiplier);
+  }
 }
 void processA(){
-    printf("A picked up: %s\n", shmem);
-    char const* child_message = "goodbye"; // child process will then write this one
-    memcpy(shmem, child_message, sizeof(child_message));
-    printf("A wrote: %s\n", shmem);
+  for(long long i=1; i<MAX; i+= 2){
+    printf(" A picked up: %s\n", shmem);
+    char const* msg = to_string(i).c_str();
+    memcpy(shmem, msg, sizeof(msg));
+    printf(" A wrote: %s\n", shmem);
+    usleep(2*sleepMultiplier);
+  }
 }
 
 int main() {
   shmem = create_shared_memory(128);
+  char const* message = "initial_content";
+  memcpy(shmem, message, sizeof(message));
 
   int pid = fork();
 
