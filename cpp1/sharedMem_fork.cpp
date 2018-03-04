@@ -16,16 +16,16 @@ void* create_shared_memory(size_t size) {
   // but the manpage for `mmap` explains their purpose.
   return mmap(NULL, size, protection, visibility, 0, 0);
 }
-void processP(){
-    printf("Parent picked up: %s\n", shmem);
+void processB(){
+    printf("B picked up: %s\n", shmem);
     sleep(1);
-    printf("After 1s, parent picked up: %s\n", shmem);
+    printf("After 1s, B picked up: %s\n", shmem);
 }
-void processC(){
-    printf("Child picked up: %s\n", shmem);
+void processA(){
+    printf("A picked up: %s\n", shmem);
     char const* child_message = "goodbye"; // child process will then write this one
     memcpy(shmem, child_message, sizeof(child_message));
-    printf("Child wrote: %s\n", shmem);
+    printf("A wrote: %s\n", shmem);
 }
 
 int main() {
@@ -37,8 +37,8 @@ int main() {
 
   int pid = fork();
 
-  if (pid == 0) processC(); //child
-  else processP();
+  if (pid == 0) processA(); //child
+  else processB();
 }
 /* based on https://stackoverflow.com/questions/5656530/how-to-use-shared-memory-with-linux-in-c
 */
