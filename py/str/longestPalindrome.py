@@ -1,32 +1,27 @@
 s=''
 fulSz=1
-maxSz=1
+winnerSz=1
 winner=''
 
-def countRep(pos): # counts how many of the given char repeats
-  pass
-
-def startfrom(l,r):#,isOdd):
-  global maxSz,winner
+def startfrom(l,r):
+  global winnerSz,winner
   assert l+1==r or l==r
-  if l+1==r and s[l]!=s[r]: return 0
+  if l+1==r and s[l]!=s[r]: return
   
   cnt=min(l, fullSz-1-r) #how many chars to check on both sides
-  #print 'cnt =',cnt
-  #todo: check if the runway on both sides are long enough
-  i=1
+  if cnt*2+r-l+1 <=winnerSz: return
+  
   for i in range(1,cnt+1):
     if s[l-i]!= s[r+i]: 
       i-=1
       break
-
   newLen=2*i+r-l+1
-  if (newLen > maxSz):
-        maxSz = newLen
-        winner=s[l-i:r+i+1]
-        print newLen, ': found a longer palindrome :', winner
+  if (newLen > winnerSz):
+        winnerSz = newLen
+        winner = s[l-i:r+i+1]
+        print 'found a longer palindrome :', winner
 
-def run(orig): #print longest palindrome and its position
+def run(orig): 
   global s, fullSz
   s=orig
   fullSz=len(orig)
