@@ -21,10 +21,10 @@ def startfrom(l,r):
         winner = s[l-i:r+i+1]
         print 'found a longer palindrome :', winner
 
-def run(orig): 
+def run(haystack): 
   global s, fullSz
-  s=orig
-  fullSz=len(orig)
+  s=haystack
+  fullSz=len(s)
   for i in range(1,fullSz-1):
     startfrom(i,i)
     startfrom(i,i+1)
@@ -35,6 +35,4 @@ def main():
 
 main()
 '''https://bintanvictor.wordpress.com/2018/03/04/find-longest-palindrome-substring-unsolved/ has the my analysis
-
-12:18 start
 '''
