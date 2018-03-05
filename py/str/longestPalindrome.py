@@ -1,12 +1,13 @@
-s="";
+s=''
 fulSz=1
 maxSz=1
+winner=''
 
 def countRep(pos): # counts how many of the given char repeats
   pass
 
 def startfrom(l,r):#,isOdd):
-  global maxSz
+  global maxSz,winner
   assert l+1==r or l==r
   if l+1==r and s[l]!=s[r]: return 0
   
@@ -22,7 +23,8 @@ def startfrom(l,r):#,isOdd):
   newLen=2*i+r-l+1
   if (newLen > maxSz):
         maxSz = newLen
-        print newLen, ': found a longer palindrome :', s[l-i:r+i+1]
+        winner=s[l-i:r+i+1]
+        print newLen, ': found a longer palindrome :', winner
 
 def run(orig): #print longest palindrome and its position
   global s, fullSz
@@ -31,9 +33,10 @@ def run(orig): #print longest palindrome and its position
   for i in range(1,fullSz-1):
     startfrom(i,i)
     startfrom(i,i+1)
+  return winner
     
 def main():
-  run('21211221121212')
+  assert '212112211212' == run('21211221121212')
 
 main()
 '''https://bintanvictor.wordpress.com/2018/03/04/find-longest-palindrome-substring-unsolved/ has the my analysis
