@@ -5,7 +5,8 @@ import static java.lang.System.out;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-/**
+/** This class is the "real" implementation. Non-trivial logic.
+ *
  * Concurrency environment:
  * <ol>
  * <li>Underlying collection is shared and mutable, subject to concurrent
