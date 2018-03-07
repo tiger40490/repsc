@@ -1,4 +1,4 @@
-''' todo: del. Update can be implemented by del then insert
+''' todo: delete(). update() can be implemented by delete() then insert()
 
 showcase: initialize a list of 5 None items
 '''
