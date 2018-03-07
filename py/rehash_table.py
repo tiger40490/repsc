@@ -1,6 +1,7 @@
 ''' todo: delete(). update() can be implemented by delete() then insert()
 
 showcase: initialize a list of 5 None items
+showcase: __str__() to facilitate "print"
 '''
 class Node:
   def __init__(self, _k, _data, _next):
