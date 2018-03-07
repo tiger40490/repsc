@@ -1,5 +1,7 @@
-# todo: rehash
+''' todo: del. Update can be implemented by del then insert
 
+showcase: initialize a list of 5 None items
+'''
 class Node:
   def __init__(self, _k, _data, _next):
     self.next = _next
@@ -8,23 +10,21 @@ class Node:
   def __str__(self):
     return '[ '+ str(self.key) + ':' + str(self.val) + ' ]'
 def hash(key):
-   return key*13
+   return key*73
    
-class Hashtable:
+class HashTable:
   def __init__(self, _bc=10, _lf=0.75):
     self.sz = 0
-    self.bucketcnt = _bc
-    self.arr=list()
-    for _ in range(self.bucketcnt):
-      self.arr.append(None)
+    self.bucketCnt = _bc
+    self.arr = [None] * self.bucketCnt
     
-    # when size/bucketcnt grows to loadfactor, we need to 
+    # when size/bucketCnt grows to loadfactor, we need to 
     # double the array, and re-distribute the elements
     self.loadfactor = _lf
 
   def dump(self):
     print '------ sz = %d ------' %self.sz
-    for i in range(self.bucketcnt):
+    for i in range(self.bucketCnt):
       node = self.arr[i]
       if node is None: continue
       print 'Bucket #',i, node,
@@ -34,8 +34,26 @@ class Hashtable:
         print '->', node,
       print 
       
+  def rehash(self):
+    if self.sz < self.loadfactor*self.bucketCnt : return
+    print "REHASHING.... Here is the before-image:",
+    self.dump()
+    
+    #oldCnt = self.bucketCnt
+    oldArr = self.arr
+    self.sz=0
+    self.bucketCnt *= 2
+    self.arr = [None] * self.bucketCnt
+    for i in range(self.bucketCnt/2):
+      node = oldArr[i]
+      while True:
+        if node is None: break
+        self.insert(node.key, node.val)
+        node = node.next
+    print '... done with rehashing:)'
+    
   def _lookup(self, k): # returns associated value or something else
-    index = hash(k)% self.bucketcnt
+    index = hash(k)% self.bucketCnt
     node = self.arr[index]
     while True:
       if node is None: return index # insert here
@@ -50,17 +68,17 @@ class Hashtable:
   def insert(self, k, v): # if val is already in then don't insert
     nodeOrIndex = self._lookup(k)
     if isinstance(nodeOrIndex, Node): return False
+    self.rehash()
     #print 'old head is', id(self.arr[nodeOrIndex])
     ret = Node(k,v,self.arr[nodeOrIndex])
     self.arr[nodeOrIndex] = ret
-    assert ret != ret.next
+    self.sz += 1
     #print 'new head is', id(ret), ret
     #print 'new 2nd is', id(ret.next), ret.next
     #print 'new 3rd is', id(ret.next.next)
-    self.sz += 1
     return ret
 def main():
-  h = Hashtable()
+  h = HashTable()
   h.dump()
   assert h.insert(1,'aa')
   assert h.insert(2,'b')
@@ -75,9 +93,9 @@ def main():
   assert h.insert(11,'k')
   assert h.insert(14,'n')
   assert h.insert(21,'u')
-  assert not h.insert(3,'33')
+  assert not h.insert(3,'newValue')
+  assert 'aa' == h.lookup(1)
   h.dump()
 main()
 '''Requirement: implement a basic hashtable within 30 min
-5.20
 '''
