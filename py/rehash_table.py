@@ -1,6 +1,7 @@
-''' todo: del. Update can be implemented by del then insert
+''' todo: delete(). update() can be implemented by delete() then insert()
 
 showcase: initialize a list of 5 None items
+showcase: __str__() to facilitate "print"
 '''
 class Node:
   def __init__(self, _k, _data, _next):
@@ -9,7 +10,8 @@ class Node:
     self.val = _data
   def __str__(self):
     return '[ '+ str(self.key) + ':' + str(self.val) + ' ]'
-def hash(key):
+
+def hash(key): # simple hash function
    return key*73
    
 class HashTable:
@@ -18,8 +20,8 @@ class HashTable:
     self.bucketCnt = _bc
     self.arr = [None] * self.bucketCnt
     
-    # when size/bucketCnt grows to loadfactor, we need to 
-    # double the array, and re-distribute the elements
+    # when size/bucketCnt grows to exceed loadfactor, we need to 
+    # double the array, and re-distribute all elements
     self.loadfactor = _lf
 
   def dump(self):
@@ -52,7 +54,7 @@ class HashTable:
         node = node.next
     print '... done with rehashing:)'
     
-  def _lookup(self, k): # returns associated value or something else
+  def _lookup(self, k): # returns associated value or something to indicate notFound
     index = hash(k)% self.bucketCnt
     node = self.arr[index]
     while True:
@@ -65,7 +67,7 @@ class HashTable:
     if isinstance(node, Node): return node.val
     return None
 
-  def insert(self, k, v): # if val is already in then don't insert
+  def insert(self, k, v): # if val is already in then return False
     nodeOrIndex = self._lookup(k)
     if isinstance(nodeOrIndex, Node): return False
     self.rehash()
