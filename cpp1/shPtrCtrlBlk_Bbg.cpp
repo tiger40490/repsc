@@ -1,3 +1,5 @@
+/*? shared_ptr instance should be double the size of raw ptr but not here?
+*/
 #include <assert.h>
 template<typename T> struct ControlBlock{
   ControlBlock(T* raw): _rawPtr(raw), _clubSize(1) {
