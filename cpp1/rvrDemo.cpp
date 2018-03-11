@@ -36,8 +36,9 @@ int main(){
   vec.push_back(move(lvr));
   
   mystring s2("b2");
-  vec.push_back(s2);
+  vec.push_back(s2); //regular copy ctor
   vec.push_back(move(s2));
+  
   vec.emplace_back("c3"); //no move-ctor used
   for(int i=0; i<vec.size(); ++i)
     cout<<i<<": "<<vec[i]<<"  ";
