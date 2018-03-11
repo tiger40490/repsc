@@ -14,9 +14,9 @@ struct mystring{
     cout<<*_ptr<<" populated in copy-ctor\n";
   }
   mystring(mystring && s){
-    _ptr = s._ptr;
+    _nonref = move(s._nonref); //nonref field needs std::move()
+    _ptr = s._ptr; // ptr field needs not std::move()
     s._ptr=nullptr;
-    _nonref = move(s._nonref);
     cout<<*_ptr<<" populated in move-ctor\n";
   }
   ~mystring(){delete _ptr;}
