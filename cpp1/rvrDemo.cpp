@@ -5,28 +5,32 @@ using namespace std;
 struct mystring{
   mystring(string const & s){
     _ptr = new string(s);
-	cout<<*_ptr<<" populated in no arg ctor\n";
+    _nonref = s;
+    cout<<*_ptr<<" populated in no arg ctor\n";
   }
   mystring(mystring const & s){
     _ptr = new string(*s._ptr);
-	cout<<*_ptr<<" populated in copy-ctor\n";
+    _nonref = s._nonref;
+    cout<<*_ptr<<" populated in copy-ctor\n";
   }
   mystring(mystring && s){
     _ptr = s._ptr;
-	s._ptr=nullptr;
-	cout<<*_ptr<<" populated in move-ctor\n";
+    s._ptr=nullptr;
+    _nonref = move(s._nonref);
+    cout<<*_ptr<<" populated in move-ctor\n";
   }
   ~mystring(){delete _ptr;}
   friend ostream & operator<<(ostream & os, mystring const & me){
     if (me._ptr){
-	  os<<*me._ptr;
-	}else{
-	  os<<"a mystring instance containing a null ptr";
-	}
-	return os;
+      os<<*me._ptr<<"/"<<me._nonref;
+    }else{
+      os<<"a mystring instance containing a null ptr and nonref = "<<me._nonref;
+    }
+    return os;
   }
 private:  
   string * _ptr;
+  string _nonref;
 };
 int main(){
   vector<mystring> vec;
