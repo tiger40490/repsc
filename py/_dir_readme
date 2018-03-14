@@ -1,5 +1,4 @@
-The current layout of this directory: 
+classic_*.py are my simplified solutions to well-researched or well-defined algorithm problems.
 
-* slist/.. are python scripts about singly linked lists.
-
+--The current layout of this directory-- 
 * sock/... are python scripts about sockets.
