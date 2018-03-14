@@ -45,10 +45,12 @@ class HashTable:
     oldArr = self.arr
     self.sz=0
     self.bucketCnt *= 2
-    self.arr = [None] * self.bucketCnt
+    self.arr = [None] * self.bucketCnt # initialize new bucket array
+    
+    # now relocate all entries to new array
     for i in range(self.bucketCnt/2):
       node = oldArr[i]
-      while True:
+      while True: # process each node from the orig linked list. Nodes may get scattered after relocation/rehash
         if node is None: break
         self.insert(node.key, node.val)
         node = node.next
