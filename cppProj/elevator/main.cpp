@@ -25,6 +25,7 @@ Btn(2, BtnDir::u),Btn(2, BtnDir::d), Btn(3, BtnDir::u),Btn(3, BtnDir::d),
 Btn(4, BtnDir::u),Btn(4, BtnDir::d), Btn(5, BtnDir::u),Btn(5, BtnDir::d),
 Btn(6, BtnDir::u),Btn(6, BtnDir::d), Btn(7, BtnDir::u),Btn(7, BtnDir::d),
 Btn(8, BtnDir::d)};
+
 struct Request{
   Btn const & source;
   time_t when; //useful for priority setting
@@ -58,8 +59,8 @@ struct Lift{
 	  else ++it;
   }
   bool shouldTakeOn(Request const & req) const; 
-  /*based on current direction/level, decide to take on a request. Note if a request 
-  has been pending for a long time we need to take it on unconditionally*/
+  /*based on current direction/level, decide to take the request or not. Optimization needed.
+  Note if a request has been pending for a long time we will take it on unconditionally*/
 };
 vector<Lift> lifts={Lift(1), Lift(2)};
 set<shared_ptr<Request>> unserviced; //whenwe take on a request, it's removed from here
