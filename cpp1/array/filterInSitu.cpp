@@ -32,11 +32,9 @@ void solution3(vector<ele> & arr){//scan from both ends inward
 	swp(arr, le,ri);
   }
   arr.resize(le);
-  dump(arr);
 }
 void solution2(vector<ele> & arr){//by stable_sort
   stable_sort(arr.begin(), arr.end(), comp);
-  dump(arr);
   //binary search for the first bad then resize the vector to discard all bad
 }
 void solution4Victor(vector<ele> & arr){
@@ -69,7 +67,7 @@ void solution4Dimitri(vector<ele> & arr){
   arr.resize(distance(arr.begin(), leftMostBad));
 }
 //Best solution IMHO
-void solution4NoItr(vector<ele> & arr){
+void solution4_noItr(vector<ele> & arr){
   auto leftMostBad = distance(arr.begin(), find_if(arr.begin(), arr.end(), isBad));
   if (leftMostBad == arr.size()) return;
   
@@ -81,14 +79,26 @@ void solution4NoItr(vector<ele> & arr){
   }
   arr.resize(leftMostBad);
 }
+void testAll(vector<ele> const & orig){
+  vector<ele> arr=orig;
+  solution2(arr); dump(arr);
+  arr=orig;
+  solution3(arr); dump(arr);
+  arr=orig;
+  solution4Victor(arr); dump(arr);
+  arr=orig;
+  solution4Dimitri(arr); dump(arr);
+  arr=orig;
+  solution4_noItr(arr); dump(arr);
+}
 int main(){
   vector<ele> arr={1,3,4,5,-51,-33,8,16,17,-31,20,-28,-27,24,-10,25,-26,-28};
-  solution4NoItr(arr);
-  dump(arr);
+  testAll(arr);
 }
 /*CVA coding question. general requirements: don't use global variables
+
 requirement 1: Given a vector (not a linked list) and a predate function, remove all bad elements
-requirement 2: constant space
+requirement 2: constant space, i.e. in-situ, vector pass-by-reference
 requirement 3: linear time
 requirement 4: preserve order
 */
