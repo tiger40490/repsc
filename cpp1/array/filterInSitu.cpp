@@ -17,19 +17,6 @@ void swp(vector<ele> & arr, size_t le, size_t ri){
   arr[le] = arr[ri];
   arr[ri] = tmp;
 }
-void solution4(vector<ele> & arr){
-  auto nextBad=arr.begin(); //next good
-  auto nextGood=arr.begin(); //next bad
-  for(;;){
-    nextBad = find_if(nextBad, arr.end(), isBad);
-    if (nextBad == arr.end()) break;
-	nextGood =find_if(max(nextBad+1, nextGood), arr.end(), isGood);
-    if (nextGood == arr.end()) break;
-	swap(*nextBad, *nextGood);
-  }
-  cout<<*nextBad<<endl;
-  dump(arr);
-}
 void solution3(vector<ele> & arr){
   int le=0, ri=arr.size()-1;
   for(;le<=ri;){
@@ -51,9 +38,27 @@ void solution2(vector<ele> & arr){//by stable_sort
   dump(arr);
   //binary search for the first bad then resize the vector to discard all bad
 }
-
+void solution4(vector<ele> & arr){
+  auto nextBad=arr.begin(); //next good
+  auto nextGood=arr.begin(); //next bad
+  for(;;){
+    nextBad = find_if(nextBad+1, arr.end(), isBad);
+    if (nextBad == arr.end()) {
+	    cout<<"no bad anywhere\n";
+    	break;
+	}
+	nextGood =find_if(max(nextBad+1, nextGood), arr.end(), isGood);
+    if (nextGood == arr.end()) {
+	    cout<<"no more good\n";
+    	break;
+	}
+	swap(*nextBad, *nextGood);
+  }
+  arr.resize(distance(arr.begin(), nextBad));
+  dump(arr);
+}
 int main(){
-  vector<ele> arr={1,3,-51,-33,8,16,17,-31,20,-28,-27,24,-10,25};
+  vector<ele> arr={1,3,4,5,-51,-33,8,16,17,-31,20,-28,-27,24,-10,25,-26,-28};
   solution4(arr);
 }
 /*CVA coding question. general requirements: don't use global variables
