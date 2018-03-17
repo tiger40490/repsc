@@ -1,4 +1,4 @@
-//compile with g++ -c this.file
+// g++ -c this.file
 //showcase: c++11 type alias, same as typedef
 //showcase: c++11 enum class
 //showcase: deleting while iterating a set
@@ -45,6 +45,7 @@ struct Lift{
   LiftDir dir;
   Level level;
   size_t passengerCnt;
+  bool isDoorOpen; 
   
   /*Below two data structures are distinct*/
   set<Level> targets; //populated by passengers inside the lift 
@@ -55,12 +56,31 @@ struct Lift{
   Note some target could be in the opposite direction but since 
   we have taken it on we will service it  */
   
-  void addRemoveTargets(); /*any time passengers in lift can add target; when lift door opens, system will remove targets */
+  void onDoorOpen(){
+    if (isDoorOpen){
+      // set current level..
+	  
+      this->targets.erase(this->level);
+	  cleanupAssigned();
+	}
+  }
+  void addTargets(); /*Any time passengers in lift can add targets. Only When lift 
+  door opens, will system remove targets */
   
-  void cleanupAssigned(){
+  void cleanupAssigned(){ /*This is the only place to remove a previoiusly assigned 
+  requests to a lift.
+  * When lift opens door at Level 3, assigned request from Level 3 is completed 
+  and removed.
+  * When this lift (X) is not at Level 3, and another lift (Y) happens to carry a 
+  passenger to stop at Level 3 and complete the same request even though the request 
+  is assigned to this Lift X. Such lucky events could happen in any iteration 
+  of work(), so every iteration of work() needs to call cleanupAssigned().
+  */
     for(auto it=this->assignedRequests.begin(); it!=assignedRequests.end();)
-	  if ((*it)->completed) assignedRequests.erase(it++);
-	  else ++it;
+	  if ((*it)->completed || isDoorOpen && this->level==(*it)->source.level) 
+	    assignedRequests.erase(it++);
+	  else 
+	    ++it;
   }
   bool shouldTakeOn(Request const & req) const; 
   /*based on current direction/level, decide to take the request or not. Optimization needed.
@@ -100,17 +120,17 @@ int work(){
   assignToLifts();
   for(auto & lift: lifts){
     lift.cleanupAssigned();
-	lift.addRemoveTargets();
+	lift.addTargets();
     if(lift.targets.empty() && lift.assignedRequests.empty()) cout<<lift.id<<" has no target no assignment and will not move\n";
 	else lift.move();
   }
 }
 int main(){
-  int duration=1;
+  int microseconds=1;
   for(;;){
     if (work() < 0) break;
-	duration=calcDuration(); // based on lift1, unserviced 
-	usleep(duration);
+	microseconds=calcDuration(); // based on Lift objects and the "unserviced"
+	usleep(microseconds);
   }
   cout<<"requested to termination\n";
 }
