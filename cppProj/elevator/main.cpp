@@ -15,23 +15,23 @@ using Level = unsigned short; //same as typedef
 
 enum class BtnDir {u, d};
 enum class LiftDir {u, d, none};
-struct Btn{ //button in lift lobby
+struct lobbyBtn{ //button in lift lobby
   Level const level;
   BtnDir direction;
-  Btn(Level l, BtnDir dir): level(l), direction(dir){}
+  lobbyBtn(Level l, BtnDir dir): level(l), direction(dir){}
 };
-vector<Btn> const all_buttons={Btn(1, BtnDir::u),
-Btn(2, BtnDir::u),Btn(2, BtnDir::d), Btn(3, BtnDir::u),Btn(3, BtnDir::d),
-Btn(4, BtnDir::u),Btn(4, BtnDir::d), Btn(5, BtnDir::u),Btn(5, BtnDir::d),
-Btn(6, BtnDir::u),Btn(6, BtnDir::d), Btn(7, BtnDir::u),Btn(7, BtnDir::d),
-Btn(8, BtnDir::d)};
+vector<lobbyBtn> const all_buttons={lobbyBtn(1, BtnDir::u),
+lobbyBtn(2, BtnDir::u),lobbyBtn(2, BtnDir::d), lobbyBtn(3, BtnDir::u),lobbyBtn(3, BtnDir::d),
+lobbyBtn(4, BtnDir::u),lobbyBtn(4, BtnDir::d), lobbyBtn(5, BtnDir::u),lobbyBtn(5, BtnDir::d),
+lobbyBtn(6, BtnDir::u),lobbyBtn(6, BtnDir::d), lobbyBtn(7, BtnDir::u),lobbyBtn(7, BtnDir::d),
+lobbyBtn(8, BtnDir::d)};
 
 struct Request{ //requests from lift lobbies, not "targets" set by in-lift passengers
-  Btn const & source;
+  lobbyBtn const & source;
   time_t when; //useful for priority setting
   bool completed; //can be completed by any lift L, even if not assigned to L
   
-  Request(Btn const & s): source(s), when(time(0)), completed(false){}
+  Request(lobbyBtn const & s): source(s), when(time(0)), completed(false){}
 };
 bool operator<(shared_ptr<Request> const & a, shared_ptr<Request> const & b){
   //not used for priority, but to remove duplicate requests
@@ -45,14 +45,18 @@ struct Lift{
   LiftDir dir;
   Level level;
   size_t passengerCnt;
+  
+  /*Below two data structures are distinct*/
   set<Level> targets; //populated by passengers inside the lift 
-  set<shared_ptr<Request>> assignedRequests;
+  set<shared_ptr<Request>> assignedRequests; //assigned by system
   
   Lift(int _id): id(_id), dir(LiftDir::none), level(1){}
   void move(); /*based on direction+level+targets and nothing else
   Note some target could be in the opposite direction but since 
   we have taken it on we will service it  */
-  void addPessengerRequests(); //passengers can push buttons inside the lift to add "targets"
+  
+  void addRemoveTargets(); /*any time passengers in lift can add target; when lift door opens, system will remove targets */
+  
   void cleanupAssigned(){
     for(auto it=this->assignedRequests.begin(); it!=assignedRequests.end();)
 	  if ((*it)->completed) assignedRequests.erase(it++);
@@ -96,8 +100,8 @@ int work(){
   assignToLifts();
   for(auto & lift: lifts){
     lift.cleanupAssigned();
-	lift.addPessengerRequests();
-    if(lift.targets.empty()) cout<<lift.id<<" has no target and will not move\n";
+	lift.addRemoveTargets();
+    if(lift.targets.empty() && lift.assignedRequests.empty()) cout<<lift.id<<" has no target no assignment and will not move\n";
 	else lift.move();
   }
 }
