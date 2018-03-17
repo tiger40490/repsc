@@ -87,8 +87,7 @@ void assignToLifts(){
   	  cout<<(sptr)->source.level<<" is unserviceable at the moment\n";
     }
   }
-  cout<<taken<<" requests taken up... Now process request by in-lift passengers...\n";
-  for(auto & lift: lifts) lift.addPessengerRequests();
+  cout<<taken<<" requests taken up\n";
 }
 int work(){
   if (isTerminationNeeded()) return -1;
@@ -96,6 +95,7 @@ int work(){
   assignToLifts();
   for(auto & lift: lifts){
     lift.cleanupAssigned();
+	lift.addPessengerRequests();
     if(lift.targets.empty()) cout<<lift.id<<" has no target and will not move\n";
 	else lift.move();
   }
