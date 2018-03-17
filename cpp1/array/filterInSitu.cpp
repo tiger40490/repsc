@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <assert.h>
 using namespace std;
 using ele=int;
 bool isBad(ele const & item){return item < 0;}
@@ -17,7 +18,7 @@ void swp(vector<ele> & arr, size_t le, size_t ri){
   arr[le] = arr[ri];
   arr[ri] = tmp;
 }
-void solution3(vector<ele> & arr){
+void solution3(vector<ele> & arr){//scan from both ends inward
   int le=0, ri=arr.size()-1;
   for(;le<=ri;){
     if (isGood(arr[le])){
@@ -38,7 +39,7 @@ void solution2(vector<ele> & arr){//by stable_sort
   dump(arr);
   //binary search for the first bad then resize the vector to discard all bad
 }
-void solution4(vector<ele> & arr){
+void solution4Victor(vector<ele> & arr){
   auto nextBad=arr.begin(); //next good
   auto nextGood=arr.begin(); //next bad
   for(;;){
@@ -55,11 +56,35 @@ void solution4(vector<ele> & arr){
 	swap(*nextBad, *nextGood);
   }
   arr.resize(distance(arr.begin(), nextBad));
-  dump(arr);
+}
+void solution4Dimitri(vector<ele> & arr){
+  auto leftMostBad = find_if(arr.begin(), arr.end(), isBad);
+  if (leftMostBad == arr.end()) return;
+  
+  for(auto it=leftMostBad+1; it<arr.end(); ++it){
+    if (isBad(*it)) continue;
+	*leftMostBad=*it;
+	++leftMostBad;
+  }
+  arr.resize(distance(arr.begin(), leftMostBad));
+}
+//Best solution IMHO
+void solution4NoItr(vector<ele> & arr){
+  auto leftMostBad = distance(arr.begin(), find_if(arr.begin(), arr.end(), isBad));
+  if (leftMostBad == arr.size()) return;
+  
+  for(auto it=leftMostBad+1; it<arr.size(); ++it){
+    if (isBad(arr[it])) continue;
+	assert(leftMostBad<=it);
+	arr[leftMostBad]=arr[it];
+	++leftMostBad;
+  }
+  arr.resize(leftMostBad);
 }
 int main(){
   vector<ele> arr={1,3,4,5,-51,-33,8,16,17,-31,20,-28,-27,24,-10,25,-26,-28};
-  solution4(arr);
+  solution4NoItr(arr);
+  dump(arr);
 }
 /*CVA coding question. general requirements: don't use global variables
 requirement 1: Given a vector (not a linked list) and a predate function, remove all bad elements
