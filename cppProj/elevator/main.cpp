@@ -26,7 +26,7 @@ Btn(4, BtnDir::u),Btn(4, BtnDir::d), Btn(5, BtnDir::u),Btn(5, BtnDir::d),
 Btn(6, BtnDir::u),Btn(6, BtnDir::d), Btn(7, BtnDir::u),Btn(7, BtnDir::d),
 Btn(8, BtnDir::d)};
 
-struct Request{
+struct Request{ //requests from lift lobbies, not "targets" set by in-lift passengers
   Btn const & source;
   time_t when; //useful for priority setting
   bool completed; //can be completed by any lift L, even if not assigned to L
@@ -45,7 +45,7 @@ struct Lift{
   LiftDir dir;
   Level level;
   size_t passengerCnt;
-  set<Level> targets; //populated by passengers inside the lift or by setTarget()
+  set<Level> targets; //populated by passengers inside the lift 
   set<shared_ptr<Request>> assignedRequests;
   
   Lift(int _id): id(_id), dir(LiftDir::none), level(1){}
