@@ -45,7 +45,9 @@ struct Lift{
   LiftDir dir;
   Level level;
   size_t passengerCnt;
-  bool isDoorOpen; 
+  bool isDoorClosing; /*any new passenger should use the in-lift buttons to add 
+  her target before door close. If she adds her target after door close, system
+  can only process her target in the next iteration of work().*/
   
   /*Below two data structures are distinct*/
   set<Level> targets; //populated by passengers inside the lift 
@@ -56,12 +58,13 @@ struct Lift{
   Note some target could be in the opposite direction but since 
   we have taken it on we will service it  */
   
-  void onDoorOpen(){
-    if (isDoorOpen){
+  void onDoorClose(){
+    if (this->isDoorClosing){
       // set current level..
 	  
+	  this->cleanupAssigned();
       this->targets.erase(this->level);
-	  cleanupAssigned();
+	  this->addTargets(); //by new passengers
 	}
   }
   void addTargets(); /*Any time passengers in lift can add targets. Only When lift 
@@ -77,8 +80,8 @@ struct Lift{
   of work(), so every iteration of work() needs to call cleanupAssigned().
   */
     for(auto it=this->assignedRequests.begin(); it!=assignedRequests.end();)
-	  if ((*it)->completed || isDoorOpen && this->level==(*it)->source.level) 
-	    assignedRequests.erase(it++);
+	  if ((*it)->completed || isDoorClosing && this->level==(*it)->source.level) 
+	    this->assignedRequests.erase(it++);
 	  else 
 	    ++it;
   }
@@ -121,6 +124,7 @@ int work(){
   for(auto & lift: lifts){
     lift.cleanupAssigned();
 	lift.addTargets();
+	lift.onDoorClose();
     if(lift.targets.empty() && lift.assignedRequests.empty()) cout<<lift.id<<" has no target no assignment and will not move\n";
 	else lift.move();
   }
