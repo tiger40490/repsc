@@ -1,9 +1,11 @@
 //compile with g++ -c this.file
 //showcase: type alias, same as typedef
 //showcase: enum class
-#include <iostream>
+//showcase: deleting while iterating a set
 #include <time.h>
 #include <unistd.h>
+#include <iostream>
+#include <memory>
 #include <set> //or unordered_set
 #include <list>
 #include <vector>
@@ -26,58 +28,74 @@ Btn(8, BtnDir::d)};
 struct Request{
   Btn const & source;
   time_t when; //useful for priority setting
+  bool completed; //can be completed by any lift L, even if not assigned to L
   
-  Request(Btn const & s): source(s), when(time(0)){}
-  bool operator<(Request const & other) const{
-  //not used for priority, but to remove duplicate requests
-    if (this->source.direction != other.source.direction)
-      return this->source.direction < other.source.direction;
-	else
-  	  return this->source.level < other.source.level; 
-  }
+  Request(Btn const & s): source(s), when(time(0)), completed(false){}
 };
+bool operator<(shared_ptr<Request> const & a, shared_ptr<Request> const & b){
+  //not used for priority, but to remove duplicate requests
+    if (a->source.direction != b->source.direction)
+      return a->source.direction < b->source.direction;
+	else
+  	  return a->source.level < b->source.level; 
+}
 struct Lift{
   int id;
   LiftDir dir;
   Level level;
   size_t passengerCnt;
   set<Level> targets; //populated by passengers inside the lift or by setTarget()
+  set<shared_ptr<Request>> assignedRequests;
   
   Lift(int _id): id(_id), dir(LiftDir::none), level(1){}
-  void move(); //based on direction+level+targets and nothing else
+  void move(); /*based on direction+level+targets and nothing else
+  Note some target could be in the opposite direction but since 
+  we have taken it on we will service it  */
   void addPessengerRequests(); //passengers can push buttons inside the lift to add "targets"
-  bool canTakeOn(Request const & req) const; //based on current direction/level, see if we can take on a request
+  void cleanupAssigned(){
+    for(auto it=this->assignedRequests.begin(); it!=assignedRequests.end();)
+	  if ((*it)->completed) assignedRequests.erase(it++);
+	  else ++it;
+  }
+  bool shouldTakeOn(Request const & req) const; 
+  /*based on current direction/level, see if we can take on a request. 
+  Note if a request has been pending for a long time we need to take it on*/
 };
 vector<Lift> lifts={Lift(1), Lift(2)};
-set<Request> unserviced; //whenwe take on a request, it's removed from here
+set<shared_ptr<Request>> unserviced; //whenwe take on a request, it's removed from here
 
 int calcDuration();
 bool isTerminationNeeded();
-void receiveNewRequests(); //add new requests to unserviced and do nothing else
+void receiveNewRequestsFromSharedBuffer(); //add new requests to unserviced and do nothing else
 
-void addTargetsToLifts(){
+void assignToLifts(){
   size_t taken=0;
-  for(auto req = unserviced.begin(); req!=unserviced.end(); ++req){
+  for(auto it = unserviced.begin(); it!=unserviced.end(); ){
     bool isTakenOn = false;
+	auto sptr=*it;
     for(auto & lift: lifts){
-	   if (lift.canTakeOn(*req)){
-	     unserviced.erase(req);
-		 lift.targets.insert(req->source.level);
+	   if (lift.shouldTakeOn(*sptr)){
+	     unserviced.erase(it++);		 
+		 lift.assignedRequests.insert(sptr);
 		 isTakenOn = true;
 		 ++taken;
 	     break;
 	   }
 	}
-	if (!isTakenOn) cout<<req->source.level<<" is unserviceable at the moment\n";
+	if (!isTakenOn){
+	  ++it;
+  	  cout<<(sptr)->source.level<<" is unserviceable at the moment\n";
+    }
   }
   cout<<taken<<" requests taken up... Now process request by in-lift passengers...\n";
   for(auto & lift: lifts) lift.addPessengerRequests();
 }
 int work(){
   if (isTerminationNeeded()) return -1;
-  receiveNewRequests(); 
-  addTargetsToLifts();
+  receiveNewRequestsFromSharedBuffer(); 
+  assignToLifts();
   for(auto & lift: lifts){
+    lift.cleanupAssigned();
     if(lift.targets.empty()) cout<<lift.id<<" has no target and will not move\n";
 	else lift.move();
   }
