@@ -58,8 +58,8 @@ struct Lift{
 	  else ++it;
   }
   bool shouldTakeOn(Request const & req) const; 
-  /*based on current direction/level, see if we can take on a request. 
-  Note if a request has been pending for a long time we need to take it on*/
+  /*based on current direction/level, decide to take on a request. Note if a request 
+  has been pending for a long time we need to take it on unconditionally*/
 };
 vector<Lift> lifts={Lift(1), Lift(2)};
 set<shared_ptr<Request>> unserviced; //whenwe take on a request, it's removed from here
@@ -79,7 +79,7 @@ void assignToLifts(){
 		 lift.assignedRequests.insert(sptr);
 		 isTakenOn = true;
 		 ++taken;
-	     break;
+	     break; //skip other lifts
 	   }
 	}
 	if (!isTakenOn){
