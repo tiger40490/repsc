@@ -1,6 +1,6 @@
 //compile with g++ -c this.file
-//showcase: type alias, same as typedef
-//showcase: enum class
+//showcase: c++11 type alias, same as typedef
+//showcase: c++11 enum class
 //showcase: deleting while iterating a set
 #include <time.h>
 #include <unistd.h>
