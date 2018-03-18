@@ -1,6 +1,11 @@
 package com.nsdq.drone.devices;
 
-public class BladeEngine implements Readable {
+public class BladeEngine implements IReadableDevice {
+	private String _name="";
+	public BladeEngine(String name) {
+		assert name!=null && !name.isEmpty();
+		this._name = name;
+	}
 	/**
 	 * target power level is usually not same as current power level.
 	 * 
@@ -10,7 +15,7 @@ public class BladeEngine implements Readable {
         //should send a signal to hardware
 	}
 	int getCurrentPowerLevel() {
-		return 0; //should query the hardware in real time		
+		return 99; //should query the hardware in real time		
 	}
 	/**
 	 * "final" helps in-line
@@ -32,7 +37,6 @@ public class BladeEngine implements Readable {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return this._name;
 	}
 }

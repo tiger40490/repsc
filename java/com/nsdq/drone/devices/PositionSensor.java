@@ -4,7 +4,7 @@ package com.nsdq.drone.devices;
  * @author Victor Tan
  * Position relative to ground antenna
  */
-public class PositionSensor implements Readable {
+public class PositionSensor implements ISnapshotSensor {
 	public double getX() {
     	return 0;//should query hardware		
 	}

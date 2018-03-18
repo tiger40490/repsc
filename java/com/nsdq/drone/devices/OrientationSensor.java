@@ -3,7 +3,7 @@ package com.nsdq.drone.devices;
 /**
  * drone orientation as if on a photograph
  */
-public class OrientationSensor implements Readable {
+public class OrientationSensor implements ISnapshotSensor {
     double getPitch() {
     	return 0;//should query hardware
     }
