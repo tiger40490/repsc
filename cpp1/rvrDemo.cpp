@@ -62,7 +62,7 @@ int main(){
 
   Badstr nonref2("nonref2-Badstr");
   shp = factory(nonref2); 
-  //factory<Trade,Badstr>(lvr) would fail as it
+  //factory<Badstr>(lvr) would fail as it
   // disables type deduction and remove universsal reference
   
   cout<<shp->display<<" = in the shared_ptr from the factory\n\n";
