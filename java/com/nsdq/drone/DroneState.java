@@ -1,4 +1,4 @@
-package com.nsdq.drone;
+package com.nsdq.drone; //v1
 
 /**
  * At any time, the drone is in exactly one of the states, but it may have zero or 1 target-state
@@ -24,4 +24,5 @@ public enum DroneState {
 	 * getting another commands
 	 */
 	Drifting,
+	Uninitialized,
 }

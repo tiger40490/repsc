@@ -1,20 +1,20 @@
 package com.nsdq.drone.devices;
 
 import com.nsdq.drone.Direction;
-import com.nsdq.drone.Motion;
+import com.nsdq.drone.SpeedTuple;
 
 /**
  * based on the gyroscope 
  */
 public class MotionSensor implements IReadableDevice {
-    Motion getX_Speed() {
-    	return new Motion(0,0); //should query hardware
+    SpeedTuple getX_Speed() {
+    	return new SpeedTuple(0,0); //should query hardware
     }
-    Motion getY_Speed() {
-    	return new Motion(0,0); //should query hardware
+    SpeedTuple getY_Speed() {
+    	return new SpeedTuple(0,0); //should query hardware
     }
-    Motion getZ_Speed() {
-    	return new Motion(0,0); //should query hardware
+    SpeedTuple getZ_Speed() {
+    	return new SpeedTuple(0,0); //should query hardware
     }
     ///////// movement direction
     Direction getDirectionFromSpeed() {
@@ -32,9 +32,9 @@ public class MotionSensor implements IReadableDevice {
 		// TODO Auto-generated method stub
     	return new Direction(0,0,0); //should query hardware
     }
-    Motion getSpinSpeedAroundAxis() {
+    SpeedTuple getSpinSpeedAroundAxis() {
 		// TODO Auto-generated method stub
-    	return new Motion(0,0); //should query hardware
+    	return new SpeedTuple(0,0); //should query hardware
     }
     	
 	@Override

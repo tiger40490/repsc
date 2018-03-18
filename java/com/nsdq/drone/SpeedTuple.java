@@ -1,9 +1,9 @@
-package com.nsdq.drone;
+package com.nsdq.drone; //v1
 
-public class Motion{
+public class SpeedTuple{
 	public final double acceleration;
 	public final double speed;
-	public Motion(double a, double v){
+	public SpeedTuple(double a, double v){
 		acceleration = a;
 		speed = v;
 	}

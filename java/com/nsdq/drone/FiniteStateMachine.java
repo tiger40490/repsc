@@ -1,21 +1,22 @@
 package com.nsdq.drone;
 
 /**
- * non-standard, simplified implementation of a state machine.
+ * simplified implementation of a state machine.
  * 
- * I would like to keep the responsibility of this class simple. so
+ * I would like to keep the responsibility of this class as samll as possible. so
  * it doesn't know any devices;
- * it doesn't know any direction or position
- *
+ * it doesn't know any direction, position or orientation.
+ * it knows a specific target is reached only when Sofia informs it via markCompletion(). 
+ * There's no point asking this state machine how far we are to a target -- query the sensors!
  */
 public class FiniteStateMachine {
-	private DroneState currentState_nonNull=DroneState.Landed;
+	private DroneState currentState_nonNull=DroneState.Uninitialized;
 	/**
 	 * After we reach targetState, we stay in the target state
 	 */
-	private DroneState targetState_nonNull=DroneState.Landed;
+	private DroneState targetState_nonNull=DroneState.Uninitialized;
 	static private FiniteStateMachine instance = new FiniteStateMachine();
-	private FiniteStateMachine() {}
+	private FiniteStateMachine() {	}
 	static public FiniteStateMachine getInstance() {
 		return instance;
 	}
