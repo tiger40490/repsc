@@ -1,10 +1,13 @@
+//note the mutex object is a field of the "mapped" object, not managed by pointer!
+//showcase mmap()
+//showcase version inside shared memory region
+//showcase usleep()
 #include <stdio.h>
 #include <sys/mman.h>
 #include <string.h>
 #include <string>
 #include <unistd.h>
 #include <pthread.h>
-//#include <iostream>
 using namespace std;
 
 int const MAX=9;
