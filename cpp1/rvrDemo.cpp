@@ -50,7 +50,7 @@ void testAssignment(){
   cout<<"^^^^^    done with testAssignment()    ^^^^^\n\n";
 }
 void testEmplace(){
-  cout<<"\n.....now declaring vector<Badstr>...\n";
+  cout<<"Now declaring vector<Badstr>...\n";
   vector<Badstr> vec;
   vec.reserve(5);
   Badstr s0("c++03");
@@ -105,6 +105,6 @@ compile as it disables type deduction and remove universsal reference*/
 }
 int main(){
   testAssignment();
-  test_fwd();
   testEmplace();
+  test_fwd();
 }
