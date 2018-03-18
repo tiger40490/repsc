@@ -46,41 +46,10 @@ void testAssignment(){
   Badstr me("var1");
   Badstr sister("sister");
   me.operator=(move(sister));
-  //me=move(sister);
-  cout<<"^^^^^    done with testAssignment()    ^^^^^\n";
+  //me=move(sister); 
+  cout<<"^^^^^    done with testAssignment()    ^^^^^\n\n";
 }
-struct Trade{
-  Trade(Badstr && s):display(move(s)) /*without move(), s is passed to 
-  Badstr ctor as LLLLvr !*/ {
-    cout<<"Trade ctor received a RRRRvr "<<display<<endl;
-  }
-  Trade(Badstr & s):display(s) /*Trade class developer should Not
-move(s) here because the object behind s is not a temporary. Std::move 
-would surprise whoever using this Trade ctor. Given it is non-const 
-We can modify but not rob it. */ {
-    cout<<"Trade ctor received a  LLLLvr "<<display<<endl;
-  }
-  Badstr display;
-};
-template <typename A> shared_ptr<Trade> factory(A && s){
-  return make_shared<Trade>(forward<A>(s));
-  //return make_shared<T>(s); //Trade ctor always gets Lvr even if s is temp
-}
-int main(){
-  testAssignment();
-  auto shp = factory(Badstr("temp-Badstr"));
-  cout<<shp->display<<" = in the shared_ptr from the factory\n\n";
-  
-  Badstr nonref1("nonref1-Badstr");
-  shp = factory(move(nonref1)); 
-  cout<<shp->display<<" = in the shared_ptr from the factory\n\n";
-
-  Badstr nonref2("nonref2-Badstr");
-  shp = factory(nonref2); 
-  //factory<Badstr>(lvr) would fail as it
-  // disables type deduction and remove universsal reference
-  
-  cout<<shp->display<<" = in the shared_ptr from the factory\n\n";
+void testEmplace(){
   cout<<"\n.....now declaring vector<Badstr>...\n";
   vector<Badstr> vec;
   vec.reserve(5);
@@ -101,4 +70,41 @@ int main(){
     cout<<i<<" @ "<<&vec[i]<<" : "<<vec[i]<<"\n";
   cout<<endl;
   cout<<s1<<" ... is original string, now vacant.\n";
+  cout<<"^^^^^    done with testEmplace()    ^^^^^\n\n";  
+}
+////////////////////////////////////
+struct Trade{
+  Trade(Badstr && s):display(move(s)) /*without move(), s is passed to 
+  Badstr ctor as LLLLvr !*/ {
+    cout<<"Trade ctor received a RRRRvr "<<display<<endl;
+  }
+  Trade(Badstr & s):display(s) /*Trade class developer should Not
+move(s) here because the object behind s is not a temporary. Std::move 
+would surprise whoever using this Trade ctor. Given it is non-const 
+We can modify but not rob it. */ {
+    cout<<"Trade ctor received a  LLLLvr "<<display<<endl;
+  }
+  Badstr display;
+};
+template <typename A> shared_ptr<Trade> factory(A && s){
+  return make_shared<Trade>(forward<A>(s));
+  //return make_shared<T>(s); //Trade ctor always gets Lvr even if s is temp
+}
+void test_fwd(){
+  auto shp = factory(Badstr("temp-Badstr"));
+  cout<<shp->display<<" = in the shared_ptr from factory\n\n";
+  
+  Badstr nonref1("nonref1-Badstr");
+  shp = factory(move(nonref1)); 
+  cout<<shp->display<<" = in the shared_ptr from factory\n\n";
+
+  Badstr nonref2("nonref2-Badstr");
+  shp = factory(nonref2); /*won't move. Note: factory<Badstr>(lvr) won't
+compile as it disables type deduction and remove universsal reference*/
+  cout<<"^^^^^    done with test_fwd()    ^^^^^\n\n";  
+}
+int main(){
+  testAssignment();
+  test_fwd();
+  testEmplace();
 }
