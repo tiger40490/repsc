@@ -34,7 +34,7 @@ mapped * create_shared_memory() {
   // so only this process and its children will be able to use it:
   int visibility = MAP_ANONYMOUS | MAP_SHARED;
 
-  // The remaining parameters to `mmap()` are not important for this use case,
+  // The remaining parameters to mmap() are not important for this use case,
   auto shmem = static_cast<mapped*>(mmap(NULL, sz, protection, visibility, 0, 0));
   rc = pthread_mutex_init(& (shmem->mutex), &mutexattr);
   if (rc != 0) die("pthread_mutex_init");
