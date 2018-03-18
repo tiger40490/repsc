@@ -3,11 +3,18 @@
 #include <vector>
 using namespace std;
 
-struct Badstr{ //a string class that robs sister instances
+struct Badstr{ //a string class that robs its sister instance
+  Badstr& operator=(Badstr && sister){
+    _nonref = move(sister._nonref);
+    _ptr = sister._ptr; 
+    sister._ptr=NULL;
+    cout<<this<<" <-- "<<*_ptr<<" repopulated in MOVE-assignment\n";
+    return *this;
+  }
   Badstr(Badstr && sister){
     _nonref = move(sister._nonref); /*nonref variable needs std::move()
 so we can use the move-assignment of std::string*/
-    _ptr = sister._ptr; // ptr field needs not std::move()
+    _ptr = sister._ptr; // ptr field needs no std::move()
     sister._ptr=nullptr;
     cout<<this<<" <-- "<<*_ptr<<" populated in MOVE-ctor\n";
   }
@@ -35,6 +42,13 @@ private:
   string * _ptr;
   string _nonref;
 };
+void testAssignment(){
+  Badstr me("var1");
+  Badstr sister("sister");
+  me.operator=(move(sister));
+  //me=move(sister);
+  cout<<"^^^^^    done with testAssignment()    ^^^^^\n";
+}
 struct Trade{
   Trade(Badstr && s):display(move(s)) /*without move(), s is passed to 
   Badstr ctor as LLLLvr !*/ {
@@ -53,6 +67,7 @@ template <typename A> shared_ptr<Trade> factory(A && s){
   //return make_shared<T>(s); //Trade ctor always gets Lvr even if s is temp
 }
 int main(){
+  testAssignment();
   auto shp = factory(Badstr("temp-Badstr"));
   cout<<shp->display<<" = in the shared_ptr from the factory\n\n";
   
