@@ -27,5 +27,5 @@ if __name__ == "__main__":
 To test, telnet to the server port and you will see the response from either parent or child process-id
 
 Q: are there two copies of the socket, each with its own buffers? or only one object in memory?
-I think lsof would show only one object.
+A: q(lsof -i :8888) shows only one so-called device.
 '''
