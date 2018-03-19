@@ -12,11 +12,11 @@ import java.util.Date;
  * There's no point asking this state machine how far we are to a target -- query the sensors!
  */
 public class FiniteStateMachine {
-	private DroneState currentState=DroneState.Uninitialized;
+	private DeducedSystemState currentState=DeducedSystemState.Uninitialized;
 	/**
 	 * After we reach targetState, we stay in the target state
 	 */
-	private DroneState targetState=DroneState.Uninitialized;
+	private DeducedSystemState targetState=DeducedSystemState.Uninitialized;
 	private Date takeOffCmdReceived = null;
 	static private FiniteStateMachine instance = new FiniteStateMachine();
 	private FiniteStateMachine() {	}
@@ -31,21 +31,21 @@ public class FiniteStateMachine {
 	 * but this class doesn't know the devices.
 	 */
 	public void handleCommand_TakeOff() {
-		setTargetState(DroneState.Drifting);
+		setTargetState(DeducedSystemState.Drifting);
 		takeOffCmdReceived = new Date(); //overwrite the null!
 	}
 	public void handleCommand_moveUp() {
-		setTargetState(DroneState.Enroute);
+		setTargetState(DeducedSystemState.Enroute);
 	}	
 	public void handleCommand_stablize() {
-		setTargetState(DroneState.Hovering);
+		setTargetState(DeducedSystemState.Hovering);
 	}
 	public void handleCommand_land() {
-		setTargetState(DroneState.Landed);
+		setTargetState(DeducedSystemState.Landed);
 	}
 
 	public boolean isTakeoffTakingTooLong() {
-		return (targetState == DroneState.Drifting) &&
+		return (targetState == DeducedSystemState.Drifting) &&
 				(new Date().getTime() - takeOffCmdReceived.getTime()> 1000*10); 
 	}
 	/***
@@ -54,20 +54,20 @@ public class FiniteStateMachine {
 	public void markCompletion() {
 		this.setCurrentState(getTargetState());
 	}
-	public DroneState getTargetState() {
+	public DeducedSystemState getTargetState() {
 		if (targetState == null) throw new IllegalStateException("should never be null");
 		return targetState;
 	}
-	public void setTargetState(DroneState targetState) {
+	public void setTargetState(DeducedSystemState targetState) {
 		if (targetState == null) throw new IllegalArgumentException("programmer error passing null DroneState");
 		this.targetState = targetState;
 		takeOffCmdReceived = null;
 	}
-	public DroneState getCurrentState() {
+	public DeducedSystemState getCurrentState() {
 		if (currentState == null) throw new IllegalStateException("should never be null");
 		return currentState;
 	}
-	public void setCurrentState(DroneState newState) {
+	public void setCurrentState(DeducedSystemState newState) {
 		if (newState == null) throw new IllegalArgumentException("programmer error passing null DroneState");
 		this.currentState = newState;
 	}

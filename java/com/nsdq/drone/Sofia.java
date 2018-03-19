@@ -98,28 +98,30 @@ public class Sofia {
 		for(;;Thread.sleep(1)) {
 			//Top priority:
 			SensorAnalysisResult status=checkSensors();
-			if (status==SensorAnalysisResult.Distress) {
-				System.err.println("Distress...");
-				fsm.setCurrentState(DroneState.Lost);
-				this.acceptedCommands.clear();
-				this.acceptedCommands.add(new TouchDown());
-			}
 			//priority 2:
 			if (fsm.isTakeoffTakingTooLong()) {
-				System.err.println("Distress... Take-off has taken more than 10 seconds");
-				fsm.setCurrentState(DroneState.Lost);				
+				System.err.println("Take-off has taken more than 10 seconds");
+				status =SensorAnalysisResult.Distress;
 			}
-			//priority 3:
-			if (fsm.getCurrentState() == DroneState.Lost && tapSensor.wasTappedWithinX_second(1)) {
-				this.reInitialize();
+			//Priority 3:
+			if (status==SensorAnalysisResult.Distress) {
+				System.err.println("Distress...");
+				fsm.setCurrentState(DeducedSystemState.Lost);
+				fsm.setTargetState(DeducedSystemState.Landed);
+				this.acceptedCommands.clear(); //abandon all commands
+				this.acceptedCommands.add(new TouchDown()); //touch down immediately
 			}
 			//priority 4:
+			if (fsm.getCurrentState() == DeducedSystemState.Lost && tapSensor.wasTappedWithinX_second(1)) {
+				this.reInitialize();
+			}
+			//priority 5:
 			if (status == SensorAnalysisResult.TargetReached) {
 				commandsCompleted.put(new Date(), acceptedCommands.poll());
 				if (acceptedCommands.isEmpty()) acceptedCommands.add(EMPTY_CMD);/*avoid empty queue*/
 				fsm.markCompletion();
 			}
-			//Priority 5:
+			//Priority 6:
 			this.checkIncomingCommand();
 			if (isCmdEmpty()) continue;
 			if (acceptedCommands.peek().shouldExit()) break;			
@@ -136,7 +138,7 @@ public class Sofia {
 		
 		//special logic for ReturnHome command:
 		assert acceptedCommands instanceof ReturnHome;
-		assert fsm.getTargetState() == DroneState.Landed;
+		assert fsm.getTargetState() == DeducedSystemState.Landed;
 		for(;;Thread.sleep(1)) { //Wait until we are landed
 			if (checkSensors() == SensorAnalysisResult.TargetReached) break; //Landed 
 		}
@@ -151,7 +153,7 @@ public class Sofia {
 	private SensorAnalysisResult checkSensors() {
 		for (BladeEngine engine: engines) {
 		  if (engine.getTemperature() > 100) return SensorAnalysisResult.Distress;
-		  if (!engine.isEngineOn() && fsm.getCurrentState() != DroneState.Landed)
+		  if (!engine.isEngineOn() && fsm.getCurrentState() != DeducedSystemState.Landed)
 			 return SensorAnalysisResult.Distress;
 		}
 		if (motionSensor.getSpinSpeedAroundAxis().speed > 1) {
@@ -159,7 +161,8 @@ public class Sofia {
 		}
 		//process other sensor
 		// 
-		// if target reached, then return SensorAnalysisResult.TargetReached
+		// if target reached, then return SensorAnalysisResult.TargetReached.
+		// There will lots of calculation to determine whether target is reached.
 		//
 		// if in progress, then calculate what signals to send to the 4 engines
 		return SensorAnalysisResult.InProgress;
