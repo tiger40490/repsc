@@ -1,10 +1,4 @@
 #!/bin/env python
-'''
-To test, telnet to the server port and you will see the response from either parent or child process-id
-
-Q: are there two copies of the socket, each with its own buffers? or only one object in memory?
-I think lsof would show only one object.
-'''
 import socket
 import os
 
@@ -29,3 +23,9 @@ def accept_conn(message, s):
 
 if __name__ == "__main__":
     main()
+'''Based on https://stackoverflow.com/questions/670891/is-there-a-way-for-multiple-processes-to-share-a-listening-socket
+To test, telnet to the server port and you will see the response from either parent or child process-id
+
+Q: are there two copies of the socket, each with its own buffers? or only one object in memory?
+I think lsof would show only one object.
+'''
