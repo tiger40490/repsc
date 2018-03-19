@@ -1,14 +1,14 @@
-package com.nsdq.drone.devices;
+package com.nsdq.drone.devices; //v1
 
 /**
  * drone orientation as if on a photograph
  */
 public class OrientationSensor implements ISnapshotSensor {
     double getPitch() {
-    	return 0;//should query hardware
+    	return 0;//should query the hardware in real time	
     }
     double getRoll() {
-    	return 0;//should query hardware
+    	return 0;//should query the hardware in real time	
     }
      	
 	@Override

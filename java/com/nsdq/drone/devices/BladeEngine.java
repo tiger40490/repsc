@@ -1,4 +1,4 @@
-package com.nsdq.drone.devices;
+package com.nsdq.drone.devices; //v1
 
 public class BladeEngine implements IReadableDevice {
 	private String _name="";
@@ -14,20 +14,23 @@ public class BladeEngine implements IReadableDevice {
 	void setTargetPowerLevel(int level) {
         //should send a signal to hardware
 	}
-	int getCurrentPowerLevel() {
+	public int getCurrentPowerLevel() {
 		return 99; //should query the hardware in real time		
 	}
 	/**
 	 * "final" helps in-line
 	 */
-	final boolean isEngineOn() {
+	public final boolean isEngineOn() {
 		return getCurrentPowerLevel() > 0;
 	}
 	/**
 	 * Blade can have speed even when engine is off .. important sometimes
 	 */
-	int getBladeSpeed() {
+	public double getBladeSpeed() {
 		return 0; //should query the hardware blade controller in real time
+	}
+	public double getTemperature() {
+		return 0; //should query the hardware in real time	
 	}
 	@Override
 	public int getUniqueId() {

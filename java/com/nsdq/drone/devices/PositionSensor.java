@@ -1,23 +1,21 @@
-package com.nsdq.drone.devices;
+package com.nsdq.drone.devices; //v1
 
 /**
- * @author Victor Tan
  * Position relative to ground antenna
  */
 public class PositionSensor implements ISnapshotSensor {
 	public double getX() {
-    	return 0;//should query hardware		
+    	return 0;//should query the hardware in real time		
 	}
 	public double getY() {
-    	return 0;//should query hardware		
+    	return 0;//should query the hardware in real time		
 	}
 	public double getZ() {
-    	return 0;//should query hardware		
+    	return 0;//should query the hardware in real time		
 	}
 
 	@Override
 	public int getUniqueId() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

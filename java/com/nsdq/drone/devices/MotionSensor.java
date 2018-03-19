@@ -1,4 +1,4 @@
-package com.nsdq.drone.devices;
+package com.nsdq.drone.devices; //v1
 
 import com.nsdq.drone.Direction;
 import com.nsdq.drone.SpeedTuple;
@@ -8,13 +8,13 @@ import com.nsdq.drone.SpeedTuple;
  */
 public class MotionSensor implements IReadableDevice {
     SpeedTuple getX_Speed() {
-    	return new SpeedTuple(0,0); //should query hardware
+    	return new SpeedTuple(0,0); //should query the hardware in real time	
     }
     SpeedTuple getY_Speed() {
-    	return new SpeedTuple(0,0); //should query hardware
+    	return new SpeedTuple(0,0); //should query the hardware in real time	
     }
     SpeedTuple getZ_Speed() {
-    	return new SpeedTuple(0,0); //should query hardware
+    	return new SpeedTuple(0,0); //should query the hardware in real time	
     }
     ///////// movement direction
     Direction getDirectionFromSpeed() {
@@ -24,17 +24,16 @@ public class MotionSensor implements IReadableDevice {
      * acceleration vs velocity directions can have any angle between them. 2 independent directions.
      */
     Direction getAcceleratingDirectionFromSpeed() {
-    	return new Direction(getX_Speed().acceleration, getY_Speed().acceleration, getZ_Speed().acceleration);
+    	return new Direction(getX_Speed().acceleration, 
+    			getY_Speed().acceleration, getZ_Speed().acceleration);
     }
     
-    ////////// spin motion
+    ////////// spin motion of the drone (not spin of the gyroscope)
     Direction getSpinAxis() {
-		// TODO Auto-generated method stub
-    	return new Direction(0,0,0); //should query hardware
+    	return new Direction(0,0,0); //should query the hardware in real time	
     }
-    SpeedTuple getSpinSpeedAroundAxis() {
-		// TODO Auto-generated method stub
-    	return new SpeedTuple(0,0); //should query hardware
+    public SpeedTuple getSpinSpeedAroundAxis() { //should be below 1 revolution/second
+    	return new SpeedTuple(0,0);  //should query the hardware in real time		
     }
     	
 	@Override

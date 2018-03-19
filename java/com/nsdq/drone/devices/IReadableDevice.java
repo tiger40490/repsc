@@ -1,7 +1,4 @@
-/**
- * 
- */
-package com.nsdq.drone.devices;
+package com.nsdq.drone.devices; //v1
 
 /**
  * Any device that we can read from

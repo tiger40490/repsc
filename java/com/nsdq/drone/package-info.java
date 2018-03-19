@@ -1,4 +1,6 @@
 /**
+ * See also javadoc in FiniteStateMachine.java, TapSensor.java, ISnapshotSensor.java
+ * 
  * Sofia is the name of the runtime process on-board the drone.
  * 
  * <h1>====external interface====</h1>
@@ -22,9 +24,13 @@
  * superseded by later events.
   
  * <h2>--input: commands--</h2>
+ * Commands are sent from RemoteControl instance.
+ * 
  * These inputs are infrequent compared to sensor inputs. I will use polling. 
- * Incoming commands are saved in a queue of size 1, so any new command would replace an
- * unprocessed "pending" command, if any.
+ * 
+ * I implemented MoveUp but the other 5 Move* are no different.
+ * 
+ * To avoid confusing, I renamed the Land command to TouchDown.
  * 
  * As a bonus, I made provisions for composite commands like
  * MoveUp2MetersLeft3Meters = MoveUp -> MoveDistance(3) -> MoveLeft -> MoveDistance(3) Please 

@@ -1,9 +1,9 @@
-package com.nsdq.drone.devices;
+package com.nsdq.drone.devices; //v1
 
-import com.nsdq.drone.AbstractCommand;
+import com.nsdq.drone.Cmd;
 
 public class CommandReceiver implements IReadableDevice {
-	public AbstractCommand getIncomingCommand() {
+	public Cmd getIncomingCommand() {
 		return null; //should query hardware
 	}
 
