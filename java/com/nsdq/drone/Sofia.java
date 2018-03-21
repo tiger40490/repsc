@@ -1,4 +1,4 @@
-package com.nsdq.drone;
+package com.nsdq.drone; //v0.8
 
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -10,9 +10,7 @@ import com.nsdq.drone.devices.OrientationSensor;
 import com.nsdq.drone.devices.PositionSensor;
 import com.nsdq.drone.devices.TapSensor;
 
-/**
- */
-class Status extends Cmd{
+class ShowStatus extends Cmd{
 	@Override
 	public void execute(FiniteStateMachine fsm) {
 		System.out.println(fsm.getCurrentState());
@@ -50,11 +48,9 @@ class MoveUp extends Cmd{
 		fsm.handleCommand_moveUp();
 	}	
 }
-/**Bonus feature not specified in original requirements. 
- */
-class MoveDistance extends Cmd{
+class MoveUpDistance extends Cmd{
 	private double distance;
-	MoveDistance(double d){
+	MoveUpDistance(double d){
 		this.distance = d;
 	}
 	@Override
@@ -70,13 +66,14 @@ public class Sofia {
 	public static final Cmd EMPTY_CMD=new EmptyCommand();
 	
 	/**
-	 * this queue always has 1 or 2 elements. If no real command, then we shouLd put the EMPTY_CMD
+	 * this queue always has 1 or 2 elements. If no real command, then we should put in the EMPTY_CMD
 	 */
 	private Queue<Cmd> acceptedCommands=new LinkedBlockingQueue<>(2); //at most 2 commands including current
+	
 	private final FiniteStateMachine fsm=FiniteStateMachine.getInstance();
 	private Direction targetDirection = Direction.MOTIONLESS;
 	private double targetValue;
-	private Map<Date, Cmd> commandsCompleted = new TreeMap<>();
+	private Map<Date, Cmd> commandsCompleted = new TreeMap<>(); //history
 	
 	//on-board devices:
 	private BladeEngine[] engines = {new BladeEngine("front-left"), new BladeEngine("front-right"), 
@@ -87,7 +84,8 @@ public class Sofia {
 	private TapSensor tapSensor = new TapSensor();
 	private CommandReceiver cmdReceiver = new CommandReceiver();
 	
-	enum SensorAnalysisResult{	InProgress, TargetReached, Distress;	} 
+	enum SensorAnalysisResult{	InProgress/*towards target*/, TargetReached, Distress;	} 
+	
 	Sofia(){
 		this.acceptedCommands.add(EMPTY_CMD);
 	}
@@ -115,14 +113,14 @@ public class Sofia {
 			if (fsm.getCurrentState() == DeducedSystemState.Lost && tapSensor.wasTappedWithinX_second(1)) {
 				this.reInitialize();
 			}
-			//priority 5:
+			//priority 5: check command completion
 			if (status == SensorAnalysisResult.TargetReached) {
 				commandsCompleted.put(new Date(), acceptedCommands.poll());
 				if (acceptedCommands.isEmpty()) acceptedCommands.add(EMPTY_CMD);/*avoid empty queue*/
 				fsm.markCompletion();
+				//Priority 6: 
+				this.acceptIncomingCommand();
 			}
-			//Priority 6:
-			this.checkIncomingCommand();
 			if (isCmdEmpty()) continue;
 			if (acceptedCommands.peek().shouldExit()) break;			
 			//Special logic for MoveUp or MoveDistance(3):
@@ -133,7 +131,8 @@ public class Sofia {
 			double tmp2 = acceptedCommands.peek().getNumericValue();
 			if (tmp2>0)
 				this.targetValue  = tmp2;
-			execute(acceptedCommands.peek());
+			
+			execute(acceptedCommands.peek()); //do not remove from queue
 		}
 		
 		//special logic for ReturnHome command:
@@ -146,9 +145,7 @@ public class Sofia {
 	/**Principle -- reacting to sensors is higher priority over processing new commands. 
 	 * 
 	 * Command can wait for some microseconds. If sensors indicate drone is off course or over-spinning
-	 * we need to correct it ASAP or risk crashing.
-	 * 
-	 * @return false (bad) if malfunction detected.
+	 * we need to correct it ASAP or risk crashing. 
 	 */
 	private SensorAnalysisResult checkSensors() {
 		for (BladeEngine engine: engines) {
@@ -159,7 +156,7 @@ public class Sofia {
 		if (motionSensor.getSpinSpeedAroundAxis().speed > 1) {
 			 return SensorAnalysisResult.Distress;//too much spinning, likely out of control
 		}
-		//process other sensor
+		//process other sensors
 		// 
 		// if target reached, then return SensorAnalysisResult.TargetReached.
 		// There will lots of calculation to determine whether target is reached.
@@ -170,10 +167,11 @@ public class Sofia {
 	boolean isCmdEmpty() {
 		return acceptedCommands.isEmpty() ||acceptedCommands.peek() == EMPTY_CMD;
 	}
-	private void checkIncomingCommand() {
+	private void acceptIncomingCommand() {
 		if (!isCmdEmpty()) return; //current command not completed
 		Cmd tmp = cmdReceiver.getIncomingCommand();
 		if (tmp != EMPTY_CMD) {
+			this.acceptedCommands.clear(); 
 			if (tmp.getClass() == TouchDown.class) {
 				this.acceptedCommands.add(new Stablize());/* Put two commands into the queue
 First the drone must reach the Hovering state. At that time first command would be removed 
@@ -181,7 +179,6 @@ from queue. Then the 2nd command (Land) would execute.*/
 			}
 			this.acceptedCommands.add(tmp);		
 		}
-		
 	}
 	private void execute(Cmd cmd) {
 		cmd.execute(fsm);

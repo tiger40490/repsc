@@ -1,4 +1,4 @@
-package com.nsdq.drone.devices;
+package com.nsdq.drone.devices; //v1
 
 import java.util.Date;
 
