@@ -1,7 +1,7 @@
 package com.nsdq.drone;
 
 /**
- * This object is in a different JVM, whereas Sofia runs in a JVM on-board the drone.
+ * This object lives in a different JVM, whereas Sofia runs in a JVM on-board the drone.
  * 
  */
 public abstract class RemoteControl {

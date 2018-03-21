@@ -5,7 +5,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import com.nsdq.drone.devices.BladeEngine;
 import com.nsdq.drone.devices.CommandReceiver;
-import com.nsdq.drone.devices.MotionSensor;
+import com.nsdq.drone.devices.SelfMotionSensor;
 import com.nsdq.drone.devices.OrientationSensor;
 import com.nsdq.drone.devices.PositionSensor;
 import com.nsdq.drone.devices.TapSensor;
@@ -78,7 +78,7 @@ public class Sofia {
 	//on-board devices:
 	private BladeEngine[] engines = {new BladeEngine("front-left"), new BladeEngine("front-right"), 
 			new BladeEngine("back-left"), new BladeEngine("back-right")};
-	private MotionSensor motionSensor = new MotionSensor();
+	private SelfMotionSensor motionSensor = new SelfMotionSensor();
 	private OrientationSensor orSensor = new OrientationSensor();
 	private PositionSensor posSensor = new PositionSensor();
 	private TapSensor tapSensor = new TapSensor();

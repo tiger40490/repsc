@@ -6,7 +6,7 @@ import com.nsdq.drone.SpeedTuple;
 /**
  * based on the gyroscope 
  */
-public class MotionSensor implements IReadableDevice {
+public class SelfMotionSensor implements IReadableDevice {
     SpeedTuple getX_Speed() {
     	return new SpeedTuple(0,0); //should query the hardware in real time	
     }

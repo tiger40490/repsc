@@ -2,10 +2,7 @@ package com.nsdq.drone; //v0.9
 
 /**All command names should start with verbs.
  * 
- * 
  * Method should probably be public.
- * 
- * @author Victor Tan
  *
  */
 public abstract class Cmd{
