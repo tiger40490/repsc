@@ -13,7 +13,7 @@ struct MyBase{
 struct MyDer1: public MyBase{ //note ctor can't initialize the field "type" directly
   MyDer1() : MyBase(MyBase::d1) { cout<<"MyDer1 ctor\n"; }
 };
-void identify(MyBase * ptr){
+void identifyType(MyBase * ptr){
   cout<<"v v v   entering identify()...\n";
   switch (ptr->type){
     case MyBase::b:
@@ -28,9 +28,10 @@ struct RegularVptrBased{
   virtual ~RegularVptrBased(){}
 };
 int main(){
-  identify(new MyDer1);
-  identify(new MyBase(MyBase::b));
+  identifyType(new MyDer1);
+  identifyType(new MyBase(MyBase::b));
   cout<<sizeof(RegularVptrBased)<<" = size of a vptr-based class\n";
 }
-/*demonstrates use of one-byte enum field instead of 8-byte vptr for RTTI
+/* Demonstrates use of one-byte enum field instead of 8-byte vptr for RTTI
+ * This is space-efficient if we construct many instances, but not necessarily runtime efficient.
  */
