@@ -1,23 +1,26 @@
+//note ctor runs before the function receives the new ptr
+
 #include <iostream>
 #include <stdint.h> //uint8_t
 using namespace std;
 
-enum Type: uint8_t {b, d1, d2};
 struct MyBase{
+  enum Type: uint8_t {b, d1, d2};
   Type type;
-  MyBase():type(b){ cout<<"MyBase ctor\n";}
+  //MyBase(): MyBase(b){} //c++11 ctor chaining not supported in my compiler:(
+  MyBase(Type t):type(t){ cout<<"MyBase ctor\n";}
 };
-struct MyDer1: public MyBase{
-  MyDer1(){ cout<<"MyDer1 ctor\n"; type = d1;}
+struct MyDer1: public MyBase{ //note ctor can't initialize the field "type" directly
+  MyDer1() : MyBase(MyBase::d1) { cout<<"MyDer1 ctor\n"; }
 };
 void identify(MyBase * ptr){
   cout<<"v v v   entering identify()...\n";
   switch (ptr->type){
-    case b:
-        cout<<"MyBase object of size ";
+    case MyBase::b:
+        cout<<"MyBase object of size == ";
         break;
-    case d1:
-        cout<<"MyDer1 object of size ";
+    case MyBase::d1:
+        cout<<"MyDer1 object of size == ";
   }
   cout<<sizeof(*ptr)<<", which is much smaller than a vptr:)\n^ ^ ^   leaving identify()\n\n";
 }
@@ -26,6 +29,8 @@ struct RegularVptrBased{
 };
 int main(){
   identify(new MyDer1);
-  identify(new MyBase);
+  identify(new MyBase(MyBase::b));
   cout<<sizeof(RegularVptrBased)<<" = size of a vptr-based class\n";
 }
+/*demonstrates use of one-byte enum field instead of 8-byte vptr for RTTI
+ */
