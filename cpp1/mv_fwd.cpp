@@ -42,6 +42,15 @@ private:
   string * _ptr;
   string _nonref;
 };
+void pbvalFunc(Badstr clone){
+  cout<<&clone<<endl;
+}
+void testPbValue(){
+  pbvalFunc(Badstr("temp")); //no move no copy. The "temp" object is created in the callee's stack!
+  Badstr nonref("nonref");
+  pbvalFunc(nonref);
+  cout<<"^^^^^    done with pbvalue test    ^^^^^\n\n";  
+}
 void testAssignment(){
   Badstr me("var1");
   Badstr sister("sister");
@@ -104,6 +113,7 @@ compile as it disables type deduction and remove universsal reference*/
   cout<<"^^^^^    done with test_fwd()    ^^^^^\n\n";  
 }
 int main(){
+  testPbValue();
   testAssignment();
   testEmplace();
   test_fwd();
