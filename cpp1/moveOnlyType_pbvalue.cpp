@@ -40,7 +40,7 @@ private:
   string * _ptr;
   string _nonref;
 };
-MoveOnlyStr factory(string s){ //RVO probably constructs the object on caller's stack frame 
+MoveOnlyStr factory(string s){ //RVO constructs the object on caller's stack frame 
   MoveOnlyStr ret(s);
   cout<<&ret<<" <- address of factory return object\n";
   cout<<"temp ret object created, now returning by value\n";
@@ -56,14 +56,20 @@ void receive(MoveOnlyStr clonedArg){
 void testPassInByValue(){
   MoveOnlyStr uniquePtrimitator("input");
   cout<<&uniquePtrimitator<<" <- address of original object before passing by value\n";
-//receive(uniquePtrimitator); //nonref needs copy-ctor. Won't compile
   receive(move(uniquePtrimitator)); 
+//receive(uniquePtrimitator); //nonref needs copy-ctor. Won't compile
   cout<<uniquePtrimitator<<endl;
 }
+void testContainer(){
+  MoveOnlyStr bb("bb");
+  vector<MoveOnlyStr> arr;
+  arr.push_back(move(bb));
+//arr.push_back(bb); //nonref needs copy-ctor. Won't compile
+  cout<<bb<<endl;
+}
 int main(){
-  testPassInByValue();
+  testFactory();
+//testContainer();
 }
 /*Goal is to test how a move-only type (like st::mutex or unique_ptr) is passed by value
-
-Let's return this object from factory, save it in container...
 */
