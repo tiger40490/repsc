@@ -46,7 +46,7 @@ void pbvalFunc(Badstr clone){
   cout<<&clone<<endl;
 }
 void testPbValue(){
-  pbvalFunc(Badstr("temp")); //no move no copy. The "temp" object is created in the callee's stack!
+  pbvalFunc(Badstr("temp")); //no move no copy. The "temp" object is created in the callee's stack! More efficient than Scott Meyers said
   Badstr nonref("nonref");
   pbvalFunc(nonref);
   cout<<"^^^^^    done with pbvalue test    ^^^^^\n\n";  
