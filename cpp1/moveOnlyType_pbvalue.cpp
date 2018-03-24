@@ -40,7 +40,7 @@ private:
   string * _ptr;
   string _nonref;
 };
-MoveOnlyStr factory(string s){ //RVO constructs the object on caller's stack frame 
+MoveOnlyStr factory(string s){ //RVO constructs the object on caller's stack frame without move-ctor
   MoveOnlyStr ret(s);
   cout<<&ret<<" <- address of factory return object\n";
   cout<<"temp ret object created, now returning by value\n";
@@ -53,14 +53,14 @@ void testFactory(){
 void receive(MoveOnlyStr clonedArg){
   cout<<&clonedArg<<" <- address of argument object passed in by value\n";
 }
-void testPassInByValue(){
+void testPassInByValue(){ //explicit move() needed
   MoveOnlyStr uniquePtrimitator("input");
   cout<<&uniquePtrimitator<<" <- address of original object before passing by value\n";
   receive(move(uniquePtrimitator)); 
 //receive(uniquePtrimitator); //nonref needs copy-ctor. Won't compile
   cout<<uniquePtrimitator<<endl;
 }
-void testContainer(){
+void testContainer(){ //explicit move() needed
   MoveOnlyStr bb("bb");
   vector<MoveOnlyStr> arr;
   arr.push_back(move(bb));
