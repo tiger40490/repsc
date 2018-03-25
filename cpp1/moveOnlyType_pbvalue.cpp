@@ -14,6 +14,7 @@ struct MoveOnlyStr{ //a string class that robs its sister instance
   }
 #endif
   MoveOnlyStr(MoveOnlyStr && sister){
+    _ssn = sister._ssn; //primitive fields? just copy 
     _nonref = move(sister._nonref); /*nonref variable needs std::move()
 so we can use the move-assignment of std::string*/
     _ptr = sister._ptr; // ptr field needs no std::move()
@@ -23,9 +24,10 @@ so we can use the move-assignment of std::string*/
   MoveOnlyStr(string const & s){
     _ptr = new string(s);
     _nonref = s;
+	_ssn = 0;
     cout<<this<<" <-- "<<*_ptr<<" populated in converter-ctor\n";
   }
-  MoveOnlyStr(MoveOnlyStr const & s) = delete;
+  MoveOnlyStr(MoveOnlyStr const & s) = delete; //do we need this?
   ~MoveOnlyStr(){delete _ptr;}
   friend ostream & operator<<(ostream & os, MoveOnlyStr const & me){
     if (me._ptr){
@@ -39,6 +41,7 @@ so we can use the move-assignment of std::string*/
 private:  
   string * _ptr;
   string _nonref;
+  int _ssn;
 };
 MoveOnlyStr factory(string s){ //RVO constructs the object on caller's stack frame without move-ctor.. see my blog on RVO^move
   MoveOnlyStr ret(s);
