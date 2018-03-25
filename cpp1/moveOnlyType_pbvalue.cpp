@@ -40,7 +40,7 @@ private:
   string * _ptr;
   string _nonref;
 };
-MoveOnlyStr factory(string s){ //RVO constructs the object on caller's stack frame without move-ctor
+MoveOnlyStr factory(string s){ //RVO constructs the object on caller's stack frame without move-ctor.. see my blog on RVO^move
   MoveOnlyStr ret(s);
   cout<<&ret<<" <- address of factory return object\n";
   cout<<"temp ret object created, now returning by value\n";
