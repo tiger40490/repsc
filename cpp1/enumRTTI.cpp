@@ -2,6 +2,7 @@
 //demo: the enum is a nested type within a struct, so enum value like
 // "b" is MyBase::b. In c++11, we would use the enum class as qualifier
 //showcase c++11 ctor chaining 
+//showcase protected ctor
 #include <iostream>
 #include <stdint.h> //uint8_t
 using namespace std;
@@ -21,6 +22,7 @@ struct MyDer1: public MyBase{ //note ctor can't initialize the field "type" dire
 void identifyType(MyBase * ptr){
   cout<<"v v v   entering identify()...\nCalling non-virtual function via base ptr: ";
   ptr->play();
+  cout<<"now calling non-virtual function via a casted ptr... ";
   switch (ptr->type){
     case MyBase::b:
         ptr->play();
@@ -38,7 +40,7 @@ struct RegularVptrBased{
 };
 int main(){
   identifyType(new MyDer1);
-  identifyType(new MyBase(/*MyBase::b*/));
+  identifyType(new MyBase/*MyBase::b*/);
   cout<<sizeof(RegularVptrBased)<<" = size of a vptr-based class\n";
 }
 /* Demonstrates use of one-byte enum field instead of 8-byte vptr for RTTI
