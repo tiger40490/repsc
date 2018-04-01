@@ -1,14 +1,15 @@
-//note ctor runs before the function receives the new ptr
-
+//demo: ctor runs before the function receives the new ptr
+//demo: the enum is a nested type within a struct, so enum value like
+// "b" is MyBase::b. In c++11, we would use the enum class as qualifier
 #include <iostream>
 #include <stdint.h> //uint8_t
 using namespace std;
 
 struct MyBase{
-  enum Type: uint8_t {b, d1, d2};
-  Type type;
+  enum Level: uint8_t {b, d1, d2};
+  Level type;
   //MyBase(): MyBase(b){} //c++11 ctor chaining not supported in my compiler:(
-  MyBase(Type t):type(t){ cout<<"MyBase ctor\n";}
+  MyBase(Level t):type(t){ cout<<"MyBase ctor\n";}
   void play(){ cout<<"MyBase playing()\n"; }
 };
 struct MyDer1: public MyBase{ //note ctor can't initialize the field "type" directly
