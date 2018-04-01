@@ -1,6 +1,7 @@
 //demo: ctor runs before the function receives the new ptr
 //demo: the enum is a nested type within a struct, so enum value like
 // "b" is MyBase::b. In c++11, we would use the enum class as qualifier
+//showcase c++11 ctor chaining 
 #include <iostream>
 #include <stdint.h> //uint8_t
 using namespace std;
@@ -8,9 +9,10 @@ using namespace std;
 struct MyBase{
   enum Level: uint8_t {b, d1, d2};
   Level type;
-  //MyBase(): MyBase(b){} //c++11 ctor chaining not supported in my compiler:(
+  MyBase(): MyBase(b){} //c++11 ctor chaining not supported in my office compiler:(
+  void play(){ cout<<"MyBase playing\n"; }
+protected:
   MyBase(Level t):type(t){ cout<<"MyBase ctor\n";}
-  void play(){ cout<<"MyBase playing()\n"; }
 };
 struct MyDer1: public MyBase{ //note ctor can't initialize the field "type" directly
   MyDer1() : MyBase(MyBase::d1) { cout<<"MyDer1 ctor\n"; }
@@ -36,7 +38,7 @@ struct RegularVptrBased{
 };
 int main(){
   identifyType(new MyDer1);
-  identifyType(new MyBase(MyBase::b));
+  identifyType(new MyBase(/*MyBase::b*/));
   cout<<sizeof(RegularVptrBased)<<" = size of a vptr-based class\n";
 }
 /* Demonstrates use of one-byte enum field instead of 8-byte vptr for RTTI
