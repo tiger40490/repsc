@@ -1,3 +1,4 @@
+# Can this algo apply to a linked list? I guess so
 import random
 arr=[8,1,2,8, 33,9,33,4,5,6,7]
 arr.extend(random.sample(xrange(-99, 100), 19))
