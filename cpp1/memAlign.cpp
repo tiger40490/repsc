@@ -20,7 +20,7 @@ int main() {
   printf("%p %p %p are addresses of struct fields without packing\n", &(st.field1), &(st.field2), &(st.field3));
   printf("%p %p %p are addresses of struct fields packed\n", &(stp.field1), &(stp.field2), &(stp.field3));
 }
-/* Typical output from x64 :
+/* Typical output on a x64 box:
 
 0x7fff0c15b788 0x7fff0c15b796 0x7fff0c15b797 0x7fff0c15b798 are addresses of locals, in reverse of declaration order
 0x7fff0c15b7a0 0x7fff0c15b7a1 are addresses of array[0], array[1], declared earliest!
