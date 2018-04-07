@@ -59,7 +59,7 @@ int main(){
   check1array({6,1,2,4,3,5,0});
 }
 /* Requirement: https://bintanvictor.wordpress.com/2018/04/07/check-array-of-0-to-n-nasdaq/
-= means the correct number is now occupying
+= means populated correctly
 - means vacated
-x means multiple objects of this value are found
+x means shared by multiple instances of this value
 */
