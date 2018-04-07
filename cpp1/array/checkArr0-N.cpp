@@ -34,7 +34,7 @@ void solve1(vector<Val> _v){
         dump(i, "after moving");
         break;
       }else if('=' == a[th] || a[th] == 'x'){
-        a[mf] = '-';
+        if (!isFake(a[mf])) a[mf] = '-'; 
         a[th] = 'x';
         dump(i, "after x");
         cout<<th<<" marked as duplicated\n";
@@ -54,8 +54,9 @@ void solve1(vector<Val> _v){
   dump(9999999999999, "game over");
 }
 int main(){
-  solve1({1,2,0,2,0});
-  solve1({1,2,4,3,0});
+  solve1({0,1,2,4,0,2});
+  //solve1({1,2,0,2,0});
+  //solve1({1,2,4,3,0});
 }
 /* Requirement: https://bintanvictor.wordpress.com/2018/04/07/check-array-of-0-to-n-nasdaq/
 = means the correct number is now occupying
