@@ -1,5 +1,5 @@
 //showcasing std::move
-//showcasing typedef to different position vs value
+//showcasing typedef to differentiate position vs value
 #include<iostream>
 #include<vector>
 #include<assert.h>
@@ -8,12 +8,13 @@ typedef int Val;
 typedef size_t Pos;
 vector<Val> a;  
 size_t sz=0;
+bool isFake(Val val){ return val < 0 || sz <= val;}
 void dump(Pos pos, string headline=""){
   cout<<"-------- "<<headline<<" .. current position == "<<pos<<endl;
   for(Pos i=0; i<sz; ++i) cout<<i<<"\t";
   cout<<endl;
   for(Pos i=0; i<sz; ++i) {
-    if (a[i]< 0 || sz <= a[i]) cout<<(char)a[i]<<"\t";
+    if (isFake(a[i])) cout<<(char)a[i]<<"\t";
     else cout<<a[i]<<"\t";
   }
   cout<<endl;
@@ -26,9 +27,9 @@ void solve1(vector<Val> _v){
     Pos mf = i; //moved from
     Val th=a[i]; /*target home*/
     while(1){
-      if (th < 0 || sz <= th){break;}
+      if (isFake(th)){break;}
       if (th == a[th] || a[th] == '-'){
-        if (0 <= a[mf] && a[mf] < sz) a[mf] = '-'; 
+        if (!isFake(a[mf])) a[mf] = '-'; 
         a[th] = '=';
         dump(i, "after moving");
         break;
@@ -39,11 +40,11 @@ void solve1(vector<Val> _v){
         cout<<th<<" marked as duplicated\n";
         break;
       }
-      if (0 <= a[mf] && a[mf] < sz) a[mf] = '-'; 
+      if (!isFake(a[mf])) a[mf] = '-'; 
       
       Val evict = a[th];
       mf = th;
-      assert( 0<=a[th] && a[th]<sz && a[th] != th);
+      assert( !isFake(a[th]) && a[th] != th);
       a[th] = '=';
       th = evict;
       dump(i, "after evicting");
