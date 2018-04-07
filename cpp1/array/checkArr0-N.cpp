@@ -54,6 +54,7 @@ void check1array(vector<Val> _v){
   dump(9999999999999, "game over");
 }
 int main(){
+  check1array({4,1,2,4,0,2,6,1});
   check1array({0,1,2,4,0,2,3,1});
   check1array({1,2,0,2,0});
   check1array({6,1,2,4,3,5,0});
