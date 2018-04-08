@@ -8,6 +8,15 @@
 using namespace std;
 typedef double Px;
 typedef size_t Ts; //timestamp
+typedef bool BS;
+
+void dump(map<Ts, BS>  const & a, string headline=""){  
+  cout<<"-------- "<<headline<<" .. size == "<<a.size()<<endl;
+  for (auto it=a.begin(); it!=a.end(); ++it){
+    cout<<it->first<<":"<<(it->second? "B":"S")<<"\t";
+  }
+  cout<<endl;
+}
 void dump(vector<Px> const & a, string headline=""){  
   cout<<"-------- "<<headline<<" .. size == "<<a.size()<<endl;
   auto const sz = a.size();
@@ -31,17 +40,18 @@ int solve(vector<Px> a){ //return total profit
   if (a.size() < 2) return 0;
   shrink(a); dump(a, "after shrink");
   
-  map<Ts, bool> trades; //yes = buy; no = Sell
+  map<Ts, BS> trades; //yes = buy; no = Sell
   for(Ts i=1; i<a.size(); ++i){ 
-    bool /*wasRising*/ wr= (a[0]<=a[1]);
+    trades.insert(make_pair(i,   a[i-1]>a[i])); //was falling=>buy
     //cout<<ii<<" is the current price"<<endl;
   }
+  dump(trades);
     //Px const pp = *prev(it);
     //Px const nn = *next(it);
     //Px const ii = *it;
 }
 int main(){
-  solve({4,5,3,6,1,2});
+  //solve({4,5,3,6,1,2});
   solve({4,4,5, 4.11, 3, 4.22, 6,6,2,1,2});
 }
 /* Requirement: https://bintanvictor.wordpress.com/2018/04/07/best-day-trading-play-in-hindsight-nasdaq/
