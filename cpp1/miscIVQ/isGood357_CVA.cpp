@@ -24,7 +24,7 @@ bool isGood(unsigned int k){
 int main(){
   assert (!isGood(30));
   assert (isGood(15));
-  for (int cand=1; cand<39; cand+=2){
+  for (unsigned int cand=1; cand<39; cand+=2){
     isGood(cand);
   }
 }
