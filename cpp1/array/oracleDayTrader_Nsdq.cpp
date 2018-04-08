@@ -44,18 +44,15 @@ void shrink(vector<Px> & a){ //remove useless price points
 }
 void tieUpEnds(vector<Px> & a, map<TickIndex, BS> & trades){
   auto sz=a.size();
-  if (trades.size()%2 == 0){// If the trades collection has matched buys/sells, then we need to add a pair of buy/sell at the two ends. 
+  if (trades.size()%2 == 0){// If the trades collection contain matched buys/sells, then we need to add a pair of buy/sell at open and close
       if (a[0]==a[sz-1]) return;
-      trades.insert(make_pair(0,   a[0]<a[sz-1]));
-      trades.insert(make_pair(sz-1,a[0]>a[sz-1]));
+      trades.insert(make_pair(0,   a[0]<a[sz-1])); //Buy at open if open is lower 
+      trades.insert(make_pair(sz-1,a[0]>a[sz-1])); //Buy at close if close is lower
       return;
   }
-  //if first trade is buy, then we need a sell at higher of the two ends
   bool closingHigher = a[0]<=a[sz-1];
-  BS buyNeeded = !trades.begin()->second;
- 
-  if (closingHigher && !buyNeeded ||
-     !closingHigher &&  buyNeeded ){ 
+  if (closingHigher &&  trades.begin()->second/*additional sell needed*/ ||
+     !closingHigher && !trades.begin()->second/*additional buy needed*/ ){ 
     trades.insert(make_pair(sz-1, !trades.begin()->second)); //add an reverse of the first trade
   }else{
     trades.insert(make_pair(0, !trades.begin()->second)); 
