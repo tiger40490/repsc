@@ -13,23 +13,13 @@ void dump(vector<Px> const & a, string headline=""){
   auto const sz = a.size();
   for(Ts i=0; i<sz; ++i) cout<<i<<"\t";
   cout<<endl;
-  for(Ts i=0; i<sz; ++i) {
-    cout<<a[i]<<"\t";
-  }cout<<endl;
+  for(Ts i=0; i<sz; ++i) cout<<a[i]<<"\t";
+  cout<<endl;
 }
 void shrink(vector<Px> & a){ //remove useless points
-  //bool /*wasRising*/ wr; //uninitialized!
   for(auto it=next(a.begin()); it!=prev(a.end());){
-    //Px const pp = *prev(it);
-    //Px const nn = *next(it);
-    //Px const ii = *it;
-    //cout<<ii<<" is the current price"<<endl;
-    if ((*prev(it) - *it) * (*it - *next(it)) >= 0){
-      it=a.erase(it);
-      //dump(a, "after erasing the current price");
-    }else{
-      ++it;
-    }
+    if ((*prev(it) - *it) * (*it - *next(it)) >= 0){ it=a.erase(it);
+    }else{ ++it; }
   }
   int i=1; //can't put into for-loop header !
   for(auto it=next(a.begin()); it!=prev(a.end()); ++it, ++i){
@@ -42,7 +32,13 @@ int solve(vector<Px> a){ //return total profit
   shrink(a); dump(a, "after shrink");
   
   map<Ts, bool> trades; //yes = buy; no = Sell
-  //for(Ts i=1, bool /*wasRising*/ wr= (a[0]<=a[1]); i<a.size(); ++i){ }
+  for(Ts i=1; i<a.size(); ++i){ 
+    bool /*wasRising*/ wr= (a[0]<=a[1]);
+    //cout<<ii<<" is the current price"<<endl;
+  }
+    //Px const pp = *prev(it);
+    //Px const nn = *next(it);
+    //Px const ii = *it;
 }
 int main(){
   solve({4,5,3,6,1,2});
