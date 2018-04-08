@@ -1,13 +1,10 @@
-//what if all the way down?
-//if price didn't change, then remove that print point
-//if direction doesn't change, then remove intermediate print points
-//if no turning point at all, then no profit to make
-//showcase using map to erase ... more robust than deque/vector when erasing
+//showcasing vector erase while iterating
 #include <iostream>
 #include <vector>
 #include <deque>
 #include <map>
 #include <iterator>
+#include <assert.h>
 using namespace std;
 typedef double Px;
 typedef size_t Ts; //timestamp
@@ -16,12 +13,10 @@ void dump(vector<Px> const & a, string headline=""){
   auto const sz = a.size();
   for(Ts i=0; i<sz; ++i) cout<<i<<"\t";
   cout<<endl;
-  
   for(Ts i=0; i<sz; ++i) {
     cout<<a[i]<<"\t";
   }cout<<endl;
 }
-
 void shrink(vector<Px> & a){ //remove useless points
   //bool /*wasRising*/ wr; //uninitialized!
   for(auto it=next(a.begin()); it!=prev(a.end());){
@@ -35,15 +30,19 @@ void shrink(vector<Px> & a){ //remove useless points
     }else{
       ++it;
     }
-    //wr = (a[0]<===a[1]);
-    //bool isRising = a[i]<a[i+1];
   }
+  int i=1; //can't put into for-loop header !
+  for(auto it=next(a.begin()); it!=prev(a.end()); ++it, ++i){
+    Px const pp = *prev(it);
+    Px const nn = *next(it);
+    Px const ii = *it;
+    //cout<<"Every prince point should be a turning point... Checking tiomestamp # "<<i<<endl; 
+    assert ((pp - ii) * (ii - nn) < 0);
+  }  
 }
-
 int solve(vector<Px> a){ //return total profit
   if (a.size() < 2) return 0;
-  shrink(a);
-  dump(a, "after shrink");
+  shrink(a); dump(a, "after shrink");
   
   map<Ts, bool> trades; //yes = buy; no = Sell
   //for(Ts i=1, bool /*wasRising*/ wr= (a[0]<=a[1]); i<a.size(); ++i){ }
