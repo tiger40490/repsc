@@ -1,5 +1,8 @@
-//untested
+#include <iostream>
+#include <assert.h>
+using namespace std;
 bool isGood(unsigned int k){
+  cout<<"\nChecking "<<k<<" ..\t";
   while(1){
     if (k%3 == 0){
       k = k/3;
@@ -13,7 +16,16 @@ bool isGood(unsigned int k){
       k = k/7;
       continue;
     }
+    //cout<<k<<" = k after 3 5 7\n";
+    if    (k == 1) cout<<"yes";
     return k == 1;
+  }
+}
+int main(){
+  assert (!isGood(30));
+  assert (isGood(15));
+  for (int cand=1; cand<39; cand+=2){
+    isGood(cand);
   }
 }
 /* return true if k has no other factors beside 3,5 or 7. 
