@@ -81,6 +81,6 @@ int main(){
 /* Requirement: https://bintanvictor.wordpress.com/2018/04/07/best-day-trading-play-in-hindsight-nasdaq/
 Strategy: every time we see a downturn, we sell (every upturn, we buy). 
 
-If the trades collection has an extra sell (buy), then both extreme ends point down(up) so we pick the lower(higher) between the two. 
+If the trades collection has an extra sell (buy), then both both ends of the price chart surely point down(up) so we wil pick the lower(higher) between the two ends. 
 
 */
