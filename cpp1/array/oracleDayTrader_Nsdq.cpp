@@ -49,7 +49,8 @@ int solve(vector<Px> a){ //return total profit
   //for(Ts i=1, bool /*wasRising*/ wr= (a[0]<=a[1]); i<a.size(); ++i){ }
 }
 int main(){
-  solve({4,5,3,6,1});
+  solve({4,5,3,6,1,2});
+  solve({4,4,5, 4.11, 3, 4.22, 6,6,2,1,2});
 }
 /* Requirement: https://bintanvictor.wordpress.com/2018/04/07/best-day-trading-play-in-hindsight-nasdaq/
 Strategy: every time we see a downturn, we sell (every upturn, we buy). 
