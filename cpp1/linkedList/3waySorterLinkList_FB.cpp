@@ -61,4 +61,4 @@ int main(){
         reshuffle();
         dump();
 }
-/*https://wp.me/p74oew-4Cj is requirement */
+/*https://wp.me/p74oew-4Cj is requirement. If input is array, I have another (harder) implementation in the "array" folder. */
