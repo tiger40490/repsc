@@ -2,27 +2,25 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include <iterator>
 #include <assert.h>
 using namespace std;
 typedef double Px;
-typedef size_t Ts; //timestamp
-typedef bool BS;
+typedef size_t TickIndex; //Tick Index
+typedef bool BS; //yes = buy; no = Sell
 void dump(vector<Px> const & a, string headline=""){  
   cout<<"-------- "<<headline<<" .. array size = "<<a.size()<<endl;
   auto const sz = a.size();
-  for(Ts i=0; i<sz; ++i) cout<<i<<"\t";
+  for(TickIndex i=0; i<sz; ++i) cout<<i<<"\t";
   cout<<endl;
-  for(Ts i=0; i<sz; ++i) cout<<a[i]<<"\t";
+  for(TickIndex i=0; i<sz; ++i) cout<<a[i]<<"\t";
   cout<<endl;
 }
-double dump(map<Ts, BS>  const & trades, vector<Px> const & a, string headline=""){  
-  double accu = 0;
+double dump(map<TickIndex, BS>  const & trades, vector<Px> const & a, string headline=""){  
+  double accu = 0; 
   if (trades.size()%2 == 0){
-    auto fi=trades.begin();
-    for (auto ri=trades.rbegin();
-         fi->first < ri->first; ++fi, ++ri){
-      assert(fi->second != ri->second);
+    auto fi=trades.begin(); //fwd iterator, different type from ri..can't go into for-loop header!
+    for (auto ri=trades.rbegin(); fi->first < ri->first; ++fi, ++ri){
+      assert(fi->second != ri->second && "the earliest/last trades must be opposites");
       accu += a[fi->first] * (fi->second ?-1:1);
       accu += a[ri->first] * (ri->second ?-1:1);
     }
@@ -44,7 +42,7 @@ void shrink(vector<Px> & a){ //remove useless price points
     assert ((*prev(it) - *it) * (*it - *next(it)) < 0);
   }  
 }
-void tieUpEnds(vector<Px> & a, map<Ts, BS> & trades){
+void tieUpEnds(vector<Px> & a, map<TickIndex, BS> & trades){
   auto sz=a.size();
   if (trades.size()%2 == 0){// If the trades collection has matched buys/sells, then we need to add a pair of buy/sell at the two ends. 
       if (a[0]==a[sz-1]) return;
@@ -68,8 +66,8 @@ int solve(vector<Px> a){ //return total profit
   shrink(a); dump(a, "after shrink");
   
   auto sz=a.size();
-  map<Ts, BS> trades; //yes = buy; no = Sell
-  for(Ts i=1; i<sz-1; ++i){ 
+  map<TickIndex, BS> trades; 
+  for(TickIndex i=1; i<sz-1; ++i){ 
     trades.insert(make_pair(i,   a[i-1]>a[i])); //was falling=>buy
     //cout<<ii<<" is the current price"<<endl;
   }
