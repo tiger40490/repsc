@@ -20,11 +20,11 @@ void dump(vector<Px> const & a, string headline=""){
 void shrink(vector<Px> & a){ //remove useless points
   //bool /*wasRising*/ wr; //uninitialized!
   for(auto it=next(a.begin()); it!=prev(a.end());){
-    Px const pp = *prev(it);
-    Px const nn = *next(it);
-    Px const ii = *it;
+    //Px const pp = *prev(it);
+    //Px const nn = *next(it);
+    //Px const ii = *it;
     //cout<<ii<<" is the current price"<<endl;
-    if ((pp - ii) * (ii - nn) >= 0){
+    if ((*prev(it) - *it) * (*it - *next(it)) >= 0){
       it=a.erase(it);
       //dump(a, "after erasing the current price");
     }else{
@@ -33,11 +33,8 @@ void shrink(vector<Px> & a){ //remove useless points
   }
   int i=1; //can't put into for-loop header !
   for(auto it=next(a.begin()); it!=prev(a.end()); ++it, ++i){
-    Px const pp = *prev(it);
-    Px const nn = *next(it);
-    Px const ii = *it;
     //cout<<"Every prince point should be a turning point... Checking tiomestamp # "<<i<<endl; 
-    assert ((pp - ii) * (ii - nn) < 0);
+    assert ((*prev(it) - *it) * (*it - *next(it)) < 0);
   }  
 }
 int solve(vector<Px> a){ //return total profit
