@@ -59,7 +59,7 @@ int main(){
   check1array({1,2,0,2,0});
   check1array({6,1,2,4,3,5,0});
 }
-/* Requirement: https://bintanvictor.wordpress.com/2018/04/07/check-array-of-0-to-n-nasdaq/
+/* Requirement: https://wp.me/p74oew-55f
 = means populated correctly
 - means vacated
 x means shared by multiple instances of this value
