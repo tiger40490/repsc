@@ -4,6 +4,7 @@
 #include <vector>
 
 //showcase non-dummy-type template param min_width
+//Note body of map^vector dumpers are identical
 //Below is minimum code block for copy-paste
 #include <iostream>
 #include <iomanip>
