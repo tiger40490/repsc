@@ -8,6 +8,7 @@
 //Below is minimum code block for copy-paste
 #include <iostream>
 #include <iomanip>
+#define ss if(1>0)cout //to mass-disable cout before uploading to hacker rank
 using namespace std;
 
 template<typename K, typename V> ostream & operator<<(ostream & os, pair<K,V> const & p){
@@ -27,5 +28,5 @@ template<typename T,             int min_width=4> ostream & operator<<(ostream &
 int main(){
   vector<int> li={1,5,2,0};
   map<int, int> tm={{1,11}, {2,22}};
-  cout<<li<<tm;
+  ss<<li<<tm;
 }
