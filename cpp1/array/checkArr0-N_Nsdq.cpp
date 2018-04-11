@@ -56,8 +56,8 @@ void solution1(){ //my home-grown solution
 void solution2(){ //based on XR's email
   for(auto & item: a) ++item;
   dump(0, "upsize");
-  for(auto & upsize: a){
-    auto idx = abs(upsize)-1;
+  for(auto & upsized: a){
+    auto idx = abs(upsized)-1;
     if (a[idx] >= 0)
         a[idx] *= -1; //flip sign
     else
