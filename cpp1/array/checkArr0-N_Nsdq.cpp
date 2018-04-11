@@ -19,9 +19,7 @@ void dump(Pos pos, string headline=""){
   }
   cout<<endl;
 }
-void check1array(vector<Val> _v){
-  a = move(_v); //the argument object is no longer needed
-  sz=a.size();
+void solution1(){ //my home-grown solution
   dump(0, "original");
 	for (Pos i=0; i<sz; ++i){
     Pos mf = i; //moved from
@@ -52,6 +50,13 @@ void check1array(vector<Val> _v){
     }//end of while loop, go back to for loop
   }
   dump(9999999999999, "game over");
+}
+void solution2(){ //based on XR's email
+}
+void check1array(vector<Val> _v){
+  a = move(_v); //the argument object is no longer needed
+  sz=a.size();  
+  solution1();
 }
 int main(){
   check1array({4,1,2,4,0,2,6,1});
