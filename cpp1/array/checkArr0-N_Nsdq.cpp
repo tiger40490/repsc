@@ -52,11 +52,20 @@ void solution1(){ //my home-grown solution
   dump(9999999999999, "game over");
 }
 void solution2(){ //based on XR's email
+  for(auto & item: a) ++item;
+  dump(0, "upsize");
+  for(auto & upsize: a){
+    auto idx = abs(upsize)-1;
+    if (a[idx] >= 0)
+        a[idx] *= -1; //flip sign
+    else
+        cout<<idx<<" marked as duplicated\n";
+  }
 }
 void check1array(vector<Val> _v){
   a = move(_v); //the argument object is no longer needed
   sz=a.size();  
-  solution1();
+  solution2();
 }
 int main(){
   check1array({4,1,2,4,0,2,6,1});
