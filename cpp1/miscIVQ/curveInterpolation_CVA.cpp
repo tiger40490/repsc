@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <functional>
+#include <assert.h>
 using namespace std;
 typedef pair<double, double> Pair;
 typedef vector<Pair> Pairs;
@@ -24,21 +25,27 @@ struct Curve{
     sort(in.begin(), in.end(), myLess);
     return in;
   }
-  Curve(Pairs && in):points(sorted(move(in))){}
-  double lookup(double x){ //don't need upper_bound
+  Curve(Pairs && in):points(sorted(move(in))){
+    assert(points.size() > 1 && "no interpolation");
+  }
+  double lookup(double x){ //what if only 1 point
   //four scenarios to handle: 1) perfect hit; 2) 2 neighbor points 3) way too high; 4) way too low; 
+    cout<<"----- looking up "<<x<<endl;
     Pair target(x, x);
-    cout<<"----- looking up for "<<x<<endl;
-    auto li = lower_bound(points.begin(), points.end(), target);
-    Pair p1 = *li;
-    cout<<p1.first<<" = lower bound \n";
-    if (li == points.end()){
+    auto p1 = lower_bound(points.begin(), points.end(), target);
+    auto p2 = prev(p1);
+    cout<<p1->first<<" = lower_bound() i.e. touchUpperBound \n";
+    if (abs(p1->first-x) < 0.0000001 ){
+      cout<<"perfect hit\n";      
+      return p1->second;
+    }else if (p1 == points.end()){
       cout<<"need to extrapolate to the right\n";
-      //p1 = *(li-1);
-      //p2 = *(li-2);
-    }else if (li == points.begin()){
+      p1 = prev(p2);
+    }else if (p1 == points.begin()){
       cout<<"need to extrapolate to the left\n";
-    }    
+      p2 = next(p1);
+    }
+    cout<<p1->first<<" <-> "<<p2->first<<endl;
     return 0;
   }
 };
@@ -47,6 +54,7 @@ int main(){
   dump(c.points);
   c.lookup(0.1);
   c.lookup(1);
+  c.lookup(1.5);
   c.lookup(4);
   c.lookup(4.1);
 }
