@@ -25,19 +25,19 @@ struct Curve{
     return in;
   }
   Curve(Pairs && in):points(sorted(move(in))){}
-  double lookup(double x){
+  double lookup(double x){ //don't need upper_bound
     Pair target(x, x);
-    cout<<"looking up for "<<x<<endl;
+    cout<<"----- looking up for "<<x<<endl;
     auto li = lower_bound(points.begin(), points.end(), target);
+    Pair p1 = *li;
+    cout<<p1.first<<" = lower bound \n";
     if (li == points.end()){
       cout<<"need to extrapolate to the right\n";
-    }
-    auto ui = upper_bound(points.begin(), points.end(), target);
-    if (ui == points.begin()){
+      //p1 = *(li-1);
+      //p2 = *(li-2);
+    }else if (li == points.begin()){
       cout<<"need to extrapolate to the left\n";
     }    
-    cout<<li->first<<" = lower bound \n";
-    cout<<ui->first<<" = upper bound \n";
     return 0;
   }
 };
