@@ -74,7 +74,7 @@ int main(){
   check1array({6,1,2,4,3,5,0});
 }
 /* Requirement: https://wp.me/p74oew-55f
-= means populated correctly
-- means vacated
+= means populated exactly once
+- means vacated i.e. required value missing
 x means shared by multiple instances of this value
 */
