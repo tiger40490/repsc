@@ -26,6 +26,7 @@ struct Curve{
   }
   Curve(Pairs && in):points(sorted(move(in))){}
   double lookup(double x){ //don't need upper_bound
+  //four scenarios to handle: 1) perfect hit; 2) 2 neighbor points 3) way too high; 4) way too low; 
     Pair target(x, x);
     cout<<"----- looking up for "<<x<<endl;
     auto li = lower_bound(points.begin(), points.end(), target);
