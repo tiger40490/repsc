@@ -1,4 +1,5 @@
 //showcasing std::move
+//showcasing for loop with auto &
 //showcasing typedef to differentiate position vs value
 #include<iostream>
 #include<vector>
@@ -8,13 +9,13 @@ typedef int Val;
 typedef size_t Pos;
 vector<Val> a;  
 size_t sz=0;
-bool isFake(Val val){ return val < 0 || sz <= val;}
+bool isChar(Val val){ return val < 0 || sz <= val;}
 void dump(Pos pos, string headline=""){
   cout<<"-------- "<<headline<<" .. current position == "<<pos<<endl;
   for(Pos i=0; i<sz; ++i) cout<<i<<"\t";
   cout<<endl;
   for(Pos i=0; i<sz; ++i) {
-    if (isFake(a[i])) cout<<(char)a[i]<<"\t";
+    if (isChar(a[i])) cout<<(char)a[i]<<"\t";
     else cout<<a[i]<<"\t";
   }
   cout<<endl;
@@ -25,30 +26,31 @@ void solution1(){ //my home-grown solution
     Pos mf = i; //moved from
     Val th=a[i]; /*target home*/
     while(1){
-      if (isFake(th)){break;}
+      if (isChar(th)){break;}
       if (th == a[th] || a[th] == '-'){
-        if (!isFake(a[mf])) a[mf] = '-'; 
+        if (!isChar(a[mf])) a[mf] = '-'; 
         a[th] = '=';
         //dump(i, "after moving");
         break;
       }else if('=' == a[th] || a[th] == 'x'){
-        if (!isFake(a[mf])) a[mf] = '-'; 
+        if (!isChar(a[mf])) a[mf] = '-'; 
         a[th] = 'x';
         //dump(i, "after x");
         cout<<th<<" marked as duplicated\n";
         break;
       }
-      if (!isFake(a[mf])) a[mf] = '-'; 
+      if (!isChar(a[mf])) a[mf] = '-'; 
       
       Val evict = a[th];
       mf = th;
-      assert( !isFake(a[th]) && a[th] != th);
+      assert( !isChar(a[th]) && a[th] != th);
       a[th] = '=';
       th = evict;
       //dump(i, "after evicting");
       cout<<evict<<" = evicted object from Position "<<mf<<endl;
     }//end of while loop, go back to for loop
   }
+  for(auto item: a) assert(isChar(item));
   dump(9999999999999, "game over");
 }
 void solution2(){ //based on XR's email
@@ -65,7 +67,7 @@ void solution2(){ //based on XR's email
 void check1array(vector<Val> _v){
   a = move(_v); //the argument object is no longer needed
   sz=a.size();  
-  solution2();
+  solution1();
 }
 int main(){
   check1array({4,1,2,4,0,2,6,1});
