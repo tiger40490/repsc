@@ -23,9 +23,42 @@ def visit(node):
     print node.data
     if node.ri: visit(node.ri)        
 def inOrderDftRecursive():
+    print '------- recursive ------'
     visit(root)
+##############  
+def dump(st):
+  for node, state in st:
+    print ' ', node.data,
+  print    
+
+''' the 2nd element in each stack element is 
+i for initial
+L for after printing left-child
+'''
 def inOrderDftIterative():
-  pass    
+  print '------- iterative ------'
+  stack = [[root,'i'] ]
+  while(stack):
+    frame = stack[-1]
+    node, state = frame
+    print 'stack top is', node.data, state
+    if state == 'R':
+      stack.pop()
+      continue
+    if node.le is not None and state == 'i': 
+      stack.append([node.le,'i'])
+      print "after append le",; dump(stack)
+      frame[1] = 'L'    
+      continue    
+    print '------> ', node.data
+    
+    if node.ri is not None: 
+      stack.append([node.ri,'i'])
+      print "after append ri",; dump(stack)
+      frame[1] = 'R'    
+      continue
+    stack.pop(); print "after pop",; dump(stack)
+
 def main():
     inOrderDftIterative()
     inOrderDftRecursive()
