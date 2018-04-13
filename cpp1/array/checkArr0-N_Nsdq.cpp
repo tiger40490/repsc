@@ -57,11 +57,11 @@ void solution2(){ //based on XR's email
   for(auto & item: a) ++item;
   dump(0, "upsize");
   for(auto & upsized: a){
-    auto idx = abs(upsized)-1;
-    if (a[idx] >= 0)
-        a[idx] *= -1; //flip sign
+    auto orig = abs(upsized)-1;
+    if (a[orig] >= 0)
+        a[orig] *= -1; //flip sign
     else
-        cout<<idx<<" marked as duplicated\n";
+        cout<<orig<<" marked as duplicated\n";
   }
 }
 void check1array(vector<Val> _v){
