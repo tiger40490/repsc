@@ -9,7 +9,7 @@ typedef int Val;
 typedef size_t Pos;
 vector<Val> a;  
 size_t sz=0;
-bool isChar(Val val){ return val < 0 || sz <= val;}
+bool isChar(Val val){ return val < 0 || sz < val;}
 void dump(Pos pos, string headline=""){
   cout<<"-------- "<<headline<<" .. current position == "<<pos<<endl;
   for(Pos i=0; i<sz; ++i) cout<<i<<"\t";
@@ -56,10 +56,10 @@ void solution1(){ //my home-grown solution
 void solution2(){ //based on XR's email
   for(auto & item: a) ++item;
   dump(0, "upsize");
-  for(auto & upsized: a){
-    auto orig = abs(upsized)-1;
+  for(auto const upsized: a){
+    auto const orig = abs(upsized)-1;
     if (a[orig] >= 0)
-        a[orig] *= -1; //flip sign
+        a[orig] *= -1;
     else
         cout<<orig<<" marked as duplicated\n";
   }
@@ -68,7 +68,7 @@ void check1array(vector<Val> _v){
   a = move(_v); //the argument object is no longer needed
   assert(0==_v.size() && "0 != size of vector after robbing");
   sz=a.size();  
-  solution1();
+  solution2();
 }
 int main(){
   check1array({4,1,2,4,0,2,6,1});
