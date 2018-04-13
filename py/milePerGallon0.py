@@ -1,5 +1,5 @@
 ''' todo: more tests needed
-showcase sorting a value in a dict
+showcase sorting a list embedded in a dict
 showcase __repr__ to support pprint
 showcase split a string into an array
 '''
@@ -68,4 +68,4 @@ def main():
 if __name__== "__main__": # best practice.. make this script usable as a module
     sys.exit(main())
 
-# Requirement: https://wp.me/p74oew-3zx assuming (illogically) each fill amount is part of the usage within the date range
+# Requirement: https://wp.me/p74oew-3zx assuming each fill amount is part of the usage within the date range
