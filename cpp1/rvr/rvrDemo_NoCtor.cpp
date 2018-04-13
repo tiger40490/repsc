@@ -19,10 +19,10 @@ int main(){
   
   string b="move-to-NAMED-rvr-var";
   string && namedRvrVar = move(b);
+	
   /*calls the lvr version because namedRvrVar has a Location
 and is a l-value expression, even though the string object 
 is marked as abandoned*/
-
   assert('l' == play(namedRvrVar)); 
   
   //can't compile: string && convertedF = forward(string("fwd-to-rvr-var"));
