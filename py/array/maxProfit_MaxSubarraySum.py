@@ -107,7 +107,4 @@ Can't buy before first delta.
 Subarray must have 0< length <= original_length.
 
 https://www.geeksforgeeks.org/largest-sum-contiguous-subarray/ has a simpler algo
-
-todo: have a one-pass maxProfit() algo that work with levels; have another one-pass maxSubsum() algo that work with deltas
-
 '''
