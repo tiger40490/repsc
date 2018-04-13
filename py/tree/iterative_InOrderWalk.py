@@ -13,7 +13,7 @@ _8=Node(8, None, _9)
 _7=Node(7, None, _8)
 _3=Node(3)
 _1=Node(1)
-_2=Node(2, _1, _a)
+_2=Node(2, _1, _3)
 _5=Node(5, _2, _7) 
 root = _5
 
@@ -21,12 +21,13 @@ def visit(node):
     if node is None: return
     if node.le: visit(node.le)
     print node.data
-    if node.ri: visit(node.ri)
-        
+    if node.ri: visit(node.ri)        
 def inOrderDftRecursive():
     visit(root)
-    
+def inOrderDftIterative():
+  pass    
 def main():
+    inOrderDftIterative()
     inOrderDftRecursive()
 
 main()
