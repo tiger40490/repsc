@@ -4,15 +4,15 @@
 using namespace std;
 
 char play(string && s){
-	cout<<s<<" -> rvr function\n";
+	cout<<s<<"\t-> rvr function\n";
 	return 'r';
 }
 char play(string & s){
-	cout<<s<<" -> lvr function\n";
+	cout<<s<<"\t-> lvr function\n";
 	return 'l';
 }
 int main(){
-  play(string("naturally-occurring-temp"));
+  assert('r' == play(string("naturally-occurring-temp")));
   
   string a="moved-unnamed";
   assert('r' == play(move(a))); //calls the rvr version
