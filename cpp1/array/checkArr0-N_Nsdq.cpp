@@ -51,7 +51,7 @@ void solution1(){ //my home-grown solution
     }//end of while loop, go back to for loop
   }//for-loop over the positions
   for(auto item: a) assert(isChar(item));
-  dump(9999999999999, "game over");
+  dump(99999, "game over");
 }
 void solution2(){ //based on XR's email
   for(auto & item: a) ++item;
@@ -66,6 +66,7 @@ void solution2(){ //based on XR's email
 }
 void check1array(vector<Val> _v){
   a = move(_v); //the argument object is no longer needed
+  assert(0==_v.size() && "0 != size of vector after robbing");
   sz=a.size();  
   solution1();
 }
