@@ -1,3 +1,4 @@
+# todo: more tests needed
 import sys,bisect
 from pprint import pprint
 
@@ -26,7 +27,7 @@ def load():
     if allrec.has_key(name):
       allrec[name].append(r)
     else:
-      allrec[name] = [r]
+      allrec[name] = [r] # new list added to dict
 
   #pprint (allrec)
 
@@ -40,11 +41,13 @@ def getMPG(name, d1, d2):
   keys = [rec.date for rec in li]
   idx1 = bisect.bisect_left(keys, d1)
   idx2 = bisect.bisect_left(keys, d2)
-  #print idx1, idx2
-  #print li
+  if idx2 == len(keys): 
+    idx2 -= 1
+    
+  #print idx1, idx2, li
 
   perCar = dict()
-  for idx in range(idx1, idx2+1):
+  for idx in range(idx1, idx2+1):#visit idx1~idx2 inclusive
     rec = li[idx]
     # put each trip under the given car
     if perCar.has_key(rec.car):
