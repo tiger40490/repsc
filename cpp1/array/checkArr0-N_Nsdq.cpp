@@ -20,7 +20,10 @@ void dump(Pos pos, string headline=""){
   }
   cout<<endl;
 }
-void solution1(){ //my home-grown solution
+void solution1(){ /*my home-grown solution
+= means populated exactly once
+- means vacated i.e. required value missing
+x means shared by multiple instances of this value */
   dump(0, "original");
   for (Pos i=0; i<sz; ++i){
     Pos mf = i; //moved from
@@ -77,7 +80,4 @@ int main(){
   check1array({6,1,2,4,3,5,0});
 }
 /* Requirement: https://wp.me/p74oew-55f
-= means populated exactly once
-- means vacated i.e. required value missing
-x means shared by multiple instances of this value
 */
