@@ -68,4 +68,4 @@ def main():
 if __name__== "__main__": # best practice.. make this script usable as a module
     sys.exit(main())
 
-# Requirement: https://wp.me/p74oew-3zx 
+# Requirement: https://wp.me/p74oew-3zx assuming (illogically) each fill amount is part of the usage within the date range
