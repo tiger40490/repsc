@@ -17,9 +17,7 @@ _1=Node(1)
 _2=Node(2, _1, _3)
 _5=Node(5, _2, _7) 
 root = _5
-
 def visit(node):
-    if node is None: return
     if node.le: visit(node.le)
     print node.data
     if node.ri: visit(node.ri)        
@@ -28,9 +26,8 @@ def inOrderDftRecursive():
     visit(root)
 ##############  
 def dump(st):
-  for node, state in st:
-    print ' ', node.data,
-  print    
+  for node, state in st:  print ' ', node.data,
+  print 
 
 ''' the 2nd element in each stack element is 
 i for initial
