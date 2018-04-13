@@ -42,10 +42,9 @@ def getMPG(name, d1, d2):
   dates = [rec.date for rec in li]
   idx1 = bisect.bisect_left(dates, d1)
   idx2 = bisect.bisect_left(dates, d2)
-  if idx2 == len(dates): 
-    idx2 -= 1
+  if idx2 == len(dates):    idx2 -= 1
     
-  print li[idx1].date, li[idx2].date, " ... marks the 1st/last records to use"
+  print li[idx1].date, li[idx2].date, " ... mark the 1st/last relevant records"
 
   perCar = dict()
   for idx in range(idx1, idx2+1):#visit idx1~idx2 inclusive
