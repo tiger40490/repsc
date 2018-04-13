@@ -39,13 +39,13 @@ def load():
 def getMPG(name, d1, d2):
   if not allrec.has_key(name): return 'name not found'
   li = allrec[name]
-  keys = [rec.date for rec in li]
-  idx1 = bisect.bisect_left(keys, d1)
-  idx2 = bisect.bisect_left(keys, d2)
-  if idx2 == len(keys): 
+  dates = [rec.date for rec in li]
+  idx1 = bisect.bisect_left(dates, d1)
+  idx2 = bisect.bisect_left(dates, d2)
+  if idx2 == len(dates): 
     idx2 -= 1
     
-  #print idx1, idx2, li
+  print li[idx1].date, li[idx2].date, " ... marks the 1st/last records to use"
 
   perCar = dict()
   for idx in range(idx1, idx2+1):#visit idx1~idx2 inclusive
@@ -63,7 +63,7 @@ def getMPG(name, d1, d2):
 
 def main():
   load()
-  getMPG('John', 20160920, 20170920)
+  getMPG('John', 20160918, 20170922)
 
 if __name__== "__main__": # best practice.. make this script usable as a module
     sys.exit(main())
