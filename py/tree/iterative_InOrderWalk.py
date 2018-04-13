@@ -5,12 +5,13 @@ class Node(object):
         self.ri = right_node
 '''   5
   2       7
- 1 3        8
+ 1 3    6   8
              9
 '''
 _9=Node(9)
 _8=Node(8, None, _9)
-_7=Node(7, None, _8)
+_6=Node(6, None, None)
+_7=Node(7, _6, _8)
 _3=Node(3)
 _1=Node(1)
 _2=Node(2, _1, _3)
