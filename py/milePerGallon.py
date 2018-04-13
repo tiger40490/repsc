@@ -8,7 +8,7 @@ from pprint import pprint
 
 allrec = dict()
 
-class Trip:
+class Fill:
   def __init__(self, car, date, miles, fuel):
     self.car = car
     self.date = int(date)
@@ -25,7 +25,7 @@ def load():
   for line in lines:
     if  not line.strip(): continue
     tok = [x.strip() for x in line.split(',')]
-    r = Trip(tok[1], tok[4], tok[2], tok[3])
+    r = Fill(tok[1], tok[4], tok[2], tok[3])
     name = tok[0]
     if allrec.has_key(name):
       allrec[name].append(r)
@@ -50,7 +50,7 @@ def getMPG(name, d1, d2):
   perCar = dict()
   for idx in range(idx1, idx2+1):#visit idx1~idx2 inclusive
     rec = li[idx]
-    # put each trip under the given car
+    # put each Fill under the given car
     if perCar.has_key(rec.car):
       perCar[rec.car][0]+=rec.miles
       perCar[rec.car][1]+=rec.fuel
