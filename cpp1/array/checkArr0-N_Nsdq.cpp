@@ -22,7 +22,7 @@ void dump(Pos pos, string headline=""){
 }
 void solution1(){ //my home-grown solution
   dump(0, "original");
-	for (Pos i=0; i<sz; ++i){
+  for (Pos i=0; i<sz; ++i){
     Pos mf = i; //moved from
     Val th=a[i]; /*target home*/
     while(1){
@@ -49,7 +49,7 @@ void solution1(){ //my home-grown solution
       //dump(i, "after evicting");
       cout<<evict<<" = evicted object from Position "<<mf<<endl;
     }//end of while loop, go back to for loop
-  }
+  }//for-loop over the positions
   for(auto item: a) assert(isChar(item));
   dump(9999999999999, "game over");
 }
