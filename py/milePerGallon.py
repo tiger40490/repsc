@@ -1,4 +1,8 @@
-# todo: more tests needed
+''' todo: more tests needed
+showcase sorting a value in a dict
+showcase __repr__ to support pprint
+showcase split a string into an array
+'''
 import sys,bisect
 from pprint import pprint
 
@@ -22,18 +26,15 @@ def load():
     if  not line.strip(): continue
     tok = [x.strip() for x in line.split(',')]
     r = Trip(tok[1], tok[4], tok[2], tok[3])
-    #print r
     name = tok[0]
     if allrec.has_key(name):
       allrec[name].append(r)
     else:
       allrec[name] = [r] # new list added to dict
 
-  #pprint (allrec)
-
   for name in allrec:
     allrec[name].sort(key=lambda x: x.date)
-  #pprint (allrec)
+  pprint (allrec)
 
 def getMPG(name, d1, d2):
   if not allrec.has_key(name): return 'name not found'
