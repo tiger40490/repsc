@@ -105,6 +105,4 @@ test()
 Can't buy before first delta.
 * low lowWaterMark
 Subarray must have 0< length <= original_length.
-
-https://www.geeksforgeeks.org/largest-sum-contiguous-subarray/ has a simpler algo
 '''
