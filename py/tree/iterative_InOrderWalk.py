@@ -31,7 +31,8 @@ def dump(st):
 
 ''' the 2nd element in each stack element is 
 i for initial
-L for after printing left-child
+L means after printing Left-child
+R means after printing Right child
 '''
 def inOrderDftIterative():
   print '------- iterative ------'
@@ -39,7 +40,7 @@ def inOrderDftIterative():
   while(stack):
     frame = stack[-1]
     node, state = frame
-    print 'stack top is', node.data, state
+    print 'stack top is', node.data, state    
     if state == 'R':
       stack.pop()
       continue
