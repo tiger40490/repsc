@@ -79,14 +79,13 @@ int maxTokens(int fCnt, vector <int> friends_from, vector <int> friends_to, vect
       }
     } //2nd for loop
   } //outer for loop
-  for (int r=0; r<fCnt; ++r){ //debugging
-    for (int c=0; c<fCnt; ++c){ ss<<mat[r][c]<<"\t"; }
+  for (int r=0; r<fCnt; ++r){ //instrumentation
+    for (int c=0; c<fCnt; ++c) ss<<mat[r][c]<<"\t"; 
     ss<<endl;
   }
   //iterate over the matrix to find the cells with maximum number of tokens
   int maxTokensInOnePair=0, ret=0;
-  for (int r=0; r<fCnt; ++r){
-    for (int c=0; c<fCnt; ++c){
+  for (int r=0; r<fCnt; ++r) for (int c=0; c<fCnt; ++c){
       auto cnt = mat[r][c].size();
       if (maxTokensInOnePair < cnt){
         maxTokensInOnePair = cnt;
@@ -95,12 +94,10 @@ int maxTokens(int fCnt, vector <int> friends_from, vector <int> friends_to, vect
         int tmp = (r+1) * (c+1);
         if (ret < tmp) ret = tmp;
       }
-    }
   }
   return ret;
 }
 int main() {
-  //use assert to run 3 test cases
     assert(6  == maxTokens(4, {1,1,2,2,2},
                               {2,2,3,3,4},
                               {1,2,1,3,3}));                              
