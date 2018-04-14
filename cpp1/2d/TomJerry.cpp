@@ -31,7 +31,6 @@ void BFT(Node * start){ //mark all MY connected nodes with the same islandId
     start->islandId = siid++;
     return;
   }
-  //bool isNewIsland=false;
   queue<Node*> q; //start new queue for each island
   q.push(start);
   while(!q.empty()){
@@ -39,14 +38,12 @@ void BFT(Node * start){ //mark all MY connected nodes with the same islandId
     if (node->islandId != UNASSIGNED) continue;
     if (node->val == 1) continue; //will get its own island
     node->islandId = siid;
-    //isNewIsland = true;
     if (node->linkU) q.push(node->linkU);
     if (node->linkL) q.push(node->linkL);
     if (node->linkR) q.push(node->linkR);
     if (node->linkD) q.push(node->linkD);
   }
-  //if (isNewIsland) 
-  ++siid; //helps keep count of island
+  ++siid; //helps keep count of islands
 }
 
 /* construct directed graph connecting all the cells, by adding a link
@@ -57,19 +54,18 @@ Designate all cheese cells as must-visit nodes.
 Run a constrained shortest-path algorithm.
 */
 int minMoves(vector<vector<int>> const & maze, int x, int y) {
-  assert(maze[0][0] != 1 && "Tom can't be starting on a wall");
+  assert(maze[0][0] != 1 && "Tom can't start on a wall");
   int const rCnt = maze.size();
   int const cCnt = maze[0].size();
-  for(int r=0; r<rCnt; ++r) {
+  for(int r=0; r<rCnt; ++r) {//input dump
     for(int c=0; c<cCnt; ++c) cout<<maze[r][c]<<" ";
     cout<<endl;
   }
   vector<vector<Node>> nodes(rCnt);
   for (int r=0; r<rCnt; ++r){
-    nodes[r].resize(cCnt);
+    nodes[r].resize(cCnt); //reserve won't do
     for(int c=0; c<cCnt; ++c){
-      auto & n = nodes[r][c];
-      n.val=maze[r][c];
+      nodes[r][c].val=maze[r][c];
     }
   }
   //construct graph links
