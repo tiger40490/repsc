@@ -43,6 +43,7 @@ def inOrderDftIterative():
       print "after append le :",; dump(stack)
       aFrame[1] = 'L'    
       continue    
+
     if state in ['i', 'L']:
       print '\t\t\t\t-->', node.data
       if node.ri is not None : 
@@ -50,6 +51,7 @@ def inOrderDftIterative():
         print "after append ri :",; dump(stack)
         aFrame[1] = 'R'    
         continue
+        
     stack.pop(); print "after pop :",; dump(stack)
 def dump(st):
   for node, state in st:  print ' ', node.data,
