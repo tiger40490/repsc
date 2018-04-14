@@ -38,8 +38,8 @@ def inOrderDftIterative():
   print '------- iterative ------'
   stack = [[root,'i'] ]
   while(stack):
-    frame = stack[-1]
-    node, state = frame
+    aFrame = stack[-1]
+    node, state = aFrame
     print 'stack top is', node.data, state    
     if state == 'R':
       stack.pop()
@@ -47,14 +47,14 @@ def inOrderDftIterative():
     if node.le is not None and state == 'i': 
       stack.append([node.le,'i'])
       print "after append le",; dump(stack)
-      frame[1] = 'L'    
+      aFrame[1] = 'L'    
       continue    
     print '------> ', node.data
     
     if node.ri is not None: 
       stack.append([node.ri,'i'])
       print "after append ri",; dump(stack)
-      frame[1] = 'R'    
+      aFrame[1] = 'R'    
       continue
     stack.pop(); print "after pop",; dump(stack)
 
