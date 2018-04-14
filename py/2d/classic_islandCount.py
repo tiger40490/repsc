@@ -14,13 +14,13 @@ def readCell(r,c): # utility to return None if out of bounds
     return origColor
   return None # out of bounds
   
-def dst(r,c): # find all black cells connected and repaint them grey
+def dft(r,c): # find all black cells connected and repaint them grey
   if readCell(r, c+1) == 'b': coverEntireCluster(r,c+1)
   if readCell(r, c-1) == 'b': coverEntireCluster(r,c-1)
   if readCell(r+1, c) == 'b': coverEntireCluster(r+1,c)
   tmp = readCell(r-1, c); assert tmp is None or tmp == 'g'# i doubt we ever need to explore upward
   
-def bst(aa,bb): 
+def bft(aa,bb): 
   queue=list()
   queue.insert(0, (aa,bb))
   while(queue):
@@ -40,8 +40,8 @@ def work():
         coverEntireCluster(r,c)
   assert seen == width*height
   return myReturn()
-def coverEntireCluster(r,c): # bst/dst both OK. BST turns out a bit tricky to implement
-  dst(r,c)      
+def coverEntireCluster(r,c): # bft/dft both OK. BFT turns out a bit tricky to implement
+  dft(r,c)      
 def populate():
   global m, width, height
   m.append(['w', 'b', 'w', 'w', 'w'])
