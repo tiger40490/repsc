@@ -25,10 +25,6 @@ def inOrderDftRecursive():
     print '------- recursive ------'
     visit(root)
 ##############  
-def dump(st):
-  for node, state in st:  print ' ', node.data,
-  print 
-
 ''' the 2nd element in each stack element is 
 i for initial
 L means after printing Left-child
@@ -57,7 +53,9 @@ def inOrderDftIterative():
       aFrame[1] = 'R'    
       continue
     stack.pop(); print "after pop",; dump(stack)
-
+def dump(st):
+  for node, state in st:  print ' ', node.data,
+  print 
 def main():
     inOrderDftIterative()
     inOrderDftRecursive()
