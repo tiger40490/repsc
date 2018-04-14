@@ -2,12 +2,10 @@
 #include <vector>
 #include <list>
 #include <set> //faster than unordered_* for small sample
-#include <map> //faster than unordered_map for small sample
+#include <map> //faster than unordered_* for small sample
 #include <cassert>
-using namespace std;
-
 #define ss if(1>0) cout
-//typedef to reduce ambiguity
+using namespace std;
 typedef int Tokn;
 typedef int Fren;
 typedef set<Fren> Group; //group of connected friends
@@ -79,14 +77,13 @@ int maxTokens(int fCnt, vector <int> friends_from, vector <int> friends_to, vect
       }
     } //2nd for loop
   } //outer for loop
-  for (int r=0; r<fCnt; ++r){ //debugging
-    for (int c=0; c<fCnt; ++c){ ss<<mat[r][c]<<"\t"; }
+  for (int r=0; r<fCnt; ++r){ //instrumentation
+    for (int c=0; c<fCnt; ++c) ss<<mat[r][c]<<"\t"; 
     ss<<endl;
   }
   //iterate over the matrix to find the cells with maximum number of tokens
   int maxTokensInOnePair=0, ret=0;
-  for (int r=0; r<fCnt; ++r){
-    for (int c=0; c<fCnt; ++c){
+  for (int r=0; r<fCnt; ++r) for (int c=0; c<fCnt; ++c){
       auto cnt = mat[r][c].size();
       if (maxTokensInOnePair < cnt){
         maxTokensInOnePair = cnt;
@@ -95,12 +92,10 @@ int maxTokens(int fCnt, vector <int> friends_from, vector <int> friends_to, vect
         int tmp = (r+1) * (c+1);
         if (ret < tmp) ret = tmp;
       }
-    }
   }
   return ret;
 }
 int main() {
-  //use assert to run 3 test cases
     assert(6  == maxTokens(4, {1,1,2,2,2},
                               {2,2,3,3,4},
                               {1,2,1,3,3}));                              
@@ -110,6 +105,5 @@ int main() {
     assert(20 == maxTokens(5, {1,2,4,1,4,2,2}, 
                               {2,3,5,2,5,3,4}, 
                               {1,1,1,2,2,3,3}));
-}
-/*Req: https://wp.me/p74oew-5b5
+}/*Req: https://wp.me/p74oew-5b5
 */
