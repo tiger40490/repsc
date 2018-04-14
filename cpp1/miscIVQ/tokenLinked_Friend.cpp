@@ -9,7 +9,7 @@ using namespace std;
 typedef int Tokn;
 typedef int Fren;
 typedef set<Fren> Group; //group of connected friends
-typedef list<Group> Club;  //all groups owning a single token
+typedef list<Group> GoG;  //all groups owning a single token
 ostream & operator<<(ostream & os, Group const & li){
   if (li.empty()){
     os<<"-";
@@ -19,7 +19,7 @@ ostream & operator<<(ostream & os, Group const & li){
   for(auto it=next(li.begin()); it!=li.end(); ++it){ os<<','<<*it; }
   return os;
 }
-ostream & operator<<(ostream & os, Club const & li){
+ostream & operator<<(ostream & os, GoG const & li){
   if (li.empty()){
     os<<"--";
     return os;
@@ -29,13 +29,13 @@ ostream & operator<<(ostream & os, Club const & li){
   return os;
 }
 int maxTokens(int fCnt, vector <int> friends_from, vector <int> friends_to, vector <int> friends_weight) {
-  map<Tokn, Club > byToken;
+  map<Tokn, GoG > byToken;
   ///// Step 1: populate groups, defined as a connect set of friends. Each token is shared by 1 or more groups.
   for (size_t i=0; i<friends_to.size(); ++i){
     Tokn tok = friends_weight[i];
     Fren f1 = friends_from[i];
     Fren f2 = friends_to[i];
-    Club & groups = byToken[tok];
+    GoG & groups = byToken[tok];
     //look for any group to join
     bool isFound = false;
     for (auto git = groups.begin(); git != groups.end(); ++git){
