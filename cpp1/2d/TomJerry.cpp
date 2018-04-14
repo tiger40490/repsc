@@ -25,37 +25,31 @@ ostream & operator<<(ostream & os, Node const & n){
 }
 void BFT(Node * start){ //mark all MY connected nodes with the same islandId
   if (start->islandId!=UNASSIGNED) return; //already marked
-  static int iid = 10;
+  static int iid = 11;
   bool isNewIsland=false;
   queue<Node*> q; //start new queue for each island
   q.push(start);
   while(!q.empty()){
-    Node * node = q.front();
-    q.pop();
-    //if (node->val == 1) continue; //leave unassigned
-    if (node->islandId!=UNASSIGNED) continue;
+    Node * node = q.front(); q.pop();
+    if (node->islandId != UNASSIGNED) continue;
+    node->islandId = iid;
+    isNewIsland = true;
     if (node->linkU) q.push(node->linkU);
     if (node->linkL) q.push(node->linkL);
     if (node->linkR) q.push(node->linkR);
     if (node->linkD) q.push(node->linkD);
-    node->islandId = iid;
-    isNewIsland = true;
   }
-  if (isNewIsland) ++iid;
+  if (isNewIsland) ++iid; //helps keep count of island
 }
 
 /* construct directed graph connecting all the cells, by adding a link
 whenever there's no wall between two adjcent cells
 
 Designate the Jerry node as the destination.
-
 Designate all cheese cells as must-visit nodes.
-
 Run a constrained shortest-path algorithm.
-
-If designation or any must-visit node is not connected to (0,0), then return Failure.
 */
-int minMoves(vector<vector<int>> maze, int x, int y) {
+int minMoves(vector<vector<int>> const & maze, int x, int y) {
   int const rCnt = maze.size();
   int const cCnt = maze[0].size();
   for(int r=0; r<rCnt; ++r) {
@@ -90,12 +84,16 @@ int minMoves(vector<vector<int>> maze, int x, int y) {
   }
   auto tomIsland = nodes[0][0].islandId;
   if (nodes[x][y].islandId != tomIsland) return -1;
+  for(int r=0; r<rCnt; ++r) {
+    for(int c=0; c<cCnt; ++c) 
+      if (nodes[r][c].islandId != tomIsland) return -2;
+  }  
   //now check the island of Jerry and all the cheese cells. If any of them is != tomIsland, then return -1
   return 0;
 }
 int main() {
-    vector<vector<int>> maze={{1,0,1}, {0,2,2}, {1,1,0}};
-    int ret = minMoves(maze, 2, 0);
+    vector<vector<int>> maze={{1,0,1}, {1,2,2}, {2,1,0}};
+    int ret = minMoves(maze, 2, 2);
     cout<<ret<<endl;
 }
 /* Req: https://bintanvictor.wordpress.com/2018/04/14/connected-matrix-cells-with-barriers/
