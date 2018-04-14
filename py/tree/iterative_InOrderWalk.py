@@ -24,8 +24,8 @@ def visit(node):
 def inOrderDftRecursive():
     print '------- recursive ------'
     visit(root)
-##############  
-''' the 2nd element in each stack element is 
+#########################  
+''' the 2nd element in each stack frame is 
 i for initial
 L means after adding Left-child
 R means after adding Right child
@@ -61,5 +61,4 @@ def dump(st):
 def main():
     inOrderDftRecursive()
     inOrderDftIterative()
-
 main()
