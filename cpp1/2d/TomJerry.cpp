@@ -1,18 +1,13 @@
 #include <iostream>
 #include <vector>
-#include <list>
 #include <queue>
-//#include <set> //faster than unordered_* for small sample
-//#include <map> //faster than unordered_map for small sample
-#include <limits>
 #include <cassert>
 using namespace std;
 
 int const UNASSIGNED = -1;
 struct Node{
   char val;
-  int islandId; //always above 10 or -1 (meaning unassigned)
-  int x, y;
+  int islandId; //always above 10 or unassigned
   Node *linkU, *linkD, *linkL, *linkR;
   Node(): val(0), islandId(UNASSIGNED), linkU(0),linkD(0),linkL(0),linkR(0){}
 };
@@ -20,13 +15,13 @@ ostream & operator<<(ostream & os, Node const & n){
   os<<"[ ";
   os<<(n.linkL?"<-":"| "); //| means no link to Left
   os<<(n.linkU?"^ ":"u "); //u means no link Up
-  os<<(int)n.val<<" Is"<<n.islandId;
+  os<<(int)n.val<<" Is_"<<n.islandId;
   os<<(n.linkD?" v":" d"); //d means no link Down
   os<<(n.linkR?"->":" |"); //| means no link to Right
   os<<" ]";
   return os;
 }
-void bft(Node * start){ //mark all connected nodes with the same islandId
+void BFT(Node * start){ //mark all connected nodes with the same islandId
   if (start->islandId!=UNASSIGNED) return; //already marked
   static int iid = 10;
   iid++;
@@ -83,7 +78,7 @@ int minMoves(vector<vector<int>> maze, int x, int y) {
   }
   //assign an id to each island to check infeasibility  i.e. -1
   for(int r=0; r<rCnt; ++r) {
-    for(int c=0; c<cCnt; ++c) bft(&nodes[r][c]);
+    for(int c=0; c<cCnt; ++c) BFT(&nodes[r][c]);
   }
   for(int r=0; r<rCnt; ++r) {
     for(int c=0; c<cCnt; ++c) cout<<nodes[r][c]<<"   ";
