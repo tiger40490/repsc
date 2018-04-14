@@ -101,6 +101,12 @@ int maxTokens(int fCnt, vector <int> friends_from, vector <int> friends_to, vect
 }
 int main() {
   //use assert to run 3 test cases
+    assert(6  == maxTokens(4, {1,1,2,2,2},
+                              {2,2,3,3,4},
+                              {1,2,1,3,3}));                              
+    assert(3  == maxTokens(3, {1,1,2},
+                              {3,3,3},
+                              {1,2,2}));
     assert(20 == maxTokens(5, {1,2,4,1,4,2,2}, 
                               {2,3,5,2,5,3,4}, 
                               {1,1,1,2,2,3,3}));
