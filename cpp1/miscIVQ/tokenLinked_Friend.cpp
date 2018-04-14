@@ -46,8 +46,7 @@ int maxTokens(int fCnt, vector <int> friends_from, vector <int> friends_to, vect
       if (git->count(f2)){
         git->insert(f1);
         isFound = true;
-      }
-      //todo: merge two groups if needed
+      }//todo: merge two groups if needed
       if (isFound){
         ss<<*git<<" is the expanded group\n";
         break;
@@ -65,7 +64,7 @@ int maxTokens(int fCnt, vector <int> friends_from, vector <int> friends_to, vect
 
   ///// Step 2: update the matrix using byToken
   set<Tokn> mat[fCnt][fCnt]; //init the matrix of friendships
-  for (auto it=byToken.begin(); it!=byToken.end(); ++it){
+  for (auto it=byToken.begin(); it!=byToken.end(); ++it)
     for (auto git = it->second.begin(); git != it->second.end(); ++git){
       vector<Fren> v(git->begin(), git->end()); //a group
       //for every paring in the group, update matrix
@@ -75,13 +74,12 @@ int maxTokens(int fCnt, vector <int> friends_from, vector <int> friends_to, vect
           ss<<tok<<" (token) : linking "<<f1<<","<<f2<<endl;
           mat[f1-1][f2-1].insert(tok);
       }
-    } //2nd for loop
   } //outer for loop
   for (int r=0; r<fCnt; ++r){ //instrumentation
     for (int c=0; c<fCnt; ++c) ss<<mat[r][c]<<"\t"; 
     ss<<endl;
   }
-  //iterate over the matrix to find the cells with maximum number of tokens
+  //finally, iterate over the matrix to find the cells with maximum number of tokens
   int maxTokensInOnePair=0, ret=0;
   for (int r=0; r<fCnt; ++r) for (int c=0; c<fCnt; ++c){
       auto cnt = mat[r][c].size();
