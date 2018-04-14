@@ -61,41 +61,41 @@ int minMoves(vector<vector<int>> const & maze, int x, int y) {
     for(int c=0; c<cCnt; ++c) cout<<maze[r][c]<<" ";
     cout<<endl;
   }
-  vector<vector<Node>> nodes(rCnt);
-  for (int r=0; r<rCnt; ++r){
-    nodes[r].resize(cCnt); //reserve won't do
+  vector<vector<Node>> mat(rCnt);
+  for (int r=0; r<rCnt; ++r){ //populate matrix
+    mat[r].resize(cCnt); //reserve won't do
     for(int c=0; c<cCnt; ++c){
-      nodes[r][c].val=maze[r][c];
+      mat[r][c].val=maze[r][c];
     }
   }
   //construct graph links
   for (int r=0; r<rCnt; ++r){
     for(int c=0; c<cCnt; ++c){
-      auto & n = nodes[r][c];
-      if (r>0 && nodes[r-1][c].val!=1) n.linkU = &nodes[r-1][c];
-      if (c>0 && nodes[r][c-1].val!=1) n.linkL = &nodes[r][c-1];
-      if (c<cCnt-1 && nodes[r][c+1].val!=1) n.linkR = &nodes[r][c+1];
-      if (r<rCnt-1 && nodes[r+1][c].val!=1) n.linkD = &nodes[r+1][c];
+      auto & n = mat[r][c];
+      if (r>0 && mat[r-1][c].val!=1) n.linkU = &mat[r-1][c];
+      if (c>0 && mat[r][c-1].val!=1) n.linkL = &mat[r][c-1];
+      if (c<cCnt-1 && mat[r][c+1].val!=1) n.linkR = &mat[r][c+1];
+      if (r<rCnt-1 && mat[r+1][c].val!=1) n.linkD = &mat[r+1][c];
     }
   }
   //assign an id to each island to check infeasibility  i.e. -1
   for(int r=0; r<rCnt; ++r) {
     for(int c=0; c<cCnt; ++c) {
       cout<<"tracing from "<<r<<","<<c<<endl;
-      BFT(&nodes[r][c]);
+      BFT(&mat[r][c]);
     }
   }
   //instrumentation:
   for(int r=0; r<rCnt; ++r) {
-    for(int c=0; c<cCnt; ++c) cout<<nodes[r][c]<<"   ";
+    for(int c=0; c<cCnt; ++c) cout<<mat[r][c]<<"   ";
     cout<<endl;
   }
   // feasibility:
-  auto tomIsland = nodes[0][0].islandId;
-  if (nodes[x][y].islandId != tomIsland) return -1;
+  auto tomIsland = mat[0][0].islandId;
+  if (mat[x][y].islandId != tomIsland) return -1;
   for(int r=0; r<rCnt; ++r) {
     for(int c=0; c<cCnt; ++c) 
-      if (nodes[r][c].islandId != tomIsland) return -2;
+      if (mat[r][c].islandId != tomIsland) return -2;
   }  
   //now check the island of Jerry and all the cheese cells. If any of them is != tomIsland, then return -1
   return 0;
