@@ -2,8 +2,8 @@
 #include <vector>
 #include <list>
 #include <queue>
-#include <set> //faster than unordered_* for small sample
-#include <map> //faster than unordered_map for small sample
+//#include <set> //faster than unordered_* for small sample
+//#include <map> //faster than unordered_map for small sample
 #include <limits>
 #include <cassert>
 using namespace std;
@@ -99,3 +99,5 @@ int main() {
     int ret = minMoves(maze, 2, 0);
     cout<<ret<<endl;
 }
+/* Req: https://bintanvictor.wordpress.com/2018/04/14/connected-matrix-cells-with-barriers/
+*/
