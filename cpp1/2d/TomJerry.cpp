@@ -26,7 +26,7 @@ ostream & operator<<(ostream & os, Node const & n){
 void BFT(Node * start){ //mark all MY connected nodes with the same islandId
   if (start->islandId!=UNASSIGNED) return; //already marked
   static int siid = 11;
-  cout<<"static siid = "<<siid<<endl;
+  //ss<<"static siid = "<<siid<<endl;
   if (start->val == 1){
     start->islandId = siid++;
     return;
@@ -68,8 +68,7 @@ int minMoves(vector<vector<int>> const & maze, int x, int y) {
       mat[r][c].val=maze[r][c];
     }
   }
-  //construct graph links
-  for (int r=0; r<rCnt; ++r){
+  for (int r=0; r<rCnt; ++r){  //construct graph links
     for(int c=0; c<cCnt; ++c){
       auto & n = mat[r][c];
       if (r>0 && mat[r-1][c].val!=1) n.linkU = &mat[r-1][c];
@@ -78,10 +77,10 @@ int minMoves(vector<vector<int>> const & maze, int x, int y) {
       if (r<rCnt-1 && mat[r+1][c].val!=1) n.linkD = &mat[r+1][c];
     }
   }
-  //assign an id to each island to check infeasibility  i.e. -1
+  //assign an id to each island to check infeasibility
   for(int r=0; r<rCnt; ++r) {
     for(int c=0; c<cCnt; ++c) {
-      cout<<"tracing from "<<r<<","<<c<<endl;
+      //cout<<"tracing from "<<r<<","<<c<<endl;
       BFT(&mat[r][c]);
     }
   }
@@ -97,7 +96,6 @@ int minMoves(vector<vector<int>> const & maze, int x, int y) {
     for(int c=0; c<cCnt; ++c) 
       if (mat[r][c].islandId != tomIsland) return -2;
   }  
-  //now check the island of Jerry and all the cheese cells. If any of them is != tomIsland, then return -1
   return 0;
 }
 int main() {
