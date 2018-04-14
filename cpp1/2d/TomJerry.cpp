@@ -28,8 +28,7 @@ void BFT(Node * start){ //mark all MY connected nodes with the same islandId
   static int siid = 11;
   cout<<"static siid = "<<siid<<endl;
   if (start->val == 1){
-    start->islandId = ++siid;
-    ++siid;
+    start->islandId = siid++;
     return;
   }
   //bool isNewIsland=false;
