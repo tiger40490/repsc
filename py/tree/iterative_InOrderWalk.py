@@ -29,6 +29,8 @@ def inOrderDftRecursive():
 i for initial
 L means after adding Left-child
 R means after adding Right child
+
+Useful techniques for recursive -> iterative
 '''
 def inOrderDftIterative():
   print '------- iterative ------'
@@ -51,7 +53,7 @@ def inOrderDftIterative():
         print "after append ri :",; dump(stack)
         aFrame[1] = 'R'    
         continue
-        
+    print 'popping the top node [', stack[-1][0].data, stack[-1][1], ']' 
     stack.pop(); print "after pop :",; dump(stack)
 def dump(st):
   for node, state in st:  print ' ', node.data,
