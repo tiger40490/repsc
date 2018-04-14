@@ -100,21 +100,10 @@ int maxTokens(int fCnt, vector <int> friends_from, vector <int> friends_to, vect
   return ret;
 }
 int main() {
-    int res;
-    int friends_nodes = 0;
-    int friends_edges = 0;
-
-    cin >> friends_nodes >> friends_edges;
-
-    vector<int> friends_from(friends_edges);
-    vector<int> friends_to(friends_edges);
-    vector<int> friends_weight(friends_edges);
-
-    for (int friends_i = 0; friends_i < friends_edges; friends_i++) {
-        cin >> friends_from[friends_i] >> friends_to[friends_i] >> friends_weight[friends_i];
-    }
-    res = maxTokens(friends_nodes, friends_from, friends_to, friends_weight);
-    cout << res << endl;
+  //use assert to run 3 test cases
+    assert(20 == maxTokens(5, {1,2,4,1,4,2,2}, 
+                              {2,3,5,2,5,3,4}, 
+                              {1,1,1,2,2,3,3}));
 }
 /*Req: https://wp.me/p74oew-5b5
 */
