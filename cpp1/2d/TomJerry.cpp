@@ -25,21 +25,29 @@ ostream & operator<<(ostream & os, Node const & n){
 }
 void BFT(Node * start){ //mark all MY connected nodes with the same islandId
   if (start->islandId!=UNASSIGNED) return; //already marked
-  static int iid = 11;
-  bool isNewIsland=false;
+  static int siid = 11;
+  cout<<"static siid = "<<siid<<endl;
+  if (start->val == 1){
+    start->islandId = ++siid;
+    ++siid;
+    return;
+  }
+  //bool isNewIsland=false;
   queue<Node*> q; //start new queue for each island
   q.push(start);
   while(!q.empty()){
     Node * node = q.front(); q.pop();
     if (node->islandId != UNASSIGNED) continue;
-    node->islandId = iid;
-    isNewIsland = true;
+    if (node->val == 1) continue; //will get its own island
+    node->islandId = siid;
+    //isNewIsland = true;
     if (node->linkU) q.push(node->linkU);
     if (node->linkL) q.push(node->linkL);
     if (node->linkR) q.push(node->linkR);
     if (node->linkD) q.push(node->linkD);
   }
-  if (isNewIsland) ++iid; //helps keep count of island
+  //if (isNewIsland) 
+  ++siid; //helps keep count of island
 }
 
 /* construct directed graph connecting all the cells, by adding a link
@@ -50,6 +58,7 @@ Designate all cheese cells as must-visit nodes.
 Run a constrained shortest-path algorithm.
 */
 int minMoves(vector<vector<int>> const & maze, int x, int y) {
+  assert(maze[0][0] != 1 && "Tom can't be starting on a wall");
   int const rCnt = maze.size();
   int const cCnt = maze[0].size();
   for(int r=0; r<rCnt; ++r) {
@@ -76,12 +85,17 @@ int minMoves(vector<vector<int>> const & maze, int x, int y) {
   }
   //assign an id to each island to check infeasibility  i.e. -1
   for(int r=0; r<rCnt; ++r) {
-    for(int c=0; c<cCnt; ++c) BFT(&nodes[r][c]);
+    for(int c=0; c<cCnt; ++c) {
+      cout<<"tracing from "<<r<<","<<c<<endl;
+      BFT(&nodes[r][c]);
+    }
   }
+  //instrumentation:
   for(int r=0; r<rCnt; ++r) {
     for(int c=0; c<cCnt; ++c) cout<<nodes[r][c]<<"   ";
     cout<<endl;
   }
+  // feasibility:
   auto tomIsland = nodes[0][0].islandId;
   if (nodes[x][y].islandId != tomIsland) return -1;
   for(int r=0; r<rCnt; ++r) {
@@ -92,7 +106,7 @@ int minMoves(vector<vector<int>> const & maze, int x, int y) {
   return 0;
 }
 int main() {
-    vector<vector<int>> maze={{1,0,1}, {1,2,2}, {2,1,0}};
+    vector<vector<int>> maze={{2,0,1}, {1,2,2}, {2,1,0}};
     int ret = minMoves(maze, 2, 2);
     cout<<ret<<endl;
 }
