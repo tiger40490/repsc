@@ -9,7 +9,7 @@ using namespace std;
 typedef int Tokn;
 typedef int Fren;
 typedef set<Fren> Group; //group of connected friends
-typedef list<Group> GoG;  //all groups owning a single token
+typedef list<Group> GoG;  //group of groups.. all groups owning a single token
 ostream & operator<<(ostream & os, Group const & li){
   if (li.empty()){
     os<<"-";
