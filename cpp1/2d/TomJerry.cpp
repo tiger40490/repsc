@@ -1,3 +1,4 @@
+//showcase operator<< for VO class, as a free function, not method
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -9,23 +10,24 @@ struct Node{
   char val;
   int islandId; //always above 10 or unassigned
   Node *linkU, *linkD, *linkL, *linkR;
-  Node(): val(0), islandId(UNASSIGNED), linkU(0),linkD(0),linkL(0),linkR(0){}
+  Node(): val(0), islandId(UNASSIGNED), 
+    linkU(0),linkD(0),linkL(0),linkR(0){}
 };
 ostream & operator<<(ostream & os, Node const & n){
   os<<"[ ";
-  os<<(n.linkL?"<-":"| "); //| means no link to Left
-  os<<(n.linkU?"^ ":"u "); //u means no link Up
+  os<<(n.linkL? "<-":"| "); //| means no link to Left
+  os<<(n.linkU? "^ ":"u "); //u means no link Up
   os<<(int)n.val<<" Is_"<<n.islandId;
-  os<<(n.linkD?" v":" d"); //d means no link Down
-  os<<(n.linkR?"->":" |"); //| means no link to Right
+  os<<(n.linkD? " v":" d"); //d means no link Down
+  os<<(n.linkR? "->":" |"); //| means no link to Right
   os<<" ]";
   return os;
 }
-void BFT(Node * start){ //mark all connected nodes with the same islandId
+void BFT(Node * start){ //mark all MY connected nodes with the same islandId
   if (start->islandId!=UNASSIGNED) return; //already marked
   static int iid = 10;
-  iid++;
-  queue<Node*> q;
+  bool isNewIsland=false;
+  queue<Node*> q; //start new queue for each island
   q.push(start);
   while(!q.empty()){
     Node * node = q.front();
@@ -37,7 +39,9 @@ void BFT(Node * start){ //mark all connected nodes with the same islandId
     if (node->linkR) q.push(node->linkR);
     if (node->linkD) q.push(node->linkD);
     node->islandId = iid;
+    isNewIsland = true;
   }
+  if (isNewIsland) ++iid;
 }
 
 /* construct directed graph connecting all the cells, by adding a link
