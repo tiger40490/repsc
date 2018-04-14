@@ -79,7 +79,7 @@ int maxTokens(int fCnt, vector <int> friends_from, vector <int> friends_to, vect
     for (int c=0; c<fCnt; ++c) ss<<mat[r][c]<<"\t"; 
     ss<<endl;
   }
-  //finally, iterate over the matrix to find the cells with maximum number of tokens
+  /////// finally, iterate over the matrix to find the cells with maximum number of tokens
   int maxTokensInOnePair=0, ret=0;
   for (int r=0; r<fCnt; ++r) for (int c=0; c<fCnt; ++c){
       auto cnt = mat[r][c].size();
