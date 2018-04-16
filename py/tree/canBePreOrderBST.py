@@ -17,8 +17,8 @@ def visit(node):
     print node.data,
     if node.ri: visit(node.ri)        
 def inOrderDftRecursive():
-    print '------- dump ------'
     visit(root)
+    print '\n^ ^ ^ ^ ^ dump ^ ^ ^ ^ ^'
 def insertNewFailed(val):
 #find the place to insert new node
     print '---- inserting', val
@@ -42,12 +42,15 @@ def insertNewFailed(val):
       #print 'parent set to', parent.data
 
 def canBePreOrderBST(li):
+  ret = _canBePreOrderBST(li)
+  inOrderDftRecursive()
+  return ret;
+  
+def _canBePreOrderBST(li):
   global root
   root = Node(li[0], None)
   for i in xrange(1, len(li)):
     if insertNewFailed(li[i]): return False
-    
-  inOrderDftRecursive()
   return True
 
 def main():
