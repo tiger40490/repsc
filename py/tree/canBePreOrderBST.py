@@ -60,3 +60,6 @@ def main():
   assert (not canBePreOrderBST([77,22,11,44,33,40,37,42,39]))
   assert (    canBePreOrderBST([77,22,11,44,33,40,37,42,41]))  
 main()
+''' Requirement: https://bintanvictor.wordpress.com/2017/04/13/check-array-can-be-preorder-bst-walk/. 
+This is a O(NN) solution. There exists some O(N) solution.
+'''
