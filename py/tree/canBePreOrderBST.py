@@ -1,3 +1,4 @@
+# showcase: global var not defined? Fine!
 class Node(object):
     def __init__(self, data, up_node, left_node=None, right_node=None):
         self.data = data
@@ -10,7 +11,6 @@ class Node(object):
  1 3    6   8
              9
 '''
-root = None
 def visit(node):
     if node.le: visit(node.le)
     print node.data,
@@ -19,7 +19,7 @@ def inOrderDftRecursive():
     visit(root)
     print '\n^ ^ ^ ^ ^ dump ^ ^ ^ ^ ^'
 def insertNewFailed(val):
-    print '---- inserting', val
+    #print '---- inserting', val
     parent = root
     while 1:
       if val <= parent.data:
@@ -29,7 +29,7 @@ def insertNewFailed(val):
           parent.le = new
           return 0
         parent = parent.le
-        print 'parent set to', parent.data
+        #print 'parent set to', parent.data
         continue
       assert(val > parent.data)
       if parent.ri is None:
@@ -37,12 +37,14 @@ def insertNewFailed(val):
         parent.ri = new
         return 0
       parent = parent.ri
-      print 'parent set to', parent.data
+      #print 'parent set to', parent.data
 def _canBePreOrderBST(li):
   global root
   root = Node(li[0], None)
   for i in xrange(1, len(li)):
-    if insertNewFailed(li[i]): return False
+    if insertNewFailed(li[i]): 
+      print 'Failed to insert         ', li[i], '->',
+      return False
   return True
 def canBePreOrderBST(li):
   ret = _canBePreOrderBST(li)
