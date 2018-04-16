@@ -51,6 +51,8 @@ def canBePreOrderBST(li):
   inOrderDftRecursive()
   return ret;  
 def main():
+  assert (    canBePreOrderBST([40,30,35,80,100]))
+  assert (not canBePreOrderBST([40,30,35,20,80,100]))
   assert (    canBePreOrderBST([1,3,2]))
   assert (    canBePreOrderBST([2,1,3]))
   assert (    canBePreOrderBST([3,2,1,5,4,6]))
