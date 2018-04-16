@@ -47,16 +47,21 @@ def _canBePreOrderBST(li):
       return False
   return True
 def geeksForGeeks(li):
-    s = [] 
+    s = [] # all the nodes able to take a right child
     root = -2**32
     for value in li: 
-        if value < root : return False     
+        if value < root : 
+          print 'Failed to insert', value
+          return False     
         while(len(s) > 0 and s[-1] < value) :
-            root = s.pop()
+          root = s.pop()
+          print s
         s.append(value) 
+        print s
     return True
 def canBePreOrderBST(li):
-  return geeksForGeeks(li)
+  print 'input =', li
+  #return geeksForGeeks(li)
   ret = _canBePreOrderBST(li)
   inOrderDftRecursive()
   return ret;  
