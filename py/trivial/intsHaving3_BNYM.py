@@ -10,6 +10,7 @@ def solution(digit, start, end):
   return ret.strip()
 def main():
   assert( solution(4,5,13) == '')
+  assert( solution(3,1,13) == '3 13')
   assert( solution(3,5,23) == '13 23')
   assert( solution(1,0,12) == '1 10 11 12') # digit=1 is more tricky
   assert( solution(1,90,111) == '91 100 101 102 103 104 105 106 107 108 109 110 111') #
