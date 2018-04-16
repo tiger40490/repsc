@@ -5,7 +5,6 @@ class Node(object):
         self.le = left_node
         self.ri = right_node
         #print 'new', data, '->', (up_node.data if up_node else 'isRoot')
-        
 '''   5
   2       7
  1 3    6   8
@@ -25,13 +24,13 @@ def insertNewFailed(val):
     parent = root
     while 1:
       if val <= parent.data:
+        if parent.ri: return 1 #failure
         if parent.le is None: 
-          if parent.ri: return val #failure
           new = Node(val, parent)
           parent.le = new
           return 0
         parent = parent.le
-        #print 'parent set to', parent.data
+        print 'parent set to', parent.data
         continue
       assert(val > parent.data)
       if parent.ri is None:
@@ -39,9 +38,10 @@ def insertNewFailed(val):
         parent.ri = new
         return 0
       parent = parent.ri
-      #print 'parent set to', parent.data
+      print 'parent set to', parent.data
 
 def canBePreOrderBST(li):
+  if not li: return True
   ret = _canBePreOrderBST(li)
   inOrderDftRecursive()
   return ret;
@@ -54,7 +54,13 @@ def _canBePreOrderBST(li):
   return True
 
 def main():
-  assert (not canBePreOrderBST([5,2,3,1]))
-  assert (canBePreOrderBST([5,2,1,3,7,6,8,9]))
+  assert (not canBePreOrderBST([77,22,11,44,33,40,37,42,39]))
+  assert (    canBePreOrderBST([77,22,11,44,33,40,37,42,41]))
+  assert (    canBePreOrderBST([1,3,2]))
+  assert (    canBePreOrderBST([2,1,3]))
+  assert (    canBePreOrderBST([3,2,1,5,4,6]))
+  assert (not canBePreOrderBST([1,3,4,2]))
+  assert (not canBePreOrderBST([3,4,5,1,2]))
+  assert (    canBePreOrderBST([5,2,1,3,7,6,8,9])) # diagram above
   
 main()
