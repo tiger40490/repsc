@@ -46,7 +46,17 @@ def _canBePreOrderBST(li):
       print 'Failed to insert         ', li[i], '->',
       return False
   return True
+def geeksForGeeks(li):
+    s = [] 
+    root = -2**32
+    for value in li: 
+        if value < root : return False     
+        while(len(s) > 0 and s[-1] < value) :
+            root = s.pop()
+        s.append(value) 
+    return True
 def canBePreOrderBST(li):
+  return geeksForGeeks(li)
   ret = _canBePreOrderBST(li)
   inOrderDftRecursive()
   return ret;  
