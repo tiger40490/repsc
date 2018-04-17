@@ -1,4 +1,5 @@
 //showcase operator<<() for VO class, as a free function, not method
+//showcase matrx as vector<vector> populated cell by cell
 #include <iostream>
 #include <vector>
 #include <queue>
