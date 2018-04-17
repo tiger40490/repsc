@@ -1,4 +1,4 @@
-//showcase NxN square matrix to record the bilateral relationships among N friends
+//showcase NxN square matrix to record the bilateral relationships among N friends. This is the only matrix in this code
 #include <iostream>
 #include <vector>
 #include <list>
