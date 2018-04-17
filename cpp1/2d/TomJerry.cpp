@@ -1,4 +1,4 @@
-//showcase operator<< for VO class, as a free function, not method
+//showcase operator<<() for VO class, as a free function, not method
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -77,7 +77,7 @@ int minMoves(vector<vector<int>> const & maze, int x, int y) {
       if (r<rCnt-1 && mat[r+1][c].val!=1) n.linkD = &mat[r+1][c];
     }
   }
-  //assign an id to each island to check infeasibility
+  //assign an id to each island to check feasibility
   for(int r=0; r<rCnt; ++r) {
     for(int c=0; c<cCnt; ++c) {
       //cout<<"tracing from "<<r<<","<<c<<endl;
