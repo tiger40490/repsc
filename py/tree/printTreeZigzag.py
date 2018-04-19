@@ -40,10 +40,10 @@ def bftWithLevel():
             if not q.list: break;
             q.enq(marker)
             level += 1
-            print '\nlevel =', level, "\t",
             if level%2:
               for i in reversed(st): print i,
               del st[:]
+            print '\nlevel =', level, "\t",
             continue
         if level%2: 
           print node.data,
