@@ -30,20 +30,28 @@ class Q: #simple class
 
 def bftWithLevel():
     q = Q()
+    st = list()
     q.enq(marker)
     q.enq(root)
     level=0
-    while(1):
+    while True:
         node = q.deq()
         if node is marker:
             if not q.list: break;
+            q.enq(marker)
             level += 1
             print '\nlevel =', level, "\t",
-            q.enq(marker)
+            if level%2:
+              for i in reversed(st): print i,
+              del st[:]
             continue
-        print node.data,
+        if level%2: 
+          print node.data,
+        else:
+          st.append(node.data)
         if (node.le): q.enq(node.le)
         if (node.ri): q.enq(node.ri)
+    for i in reversed(st): print i,
 def main():
     bftWithLevel()
 main()
