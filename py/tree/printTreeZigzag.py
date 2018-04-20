@@ -1,3 +1,5 @@
+# showcase stack and queue
+# showcase reverse iteration of list
 class Node(object):
     def __init__(self, data, left_node=None, right_node=None):
         self.data = data
@@ -25,12 +27,11 @@ class Q: #simple class
         self.list = [] # faster than list()
     def enq(self, item):
         self.list.insert(0,item)
-        #print 'pushed', item.data
     def deq(self): return self.list.pop() # throws error if empty
 
 def bftWithLevel():
     q = Q()
-    st = list()
+    st = []
     q.enq(marker)
     q.enq(root)
     level=0
@@ -43,12 +44,10 @@ def bftWithLevel():
             if level%2:
               for i in reversed(st): print i,
               del st[:]
-            print '\nlevel =', level, "\t",
+            print '\nLevel', level, ":\t",
             continue
-        if level%2: 
-          print node.data,
-        else:
-          st.append(node.data)
+        if level%2: print node.data,
+        else: st.append(node.data)
         if (node.le): q.enq(node.le)
         if (node.ri): q.enq(node.ri)
     for i in reversed(st): print i,
