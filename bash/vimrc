@@ -1,8 +1,9 @@
 set nu
 set bg=dark
 
-"map the 'v' keystroke to mean 'save file unconditionally'
+"map the 'v' keystroke to mean 'save file unconditionally', very useful when
+"my files become readonly frequently
 map v :w!
 
-"ineffective. Suggested on stackoverflow
+"doesn't work:( Suggested on stackoverflow
 map <F3> :%!xxd<CR>
