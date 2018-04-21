@@ -9,7 +9,7 @@ ______________end_of_comment_1________________
 # # # # # # # # # # # # # # # # # # # # # #
 export PS1='\n\s!\! \u@\h [ \t \d ] \w/ \n\$ '
 export EDITOR=vi # primarily for sqlplus
-export VIMINIT=":se nu | :map v :w!"
+#export VIMINIT=":se nu | :map v :w!" # superceded by .vimrc
 export EXINIT=$VIMINIT # ignored if .vimrc found!
 LESS="--ignore-case"
 export TMOUT=987654; [ $root ] && export TMOUT=100600
@@ -113,7 +113,7 @@ ps_grep(){
   done
   eval $cmd1
 }
-sav(){ # proven since 2007, never had a problem
+sav(){ # proven since 2007, never had a problem. You can pass in a relative or abs path :)
   suffix=$RANDOM$(date +"%H%d%b") # to avoid misleading readers,make the suffix ambiguous
   for f in $*; do
     f=$(echo $f|perl -pe 's|/$||')   # sav dir/
