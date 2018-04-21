@@ -1,0 +1,8 @@
+set nu
+set bg=dark
+
+"map the 'v' keystroke to mean 'save file unconditionally'
+map v :w!
+
+"ineffective. Suggested on stackoverflow
+map <F3> :%!xxd<CR>
