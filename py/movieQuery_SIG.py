@@ -1,8 +1,8 @@
 '''
 optimization todo: binary search
 optimization todo: check for "(no genre" early or discard the movie if never needed
-optimization todo: use array to hold all movies, indexed year. Within each "bucket", store multiple movies in a vector (cache efficient)
-optimization todo: use array for "genres" field, indexed by genreId
+optimization todo: use array to hold all movies, indexed by year. Within each "year", 
+store multiple movies in an array of (list-of-movie-pointers) indexed by genreId
 todo: handle embedded commas
 
 Q: would user pass in multiple genres?
