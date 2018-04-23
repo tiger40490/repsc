@@ -1,7 +1,9 @@
 '''
 optimization todo: binary search
 optimization todo: check for "(no genre" early or discard the movie if never needed
-optimization todo
+optimization todo: use array to hold all movies, indexed year
+optimization todo: use array for "genres" field, indexed by genreId
+todo: handle embedded commas
 
 Q: would user pass in multiple genres?
 Q: would user pass in wildcard genre?
