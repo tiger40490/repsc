@@ -74,3 +74,7 @@ def main():
   #inst.get_movies('drama', 1992, 1992)
   #inst.get_movies('drama', 1992, 1993)
 main()
+'''
+#movieId,title,date,genres
+1,Toy Story,1995,Adventure|Animation|Children|Comedy|Fantasy
+'''
