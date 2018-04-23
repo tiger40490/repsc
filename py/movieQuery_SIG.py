@@ -1,7 +1,7 @@
 '''
 optimization todo: binary search
 optimization todo: check for "(no genre" early or discard the movie if never needed
-optimization todo: use array to hold all movies, indexed year
+optimization todo: use array to hold all movies, indexed year. Within each "bucket", store multiple movies in a vector (cache efficient)
 optimization todo: use array for "genres" field, indexed by genreId
 todo: handle embedded commas
 
