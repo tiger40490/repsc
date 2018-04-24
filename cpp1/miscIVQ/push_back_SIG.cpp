@@ -1,7 +1,8 @@
 /*
-todo: check unique_ptr<T[]> syntax
 todo: prevent memory leak in the face of placement-new exception
-showcase placement new
+
+showcase copy-construct using placement-new
+showcase make_unique<T[]> 
 showcase unique_ptr::release()
 showcase unique_ptr::get()
 showcase scoped enum
@@ -27,10 +28,10 @@ template<typename T> struct MyVec{
 	}
 	T* alloc1(size_t const newcap){
 		assert(this->mode == AllocMode::DC);
-		unique_ptr<T[]> //need to ensure delete[] is called
-		newArr(new T[newcap]); //default construct newcap instances
+		unique_ptr<T[]> newArr //need to ensure delete[] is called
+		  = make_unique<T[]>(newcap); //default construct newcap instances
 		std::copy(arr, arr+sz, newArr.get());
-		cout<<"Returning from alloc1()\n";
+		cout<<"Returning from alloc11111\n";
 		return newArr.release();
 	}
 /*Above (inefficient) uses default ctor on raw memory, followed by op=()
@@ -42,7 +43,7 @@ Below (efficient) uses placement new to copy-construct.
 		for(int i=0; i<sz; ++i){
 			new (raw+i*sizeof(T)) T( *(arr+i) ); //what if throws?
 		}
-		cout<<"Returning from alloc2()\n";
+		cout<<"Returning from alloc22222\n";
 		return (T*)raw;
 	}
 	void dump(string const & headline){
