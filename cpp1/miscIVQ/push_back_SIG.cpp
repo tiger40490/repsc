@@ -39,12 +39,18 @@ Below (efficient) uses placement new to copy-construct.
 */
 	T* alloc2(size_t const newcap){//tested
 		assert(this->mode == AllocMode::PN);	
-		char * raw = (char*) malloc( sizeof(T)*newcap );
+		
+		/*cast to char to support raw+1
+		but why reinterpret_cast not needed?
+		*/
+		unique_ptr<char> raw(
+			static_cast<char*>(   malloc(sizeof(T)*newcap)   )
+		);
 		for(int i=0; i<sz; ++i){
-			new (raw+i*sizeof(T)) T( *(arr+i) ); //what if throws?
+			new (raw.get()+i*sizeof(T)) T( *(arr+i) ); //what if throws?
 		}
 		cout<<"Returning from alloc22222\n";
-		return (T*)raw;
+		return (T*)raw.release();
 	}
 	void dump(string const & headline){
 		//cout<<"---- "<<headline<<" -----\n";
