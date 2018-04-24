@@ -1,4 +1,5 @@
 //showcase NxN square matrix to record the bilateral relationships among N friends. This is the only matrix in this code
+//Interview (Carl) believes the matrix is optional (compared to the map) and memory intensive
 #include <iostream>
 #include <vector>
 #include <list>
