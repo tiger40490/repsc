@@ -1,6 +1,4 @@
 /*
-todo: prevent memory leak in the face of placement-new exception
-
 showcase copy-construct using placement-new
 showcase make_unique<T[]> 
 showcase unique_ptr::release()
