@@ -4,7 +4,7 @@
 using namespace std;
 vector<int> num;
 
-size_t fun(unsigned int bigNum){
+size_t factorize(unsigned int bigNum){
   size_t cnt =0;
   unsigned int start,x,y;
   if (num.size() == 0) start = 2;
@@ -19,7 +19,7 @@ size_t fun(unsigned int bigNum){
       cout << i << "x" << x << endl;
       cnt++;
       num.push_back(i);
-      cnt += fun(x);
+      cnt += factorize(x);
       num.pop_back();
     }
   }
@@ -27,8 +27,8 @@ size_t fun(unsigned int bigNum){
   return cnt;
 }
 int main(){
-  assert(6 == fun(24));
-  assert(3 == fun(12));
+  assert(6 == factorize(24));
+  assert(3 == factorize(12));
 }
 /*Requirement: https://bintanvictor.wordpress.com/2017/04/16/factorize-a-natural-number-aqr/
 Solution from my friend Shanyou.
