@@ -3,9 +3,9 @@ optimization todo: use contiguous array to hold all movies, indexed by year. Wit
 
 optimization todo: binary search. bisect_left can't use custom key, so simplied chose the simplest solution to produce working ode.
 
-optimization todo: check for "(no genre" early or discard the movie if never needed
+optimization todo: check for "(no genre" early and discard the movie if never needed.
 
-todo: handle embedded commas
+todo: handle embedded commas, as pointed out by interviewer. I already have an assertion.
 
 Q: would user pass in multiple genres?
 Q: would user pass in wildcard genre?
