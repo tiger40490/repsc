@@ -7,8 +7,7 @@ vector<int> num;
 size_t factorize(unsigned int bigNum){
   size_t cnt =0;
   unsigned int start,x,y;
-  if (num.size() == 0) start = 2;
-  else start = num.back(); //last item
+  start = num.empty()? 2: num.back();
 
   for (int i=start; i<bigNum; i++)  {
     x = bigNum/i;
