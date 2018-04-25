@@ -1,23 +1,30 @@
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include <math.h>
 #include <assert.h>
 using namespace std;
-vector<int> num;
+vector<int> st;
+template<typename T, int min_width=4> ostream & operator<<(ostream & os, vector<T> const & c){
+   for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
+   os<<endl;
+   return os;
+}
 
 size_t factorize(unsigned int bigNum){
+  cout<<"entering with bigNum = "<<bigNum<<" and"<<st;
   size_t cnt =0;
-  for (int factor = num.empty()? 2:num.back();   
+  for (int factor = st.empty()? 2:st.back(); //top of the stack
            factor <= sqrt(bigNum);
            factor++ ) {
     if (bigNum%factor == 0){ //is a real factor
       unsigned int const x = bigNum/factor;
-      for (int j=0; j<num.size(); j++) cout << num[j] << " * ";
+      for (int j=0; j<st.size(); j++) cout << st[j] << " * ";
       cout << factor << " * " << x << endl;
       cnt++;
-      num.push_back(factor);
+      st.push_back(factor);
       cnt += factorize(x);
-      num.pop_back();
+      st.pop_back();
     }
   }
   //cout<<"^^^^ "<<cnt<<" formula found so far ^^^^^\bigNum";
