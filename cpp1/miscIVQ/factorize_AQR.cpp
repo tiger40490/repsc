@@ -6,15 +6,15 @@ vector<int> num;
 
 size_t factorize(unsigned int bigNum){
   size_t cnt =0;
-  for (int i=num.empty()? 2:num.back();   
-       i<bigNum; i++)  {
-    unsigned int x = bigNum/i;
-    if (x < i) break;
-    if (bigNum%i == 0){
+  for (int factor=num.empty()? 2:num.back();   
+       factor<bigNum; factor++)  {
+    unsigned int const x = bigNum/factor;
+    if (x < factor) break;
+    if (bigNum%factor == 0){
       for (int j=0; j<num.size(); j++) cout << num[j] << " * ";
-      cout << i << " * " << x << endl;
+      cout << factor << " * " << x << endl;
       cnt++;
-      num.push_back(i);
+      num.push_back(factor);
       cnt += factorize(x);
       num.pop_back();
     }
