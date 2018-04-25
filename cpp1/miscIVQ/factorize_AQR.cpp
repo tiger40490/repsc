@@ -6,12 +6,12 @@ vector<int> num;
 
 size_t factorize(unsigned int bigNum){
   size_t cnt =0;
-  unsigned int start,x,y;
-  start = num.empty()? 2: num.back();
+  //unsigned int start = num.empty()? 2: num.back();
 
-  for (int i=start; i<bigNum; i++)  {
-    x = bigNum/i;
-    y = bigNum%i;
+  for (int i=num.empty()? 2:num.back();   
+       i<bigNum; i++)  {
+    unsigned int x = bigNum/i;
+    unsigned int y = bigNum%i;
     if (x < i) break;
     if (y == 0)    {
       for (int j=0; j<num.size(); j++) cout << num[j] << "x";
@@ -26,6 +26,7 @@ size_t factorize(unsigned int bigNum){
   return cnt;
 }
 int main(){
+  assert(8 == factorize(36));
   assert(6 == factorize(24));
   assert(3 == factorize(12));
 }
