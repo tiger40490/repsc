@@ -9,9 +9,8 @@ size_t factorize(unsigned int bigNum){
   for (int i=num.empty()? 2:num.back();   
        i<bigNum; i++)  {
     unsigned int x = bigNum/i;
-    unsigned int remainder = bigNum%i;
     if (x < i) break;
-    if (remainder == 0)    {
+    if (bigNum%i == 0){
       for (int j=0; j<num.size(); j++) cout << num[j] << " * ";
       cout << i << " * " << x << endl;
       cnt++;
