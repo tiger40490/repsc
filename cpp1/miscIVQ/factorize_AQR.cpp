@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <math.h>
 #include <assert.h>
 using namespace std;
 vector<int> num;
@@ -7,9 +8,9 @@ vector<int> num;
 size_t factorize(unsigned int bigNum){
   size_t cnt =0;
   for (int factor=num.empty()? 2:num.back();   
-       factor<bigNum; factor++)  {
+           factor <= sqrt(bigNum);
+           factor++ ) {
     unsigned int const x = bigNum/factor;
-    if (x < factor) break;
     if (bigNum%factor == 0){
       for (int j=0; j<num.size(); j++) cout << num[j] << " * ";
       cout << factor << " * " << x << endl;
