@@ -1,8 +1,4 @@
 '''
-optimization todo: use contiguous array to hold all movies, indexed by year. Within each "year bucket", 
-store multiple movies in a contiguous array of (list-of-unique_ptr-to-movie) indexed by genreId. 
-The number of genres could be thousands, like a tag cloud.
-
 optimization todo: binary search. bisect_left can't use custom key, so simplied chose the simplest solution to produce working ode.
 
 optimization todo: check for "(no genre" early and discard the movie if never needed.
@@ -80,9 +76,5 @@ def main():
   #inst.get_movies('drama', 1992, 1992)
   #inst.get_movies('drama', 1992, 1993)
 main()
-'''Requirement: Given sample data file below (unsorted), implement an efficient query function get_movies(genre, start_year, end_year)
-
-#movieId,title,date,genres
-1,Toy Story 3,2010,Adventure|Animation|Children|Comedy|Fantasy
-2,Toy Story,1995,Adventure|Animation|Children|Comedy|Fantasy
+'''Requirement: https://bintanvictor.wordpress.com/2018/04/25/movie-query-si/
 '''
