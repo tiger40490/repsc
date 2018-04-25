@@ -4,15 +4,15 @@
 using namespace std;
 vector<int> num;
 
-size_t fun(int n){
+size_t fun(unsigned int bigNum){
   size_t cnt =0;
-  int start,x,y;
+  unsigned int start,x,y;
   if (num.size() == 0) start = 2;
   else start = num[num.size()-1];
 
-  for (int i=start; i<n; i++)  {
-    x = n/i;
-    y = n%i;
+  for (int i=start; i<bigNum; i++)  {
+    x = bigNum/i;
+    y = bigNum%i;
     if (x < i) break;
     if (y == 0)    {
       for (int j=0; j<num.size(); j++) cout << num[j] << "x";
@@ -23,7 +23,7 @@ size_t fun(int n){
       num.pop_back();
     }
   }
-  //cout<<"^^^^ "<<cnt<<" formula found so far ^^^^^\n";
+  //cout<<"^^^^ "<<cnt<<" formula found so far ^^^^^\bigNum";
   return cnt;
 }
 int main(){
