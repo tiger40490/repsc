@@ -1,5 +1,7 @@
 '''
-optimization todo: use contiguous array to hold all movies, indexed by year. Within each "year bucket", store multiple movies in a contiguous array of (list-of-movie-pointers) indexed by genreId. The number of genres could be thousands, like a tag cloud.
+optimization todo: use contiguous array to hold all movies, indexed by year. Within each "year bucket", 
+store multiple movies in a contiguous array of (list-of-unique_ptr-to-movie) indexed by genreId. 
+The number of genres could be thousands, like a tag cloud.
 
 optimization todo: binary search. bisect_left can't use custom key, so simplied chose the simplest solution to produce working ode.
 
