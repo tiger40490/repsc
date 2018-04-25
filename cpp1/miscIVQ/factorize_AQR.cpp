@@ -10,8 +10,8 @@ size_t factorize(unsigned int bigNum){
   for (int factor=num.empty()? 2:num.back();   
            factor <= sqrt(bigNum);
            factor++ ) {
-    unsigned int const x = bigNum/factor;
-    if (bigNum%factor == 0){
+    if (bigNum%factor == 0){ //is a real factor
+      unsigned int const x = bigNum/factor;
       for (int j=0; j<num.size(); j++) cout << num[j] << " * ";
       cout << factor << " * " << x << endl;
       cnt++;
