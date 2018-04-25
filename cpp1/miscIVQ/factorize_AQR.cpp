@@ -12,8 +12,8 @@ size_t factorize(unsigned int bigNum){
     unsigned int remainder = bigNum%i;
     if (x < i) break;
     if (remainder == 0)    {
-      for (int j=0; j<num.size(); j++) cout << num[j] << "x";
-      cout << i << "x" << x << endl;
+      for (int j=0; j<num.size(); j++) cout << num[j] << " * ";
+      cout << i << " * " << x << endl;
       cnt++;
       num.push_back(i);
       cnt += factorize(x);
