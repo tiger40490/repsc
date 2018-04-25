@@ -78,8 +78,9 @@ def main():
   #inst.get_movies('drama', 1992, 1992)
   #inst.get_movies('drama', 1992, 1993)
 main()
-'''Requirement: Given sample data file below (unsorted), implement an efficient query get_movies(genre, start_year, end_year)
-#movieId,title,date,genres
-1,Toy Story,1995,Adventure|Animation|Children|Comedy|Fantasy
+'''Requirement: Given sample data file below (unsorted), implement an efficient query function get_movies(genre, start_year, end_year)
 
+#movieId,title,date,genres
+1,Toy Story 3,2010,Adventure|Animation|Children|Comedy|Fantasy
+2,Toy Story,1995,Adventure|Animation|Children|Comedy|Fantasy
 '''
