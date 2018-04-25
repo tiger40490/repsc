@@ -1,8 +1,10 @@
 '''
-optimization todo: binary search
+optimization todo: use contiguous array to hold all movies, indexed by year. Within each "year bucket", store multiple movies in a contiguous array of (list-of-movie-pointers) indexed by genreId. The number of genres could be thousands, like a tag cloud.
+
+optimization todo: binary search. bisect_left can't use custom key, so simplied chose the simplest solution to produce working ode.
+
 optimization todo: check for "(no genre" early or discard the movie if never needed
-optimization todo: use array to hold all movies, indexed by year. Within each "year", 
-store multiple movies in an array of (list-of-movie-pointers) indexed by genreId
+
 todo: handle embedded commas
 
 Q: would user pass in multiple genres?
