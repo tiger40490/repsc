@@ -8,7 +8,7 @@ size_t factorize(unsigned int bigNum){
   size_t cnt =0;
   unsigned int start,x,y;
   if (num.size() == 0) start = 2;
-  else start = num[num.size()-1];
+  else start = num.back(); //last item
 
   for (int i=start; i<bigNum; i++)  {
     x = bigNum/i;
