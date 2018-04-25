@@ -7,7 +7,7 @@ vector<int> num;
 
 size_t factorize(unsigned int bigNum){
   size_t cnt =0;
-  for (int factor=num.empty()? 2:num.back();   
+  for (int factor = num.empty()? 2:num.back();   
            factor <= sqrt(bigNum);
            factor++ ) {
     if (bigNum%factor == 0){ //is a real factor
@@ -29,5 +29,5 @@ int main(){
   assert(3 == factorize(12));
 }
 /*Requirement: https://bintanvictor.wordpress.com/2017/04/16/factorize-a-natural-number-aqr/
-Solution from my friend Shanyou.
+Solution from my friend Shanyou, using a global vector in recursion?
 */
