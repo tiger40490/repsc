@@ -4,7 +4,8 @@
 using namespace std;
 vector<int> num;
 
-size_t fun(int n, size_t & cnt){
+size_t fun(int n){
+  size_t cnt =0;
   int start,x,y;
   if (num.size() == 0) start = 2;
   else start = num[num.size()-1];
@@ -18,7 +19,7 @@ size_t fun(int n, size_t & cnt){
       cout << i << "x" << x << endl;
       cnt++;
       num.push_back(i);
-      fun(x, cnt);
+      cnt += fun(x);
       num.pop_back();
     }
   }
@@ -27,7 +28,7 @@ size_t fun(int n, size_t & cnt){
 }
 int main(){
   size_t cnt=0;
-  assert(6 == fun(24, cnt));
+  assert(6 == fun(24));
 }
 /*Requirement: https://bintanvictor.wordpress.com/2017/04/16/factorize-a-natural-number-aqr/
 Solution from my friend Shanyou.
