@@ -6,7 +6,7 @@
 #include <assert.h>
 #define ss if(1>0)cout
 using namespace std;
-vector<int> st; /*Invariant -- at any time, the latest recursive call's bigNum 
+vector<int> otherFactors; /*Invariant -- at any time, the latest recursive call's bigNum 
 multiplied by all the numbers in this vector equals the original BigNumber */
 template<typename T, int min_width=4> ostream & operator<<(ostream & os, vector<T> const & c){
    if (c.empty()) os<<"----------";
@@ -16,20 +16,20 @@ template<typename T, int min_width=4> ostream & operator<<(ostream & os, vector<
 }
 
 size_t factorize(unsigned int bigNum){
-  ss<<"entering with bigNum = "<<bigNum<<" <"<<st;
+  ss<<"entering with bigNum = "<<bigNum<<" <"<<otherFactors;
   size_t cnt =0;
-  for (int factor = st.empty()? 2:st.back(); //top of the stack
+  for (int factor = otherFactors.empty()? 2:otherFactors.back(); //top of the stack
            factor <= sqrt(bigNum);
            factor++ ) {
     if (bigNum%factor) continue; //skip any fake factor
     unsigned int const x = bigNum/factor;
-    { for (auto stackItem : st) ss << stackItem << " * ";
+    { for (auto stackItem : otherFactors) ss << stackItem << " * ";
       ss <<" .. "<< factor << " * " << x << endl; // factor*x == bigNum
       cnt++;
     }// output one formula
-    st.push_back(factor);
+    otherFactors.push_back(factor);
     cnt += factorize(x);
-    st.pop_back();
+    otherFactors.pop_back();
   }
   return cnt;
 }
