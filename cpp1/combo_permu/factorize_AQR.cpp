@@ -27,8 +27,11 @@ size_t factorize(unsigned int bigNum){
       ss <<" .. "<< factor << " * " << x << endl; // factor*x == bigNum
       cnt++;
     }// output one formula
-    otherFactors.push_back(factor);
-    cnt += factorize(x);
+     
+    //now add current factor to the vector and factorize x
+    otherFactors.push_back(factor); cnt += factorize(x);
+     
+    //now restore the vector and continue scanning for the next factor at the current level
     otherFactors.pop_back();
   }
   return cnt;
