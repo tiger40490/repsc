@@ -1,3 +1,4 @@
+//Q: how does this algo automatically avoid duplicates?
 #include <iostream>
 #include <iomanip>
 #include <vector>
