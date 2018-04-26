@@ -3,30 +3,31 @@
 #include <vector>
 #include <math.h>
 #include <assert.h>
+#define ss if(1>0)cout
 using namespace std;
 vector<int> st;
 template<typename T, int min_width=4> ostream & operator<<(ostream & os, vector<T> const & c){
+   if (c.empty()) os<<"----------";
    for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
    os<<endl;
    return os;
 }
 
 size_t factorize(unsigned int bigNum){
-  cout<<"entering with bigNum = "<<bigNum<<" and"<<st;
+  ss<<"entering with bigNum = "<<bigNum<<" <"<<st;
   size_t cnt =0;
   for (int factor = st.empty()? 2:st.back(); //top of the stack
            factor <= sqrt(bigNum);
            factor++ ) {
     if (bigNum%factor) continue; //skip any fake factor
     unsigned int const x = bigNum/factor;
-    for (int j=0; j<st.size(); j++) cout << st[j] << " * ";
-    cout << factor << " * " << x << endl;
+    for (int j=0; j<st.size(); j++) ss << st[j] << " * ";
+    ss << factor << " * " << x << endl;
     cnt++;
     st.push_back(factor);
     cnt += factorize(x);
     st.pop_back();
   }
-  //cout<<"^^^^ "<<cnt<<" formula found so far ^^^^^\bigNum";
   return cnt;
 }
 int main(){
