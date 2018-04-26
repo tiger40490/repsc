@@ -10,6 +10,7 @@ typedef unsigned int Factor;
 vector<Factor> otherFactors; /*Invariant -- at any time, the latest recursive call's bigNum 
 multiplied by all the numbers in this vector equals the original BigNumber.
 
+The elements in this vector are sorted.
 At recursive level N, there are N elements in the vector.
 At recursive level 2, there are 2 elements in the vector.
 */
