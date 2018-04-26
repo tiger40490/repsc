@@ -1,6 +1,6 @@
 def sol3loop(input): 
   li=sorted(input); sz=len(li)
-  factorsOf=dict() # key is big number, value is a list of factorsOf
+  factorsOf=dict() # key is a big number, value is its factors as a list
   cost=0; cnt=0
   for s in range(sz-1):
     for b in range(s+1, sz):
