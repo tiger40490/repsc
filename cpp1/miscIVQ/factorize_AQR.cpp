@@ -21,7 +21,7 @@ size_t factorize(unsigned int bigNum){
            factor++ ) {
     if (bigNum%factor) continue; //skip any fake factor
     unsigned int const x = bigNum/factor;
-    for (int j=0; j<st.size(); j++) ss << st[j] << " * ";
+    for (auto stackItem: st) ss << stackItem << " * ";
     ss << factor << " * " << x << endl;
     cnt++;
     st.push_back(factor);
