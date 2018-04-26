@@ -17,15 +17,14 @@ size_t factorize(unsigned int bigNum){
   for (int factor = st.empty()? 2:st.back(); //top of the stack
            factor <= sqrt(bigNum);
            factor++ ) {
-    if (bigNum%factor == 0){ //is a real factor
-      unsigned int const x = bigNum/factor;
-      for (int j=0; j<st.size(); j++) cout << st[j] << " * ";
-      cout << factor << " * " << x << endl;
-      cnt++;
-      st.push_back(factor);
-      cnt += factorize(x);
-      st.pop_back();
-    }
+    if (bigNum%factor) continue; //skip any fake factor
+    unsigned int const x = bigNum/factor;
+    for (int j=0; j<st.size(); j++) cout << st[j] << " * ";
+    cout << factor << " * " << x << endl;
+    cnt++;
+    st.push_back(factor);
+    cnt += factorize(x);
+    st.pop_back();
   }
   //cout<<"^^^^ "<<cnt<<" formula found so far ^^^^^\bigNum";
   return cnt;
