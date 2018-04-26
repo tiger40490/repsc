@@ -1,4 +1,5 @@
 //Q: how does this algo automatically avoid duplicates?
+//For each formula, this solution prints the factors in ascending order:)
 #include <iostream>
 #include <iomanip>
 #include <vector>
