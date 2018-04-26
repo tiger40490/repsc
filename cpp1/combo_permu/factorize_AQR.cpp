@@ -43,9 +43,10 @@ size_t factorize(unsigned int bigNum){
   return cnt;
 }
 int main(){
-  assert(8 == factorize(36));
-  assert(6 == factorize(24));
-  assert(3 == factorize(12));
+  assert(10 == factorize(60));
+  assert(8  == factorize(36));
+  assert(6  == factorize(24));
+  assert(3  == factorize(12));
 }
 /*Requirement: https://bintanvictor.wordpress.com/2017/04/16/factorize-a-natural-number-aqr/
 Solution from my friend Shanyou, using a global vector in recursion?
