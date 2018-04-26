@@ -7,7 +7,11 @@
 #define ss if(1>0)cout
 using namespace std;
 vector<int> otherFactors; /*Invariant -- at any time, the latest recursive call's bigNum 
-multiplied by all the numbers in this vector equals the original BigNumber */
+multiplied by all the numbers in this vector equals the original BigNumber.
+
+At recursive level N, there are N elements in the vector.
+At recursive level 2, there are 2 elements in the vector.
+*/
 template<typename T, int min_width=4> ostream & operator<<(ostream & os, vector<T> const & c){
    if (c.empty()) os<<"----------";
    for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
