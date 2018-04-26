@@ -15,6 +15,7 @@ def sol3loop(input):
   return cnt
   
 def main():
+  # any 3 numbers would form a triplet, so cnt = 12-C-3 = 220
   assert(220 == sol3loop([1,2,4,8,16,32,64,128,256,512,1024,2048]))
 main()
 '''Requirement: https://bintanvictor.wordpress.com/2018/03/03/find-triplet-x-divide-y-y-divides-z/
