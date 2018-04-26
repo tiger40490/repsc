@@ -2,6 +2,7 @@
 //For each formula, this solution prints the factors in ascending order:)
 #include <iostream>
 #include <iomanip>
+//#include <string>
 #include <vector>
 #include <math.h>
 #include <assert.h>
@@ -23,7 +24,8 @@ template<typename T, int min_width=4> ostream & operator<<(ostream & os, vector<
 }
 
 size_t factorize(unsigned int bigNum){
-  ss<<"entering with bigNum = "<<bigNum<<" <"<<otherFactors;
+  string const indent(otherFactors.size()*2, ' ');
+  ss<<indent<<"> entering with bigNum = "<<bigNum<<" <"<<otherFactors;
   size_t cnt =0;
   for (Factor factor = otherFactors.empty()? 2:otherFactors.back(); 
               factor <= sqrt(bigNum);
@@ -41,10 +43,12 @@ size_t factorize(unsigned int bigNum){
     //now restore the vector and continue scanning for the next factor at the current level
     otherFactors.pop_back();
   }
+  ss<<indent<<"< leaving with bigNum = "<<bigNum<<" <"<<otherFactors;
   return cnt;
 }
 int main(){
   assert(10 == factorize(60));
+  return 0;
   assert(8  == factorize(36));
   assert(6  == factorize(24));
   assert(3  == factorize(12));
