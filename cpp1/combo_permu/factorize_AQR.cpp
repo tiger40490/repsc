@@ -5,7 +5,8 @@
 #include <assert.h>
 #define ss if(1>0)cout
 using namespace std;
-vector<int> st;
+vector<int> st; /*Invariant -- at any time, the latest recursive call's bigNum 
+multiplied by all the numbers in this vector equals the original BigNumber */
 template<typename T, int min_width=4> ostream & operator<<(ostream & os, vector<T> const & c){
    if (c.empty()) os<<"----------";
    for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
