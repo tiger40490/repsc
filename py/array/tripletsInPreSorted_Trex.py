@@ -1,4 +1,4 @@
-def sol3loop(input): 
+def sol3loop(input): #based on hints given by interviewer
   li=sorted(input); sz=len(li)
   factorsOf=dict() # key is a big number, value is its factors as a list
   cost=0; cnt=0
@@ -8,6 +8,7 @@ def sol3loop(input):
       if bi%sm: continue
       for factor in factorsOf.get(sm, []):
         cnt+=1; print 'match -', factor,sm,bi
+
       if bi in factorsOf:
         factorsOf[bi].append(sm);
       else:
