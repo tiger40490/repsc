@@ -4,7 +4,7 @@ def sol3loop(input): #based on hints given by interviewer
   cost=0; cnt=0
   for s in range(sz-1):
     for b in range(s+1, sz):
-      sm,bi = li[s],li[b]
+      sm,bi = li[s],li[b] #sm means smallerNumber, bi means biggerNumber
       if bi%sm: continue
       for factor in factorsOf.get(sm, []):
         cnt+=1; print 'match -', factor,sm,bi
