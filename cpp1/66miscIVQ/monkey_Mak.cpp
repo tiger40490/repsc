@@ -22,11 +22,10 @@ bool isGood(vector<bool> const & visible, int const D){
   Gap gap=0; Position lastStone = -1;
   for(size_t i=0; i<visible.size(); ++i){
     if (visible[i]){ gap = 0; lastStone=i;
-    }else{
-        gap++;
-        if (gap >= D) { ss<<lastStone<<'~'<<i<<" is equal to D="<<D<<", too far apart :(\n";
-          return false;
-        }
+    }else if (++gap >= D) { 
+       ss<<lastStone<<'~'<<i<<" is equal to D="<<D<<", too far apart :(\n";
+       return false;
+    }
     }
   } return true;
 }
