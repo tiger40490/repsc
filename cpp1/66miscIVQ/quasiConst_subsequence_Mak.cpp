@@ -34,9 +34,11 @@ int solution(vector<int> &A) {
 }
 int sol(vector<int> A){
     ss<<A;
-    return solution(A);
+    auto ret = solution(A);
+    ss<<ret<<" returned\n";
+    return ret;
 }
 int main(){
-    ss<<sol({6, 10, 6, 9, 7, 8})<<" returned\n";
-    ss<<sol({6,6,6,6,6,6,6})<<" returned\n";
+    assert(3==sol({6, 10, 6, 9, 7, 8}));
+    assert(7==sol({6,6,6,  6,6,6,6}));
 }
