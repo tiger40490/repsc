@@ -31,13 +31,13 @@ int solution(vector<int> &A) {
     for(auto it=frq.begin(); it!=frq.end(); ++it){
       /*a "band" consists of 2 adjacent levels like levels 6/7, or 3/4 but not 3/5. 
       We scan from lowest band to highest band, and count how many elements are in each band*/
-	  Level const & b=it->first;
+      Level const & b=it->first;
       ss<<b<<" is the lower value of current band\n";
-	  auto const cnt = it->second + (frq.count(b+1)? frq[b+1]:0);
+      auto const cnt = it->second + (frq.count(b+1)? frq[b+1]:0);
       ss<<cnt<<" = cnt\n";
       if (ret < cnt) ret = cnt;
-	}
-	return ret;
+    }
+    return ret;
 }
 int sol(vector<int> A){
     ss<<A;
