@@ -10,24 +10,22 @@ template<typename T,             int min_width=4> ostream & operator<<(ostream &
    os<<endl;
    return os;
 }
-typedef int Level;
-size_t N=0;
+typedef int Level; // can be negative
 int solution(vector<int> &A) {
-    N = A.size(); ss<<N<<" = N\n";
+    size_t N = A.size(); ss<<N<<" = N\n";
     ss<<A;
-    //a band has 2 adjacent levels like 6~7
-    auto lowest = *min_element(A.begin(), A.end());
-    auto highest = *max_element(A.begin(), A.end());
+    //a "band" consists of 2 adjacent levels like levels 6/7, or 3/4 but not 3/5
+    Level lowest = *min_element(A.begin(), A.end());
+    Level highest = *max_element(A.begin(), A.end());
     ss<<lowest<<"~"<<highest<<endl;
-    if (lowest == highest) return N;
+    if (lowest == highest) return N; //original sequence's length
     size_t ret=1;
-    for(Level b=lowest; b<highest; ++b){
+    for(Level b=lowest; b<=highest-1; ++b){
       ss<<b<<" is the lower value of current band\n";
-      //scan from lowest band and count how many elements are in this band
+      //scan from lowest band to highest band, and count how many elements are in each band
       size_t cnt=0;
       for(unsigned int i=0; i<N; ++i){
-        auto v = A[i];
-        cnt +=  (v==b || v==b+1);
+        cnt +=  (A[i]==b || A[i]==b+1);
       }
       ss<<cnt<<" = cnt\n";
       if (ret < cnt) ret = cnt;
