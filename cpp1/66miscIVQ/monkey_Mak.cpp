@@ -38,7 +38,7 @@ int solution(vector<int> &A, int D) {
     //check isGood() at each snapshot. Return the first good timestamp.
     //if nothing good at end of the movie, then return -1
     set<Timestamp> const times(A.begin(), A.end());
-	for(Timestamp const & t: times){
+    for(Timestamp const & t: times){
       if (t<0) continue;
       ss<<t<<" = timestamp\n";
       vector<bool> vis(N);
