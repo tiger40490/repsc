@@ -44,22 +44,6 @@ int solution(vector<int> &A) {
       if (ret < cnt) ret = cnt;
 	}
 	return ret;
-	
-	multiset<Level> const levels(A.begin(), A.end());
-	ss<<levels;
-    for(auto it=levels.begin(); it!=levels.end(); ++it){
-	  Level const & b=*it;
-      ss<<b<<" is the lower value of current band\n";
-      /*a "band" consists of 2 adjacent levels like levels 6/7, or 3/4 but not 3/5. 
-      We scan from lowest band to highest band, and count how many elements are in each band*/
-      size_t cnt=0;
-      for(unsigned int i=0; i<N; ++i){
-        cnt +=  (A[i]==b || A[i]==b+1);
-      }
-      ss<<cnt<<" = cnt\n";
-      if (ret < cnt) ret = cnt;
-    }
-    return ret;
 }
 int sol(vector<int> A){
     ss<<A;
