@@ -19,6 +19,7 @@ int solution(vector<int> &A) {
     auto lowest = *min_element(A.begin(), A.end());
     auto highest = *max_element(A.begin(), A.end());
     ss<<lowest<<"~"<<highest<<endl;
+    if (lowest == highest) return N;
     size_t ret=1;
     for(Level b=lowest; b<highest; ++b){
       ss<<b<<" is the lower value of current band\n";
@@ -39,4 +40,5 @@ int sol(vector<int> A){
 }
 int main(){
     ss<<sol({6, 10, 6, 9, 7, 8})<<" returned\n";
+    ss<<sol({6,6,6,6,6,6,6})<<" returned\n";
 }
