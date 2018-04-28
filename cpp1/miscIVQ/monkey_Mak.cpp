@@ -58,3 +58,4 @@ int main(){
     ss<<sol({3, 2, 1}, 1)<<" returned\n";
     ss<<sol({1, 2, 3, 4, -1, -1, -1}, 3)<<" returned\n";
 }
+//Requirement: https://bintanvictor.wordpress.com/2018/04/28/monkey-crossing-river-codility/
