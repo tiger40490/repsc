@@ -21,11 +21,6 @@ template<typename T,             int min_width=4> ostream & operator<<(ostream &
    os<<endl;
    return os;
 }
-template<typename T,             int min_width=4> ostream & operator<<(ostream & os, multiset<T> const & c){
-   for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
-   os<<endl;
-   return os;
-}
 typedef int Level; // can be negative
 int solution(vector<int> &A) {
     size_t N = A.size(); ss<<N<<" = N\n";
