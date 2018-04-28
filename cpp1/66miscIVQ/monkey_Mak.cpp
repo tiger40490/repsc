@@ -21,7 +21,9 @@ bool isGood(vector<bool> const & visible, int const D){
   ss<<"visible = "<<visible;
   Gap gap=0; Position lastStone = -1;
   for(size_t i=0; i<visible.size(); ++i){
-    if (visible[i]){ gap = 0; lastStone=i;
+    if (visible[i]){ 
+	  gap = 0; 
+	  lastStone=i;
     }else if (++gap == D) { 
        ss<<lastStone<<'~'<<i<<" is equal to D="<<D<<", too far apart :(\n";
        return false;
@@ -36,7 +38,7 @@ int solution(vector<int> &A, int D) {
     //check isGood() at each snapshot. Return the first good timestamp.
     //if nothing good at end of the movie, then return -1
     set<Timestamp> const times(A.begin(), A.end());
-	for(Timestamp const & t:times){
+	for(Timestamp const & t: times){
       if (t<0) continue;
       ss<<t<<" = timestamp\n";
       vector<bool> vis(N);
