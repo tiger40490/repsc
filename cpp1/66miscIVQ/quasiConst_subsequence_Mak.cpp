@@ -1,6 +1,6 @@
 #include <vector>
 #include <set>
-#include <map>
+#include <unordered_map>
 #include <algorithm>
 #include <iostream>
 #include <iomanip>
@@ -11,7 +11,7 @@ template<typename K, typename V> ostream & operator<<(ostream & os, pair<K,V> co
    os<<p.first<<":"<<p.second;
    return os;
 }
-template<typename K, typename V, int min_width=4> ostream & operator<<(ostream & os,  map<K,V> const & c){
+template<typename K, typename V, int min_width=4> ostream & operator<<(ostream & os,  unordered_map<K,V> const & c){
    for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
    os<<endl;
    return os;
@@ -24,7 +24,7 @@ template<typename T,             int min_width=4> ostream & operator<<(ostream &
 typedef int Level; // can be negative
 int solution(vector<int> &A) {
     size_t N = A.size(); ss<<N<<" = N\n";
-    map<Level, size_t> frq;
+    unordered_map<Level, size_t> frq;
     for(Level const & i: A) frq[i]++;
     ss<<frq;
     if (frq.size()==1) return N; //original sequence's length
