@@ -26,7 +26,6 @@ bool isGood(vector<bool> const & visible, int const D){
        ss<<lastStone<<'~'<<i<<" is equal to D="<<D<<", too far apart :(\n";
        return false;
     }
-    }
   } return true;
 }
 int solution(vector<int> &A, int D) {
