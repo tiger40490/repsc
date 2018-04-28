@@ -1,5 +1,5 @@
 #include <vector>
-#include <unordered_map>
+#include <unordered_map> //map is easier for instrumentation, but hash map is faster for a bigger data set
 #include <algorithm>
 #include <iostream>
 #include <iomanip>
