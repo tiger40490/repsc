@@ -32,12 +32,11 @@ int solution(vector<int> &A, int D) {
     N = A.size(); ss<<N<<" = dest position\n";
     if (D >= (int)(1+N)) return 0;//N+1 gaps apart,single jump of size(N+1)will do
 
-    //Play the movie of stones at time 0, time 1, time 2...
-    //check isGood() at each snapshot. If good, return the timestamp.
-    //if still no good at end of the movie, then return -1
+    //Play the movie (of stones surfacing) at time 0, time 1, time 2...
+    //check isGood() at each snapshot. Return the first good timestamp.
+    //if nothing good at end of the movie, then return -1
     set<Timestamp> const times(A.begin(), A.end());
-    for(auto it =times.begin(); it!=times.end(); ++it){
-      Timestamp const t=*it;
+	for(Timestamp const & t:times){
       if (t<0) continue;
       ss<<t<<" = timestamp\n";
       vector<bool> vis(N);
