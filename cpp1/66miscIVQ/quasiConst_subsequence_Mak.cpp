@@ -1,4 +1,5 @@
 #include <vector>
+#include <set>
 #include <algorithm>
 #include <iostream>
 #include <iomanip>
@@ -13,13 +14,11 @@ template<typename T,             int min_width=4> ostream & operator<<(ostream &
 typedef int Level; // can be negative
 int solution(vector<int> &A) {
     size_t N = A.size(); ss<<N<<" = N\n";
-    ss<<A;
-    Level lowest = *min_element(A.begin(), A.end());
-    Level highest = *max_element(A.begin(), A.end());
-    ss<<lowest<<"~"<<highest<<endl;
-    if (lowest == highest) return N; //original sequence's length
+	set<Level> const levels(A.begin(), A.end());
+    if (levels.size()==1) return N; //original sequence's length
     size_t ret=1;
-    for(Level b=lowest; b<=highest-1; ++b){
+    for(auto it=levels.begin(); it!=levels.end(); ++it){
+	  Level const & b=*it;
       ss<<b<<" is the lower value of current band\n";
       /*a "band" consists of 2 adjacent levels like levels 6/7, or 3/4 but not 3/5. 
       We scan from lowest band to highest band, and count how many elements are in each band*/
@@ -40,5 +39,6 @@ int sol(vector<int> A){
 }
 int main(){
     assert(3==sol({6, 10, 6, 9, 7, 8}));
+    assert(3==sol({6, 100, 6, 90, 7, 8}));
     assert(7==sol({6,6,6,  6,6,6,6}));
 }
