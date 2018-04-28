@@ -11,7 +11,7 @@ template<typename T,             int min_width=4> ostream & operator<<(ostream &
    os<<endl;
    return os;
 }
-typedef int ts; //timestamp;
+typedef int Timestamp; //timestamp;
 typedef int Position; //0 to N, N being the destination
 typedef int Gap; //between 0 and 2, gap is 2
 size_t N=0;
@@ -37,9 +37,9 @@ int solution(vector<int> &A, int D) {
     //Play the movie of stones at time 0, time 1, time 2...
     //check isGood() at each snapshot. If good, return the timestamp.
     //if still no good at end of the movie, then return -1
-    set<ts> const times(A.begin(), A.end());
+    set<Timestamp> const times(A.begin(), A.end());
     for(auto it =times.begin(); it!=times.end(); ++it){
-      ts const t=*it;
+      Timestamp const t=*it;
       if (t<0) continue;
       ss<<t<<" = timestamp\n";
       vector<bool> vis(N);
@@ -49,7 +49,7 @@ int solution(vector<int> &A, int D) {
     }
     return -1;
 }
-int sol(vector<ts> A, int D){
+int sol(vector<Timestamp> A, int D){
     auto ret = solution(A, D);
     ss<<ret<<" <----- returned\n";
     return ret;
@@ -59,6 +59,7 @@ int main(){
     assert(6==sol({1, 7,-1,6, 0, 2, 8,3, 5}, 3));
     assert(2==sol({1, -1, 0, 2, 3, 5}, 3));
     assert(3==sol({3, 2, 1}, 1));
+    assert(-1==sol({1,2,3,4,-1,-1,-1}, 3));
     assert(-1==sol({5, 2, -1, 4, -1, -1, -1}, 3));
 }
 //Requirement: https://bintanvictor.wordpress.com/2018/04/28/monkey-crossing-river-codility/
