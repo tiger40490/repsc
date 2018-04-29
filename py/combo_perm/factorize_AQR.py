@@ -4,15 +4,16 @@ def factorize(bigNum, smallFactors=tuple()):
   '''find each formula to factorize bigNum, but when print it, also print smallFactors
   '''
   assert sorted(smallFactors) == list(smallFactors), 'should be sorted low to high'
-  print smallFactors, bigNum
   global cnt
   if smallFactors: 
     assert smallFactors[-1] <= bigNum
     cnt+=1
     _start = smallFactors[-1] # highest existing factor
+    print smallFactors, bigNum
   else: 
     cnt=0
     _start = 2
+    print '------- factoring', bigNum
   for f in xrange(_start, int(sqrt(bigNum))+1):
     if bigNum%f: continue
     factorize(bigNum/f, smallFactors+(f,))
