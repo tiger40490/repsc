@@ -13,7 +13,7 @@ def factorize(bigNum, smallFactors=tuple()):
   else: 
     cnt=0
     _start = 2
-    print '------- factoring', bigNum
+    print '------- factorizing', bigNum
   for f in xrange(_start, int(sqrt(bigNum))+1):
     if bigNum%f: continue
     factorize(bigNum/f, smallFactors+(f,))
