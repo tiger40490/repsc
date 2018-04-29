@@ -24,7 +24,7 @@ typedef int Level; // can be negative
 int solution(vector<int> &A) {
     size_t N = A.size(); ss<<N<<" = N\n";
     unordered_map<Level, size_t> frq;
-    for(Level const & i: A) frq[i]++; //probably O(N*logN)
+    for(Level const & i: A) frq[i]++; //worst case: O(N^2) for hashtable, O(N logN) for RedBlackTree
     ss<<frq;
     if (frq.size()==1) return N; //original sequence's length
     size_t ret=1;	
