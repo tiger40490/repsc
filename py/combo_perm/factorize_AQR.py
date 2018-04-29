@@ -7,15 +7,15 @@ def factorize(bigNum, smallFactors=tuple()):
   print smallFactors, bigNum
   global cnt
   if smallFactors: 
-      cnt+=1
-      assert smallFactors[-1] <= bigNum
-      _start = smallFactors[-1] # highest existing factor
+    assert smallFactors[-1] <= bigNum
+    cnt+=1
+    _start = smallFactors[-1] # highest existing factor
   else: 
     cnt=0
     _start = 2
   for f in xrange(_start, int(sqrt(bigNum))+1):
     if bigNum%f: continue
-    factorize(bigNum/f, smallFactors + (f,))
+    factorize(bigNum/f, smallFactors+(f,))
   return cnt
 
 def main():
