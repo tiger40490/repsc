@@ -1,12 +1,15 @@
 from math import sqrt
 #smallFactors is sorted from low to high
-
-def factorize(bigNum, smallFactors):
+cnt=0
+def factorize(bigNum, smallFactors=tuple()):
   '''find each formula to factorize bigNum, but when print it, also print smallFactors
   
   return true if our loop had any success
   '''
+  global cnt
   print 'breaking up', bigNum, smallFactors
+  if smallFactors: cnt+=1
+  else: cnt=0
   #isGood=False
   tmp = smallFactors[-1] if smallFactors else 2 #highest existing factor
   for f in xrange(tmp, int(sqrt(bigNum))+1):
@@ -14,10 +17,13 @@ def factorize(bigNum, smallFactors):
     print f, 'is a factor of', bigNum
     factorize(bigNum/f, smallFactors + (f,))
   #print 'returning with bigNum=', bigNum, 'f=',f   
-  #return isGood
+  return cnt
 
 def main():
-  factorize(36, tuple())
+  assert(8  == factorize(36));
+  assert(10 == factorize(60));
+  assert(6  == factorize(24));
+  assert(3  == factorize(12));  
 main()
 '''Requirement: https://bintanvictor.wordpress.com/2017/04/16/factorize-a-natural-number-aqr/
 Based on https://github.com/tiger40490/repo1/blob/cpp1/cpp1/combo_permu/factorize_AQR.cpp
