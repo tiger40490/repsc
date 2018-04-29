@@ -3,24 +3,20 @@ from math import sqrt
 cnt=0
 def factorize(bigNum, smallFactors=tuple()):
   '''find each formula to factorize bigNum, but when print it, also print smallFactors
-  
-  return true if our loop had any success
   '''
+  print smallFactors, bigNum
   global cnt
-  print 'breaking up', bigNum, smallFactors
   if smallFactors: cnt+=1
   else: cnt=0
-  #isGood=False
   tmp = smallFactors[-1] if smallFactors else 2 #highest existing factor
   for f in xrange(tmp, int(sqrt(bigNum))+1):
     if bigNum%f: continue
-    print f, 'is a factor of', bigNum
     factorize(bigNum/f, smallFactors + (f,))
-  #print 'returning with bigNum=', bigNum, 'f=',f   
   return cnt
 
 def main():
   assert(8  == factorize(36));
+  #return
   assert(10 == factorize(60));
   assert(6  == factorize(24));
   assert(3  == factorize(12));  
