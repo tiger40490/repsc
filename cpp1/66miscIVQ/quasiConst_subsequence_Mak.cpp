@@ -50,3 +50,4 @@ int main(){
     assert(3==sol({6, 100, 6, 90, 7, 8}));
     assert(7==sol({6,6,6,  6,6,6,6}));
 }
+//Requirement: https://bintanvictor.wordpress.com/2018/04/28/quasi-constant-subsequence-codility/
