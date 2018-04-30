@@ -38,6 +38,6 @@ fac 36 () iterating from 2 to 6
     fac 6 (2, +3)
   fac 12 (+3) iterating from 3 to 3
     fac 4 (3, +3)
-  fac 9 (+4)    
+  fac 9 (+4) # when factorizing 9, we ignore factors below 4, since they are taken care of in an earlier recursive call
   fac 6 (+6)
 '''
