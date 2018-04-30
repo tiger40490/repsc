@@ -1,11 +1,13 @@
 from math import sqrt
-cnt=0
+cnt=0; recursionLevel=0
 def factorize(bigNum, smallFactors=tuple()):
   '''find each formula to factorize bigNum, but when print it, also print smallFactors
   '''
+  global cnt, recursionLevel
   assert sorted(smallFactors) == list(smallFactors), 'should be sorted low to high'
-  global cnt
-  if smallFactors: 
+  assert len( smallFactors ) == recursionLevel
+  recursionLevel += 1
+  if smallFactors: # i.e. non-empty
     assert smallFactors[-1] <= bigNum
     cnt+=1
     _start = smallFactors[-1] # highest existing factor
@@ -17,6 +19,7 @@ def factorize(bigNum, smallFactors=tuple()):
   for f in xrange(_start, int(sqrt(bigNum))+1):
     if bigNum%f: continue
     factorize(bigNum/f, smallFactors+(f,))
+  recursionLevel -= 1
   return cnt
 
 def main():
