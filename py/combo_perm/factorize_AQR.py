@@ -1,24 +1,24 @@
 from math import sqrt
 cnt=0; recursionLevel=0
-def factorize(bigNum, smallFactors=tuple()):
-  '''find each formula to factorize bigNum, but when print it, also print smallFactors
+def factorize(tgt, smallFactors=tuple()):
+  '''find each formula to factorize tgt, but when print it, also print smallFactors
   '''
   global cnt, recursionLevel
   assert sorted(smallFactors) == list(smallFactors), 'should be sorted low to high'
   assert len( smallFactors ) == recursionLevel
   recursionLevel += 1
   if smallFactors: # i.e. non-empty
-    assert smallFactors[-1] <= bigNum
+    assert smallFactors[-1] <= tgt
     cnt+=1
     _start = smallFactors[-1] # highest existing factor
-    print smallFactors, bigNum
+    print smallFactors, tgt
   else: 
     cnt=0
     _start = 2
-    print '------- factorizing', bigNum
-  for f in xrange(_start, int(sqrt(bigNum))+1):
-    if bigNum%f: continue
-    factorize(bigNum/f, smallFactors+(f,))
+    print '------- factorizing', tgt
+  for f in xrange(_start, int(sqrt(tgt))+1):
+    if tgt%f: continue
+    factorize(tgt/f, smallFactors+(f,))
   recursionLevel -= 1
   return cnt
 
