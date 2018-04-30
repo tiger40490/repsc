@@ -10,7 +10,7 @@ def factorize(tgt, smallFactors=tuple()):
   if smallFactors: # i.e. non-empty
     assert smallFactors[-1] <= tgt
     cnt+=1
-    _start = smallFactors[-1] # highest existing factor
+    _start = smallFactors[-1] # highest existing factor -- smartest trick in this algorithm
     print smallFactors, tgt
   else: 
     cnt=0
