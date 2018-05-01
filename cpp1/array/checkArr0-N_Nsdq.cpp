@@ -72,15 +72,15 @@ void swap(int i, int j){
   a[i] = a[j];
   a[j] = tmp;
 }
-bool isDuplicate(int i, int j){
+bool notSame(int i, int j){
   if (a[i] == a[j]){
     cout << a[i] <<" marked as duplicated\n";
   }
-  return a[i] == a[j];
+  return a[i] != a[j];
 }
 void solution3(){
   for (int idx=0; idx < sz; idx++){
-    while (a[idx] != idx && isDuplicate(a[idx], a[a[idx]]) == false)
+    while (a[idx] != idx && notSame(a[idx], a[a[idx]]))
       swap(idx, a[idx]);
   }
 }
