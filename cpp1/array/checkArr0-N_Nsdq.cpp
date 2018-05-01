@@ -31,16 +31,16 @@ x means shared by multiple instances of this value */
     while(1){
       if (isChar(th)){break;}
       if (th == a[th] || a[th] == '-'){
-        if (!isChar(a[mf])) a[mf] = '-'; 
-        a[th] = '=';
-        //dump(i, "after moving");
-        break;
+  if (!isChar(a[mf])) a[mf] = '-'; 
+  a[th] = '=';
+  //dump(i, "after moving");
+  break;
       }else if('=' == a[th] || a[th] == 'x'){
-        if (!isChar(a[mf])) a[mf] = '-'; 
-        a[th] = 'x';
-        //dump(i, "after x");
-        cout<<th<<" marked as duplicated\n";
-        break;
+  if (!isChar(a[mf])) a[mf] = '-'; 
+  a[th] = 'x';
+  //dump(i, "after x");
+  cout<<th<<" marked as duplicated\n";
+  break;
       }
       if (!isChar(a[mf])) a[mf] = '-'; 
       
@@ -62,34 +62,30 @@ void solution2(){ //based on XR's email
   for(auto const upsized: a){
     auto const orig = abs(upsized)-1;
     if (a[orig] >= 0)
-        a[orig] *= -1;
+  a[orig] *= -1;
     else
-        cout<<orig<<" marked as duplicated\n";
+  cout<<orig<<" marked as duplicated\n";
   }
 }
 //////////// CSY
 void swap(int i, int j){
-        int tmp;
-        tmp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = tmp;
+  int tmp = a[i];
+  a[i] = a[j];
+  a[j] = tmp;
 }
 bool isDuplicate(int i, int j){
-        if (arr[i] == arr[j])
-        {
-                cout << arr[i] << endl;
-                return true;
-        }
-        return false;
+  if (a[i] == a[j]){
+    cout << a[i] << endl;
+    return true;
+  }
+  return false;
 }
-void solutino3{
-        for (int i=0; i < 5; i++)
-        {
-                while (arr[i] != i && isDuplicate(arr[i], arr[arr[i]]) == false)
-                        swap(i, arr[i]);
-        }
+void solutino3(){
+  for (int i=0; i < 5; i++){
+    while (a[i] != i && isDuplicate(a[i], a[a[i]]) == false)
+      swap(i, a[i]);
+  }
 }
-
 void check1array(vector<Val> _v){
   a = move(_v); //the argument object is no longer needed
   assert(0==_v.size() && "0 != size of vector after robbing");
