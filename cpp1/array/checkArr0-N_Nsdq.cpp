@@ -75,13 +75,13 @@ void swap(int i, int j){
 }
 bool isDuplicate(int i, int j){
   if (a[i] == a[j]){
-    cout << a[i] << endl;
+    cout << a[i] <<" marked as duplicated\n";
     return true;
   }
   return false;
 }
-void solutino3(){
-  for (int i=0; i < 5; i++){
+void solution3(){
+  for (int i=0; i < sz; i++){
     while (a[i] != i && isDuplicate(a[i], a[a[i]]) == false)
       swap(i, a[i]);
   }
@@ -90,10 +90,11 @@ void check1array(vector<Val> _v){
   a = move(_v); //the argument object is no longer needed
   assert(0==_v.size() && "0 != size of vector after robbing");
   sz=a.size();  
-  solution2();
+  solution3();
 }
 int main(){
   check1array({4,1,2,4,0,2,6,1});
+  return 0;
   check1array({0,1,2,4,0,2,3,1});
   check1array({1,2,0,2,0});
   check1array({6,1,2,4,3,5,0});
