@@ -80,8 +80,9 @@ bool notSame(int i, int j){
 }
 void solution3(){
   for (int idx=0; idx < sz; idx++){
-    while (a[idx] != idx && notSame(a[idx], a[a[idx]]))
-      swap(idx, a[idx]);
+    while (    idx != a[idx] && 
+     notSame(a[idx],a[a[idx]]))
+          swap(idx,   a[idx]);
   }
 }
 void check1array(vector<Val> _v){
