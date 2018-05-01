@@ -30,16 +30,16 @@ x means shared by multiple instances of this value */
     while(1){
       if (isChar(th)){break;}
       if (th == a[th] || a[th] == '-'){
-  if (!isChar(a[mf])) a[mf] = '-'; 
-  a[th] = '=';
-  //dump(i, "after moving");
-  break;
+        if (!isChar(a[mf])) a[mf] = '-'; 
+        a[th] = '=';
+        //dump(i, "after moving");
+        break;
       }else if('=' == a[th] || a[th] == 'x'){
-  if (!isChar(a[mf])) a[mf] = '-'; 
-  a[th] = 'x';
-  //dump(i, "after x");
-  cout<<th<<" marked as duplicated\n";
-  break;
+        if (!isChar(a[mf])) a[mf] = '-'; 
+        a[th] = 'x';
+        //dump(i, "after x");
+        cout<<th<<" marked as duplicated\n";
+        break;
       }
       if (!isChar(a[mf])) a[mf] = '-'; 
       
@@ -61,9 +61,9 @@ void solution2(){ //based on XR's email
   for(auto const upsized: a){
     auto const orig = abs(upsized)-1;
     if (a[orig] >= 0)
-  a[orig] *= -1;
+      a[orig] *= -1;
     else
-  cout<<orig<<" marked as duplicated\n";
+      cout<<orig<<" marked as duplicated\n";
   }
 }
 //////////// by CSY
