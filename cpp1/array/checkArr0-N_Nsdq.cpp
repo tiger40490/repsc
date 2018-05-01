@@ -79,9 +79,9 @@ bool isDuplicate(int i, int j){
   return a[i] == a[j];
 }
 void solution3(){
-  for (int i=0; i < sz; i++){
-    while (a[i] != i && isDuplicate(a[i], a[a[i]]) == false)
-      swap(i, a[i]);
+  for (int idx=0; idx < sz; idx++){
+    while (a[idx] != idx && isDuplicate(a[idx], a[a[idx]]) == false)
+      swap(idx, a[idx]);
   }
 }
 void check1array(vector<Val> _v){
