@@ -24,7 +24,6 @@ void solution1(){ /*my home-grown solution
 = means populated exactly once
 - means vacated i.e. required value missing
 x means shared by multiple instances of this value */
-  dump(0, "original");
   for (Pos i=0; i<sz; ++i){
     Pos mf = i; //moved from
     Val th=a[i]; /*target home*/
@@ -67,7 +66,7 @@ void solution2(){ //based on XR's email
   cout<<orig<<" marked as duplicated\n";
   }
 }
-//////////// CSY
+//////////// by CSY
 void swap(int i, int j){
   int tmp = a[i];
   a[i] = a[j];
@@ -76,9 +75,8 @@ void swap(int i, int j){
 bool isDuplicate(int i, int j){
   if (a[i] == a[j]){
     cout << a[i] <<" marked as duplicated\n";
-    return true;
   }
-  return false;
+  return a[i] == a[j];
 }
 void solution3(){
   for (int i=0; i < sz; i++){
@@ -90,11 +88,11 @@ void check1array(vector<Val> _v){
   a = move(_v); //the argument object is no longer needed
   assert(0==_v.size() && "0 != size of vector after robbing");
   sz=a.size();  
+  dump(0, "original");  
   solution3();
 }
 int main(){
   check1array({4,1,2,4,0,2,6,1});
-  return 0;
   check1array({0,1,2,4,0,2,3,1});
   check1array({1,2,0,2,0});
   check1array({6,1,2,4,3,5,0});
