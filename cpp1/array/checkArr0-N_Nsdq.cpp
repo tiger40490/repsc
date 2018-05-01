@@ -67,6 +67,29 @@ void solution2(){ //based on XR's email
         cout<<orig<<" marked as duplicated\n";
   }
 }
+//////////// CSY
+void swap(int i, int j){
+        int tmp;
+        tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+}
+bool isDuplicate(int i, int j){
+        if (arr[i] == arr[j])
+        {
+                cout << arr[i] << endl;
+                return true;
+        }
+        return false;
+}
+void solutino3{
+        for (int i=0; i < 5; i++)
+        {
+                while (arr[i] != i && isDuplicate(arr[i], arr[arr[i]]) == false)
+                        swap(i, arr[i]);
+        }
+}
+
 void check1array(vector<Val> _v){
   a = move(_v); //the argument object is no longer needed
   assert(0==_v.size() && "0 != size of vector after robbing");
