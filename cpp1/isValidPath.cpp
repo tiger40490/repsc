@@ -7,3 +7,5 @@ int main(int argc, char* argv[]){
   else
     cout<<argv[1]<<" isn't a relative or abs path to any File or dir :(\n";
 }
+/* simplest file/dir path validation. Only needs <fstream>
+*/
