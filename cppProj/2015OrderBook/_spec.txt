@@ -1,0 +1,95 @@
+--todo:
+add coomment
+
+merge into one file  and test online
+
+---
+Order book In securities trading an order book contains the list of interested buyers and the list of interested sellers. For each entry it must keep among others, some form of identifying the number of shares and the price that the buyer or seller are bidding/asking for the particular security. The orders belonging to people interested in buying the security are referred to as bids while those of the people interested in selling are referred to asks. Price Levels When several orders contain the same price, they are referred as a price level, meaning that if say, a bid comes at a price level, all the sell orders on that price level could potentially fulfill that. When the order book is part of a matching engine, orders are matched as the interest of buyers and sellers can be satisfied. When there are orders where the bid price is equal or higher than the lowest ask, those orders can be immediately fulfilled and will not be part of the open orders book.
+
+Top of the book The highest bid and the lowest ask are referred as the top of the book. They are interesting because they signal the prevalent market and the bid and ask price that would be needed to get an order fulfilled. The difference between the highest bid and the lowest ask is called the bid-offer spread.
+
+For eg Lets assume the order book is as follows 
+BidSize Bid Ask AskSize 
+100 61.9975 62.0000 10 	
+90 	61.9950 62.0025 110 
+120 61.9900 62.0050 120 
+10 	61.9875 62.0100 122 
+110 61.9800 62.0150 40
+
+In the above order book, The best bid is at 61.9975 and cumulatively there is a size of 100 present at this price level. Similarly, the best ask is 62.0000 and cumulatively there is a size of 10 present at this price level. Let us assume a new BUY order of size 15 and price 62.1000 comes in. Then the order book would become 
+BidSize Bid Ask AskSize 
+15 	62.1000 62.0000 10 
+100 61.9975 62.0025 110 
+90 	61.9950 62.0050 120 
+120 61.9900 62.0100 122 
+10 	61.9875 62.0150 40 
+110 61.9800
+
+The best bid(62.1000) >= best ask (62.0000). In this case, the best bid can be fulfilled and the best ask can be fulfilled. Further, the second best ask as well can be partially filled. Hence, the fulfilled price, also known as the last traded price would be Min(Best bid, Best Ask) = 62.0000 and size of 15. And the resulting order book would be. 
+BidSize Bid Ask AskSize 
+100 61.9975 62.0025 105 
+90 	61.9950 62.0050 120 
+120 61.9900 62.0100 122 
+10 	61.9875 62.0150 40 
+110 61.9800
+
+PRIORITY RULES 1. An Order that enters the price level on a side (buy or sell) will have a higher priority than all orders that enter the queue after it at that price level until it changes the price and exits the price level. 2. A change of price is equivalent to entering the new price level for the first time. 3. A change of size does not change the priority 4. Orders at the same price level will be matched (for a trade by the exchange) as per their priority from highest to lowest.
+
+The task now is to read such messages and reconstruct the order book. Each line in the input file consists of one of the following messages 
+	NEW ORDER MESSAGE: 	SymbolId, N, orderId , price, quantity,side 
+	MODIFY MESSAGE: 	SymbolId, M, orderId, newPrice, newQuantity, Side
+	Cancel Message: 	SymbolId,X,OrderId, Side 
+	Trade Message: 		SymbolId, T, BuyOrderId,SellOrderId, TradedPrice, TradedQuantity
+
+NOTE: It is possible that for order cancellation message, the order Id has not been seen earlier. In that case the particular order cancel message should be ignored. 
+
+NOTE: It is possible that for an order Modification message the original order Id has not been seen earlier. In that case the particular order mod message should be treated as a new order and handled accordingly.
+
+NOTE: It is possible that the buyOrderid or sellOrderId can have the value 0. In such a case the order Id should be ignored and there should not be any follow up action based on that orderId (the one that is 0). Both the orderIds will not have the value 0 at the same time.
+
+Problem The task is to read the input file line by line and parse each message according to the above instructions and print out the order book at the end of it in the following format
+
+best bid_size1,best bid1,best ask1,best askSize1,
+best bid_size2,best bid2,best ask2,best askSize2,
+best bid_size3,best bid3,best ask3,best askSize3,
+best bid_size4,best bid4,best ask4,best askSize4,
+best bid_size5,best bid5,best ask5,best askSize5
+
+where best bid i refers to the ith best bid. Correspondingly the best ask i refers to the ith best ask that is the ith best ask. For eg, best_bid1 refers to the best bid or the highest bid. and best_ask1 refers to the best ask or the lowest ask.
+
+NOTE: incase there is no bid then the best bid_size should be noted as 0 and best bid as 0. Incase there is no ask then the best ask_size should be noted as 0 and the best ask is 0.
+Sample Input (Plaintext Link)
+
+1069,N,1000000000000242.000000,624400,300,B
+1069,N,1000000000000243.000000,623650,400,B
+1069,N,1000000000000244.000000,623250,500,B
+1069,N,1000000000000245.000000,622650,500,B
+1069,N,1000000000000246.000000,622250,500,B
+1069,N,1000000000000247.000000,621250,500,B
+1069,N,1000000000000248.000000,620250,500,B
+1069,N,1000000000000249.000000,625950,300,S
+1069,N,1000000000000251.000000,626350,400,S
+1069,N,1000000000000252.000000,626750,500,S
+1069,N,1000000000000254.000000,627750,500,S
+1069,N,1000000000000255.000000,628750,500,S
+1069,N,1000000000000258.000000,624125,200,B
+1069,N,1000000000000260.000000,626650,1000,S
+1069,N,1000000000000262.000000,626450,400,S
+1069,N,1000000000000264.000000,626750,800,S
+
+Sample Output (in one line!)
+
+300,624400,625950,300,
+200,624125,626350,400,
+400,623650,626450,400,
+500,623250,626650,1000,
+500,622650,626750,1300
+
+Explanation
+the order book looks somewhat like this
+<bidsize> <bid> <ask> <asksize> <level>
+300 624400 625950 300 best
+200 624125 626350 400 2nd best
+400 623650 626450 400 3rd best
+500 623250 626650 1000 4th best
+500 622650 626750 1300 5th best
