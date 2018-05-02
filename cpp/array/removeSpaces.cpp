@@ -1,28 +1,31 @@
-#include <iostream>
-#include <cassert>
-using namespace std;
+//O(1) space, one scan
 //Avoid strlen() which has O(N) cost
 //Avoid unnecessary char-copying in the initial part since most strings start with non-spaces.
 
-void removeSpaces(char * s){
-  int i=0;
-  for(; !isspace(s[i]); ++i){
-    if (s[i] == 0) return;
-  }
+#include <iostream>
+#include <cassert>
+using namespace std;
 
-  assert(isspace(s[i]) &&
-"This should be the first space. Before this position, we have saved unnecessary char-copying");
-
-  for(int front=i; s[front]!=0; ++front){
+//returns # of copy operations
+size_t removeSpaces(char * s){
+  cout<<s<<"__ is original\n";
+  int cost=0, back=0;
+  for(int front=back; s[front]!=0; ++front){
     if (isspace(s[front])) continue;
-      s[i++] = s[front];
+    if (back<front) {
+      s[back] = s[front];
+      cost++;
+    }
+    back++;
   }
-  s[i]=0;
+  s[back]=0;
+  cout<<s<<"__ is clone\n";
+  return cost;
 }
 int main(){
   char s[]="  at  b c dd ";
-  cout<<s<<"__\n";
-  removeSpaces(s);
-  cout<<s<<"__\n";
+  assert(6==removeSpaces(s));
+  char s2[]="  at  b c dd";
+  assert(6==removeSpaces(s2));
 }
-// https://bintanvictor.wordpress.com/2015/12/10/my-most-efficient-removespaceschar/
+//requirement: https://bintanvictor.wordpress.com/2015/12/10/my-most-efficient-removespaceschar/
