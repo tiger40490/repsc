@@ -11,7 +11,7 @@ def factorize(tgt, smallFactors=tuple()):
     assert smallFactors[-1] <= tgt
     cnt+=1
     _start = smallFactors[-1] # highest existing factor -- smartest trick in this algorithm
-    print smallFactors, tgt
+    #print smallFactors, tgt
   else: 
     cnt=0
     _start = 2
@@ -28,6 +28,9 @@ def main():
   assert(10 == factorize(60));
   assert(6  == factorize(24));
   assert(3  == factorize(12));  
+  A=2; B=3; C=5; D=7
+  target = A**10 * B**8 * C**6 * D**4
+  factorize(target) # need to use q(python -u)
 main()
 '''Requirement: https://bintanvictor.wordpress.com/2017/04/16/factorize-a-natural-number-aqr/
 --for 36 we want
