@@ -29,8 +29,8 @@ def main():
   assert(6  == factorize(24));
   assert(3  == factorize(12));  
   A=2; B=3; C=5; D=7
-  target = A**10 * B**8 * C**6 * D**4
-  factorize(target) # need to use q(python -u)
+  factorize((A*C)**12) # a trillion
+  factorize(A**10 * B**8 * C**6 * D**4) # need to use q(python -u)
 main()
 '''Requirement: https://bintanvictor.wordpress.com/2017/04/16/factorize-a-natural-number-aqr/
 --for 36 we want
