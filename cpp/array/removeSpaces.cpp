@@ -6,8 +6,7 @@
 #include <cassert>
 using namespace std;
 
-//returns # of copy operations
-size_t removeSpaces(char * s){
+size_t removeSpaces(char * s){ //returns # of copy operations, to be minimized
   cout<<s<<"__ is original\n";
   int cost=0, back=0;
   for(int front=back; s[front]!=0; ++front){
