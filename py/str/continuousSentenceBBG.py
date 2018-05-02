@@ -28,6 +28,7 @@ def parse(remain):
       if not   (le.startswith(pw) or ri.startswith(pw)):
         print pw, 'is not a prefix of any word.. giving up on', remain
         return False;
+  # end of for loop    
   return False      
 def main():
   result = parse('alicealx')
