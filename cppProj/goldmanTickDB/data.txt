@@ -1,8 +1,0 @@
-1506724491,MS,price,1.20,qty,100,side,1,id,987652
-1506724491,GS,price,1.21,qty,100,side,1,id,987653
-1506724492,GS,ppprice,1.21,qty,100,side,1,id,987654,delete,1
-1506724493,GS,price,1.21,qty,100,side,1,id,987654,new_id,971970
-1506724494,GS,price,1.21,newqty,200,side,1,id,987654,modify,1
-1506724494,GS,price,1.21,qty,200,side,1,id,987652,modify,1
-1506724496,MS,price,1.21,qty,100,side,1,id,987654
-1506724497,GS,price,1.21,qty,100,side,1,id,987654
