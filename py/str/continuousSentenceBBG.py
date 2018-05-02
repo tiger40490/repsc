@@ -2,16 +2,17 @@ import bisect
 
 input = ('al', 'ali', 'alice', 'bob', 'dan')
 hay = sorted(input)
-engDict = set(input)
-matched=list()
+engDict = set(input) # the English dictionary
+matched=list() # list of words parsed
 
 def myReturn(pw): # to reduce indentation levels
   global matched
   matched.insert(0, pw)  
   return True
+
 def parse(remain):
   sz = len(remain)
-  if sz == 0: return True
+  if sz == 0: return True # entire sentence parsed :)
   if remain in engDict: return myReturn(remain)
   for i in range(1,sz+1):
     pw = remain[0:i] # possible word
