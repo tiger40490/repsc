@@ -18,7 +18,7 @@ size_t removeSpaces(char * s){ //returns # of copy operations, to be minimized
     back++;
   }
   s[back]=0;
-  cout<<s<<"__ is clone\n";
+  cout<<s<<"__ is afterwards\n";
   return cost;
 }
 int main(){
