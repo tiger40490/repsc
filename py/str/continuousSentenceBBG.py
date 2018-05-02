@@ -15,7 +15,7 @@ def parse(remain):
   if sz == 0: return True # entire sentence parsed :)
   if remain in engDict: return myReturn(remain)
   for i in range(1,sz+1):
-    pw = remain[0:i] # possible word
+    pw = remain[0:i] # possible word. remain[0:n] would return the first n characters from "remain".
     print 'trying', pw
     if pw in engDict:    
       if parse(remain[i:]): return myReturn(pw)
