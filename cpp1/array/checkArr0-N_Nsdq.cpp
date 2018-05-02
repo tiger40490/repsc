@@ -78,7 +78,7 @@ bool notSame(int i, int j){
   }
   return a[i] != a[j];
 }
-void solution3(){
+void solution3(){ // at a given index, swap until it gets the correct value or a dupe
   for (int idx=0; idx < sz; idx++){
     while (    idx != a[idx] && 
      notSame(a[idx],a[a[idx]]))
