@@ -19,6 +19,8 @@ def parse(remain):
     print 'trying', pw
     if pw in engDict:    
       if parse(remain[i:]): return myReturn(pw)
+      
+    # The else block below is not needed to solve the problem. It's added purely for efficiency.
     else: # is pw a possible prefix? Locate the nearest 2 neighbours
       tmp = bisect.bisect_left(hay, pw)
       le = hay[tmp-1] if tmp>=1 else '/'
