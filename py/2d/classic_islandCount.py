@@ -15,9 +15,9 @@ def readCell(r,c): # utility to return None if out of bounds
   return None # out of bounds
   
 def dft(r,c): # find all black cells connected and repaint them grey
-  if readCell(r, c+1) == 'b': coverEntireCluster(r,c+1)
-  if readCell(r, c-1) == 'b': coverEntireCluster(r,c-1)
-  if readCell(r+1, c) == 'b': coverEntireCluster(r+1,c)
+  if readCell(r, c+1) == 'b': coverEntireIsland(r,c+1)
+  if readCell(r, c-1) == 'b': coverEntireIsland(r,c-1)
+  if readCell(r+1, c) == 'b': coverEntireIsland(r+1,c)
   tmp = readCell(r-1, c); assert tmp is None or tmp == 'g'# i doubt we ever need to explore upward
   
 def bft(aa,bb): 
@@ -37,10 +37,10 @@ def work():
       color = readCell(r,c)
       if color == 'b': 
         islands += 1
-        coverEntireCluster(r,c)
+        coverEntireIsland(r,c)
   assert seen == width*height
   return myReturn()
-def coverEntireCluster(r,c): # bft/dft both OK. BFT turns out a bit tricky to implement
+def coverEntireIsland(r,c): # bft/dft both OK. BFT turns out a bit tricky to implement
   dft(r,c)      
 def populate():
   global m, width, height
@@ -52,7 +52,7 @@ def populate():
   height = len(m)
   width = len(m[0])
 def myReturn():
-  print islands, '<-- clusters found. Game over'
+  print islands, '<-- islands found. Game over'
 def dump():
   for r in xrange(len(m)):
     for c in xrange(width):
