@@ -7,11 +7,11 @@ using namespace std;
 
 typedef int field;
 typedef size_t Index;
-vector<field> v{1,2,3,4,  21,22,23,24,  110,120,130,140};//,  111,222,333,444};
+vector<field> v{1,2,3,4,  21,22,23,24};//,  110,120,130,140};//,  111,222,333,444};
 list<field> li(v.begin(), v.end());
 typedef list<field>::iterator Itr;
 size_t sz=v.size();
-size_t const fields=3;
+size_t const fields=2;
 size_t const objCount = sz/fields;
 
 template<typename T,             int min_width=4> ostream & operator<<(ostream & os, vector<T> const & c){
@@ -29,13 +29,13 @@ void simpleSolution(){
 }
 /////////// O(1)-space eviction solution
 Index convert(Index i, field f){
-  cout<<f<<" is the value at old home = "<<i<<" ; ";
-  i++;
-  int oid = 1+ i/objCount;
-  int aid = 1+ i%objCount;
+  cout<<f<<" is the value at old home = "<<i<<"\n";
+  //i++; cout<<i<<" = old home + 1\n";
+  int oid = (i)%objCount; //0 means 1st obj
+  int aid = (i)/objCount; //0 means 1st att; 1 means 2nd att
   cout<<oid<<" = oid; aid = "<<aid<<endl;
   //everything is 1-based
-  Index ret = (oid)*fields + aid -1;
+  Index ret = (oid)*fields + aid;
   cout<<ret<<" = new home\n";
   assert(ret < sz);
   return ret;
@@ -79,8 +79,9 @@ void inPlaceShuffle(Itr const objField1){ //tested
 }
 int main(){
   cout<<"before evictions, "<<v;
-  //evictionSolution();
+  evictionSolution();
   cout<<"after evictions, "<<v;
+  return 0;
   inPlaceShuffle(li.begin());
   for(auto it=li.begin(); it!=li.end(); ++it)  cout<<*it<<" ";
 }
