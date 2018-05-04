@@ -46,8 +46,7 @@ void evictionSolution(){
         int newHome = convert(oldHome, f);
         field tmp = v[newHome]; //save
         v[newHome] = f;
-        ++mvcnt;
-
+		cout<<v;
         oldHome = newHome;
         f = tmp;
   } //convert(oldHome) should be 1
