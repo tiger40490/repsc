@@ -20,7 +20,10 @@ void simpleSolution(){
     }
   }
 }
- 
+/////////// O(1) space eviction solution
+void evictionSolution(){
+}
+/////////// solution on a list input (not applicable if input is array): 
 size_t objFixed=0;
 Itr objNextField(Itr it){
   for(int i=0; i< objCount-objFixed; ++i){++it; assert(it != li.end()); }
