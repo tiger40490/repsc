@@ -67,22 +67,18 @@ void solution2(){ //based on XR's email
   }
 }
 //////////// by CSY
-void swap(int i, int j){
-  int tmp = a[i];
-  a[i] = a[j];
-  a[j] = tmp;
-}
-bool notSame(int i, int j){
+bool notSame(Pos i, Pos j){
   if (a[i] == a[j]){
     cout << a[i] <<" marked as duplicated\n";
   }
   return a[i] != a[j];
 }
 void solution3(){ // at a given index, swap until it gets the correct value or a dupe
-  for (int idx=0; idx < sz; idx++){
-    while (    idx != a[idx] && 
-     notSame(a[idx],a[a[idx]]))
-          swap(idx,   a[idx]);
+  for (Pos idx=0; idx < sz; idx++){
+    //cout<<"idx = "<<idx<<endl;
+    while (       idx != a[idx] && 
+      notSame  (a[idx],a[a[idx]]))
+      std::swap(a[idx],a[a[idx]]);
   }
 }
 void check1array(vector<Val> _v){
