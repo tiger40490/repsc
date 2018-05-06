@@ -67,6 +67,21 @@ void solution2(){ //based on XR's email
       cout<<orig<<" marked as duplicated\n";
   }
 }
+bool trySwap(Pos c, Pos b){
+  if (c==b) return false;
+  if (a[c] == a[b]){
+    cout << a[c] <<" marked as duplicated\n";
+    return false;
+  }
+  std::swap(a[c], a[b]);
+  return true;
+}
+void solution3(){ //inspired by CSY
+    //keep updating (by swap) a[0] node until it's filled correctly, or a[a[0]] node is filled correctly. Then move on to a[1].
+    for(Pos i=0; i<sz;){
+      if ( ! trySwap(i, a[i]) ) ++i;
+    }dump(99, "end of solution3");
+}
 //////////// by CSY
 bool notSame(Pos i, Pos j){
   if (a[i] == a[j]){
@@ -74,7 +89,6 @@ bool notSame(Pos i, Pos j){
   }
   return a[i] != a[j];
 }
-void solution3(){}
 void solutionByCSY(){ // at a given index, swap until it gets the correct value or a dupe
   for (Pos idx=0; idx < sz; idx++){
     ss<<"idx = "<<idx<<endl;
@@ -91,7 +105,7 @@ void check1array(vector<Val> _v){
   assert(0==_v.size() && "0 != size of vector after robbing");
   sz=a.size();  
   dump(0, "original");  
-  solutionByCSY();
+  solution3();
 }
 int main(){
   check1array({4,1,2,4,0,2,6,1});
