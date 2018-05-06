@@ -1,16 +1,21 @@
 #include <queue>
 #include <vector>
+#include <map>
 #include <iostream>
+#include <sstream>
+#include <cassert>
+#define ss if(1>-2)cout
 using namespace std;
-
+stringstream strstr;
+typedef int Data;
 struct Node {
-    int data;
+    Data data;
     Node *left, *right;
-    Node(int x, Node * le = NULL, Node * ri = NULL) : data(x), left(le), right(ri) {}
+    Node(int x, Node * _le = NULL, Node * _ri = NULL) : data(x), left(_le), right(_ri) {}
 };
 ostream & operator<<(ostream & os, Node const & nd){
   os<<"{ ";
-  if (nd.left) os<<nd.left->data<<" <-";
+  if (nd.left)  os<<nd.left->data<<" <-";
   os<<"\t[ "<<nd.data/*<<" @ "<<&nd*/<<" ] ";
   if (nd.right) os<<"-> "<<nd.right->data<<" ";
   os<<" }\n";  
@@ -31,6 +36,7 @@ https://en.wikipedia.org/wiki/Threaded_binary_tree#Non_recursive_Inorder_travers
     Node _8(8, &_7, &_9);
     Node _6(6, NULL, &_8);
     Node root(5, &_4, &_6);
+void dumpNode(Node * n){cout<<*n;}
 void BreadthFirstTraversal(Node* node, void(*callback)(Node*)){
   queue<Node*> q;
   q.push(node); // must be root
@@ -41,14 +47,47 @@ void BreadthFirstTraversal(Node* node, void(*callback)(Node*)){
       callback(node);
   }
 }
-void genericWalk(Node* node, void (*callback)(Node*)){
-  BreadthFirstTraversal(node, callback);
+void genericWalk(Node* root, void (*callback)(Node*)){
+  BreadthFirstTraversal(root, callback);
 }
-void dump(Node * n){cout<<*n;}
 void serialize1node(Node * n){
-  cout<<n<<",   "<<n->data<<"   ,"<<n->left<<" ^ "<<n->right<<endl;
+  strstr<<n<<","<<n->data<<","<<n->left<<","<<n->right<<",";
+}
+void reconstruct(stringstream & strstr){
+    Node * newRoot = NULL;
+    map<string, Node*> lookup;
+    vector<string> v; v.reserve(4);
+    string token;
+    for(int i=0; getline(strstr, token, ','); ++i){
+      v.push_back(token);
+      if (i%4 < 3) continue;
+      string id=v[0], idLe=v[2], idRi=v[3]; Data d=stoi(v[1]);
+      v.clear();
+      ss<<id<<" , "<<d<<" , "<<idLe<<" ^ "<<idRi<<"\n";
+      if (lookup.count(id)){ lookup[id]->data = d;
+      }else{ 
+        Node * n = new Node(d);
+        lookup[id]=n;
+        if (lookup.size() == 1) newRoot = n;
+      }
+      Node * n = lookup[id];
+      if (idLe != "0"){
+        if (!lookup.count(idLe))lookup[idLe] = new Node(-1);    
+        n->left = lookup[idLe];
+      }
+      if (idRi != "0" ){
+        if (!lookup.count(idRi)) lookup[idRi] = new Node(-1);          
+        n->right = lookup[idRi];
+      }
+    }
+    assert(newRoot);
+    cout<<"Reconstructed:\n";
+    BreadthFirstTraversal(newRoot, dumpNode);
 }
 int main() {
-    BreadthFirstTraversal(&root, dump);
+    BreadthFirstTraversal(&root, dumpNode);
     genericWalk(&root, serialize1node);
+    ss<<strstr.str()<<endl;
+    reconstruct(strstr);
 }
+
