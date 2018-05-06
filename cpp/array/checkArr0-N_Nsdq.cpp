@@ -67,6 +67,7 @@ void solution2(){ //based on XR's email
       cout<<orig<<" marked as duplicated\n";
   }
 }
+// returns true iff swapped
 bool trySwap(Pos cur, Pos tgt){
   if(cur==tgt)return false;//current position already correct
   if( a[cur] == a[tgt] )return false; 
