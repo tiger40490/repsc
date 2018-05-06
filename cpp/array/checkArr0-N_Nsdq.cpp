@@ -21,7 +21,7 @@ void dump(Pos pos, string headline=""){
   }
   cout<<endl;
 }
-void solution1(){ /*my home-grown solution
+void solution1(){ /*my home-grown solution. Lengthy, powerful, efficient
 = means populated exactly once
 - means vacated i.e. required value missing
 x means shared by multiple instances of this value */
@@ -58,7 +58,7 @@ x means shared by multiple instances of this value */
 }
 void solution2(){ //based on XR's email
   for(auto & item: a) ++item;
-  dump(0, "upsize");
+  dump(0, "upsized");
   for(auto const upsized: a){
     auto const orig = abs(upsized)-1;
     if (a[orig] >= 0)
@@ -67,13 +67,12 @@ void solution2(){ //based on XR's email
       cout<<orig<<" marked as duplicated\n";
   }
 }
-bool trySwap(Pos c, Pos b){
-  if (c==b) return false;
-  if (a[c] == a[b]){
-    cout << a[c] <<" marked as duplicated\n";
-    return false;
-  }
-  std::swap(a[c], a[b]);
+bool trySwap(Pos cur, Pos tgt){
+  if(cur==tgt)return false;//current position already correct
+  if( a[cur] == a[tgt] )return false; 
+    //target position is correctly, and current position is a bad duplicate
+  
+  std::swap(a[cur], a[tgt]);
   return true;
 }
 void solution3(){ //inspired by CSY
@@ -81,6 +80,13 @@ void solution3(){ //inspired by CSY
     for(Pos i=0; i<sz;){
       if ( ! trySwap(i, a[i]) ) ++i;
     }dump(99, "end of solution3");
+    
+    //now we can easily output dupe values and missing values :)
+    for(Pos i=0; i<sz; ++i){
+      if (a[i] == i) continue;
+      cout<<i<<" -- is missing\n";
+      cout<<a[i]<<" ++ marked as duplicated\n";
+    }
 }
 //////////// by CSY
 bool notSame(Pos i, Pos j){
@@ -112,6 +118,7 @@ int main(){
   //return 0;
   check1array({0,1,2,4,0,2,3,1});
   check1array({1,2,0,2,0});
+  check1array({2,2,2,2});
   check1array({6,1,2,4,3,5,0});
 }
 /* Requirement: https://wp.me/p74oew-55f
