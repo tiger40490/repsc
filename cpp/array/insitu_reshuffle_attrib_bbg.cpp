@@ -1,3 +1,5 @@
+//showcase vector dump with index, using setw()
+//todo: better left-align
 #include <iostream>
 #include <vector>
 #include <list>
@@ -5,16 +7,16 @@
 #include <assert.h>
 using namespace std;
 
-typedef int field;
-typedef size_t Index;
-vector<field> v{1,2,3,4,  21,22,23,24};//,  110,120,130,140};//,  111,222,333,444};
-list<field> li(v.begin(), v.end());
-typedef list<field>::iterator Itr;
-size_t sz=v.size();
-size_t const fields=2;
-size_t const objCount = sz/fields;
+typedef size_t index;
+typedef int field; 
+vector<field> v{1,2,3,4,  21,22,23,24,  110,120,130,140,  111,222,333,444};
+size_t const sz=v.size();
+size_t constexpr objCount = 4;
+size_t const fields=sz/objCount;
 
-template<typename T,             int min_width=4> ostream & operator<<(ostream & os, vector<T> const & c){
+template<typename T,             int min_width=3> ostream & operator<<(ostream & os, vector<T> const & c){
+   for(int i=0; i<c.size(); ++i) os<<setw(min_width)<<i<<"-";
+   os<<"\n";
    for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
    os<<endl;
    return os;
@@ -28,30 +30,37 @@ void simpleSolution(){
   }
 }
 /////////// O(1)-space eviction solution
-Index convert(Index i, field f){
-  cout<<f<<" is the value at old home = "<<i<<"\n";
-  //i++; cout<<i<<" = old home + 1\n";
+index convert(index i, field val2mv = -9999){
+  //cout<<val2mv<<" is the value at old home = "<<i<<"\n";
   int oid = (i)%objCount; //0 means 1st obj
-  int aid = (i)/objCount; //0 means 1st att; 1 means 2nd att
-  cout<<oid<<" = oid; aid = "<<aid<<endl;
-  //everything is 1-based
-  Index ret = (oid)*fields + aid;
-  cout<<ret<<" = new home\n";
+  int fid = (i)/objCount; //0 means 1st field; 1 means 2nd field
+  //cout<<oid<<" = oid; fid = "<<fid<<endl;
+  index ret = (oid)*fields + fid;
+  //cout<<ret<<" = new home\n";
   assert(ret < sz);
   return ret;
 }
-void evictionSolution(){
-  field f = v[1];
-  for (int mvcnt=0, oldHome=1; mvcnt<sz-2; ++mvcnt) {
-        int newHome = convert(oldHome, f);
+void evictionSolution(){ //tested
+  size_t mvcnt=0;
+  index oldHome=1; field val2mv=v[oldHome ];
+  while( mvcnt < sz-2/*move all but 1st/last nodes*/){
+        index newHome = convert(oldHome);
         field tmp = v[newHome]; //save
-        v[newHome] = f;
-		cout<<v;
-        oldHome = newHome;
-        f = tmp;
-  } //convert(oldHome) should be 1
+        if (tmp < 0) {
+          ++oldHome; val2mv = v[oldHome];
+          continue;
+        }
+        v[newHome] = -val2mv;
+        ++mvcnt;
+        oldHome = newHome; val2mv = tmp;
+        assert (val2mv>0);
+  }
+  for(auto & e: v) if(e<0) e = -e;
+  // for(int i=0; i<sz; ++i) if (v[i]<0) v[i]=-v[i];
 }
 /////////// solution on a list input (not applicable if input is array):
+list<field> li(v.begin(), v.end());
+typedef list<field>::iterator Itr;
 size_t objFixed=0;
 Itr objNextField(Itr it){
   for(int i=0; i< objCount-objFixed; ++i){++it; assert(it != li.end()); }
@@ -77,10 +86,9 @@ void inPlaceShuffle(Itr const objField1){ //tested
   inPlaceShuffle(nextObjField1);//tail recursion is cleaner than iteration
 }
 int main(){
-  cout<<"before evictions, "<<v;
-  evictionSolution();
-  cout<<"after evictions, "<<v;
-  return 0;
   inPlaceShuffle(li.begin());
   for(auto it=li.begin(); it!=li.end(); ++it)  cout<<*it<<" ";
+  cout<<"\nbefore evictions, \n"<<v;
+  evictionSolution();
+  cout<<"after evictions, \n"<<v;
 }
