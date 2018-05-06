@@ -4,6 +4,7 @@
 #include<iostream>
 #include<vector>
 #include<assert.h>
+#define ss if(1>2)cout
 using namespace std;
 typedef int Val;
 typedef size_t Pos;
@@ -73,12 +74,16 @@ bool notSame(Pos i, Pos j){
   }
   return a[i] != a[j];
 }
-void solution3(){ // at a given index, swap until it gets the correct value or a dupe
+void solution3(){}
+void solutionByCSY(){ // at a given index, swap until it gets the correct value or a dupe
   for (Pos idx=0; idx < sz; idx++){
-    //cout<<"idx = "<<idx<<endl;
+    ss<<"idx = "<<idx<<endl;
     while (       idx != a[idx] && 
-      notSame  (a[idx],a[a[idx]]))
+      notSame  (a[idx],a[a[idx]])){
       std::swap(a[idx],a[a[idx]]);
+      ss<<idx<<" swapping "<<a[idx]<<endl;
+    }
+    //dump(idx);
   }
 }
 void check1array(vector<Val> _v){
@@ -86,10 +91,11 @@ void check1array(vector<Val> _v){
   assert(0==_v.size() && "0 != size of vector after robbing");
   sz=a.size();  
   dump(0, "original");  
-  solution3();
+  solutionByCSY();
 }
 int main(){
   check1array({4,1,2,4,0,2,6,1});
+  //return 0;
   check1array({0,1,2,4,0,2,3,1});
   check1array({1,2,0,2,0});
   check1array({6,1,2,4,3,5,0});
