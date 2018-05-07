@@ -4,7 +4,7 @@
 
 using namespace std;
 
-//by CSY
+//by my friend CSY
 void fun(vector<int> arr, int sum, int count, vector<int> v){
   if (sum <= 0 || count < 1 || arr.size() < count)
     return;
