@@ -1,3 +1,4 @@
+//showcase: parsing a stringstream
 //todo: how to pass the stringstream object rather than a global variable
 #include <queue>
 #include <vector>
