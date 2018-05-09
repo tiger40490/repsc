@@ -5,7 +5,7 @@ package com.hackerrank.mazePath;
 import java.util.*;
 import static java.lang.System.*;
 
-class Solution{
+class MazePath{
     public static void main(String [] args) throws Exception    {
         Scanner sc = new Scanner(System.in);
         R = 3;//sc.nextInt(); 
