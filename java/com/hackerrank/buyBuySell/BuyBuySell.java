@@ -3,7 +3,7 @@ import java.util.*;
 import static java.lang.System.*;
 
 class BuyBuySell{
-    public static void main(String [] args) throws Exception    {
+  public static void main(String [] args) throws Exception    {
         Scanner sc = new Scanner(System.in);
         int T = sc.nextInt();
         for(int t = 0; t < T; t++) {
@@ -13,11 +13,10 @@ class BuyBuySell{
         		int b = sc.nextInt();
         		li.add(b);
         	}
-            play(li);
+          play(li);
         }
         sc.close();
-    }
-
+  }
 	private static void play(final List<Integer> li) {
 		int holding=0;
 		for (int i=0; i<li.size()-1; ++i) {
