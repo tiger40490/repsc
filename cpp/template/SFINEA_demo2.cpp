@@ -1,6 +1,7 @@
+#include <stdio.h>
+
 template <class T>
-struct is_pointer
-{
+struct is_pointer{
   template <class U>
   static char is_ptr(U *);
 
@@ -16,12 +17,9 @@ struct is_pointer
   enum { value = sizeof(is_ptr(t)) == sizeof(char) };
 };
 
-struct Foo {
-  int bar;
-};
+struct Foo {int bar; };
 
-int main(void)
-{
+int main(void){
   typedef int * IntPtr;
   typedef int Foo::* FooMemberPtr;
   typedef int (*FuncPtr)();
