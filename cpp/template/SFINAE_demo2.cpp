@@ -1,6 +1,5 @@
 #include <assert.h>
 #include <iostream>
-#include <sstream>
 //using namespace std; //problematic
 
 struct type9{ char dummy[9]; };
@@ -15,7 +14,7 @@ template <class T> struct is_pointer{
   static float is_ptr(Y  X::*);
 
   template <class X, class Y>
-  static double is_ptr(Y (X::*)(std::stringstream));
+  static double is_ptr(Y (X::*)(std::ostream));
 
   static type9 is_ptr(...); //default overload
   static T t;
@@ -24,14 +23,14 @@ template <class T> struct is_pointer{
 
 struct Foo {
   long bar; 
-  int f1(std::stringstream);
+  int f1(std::ostream);
   //float f2();
 };
 
 int main(void){
   typedef int * IntPtr;
   typedef long Foo::* FooMemberPtr;
-  typedef int (Foo::*FooMemFunPtr)(std::stringstream) ;
+  typedef int (Foo::*FooMemFunPtr)(std::ostream) ;
   typedef int (*FuncPtr)();
 
   assert(1==is_pointer<IntPtr>::value); 
