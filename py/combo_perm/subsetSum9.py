@@ -1,4 +1,5 @@
 Hand=0
+LastCard=0
 def recurs(hand, tgtSum, cards, used):
   if tgtSum<0: return
   #print 'hand=', hand, ' ; tgtSum=', tgtSum, '; rem=', cards, '; used=',used
@@ -10,7 +11,9 @@ def recurs(hand, tgtSum, cards, used):
     #print 'returning'
     return
   assert hand>0
-  for card in cards:
+  
+  firstCard=used[-1]+1 if used else 1
+  for card in range(firstCard, LastCard+1):
     remain=list(cards)
     remain.remove(card)
     u2=list(used)
@@ -19,11 +22,11 @@ def recurs(hand, tgtSum, cards, used):
     recurs(hand-1, tgtSum, remain, u2)
 
 def solve(hand, tgtSum, cards):
-  global Hand
-  Hand = hand
+  global Hand, LastCard
+  Hand = hand; LastCard=cards
   recurs(hand, tgtSum, range(1,cards+1), ())
 def test():
-  solve(3, 7, 5)
+  solve(3, 11, 9)
 test()
 '''Req: given pocker cards numbered 1 to 9, find all hands of 3 producing target tgtSum of 11
 See blog 
