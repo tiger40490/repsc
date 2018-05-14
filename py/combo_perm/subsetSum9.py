@@ -1,5 +1,5 @@
+# efficiency showcase: avoid sum() over a long list
 Hand=0
-Sum=0
 LastCard=0
 def recurs(hand, tgtSum, cards, used):
   if tgtSum<0: return
@@ -15,11 +15,11 @@ def recurs(hand, tgtSum, cards, used):
     remain.remove(card)
     u2=list(used)
     u2.append(card)
-    recurs(hand-1, Sum-sum(u2), remain, u2)
+    recurs(hand-1, tgtSum-card, remain, u2)
 
 def solve(hand, tgtSum, cards):
-  global Hand, LastCard, Sum
-  Hand = hand; LastCard=cards; Sum=tgtSum
+  global Hand, LastCard
+  Hand = hand; LastCard=cards;
   recurs(hand, tgtSum, range(1,cards+1), ())
 def test():
   solve(3, 11, 9)
