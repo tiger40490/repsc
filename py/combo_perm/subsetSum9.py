@@ -11,11 +11,11 @@ def recurs(hand, tgtSum, cards, used=()): # returns hit count of entire subtree
   hits=0
   firstCard=used[-1]+1 if used else 1
   for card in range(firstCard, cards[-1]+1):
-    remain=list(cards)
-    remain.remove(card)
+    remainingCards=list(cards)
+    remainingCards.remove(card)
     u2=list(used)
     u2.append(card)
-    hits += recurs(hand-1, tgtSum-card, remain, u2)
+    hits += recurs(hand-1, tgtSum-card, remainingCards, u2)
   return hits
 
 def solve(hand, tgtSum, cards):
