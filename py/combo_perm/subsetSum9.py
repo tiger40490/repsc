@@ -1,15 +1,14 @@
-# efficiency showcase: avoid sum() over a long list
+# showcase: efficiency : avoid sum() over a long list
 # todo assert on result
-LastCard=0
-def recurs(hand, tgtSum, cards, used):
+def recurs(hand, tgtSum, cards, used=()):
   if tgtSum<0: return
-  #print 'hand=', hand, ' ; tgtSum=', tgtSum, '; rem=', cards, '; used=',used
+  #print 'hand=',hand,'; tgtSum=',tgtSum,'; rem=',cards,'; used=',used
   if hand==0:
     if 0 == tgtSum:
       print 'hit', used
     return  
   firstCard=used[-1]+1 if used else 1
-  for card in range(firstCard, LastCard+1):
+  for card in range(firstCard, cards[-1]+1):
     remain=list(cards)
     remain.remove(card)
     u2=list(used)
@@ -17,9 +16,7 @@ def recurs(hand, tgtSum, cards, used):
     recurs(hand-1, tgtSum-card, remain, u2)
 
 def solve(hand, tgtSum, cards):
-  global LastCard
-  LastCard=cards;
-  recurs(hand, tgtSum, range(1,cards+1), ())
+  recurs(hand, tgtSum, range(1,cards+1))
 def test():
   solve(3, 11, 9)
 test()
