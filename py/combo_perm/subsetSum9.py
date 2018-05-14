@@ -7,8 +7,9 @@ def recurs(hand, tgtSum, cards, used=()): # returns hit count of entire subtree
       print 'hit', used
       return 1
     return 0
-  firstCard=used[-1]+1 if used else 1
+  
   hits=0
+  firstCard=used[-1]+1 if used else 1
   for card in range(firstCard, cards[-1]+1):
     remain=list(cards)
     remain.remove(card)
