@@ -1,3 +1,4 @@
+//todo : check empty range
 #include <list>
 #include <cassert>
 #include <iostream>
@@ -9,52 +10,61 @@ template<typename T,             int min_width=4> ostream & operator<<(ostream &
    os<<endl;
    return os;
 }
-
 template<typename I, typename P>
-I myPartition(I beg, I const end, P isgood){
-  //first adjust e
-  auto e = prev(end);
-  while ( !isgood(*e)){ // not good
-    if (e == beg) return e;
-    --e;
+I myPartition(I bb, I const end, P isgood){
+  auto ee = prev(end);
+  while ( !isgood(*ee)){ // not good i.e. even
+    if (ee == bb) return bb;
+    --ee;
   }
-  assert ( isgood(*e) && "e now points to a good node");
+  assert ( isgood(*ee) && "ee is now initialized to a good node");
   for (;;){
-    if (beg == e){
+    if (bb == ee){
       cout<<111111<<endl;
     }
-    //adjust beg and check exit conditions
-    while(isgood(*beg)){
-      ++beg;
-      if (beg==e){
+    //adjust bb and check exit conditions
+    while(isgood(*bb)){
+      ++bb;
+      if (bb==ee){
         cout<<22222<<endl;
-        return e;
+        if (ee == prev(end)) return end;
+        return ee;
       }
     }
-    assert ( !isgood(*beg) && "beg now points to a bad node");
-    //adjust e and check exit conditions
-    while(!isgood(*e)){
-      --e;
-      if (beg==e){
-        cout<<22222<<endl;
-        return e;
+    assert ( !isgood(*bb) && "bb now points to a bad node");
+    //adjust ee and check exit conditions
+    while(!isgood(*ee)){
+      --ee;
+      if (bb==ee){
+        cout<<33333333<<endl;
+        return ee;
       }
     }
-    assert ( isgood(*e) && "e now points to a good node");
-    swap(*beg, *e);
+    assert ( isgood(*ee) && "ee now points to a good node");
+    //cout<<*bb<<" -swapping- "<<*ee<<endl;
+    swap(*bb, *ee);
   }
   return end; 
 }
 
 bool isOdd(int i){ return i%2; }
 
-int main(){
-  list<int> li={1,2,3,4,5,6,7,8,9};
+
+void test1(list<int> li){
   auto firstBad = myPartition(li.begin(), li.end(), isOdd);
+  cout<<li<<" --> ";
   if (firstBad == li.end()){
     cout<<"no bad node\n";
   }else{
     cout<<*firstBad<<endl;
   }
-  cout<<li<<endl;
 }
+int main(){
+  test1({1,2,3,4,5,6,7,8});
+  test1({1,2,3,4,5,6,7,8,9});
+  test1({1,3,5,2,4,6,8,7,9});
+  test1({1,3,5,7});
+}
+/*Req: ....
+My solution is overcomplicated since I move two rather than one pointer.
+*/
