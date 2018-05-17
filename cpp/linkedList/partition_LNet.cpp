@@ -66,8 +66,5 @@ int main(){
   test1({1,3,5,2,4,6,8,7,9});
   test1({1,3,5,7});
 }
-/*Req: ....
-Note our iterator doesn't support comparison.
-
-My solution is overcomplicated since I move two rather than one pointer.
+/*Req: https://bintanvictor.wordpress.com/2018/05/16/partition-list-into-goodbad-sections/
 */
