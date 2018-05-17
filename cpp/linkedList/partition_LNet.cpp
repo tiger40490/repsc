@@ -16,16 +16,17 @@ inc/dec
 template<typename I, typename P>
 I myPartition(I bb, I const end, P isgood){
   auto ee = prev(end);
-  while ( !isgood(*ee)){ // not good i.e. even
-    if (ee == bb) return bb;
+  while ( !isgood(*ee)){
+    if (ee == bb) return bb; // all bad
     --ee;
   }
   assert ( isgood(*ee) && "ee is now initialized to the last good node in original sequence");
+  
   int swapCnt=0;
   for (;;){
     while(isgood(*bb)){
       if (next(bb)==ee){ 
-        cout<<22222<<endl;
+        //cout<<22222<<endl;
         if (ee == prev(end)) return end; //no bad node
         assert(swapCnt);
         assert(!isgood(*ee) && "if there's any swap, then ee must be Bad now");
