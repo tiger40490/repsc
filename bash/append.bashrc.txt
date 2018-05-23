@@ -56,7 +56,8 @@ alias mv='mv -i'  # defuse
 alias p=ps_grep
 alias path="  echo \$PATH |perl -pe 's/:/\n/g' |sort -u|$PAGERE  "
 alias rm=myrm
-alias s='  source   $HOME/.bashrc  '
+alias s-='  source  $HOME/.bashrc  '
+alias s+='       vi $HOME/append.bashrc_ms.txt  '
 alias t='l -t'
 # # # # # # # # # # # # # # # # # # # # # #
 #
