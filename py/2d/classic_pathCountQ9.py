@@ -2,7 +2,7 @@ m = list()
 revisits = dict()
 def test3():
   global m
-  tmp=100
+  tmp=10
   m = [[1 for x in xrange(tmp)] for y in xrange(tmp)]
   assert len(m) == tmp and len(m[0]) == tmp
 def test2():
@@ -36,12 +36,12 @@ def work(setup1test, verbose=1):
   height, width = len(m), len(m[0])
   finalCnt=0
   revisits=dict()
-  print '-----------'
   
   start(0,0, verbose)
+  print '-----------> finalCnt =', finalCnt
 def main():
-  #work(test3, verbose=0)
-  #return
+  work(test3, verbose=0)
+  return
   work(test2)
   work(test1)
 main()
