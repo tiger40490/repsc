@@ -1,4 +1,3 @@
-# todo: BFT why max revisit can reach 6?
 import sys, os
 from collections import deque
 import operator # locate max entry from dict
@@ -66,8 +65,7 @@ def startBFT(verbose=1):
     tmp =  readScore(r-1, c) if r>0 else 0
     tmp += readScore(r, c-1) if c>0 else 0
     score[r][c] = tmp 
-    if (r,c) in revisits: revisits[(r,c)] += 1
-    if verbose: print r,c,' --> score set to ', readScore(r,c)    
+    if verbose: print r,c,' --> score set to ', score[r][c]    
     if r < height-1 and m[r+1][c]: 
         q.enQ((r+1, c))
     if c < width-1  and m[r][c+1]: 
