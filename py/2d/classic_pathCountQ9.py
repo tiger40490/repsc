@@ -1,7 +1,9 @@
 # todo: use more efficient queue so as to address 1000x1000
+# todo: try a dict for score
 import sys, os
 from collections import deque
-bigMatSize=13
+import operator
+bigMatSize=12
 if bigMatSize > 7: 
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
 m = list() 
@@ -71,8 +73,11 @@ def work(setup1test, verbose=1):
   finalCnt=0
   revisits=dict()
   
-  startBFT(verbose)  
-  #startDFT(0,0, verbose) # tested but inefficient
+  if 1>0: 
+    startBFT(verbose)  
+  else:
+    startDFT(0,0, verbose)
+    print 'most revisited node is ', max(revisits.iteritems(), key=operator.itemgetter(1))
   print '-----------> finalCnt =', finalCnt
 def main():
   work(test1)
