@@ -28,11 +28,11 @@ def work(setup1test):
   global m, width, height, finalCnt, revisits
   m = list()
   setup1test()
-  height = len(m)
-  width = len(m[0])
+  height, width = len(m), len(m[0])
   finalCnt=0
   revisits=dict()
   print '-----------'
+  
   start(0,0)
 def main():
   work(test1)
