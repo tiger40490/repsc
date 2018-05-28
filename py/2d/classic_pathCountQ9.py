@@ -1,6 +1,7 @@
+# todo: BFT why max revisit can reach 6?
 import sys, os
 from collections import deque
-import operator
+import operator # locate max entry from dict
 bigMatSize=1000
 if bigMatSize > 7: 
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
@@ -36,31 +37,31 @@ def startDFT(r,c, verbose):
     finalCnt += 1
     if verbose: print 'incremented finalCnt to', finalCnt
 ######## non-recursive BFT solution
-class Q: #simple class
+class Q: #class based on deque
     def __init__(self):
         self.list = deque()
-    def enq(self, item):
+    def enQ(self, item):
         self.list.append(item)
-        #print 'pushed', item.data
-    def deq(self): return self.list.popleft() # throws error if empty
+    def deQ(self): 
+        return self.list.popleft() # throws error if empty
 
 score=list() 
 
 def readScore(r,c):
-  '''Only purpose of this wrapper is revisit accounting, but
-  accounting has noticeable costs. 
+  '''Created for revisit accounting, which hurts performance. 
+  Turn off after verifying revisits.  
   '''
-  #addr=(r,c); revisits[addr] = revisits.get(addr, 0) + 1  
+  addr=(r,c); revisits[addr] = revisits.get(addr, 0) + 1  
   return score[r][c]
 def startBFT(verbose=1): 
   global finalCnt, score
   score=[[0 for x in xrange(width)] for y in xrange(height)]
   score[0][0] = 1
   q = Q()
-  q.enq((1,0))
-  q.enq((0,1))
+  q.enQ((1,0))
+  q.enQ((0,1))
   while q.list:
-    r,c = q.deq()
+    r,c = q.deQ()
     if readScore(r,c) > 0: continue
     tmp =  readScore(r-1, c) if r>0 else 0
     tmp += readScore(r, c-1) if c>0 else 0
@@ -68,9 +69,9 @@ def startBFT(verbose=1):
     if (r,c) in revisits: revisits[(r,c)] += 1
     if verbose: print r,c,' --> score set to ', readScore(r,c)    
     if r < height-1 and m[r+1][c]: 
-        q.enq((r+1, c))
+        q.enQ((r+1, c))
     if c < width-1  and m[r][c+1]: 
-        q.enq((r, c+1))
+        q.enQ((r, c+1))
   finalCnt = score[height-1][width-1]
 def work(setup1test, verbose=1):
   global m, width, height, finalCnt, revisits
