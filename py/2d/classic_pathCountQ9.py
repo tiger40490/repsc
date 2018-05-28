@@ -1,9 +1,11 @@
+# todo: use more efficient queue
 import sys, os
 bigMatSize=10
 if bigMatSize > 9: 
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
 m = list() 
 revisits = dict()
+
 def test3():
   global m
   m = [[1 for x in xrange(bigMatSize)] for y in xrange(bigMatSize)]
@@ -74,9 +76,7 @@ def work(setup1test, verbose=1):
 def main():
   work(test1)
   work(test2)
-  work(test3, verbose=0) # need to use python -u
+  work(test3, verbose=0)
 main()
 ''' Req: https://bintanvictor.wordpress.com/2018/05/28/count-paths-between-2-tree-nodes/
-
-
 '''
