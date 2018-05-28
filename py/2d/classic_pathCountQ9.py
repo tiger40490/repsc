@@ -1,13 +1,14 @@
 m = list() 
-finalCnt=0
 
-def populate():
-  global m, width, height
+def test1():
+  global m
   m.append([1,1,1,1])
   m.append([1,1,1,1])
   m.append([1,1,1,1])
-  height = len(m)
-  width = len(m[0])
+def test2():
+  global m
+  m.append([1,1,0,1])
+  m.append([1,1,1,1])
 def start(r,c): 
   '''every time we find a path, inc'''
   global finalCnt
@@ -21,11 +22,17 @@ def start(r,c):
   if r == height-1 and c == width-1:
     finalCnt += 1
     print 'incremented finalCnt to', finalCnt
-def work():
+def work(setup1test):
+  global m, width, height, finalCnt
+  m = list()
+  setup1test()
+  height = len(m)
+  width = len(m[0])
+  finalCnt=0;
   start(0,0)
 def main():
-  populate()
-  work()
+  work(test1)
+  work(test2)
 main()
 '''Req: See pdf in the same dir. Here are some key points:
 
