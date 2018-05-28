@@ -1,7 +1,8 @@
-# todo: use more efficient queue
+# todo: use more efficient queue so as to address 1000x1000
 import sys, os
-bigMatSize=10
-if bigMatSize > 9: 
+from collections import deque
+bigMatSize=13
+if bigMatSize > 7: 
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
 m = list() 
 revisits = dict()
@@ -37,11 +38,11 @@ def startDFT(r,c, verbose):
 ######## non-recursive BFT solution
 class Q: #simple class
     def __init__(self):
-        self.list = [] # faster than list()
+        self.list = deque()
     def enq(self, item):
-        self.list.insert(0,item)
+        self.list.append(item)
         #print 'pushed', item.data
-    def deq(self): return self.list.pop() # throws error if empty
+    def deq(self): return self.list.popleft() # throws error if empty
    
 def startBFT(verbose=1): 
   global finalCnt
@@ -54,7 +55,7 @@ def startBFT(verbose=1):
     r,c = q.deq()
     #print r,c
     if score[r][c]==0:
-      score[r][c] += score[r-1][c] if r>0 else 0
+      score[r][c] = score[r-1][c] if r>0 else 0
       score[r][c] += score[r][c-1] if c>0 else 0
       if verbose: print r,c,' --> score set to ', score[r][c]    
     if r < height-1 and score[r+1][c]==0 and m[r+1][c]: 
