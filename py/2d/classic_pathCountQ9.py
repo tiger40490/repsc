@@ -49,7 +49,7 @@ score=list()
 
 def readScore(r,c):
   '''Created for revisit accounting, which hurts performance. 
-  Turn off after verifying revisits.  
+  Comment out next line after verifying revisits.  
   '''
   addr=(r,c); revisits[addr] = revisits.get(addr, 0) + 1  
   return score[r][c]
@@ -62,7 +62,7 @@ def startBFT(verbose=1):
   q.enQ((0,1))
   while q.list:
     r,c = q.deQ()
-    if readScore(r,c) > 0: continue
+    if readScore(r,c) > 0: continue # See Keynote in blog
     tmp =  readScore(r-1, c) if r>0 else 0
     tmp += readScore(r, c-1) if c>0 else 0
     score[r][c] = tmp 
