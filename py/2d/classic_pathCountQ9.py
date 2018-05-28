@@ -1,9 +1,7 @@
-# todo: use more efficient queue so as to address 1000x1000
-# todo: try a dict for score
 import sys, os
 from collections import deque
 import operator
-bigMatSize=12
+bigMatSize=1000
 if bigMatSize > 7: 
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
 m = list() 
@@ -45,9 +43,17 @@ class Q: #simple class
         self.list.append(item)
         #print 'pushed', item.data
     def deq(self): return self.list.popleft() # throws error if empty
-   
+
+score=list() 
+
+def readScore(r,c):
+  '''Only purpose of this wrapper is revisit accounting, but
+  accounting has noticeable costs. 
+  '''
+  #addr=(r,c); revisits[addr] = revisits.get(addr, 0) + 1  
+  return score[r][c]
 def startBFT(verbose=1): 
-  global finalCnt
+  global finalCnt, score
   score=[[0 for x in xrange(width)] for y in xrange(height)]
   score[0][0] = 1
   q = Q()
@@ -55,15 +61,16 @@ def startBFT(verbose=1):
   q.enq((0,1))
   while q.list:
     r,c = q.deq()
-    #print r,c
-    if score[r][c]==0:
-      score[r][c] = score[r-1][c] if r>0 else 0
-      score[r][c] += score[r][c-1] if c>0 else 0
-      if verbose: print r,c,' --> score set to ', score[r][c]    
-    if r < height-1 and score[r+1][c]==0 and m[r+1][c]: 
-      q.enq((r+1, c))
-    if c < width-1  and score[r][c+1]==0 and m[r][c+1]: 
-      q.enq((r, c+1))
+    if readScore(r,c) > 0: continue
+    tmp =  readScore(r-1, c) if r>0 else 0
+    tmp += readScore(r, c-1) if c>0 else 0
+    score[r][c] = tmp 
+    if (r,c) in revisits: revisits[(r,c)] += 1
+    if verbose: print r,c,' --> score set to ', readScore(r,c)    
+    if r < height-1 and m[r+1][c]: 
+        q.enq((r+1, c))
+    if c < width-1  and m[r][c+1]: 
+        q.enq((r, c+1))
   finalCnt = score[height-1][width-1]
 def work(setup1test, verbose=1):
   global m, width, height, finalCnt, revisits
@@ -77,6 +84,7 @@ def work(setup1test, verbose=1):
     startBFT(verbose)  
   else:
     startDFT(0,0, verbose)
+  if revisits: 
     print 'most revisited node is ', max(revisits.iteritems(), key=operator.itemgetter(1))
   print '-----------> finalCnt =', finalCnt
 def main():
