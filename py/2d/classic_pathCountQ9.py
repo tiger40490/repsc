@@ -98,11 +98,10 @@ def work(setup1test, verbose=1):
   revisits=dict()
   
   if 1>2: 
-    startBFT(verbose)  
-  else:
     startSpreadsheet()
+  else:
+    startBFT(verbose)  
     #startDFT(0,0, verbose)
-  #if score[0][0] and height < 9: pprint(score)
   if revisits: 
     print 'most revisited node is ', max(revisits.iteritems(), key=operator.itemgetter(1))
   print '-----------> finalCnt =', finalCnt
