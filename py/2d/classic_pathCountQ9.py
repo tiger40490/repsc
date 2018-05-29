@@ -71,6 +71,15 @@ def startBFT(verbose=1):
     if c < width-1  and m[r][c+1]: 
         q.enQ((r, c+1))
   finalCnt = score[height-1][width-1]
+
+def startAshish():
+  global finalCnt, score
+  score=[[0 for x in xrange(width)] for y in xrange(height)]
+  for r in xrange(height): score[r][0] = m[r][0]
+  for c in xrange(width):  score[0][c] = m[0][c]
+  # all top and left boundary cells have scores 1 (unless blocked) since for each cell there's only one path from origin.
+   
+    
 def work(setup1test, verbose=1):
   global m, width, height, finalCnt, revisits
   m = list()
