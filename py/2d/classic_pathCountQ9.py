@@ -1,6 +1,6 @@
-import sys, os
+import sys, os, operator # locate max entry from dict
 from collections import deque
-import operator # locate max entry from dict
+from pprint import pprint
 bigMatSize=1000
 if bigMatSize > 7: 
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
@@ -70,16 +70,25 @@ def startBFT(verbose=1):
         q.enQ((r+1, c))
     if c < width-1  and m[r][c+1]: 
         q.enQ((r, c+1))
-  finalCnt = score[height-1][width-1]
+  finalCnt = score[-1][-1]
 
-def startAshish():
+def startSpreadsheet(): #Based on Ashish Singh's tips
   global finalCnt, score
   score=[[0 for x in xrange(width)] for y in xrange(height)]
-  for r in xrange(height): score[r][0] = m[r][0]
-  for c in xrange(width):  score[0][c] = m[0][c]
+  for r in xrange(height): 
+    if m[r][0] == 0: 
+      break
+    score[r][0] = m[r][0]
+  for c in xrange(width):  
+    if m[0][c] == 0: 
+      break
+    score[0][c] = m[0][c]
   # all top and left boundary cells have scores 1 (unless blocked) since for each cell there's only one path from origin.
-   
-    
+  for r in xrange(1,height):  
+    for c in xrange(1,width): 
+       if m[r][c]: 
+         score[r][c] = score[r-1][c] + score[r][c-1]   
+  finalCnt = score[-1][-1]
 def work(setup1test, verbose=1):
   global m, width, height, finalCnt, revisits
   m = list()
@@ -88,10 +97,12 @@ def work(setup1test, verbose=1):
   finalCnt=0
   revisits=dict()
   
-  if 1>0: 
+  if 1>2: 
     startBFT(verbose)  
   else:
-    startDFT(0,0, verbose)
+    startSpreadsheet()
+    #startDFT(0,0, verbose)
+  #if score[0][0] and height < 9: pprint(score)
   if revisits: 
     print 'most revisited node is ', max(revisits.iteritems(), key=operator.itemgetter(1))
   print '-----------> finalCnt =', finalCnt
