@@ -5,6 +5,7 @@
 # find .|grep1.pl -i -v -A3 'strinG & value'
 # find .|grep1.pl -i -v --class trade
 # find .|grep1.pl '\-O2' # escape leading dash in needle. grep requirement
+# find .|grep1.pl -P \\bReload\\b # whole word "Reload"
 
 use Data::Dumper qw(Dumper);
 INIT{ begin(); } # BEGIN block also usable IIF the sub is defined in advance
@@ -19,7 +20,7 @@ sub begin(){
   my $log_filename = "${0}.log";
   open($LOG, '>', $log_filename) or die "Could not open file '$log_filename' $!";
   print $LOG Dumper \@ARGV;
-  my @header_ext=('h');
+  my @header_ext=('h', 'H');  
   my @src_ext=('C', 'c', 'cpp');
   $extension=join('|', @header_ext, @src_ext); # 'C|h'; # rename to $extension?
   while(1){
