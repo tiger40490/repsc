@@ -74,12 +74,13 @@ def startBFT(verbose=1):
 
 def startSpreadsheet(): #Based on Ashish Singh's tips
   global finalCnt, score
-  score=[[0 for x in xrange(width)] for y in xrange(height)]
-  for r in xrange(height): 
+  score=[[0 for x in xrange(width)] for y in xrange(height)] # init
+  
+  for r in xrange(height): # populate left-nost column
     if m[r][0] == 0: 
       break
     score[r][0] = m[r][0]
-  for c in xrange(width):  
+  for c in xrange(1,width): # populate top row
     if m[0][c] == 0: 
       break
     score[0][c] = m[0][c]
