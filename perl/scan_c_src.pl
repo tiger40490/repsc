@@ -20,7 +20,7 @@ sub begin(){
   my $log_filename = "${0}.log";
   open($LOG, '>', $log_filename) or die "Could not open file '$log_filename' $!";
   print $LOG Dumper \@ARGV;
-  my @header_ext=('h', 'H');  
+  my @header_ext=('H', 'h');
   my @src_ext=('C', 'c', 'cpp');
   $extension=join('|', @header_ext, @src_ext); # 'C|h'; # rename to $extension?
   while(1){
