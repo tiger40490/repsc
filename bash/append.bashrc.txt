@@ -163,10 +163,15 @@ exa /tmp/
 #
 # # # # # # # # # # # # # # # # # # # # # #
 add_path(){
-  [ -r $1 ] || return
-  [ "$(echo $PATH|grep :$1)" ] && return
-  # check world write perm, esp for root
-  PATH=$PATH:$1
+  dir=`echo $1|perl -pe 's|/$||'`
+  [ -r $dir ] || return
+  # old version:  [ "$(echo $PATH|grep :$1)" ] && return	
+  echo $PATH|grep -P "$dir(:|$)" > /dev/null && return 0
+  #todo: check world write perm, esp for root
+  PATH=$PATH:$dir
+  ret=$(echo $PATH |perl -pe 's/:/\n/g' | wc -l)
+  echo adding $dir to PATH and returning $ret
+  return $ret
 }
 set_manpath(){ # very slow on some systems. Run this when u need it.
   for d in `ls -d /[uo]*/*/man /[uo]*/*/*/man /[uo]*/*/*/*/man`; do
@@ -179,13 +184,14 @@ set_path(){
   add_path /sbin
   add_path /usr/local/bin
   add_path /usr/cluster/bin
-  add_path /usr/openwin/bin/
+  add_path /usr/openwin/bin
   add_path /usr/ucb
-  add_path $ORACLE_HOME/bin
   add_path /usr/sfw/bin  # pre-installed
   add_path /opt/csw/bin
   [ $root ] && return
   add_path .
-  add_path $HOME/bin
+  printf "PATH clean-up ${#PATH} -> "
+  export PATH=`echo $PATH|perl -pe 's|/:|:|g' `
+  printf "${#PATH}\n\n"
 }
 set_path
