@@ -2,6 +2,7 @@
 import sys, os, operator # locate max entry from dict
 from collections import deque
 from pprint import pprint
+from datetime import datetime
 bigMatSize=1000
 if bigMatSize > 7: 
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
@@ -14,7 +15,7 @@ def test9():
   assert len(m) == bigMatSize and len(m[0]) == bigMatSize
 def test3():
   global m
-  m.append([1,0,0,1])
+  m.append([1,1,0,1])
   m.append([0,0,1,1])
   m.append([1,1,1,1])
 def test2():
@@ -60,6 +61,7 @@ def readScore(r,c):
   return score[r][c]
 def startBFT(verbose=1): 
   global finalCnt, score
+  # 0 means unknown; None means unreachable though I don't use None for now
   score=[[0 for x in xrange(width)] for y in xrange(height)]
   score[0][0] = 1
   q = Q()
@@ -67,14 +69,17 @@ def startBFT(verbose=1):
   q.enQ((0,1))
   while q.list:
     r,c = q.deQ()
+    if m[r][c] == 0: continue
     if readScore(r,c) > 0: continue # See Keynote in blog
-    tmp =  readScore(r-1, c) if r>0 else 0
+    tmp  = readScore(r-1, c) if r>0 else 0
     tmp += readScore(r, c-1) if c>0 else 0
-    score[r][c] = tmp 
-    if verbose: print r,c,' --> score set to ', score[r][c]    
-    if r < height-1 and m[r+1][c]: 
+    assert tmp > 0
+    score[r][c] = tmp # if tmp > 0 else None
+    if verbose: print r,c,' --> score set to ', score[r][c]   
+    #if tmp == 0: continue # current node is unreachable   
+    if r < height-1 : 
         q.enQ((r+1, c))
-    if c < width-1  and m[r][c+1]: 
+    if c < width-1 :
         q.enQ((r, c+1))
   finalCnt = score[-1][-1]
 
@@ -114,10 +119,14 @@ def work(setup1test, verbose=1):
     print 'most revisited node is ', max(revisits.iteritems(), key=operator.itemgetter(1))
   print '-----------> finalCnt =', finalCnt
 def main():
-  #work(test1)
-  #work(test2)
+  work(test1)
+  work(test2)
   work(test3)
-  #work(test9, verbose=0)
+  
+  startTime=datetime.now()
+  work(test9, verbose=0)
+  print (datetime.now()-startTime).total_seconds(), 'seconds'
+
 main()
 ''' Req: https://bintanvictor.wordpress.com/2018/05/28/count-paths-between-2-tree-nodes/
 '''
