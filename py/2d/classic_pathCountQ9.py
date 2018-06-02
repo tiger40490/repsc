@@ -1,3 +1,4 @@
+#todo: early exit when no path
 import sys, os, operator # locate max entry from dict
 from collections import deque
 from pprint import pprint
@@ -7,10 +8,15 @@ if bigMatSize > 7:
 m = list() 
 revisits = dict()
 
-def test3():
+def test9():
   global m
   m = [[1 for x in xrange(bigMatSize)] for y in xrange(bigMatSize)]
   assert len(m) == bigMatSize and len(m[0]) == bigMatSize
+def test3():
+  global m
+  m.append([1,0,0,1])
+  m.append([0,0,1,1])
+  m.append([1,1,1,1])
 def test2():
   global m
   m.append([1,1,1,1])
@@ -107,9 +113,10 @@ def work(setup1test, verbose=1):
     print 'most revisited node is ', max(revisits.iteritems(), key=operator.itemgetter(1))
   print '-----------> finalCnt =', finalCnt
 def main():
-  work(test1)
-  work(test2)
-  work(test3, verbose=0)
+  #work(test1)
+  #work(test2)
+  work(test3)
+  #work(test9, verbose=0)
 main()
 ''' Req: https://bintanvictor.wordpress.com/2018/05/28/count-paths-between-2-tree-nodes/
 '''
