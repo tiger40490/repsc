@@ -101,6 +101,7 @@ def work(setup1test, verbose=1):
   m = list()
   setup1test()
   height, width = len(m), len(m[0])
+  assert m[0][0] == m[-1][-1] == 1
   finalCnt=0
   revisits=dict()
   
