@@ -24,6 +24,7 @@ def trade1day(li, verbose=1):
   return cashflow
     
 def main():
+  assert 371 ==trade1day([120,1,2,100,2,119])
   assert 375 ==trade1day([1,2,100,2,120])
   assert 34 ==trade1day([2,10,0,12,2,7,1,6])
   tmp = [1 for _ in xrange(500000-1) ]
