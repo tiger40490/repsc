@@ -1,27 +1,25 @@
 # Note: Nsdq question has slightly different requirements but solution is completely different
 
-def calc1BullRun(buys, theSellAfter, verbose=1):
-  if not buys: return 0
-  ret = len(buys)*theSellAfter - sum(buys)
-  if verbose: print buys, theSellAfter, '==>', ret
-  return ret
 def trade1day(li, verbose=1):
-  cashflow = 0
+  profit = 0
   buys=list()
   theSellAfter=li[-1]
+  if verbose: print "\n\t\t v v ", li
   for v in reversed(li):
     if v >= theSellAfter:
-      cashflow += calc1BullRun(buys, theSellAfter, verbose)  
-      assert abs(cashflow)<9223372036854775807, 'this int should be 64-bit signed'
-      buys=list()
+      assert abs(profit)<9223372036854775807, 'this int should be 64-bit signed'
+      if verbose: 
+        if profit: 
+          print buys, theSellAfter, '==> profit reached', profit
+        buys=list()
       theSellAfter = v
       continue
     assert v < theSellAfter
-    buys.append(v)
+    profit += (theSellAfter - v)
+    if verbose: buys.append(v)
 
-  cashflow += calc1BullRun(buys, theSellAfter, verbose)  
-  if verbose: print 'returning max calc1BullRun =', cashflow
-  return cashflow
+  print "\t\t ^ ^ returning", profit
+  return profit
     
 def main():
   assert 371 ==trade1day([120,1,2,100,2,119])
