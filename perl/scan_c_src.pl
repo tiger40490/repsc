@@ -68,6 +68,9 @@ sub begin(){
       print $LOG "\n==> header-only requested \n";
       $extension_filers++;
       $extension=join('|', @header_ext);
+    }elsif ($option eq '--no-viewer'){
+      print $LOG "\n==> no-viewer requested \n";
+      $is_viewer_disabled=1;
     }else{
       die "invalid command line option $option";
     }
@@ -111,7 +114,7 @@ sub begin(){
 END{
   if ($grand_total != 1){
     print "---- grand total ==   $grand_total   needles found\n";
-  }else{
+  }elsif( ! $is_viewer_disabled){
     # command would not work properly if you pipe this to "| less" !
     my $cmd = "less +${offset}g -MN $filename";
     print "---- exactly one match. Let's use command below to open the file. \n$cmd\n...\n\n";
