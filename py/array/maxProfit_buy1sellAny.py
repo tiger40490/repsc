@@ -1,22 +1,31 @@
-def trade1day(li, verbose=1):
-  holding=0; cashflow=0
-  for i in xrange(len(li)-1): # visit all but Final minute
-    if li[i]<=li[i+1]:
-      if verbose: print 'buy 1 @', li[i]
-      holding += 1
-      cashflow -= li[i]
-      assert abs(cashflow)<9223372036854775807, 'this int should be 64-bit signed'
-    else: 
-      if holding: # trivial optimization
-        print 'sell', holding, '@', li[i]
-        cashflow += holding * li[i]
-        holding=0
+# Note: Nsdq question has slightly different requirements but solution is completely different
 
-  print 'Final minute: sell', holding, '@', li[-1]
-  cashflow += holding * li[-1]
-  #if verbose: print 'returning max profit =', cashflow
+def calc1BullRun(buys, theSellAfter, verbose=1):
+  if not buys: return 0
+  ret = len(buys)*theSellAfter - sum(buys)
+  if verbose: print buys, theSellAfter, '==>', ret
+  return ret
+def trade1day(li, verbose=1):
+  cashflow = 0
+  buys=list()
+  theSellAfter=li[-1]
+  for v in reversed(li):
+    if v >= theSellAfter:
+      cashflow += calc1BullRun(buys, theSellAfter, verbose)  
+      assert abs(cashflow)<9223372036854775807, 'this int should be 64-bit signed'
+      buys=list()
+      theSellAfter = v
+      continue
+    assert v < theSellAfter
+    buys.append(v)
+
+  cashflow += calc1BullRun(buys, theSellAfter, verbose)  
+  if verbose: print 'returning max calc1BullRun =', cashflow
   return cashflow
+    
 def main():
+  assert 375 ==trade1day([1,2,100,2,120])
+  assert 34 ==trade1day([2,10,0,12,2,7,1,6])
   tmp = [1 for _ in xrange(500000-1) ]
   tmp.append(100000)
   assert 499999*99999 ==trade1day(tmp, verbose=0)
@@ -29,7 +38,7 @@ def main():
   assert 197==trade1day([1,2,100])
   assert 3  ==trade1day([1,3,1,2])
 main()
-''' Req: Pimco Java HackerRank: Each minute, your high frequency trading platform allows you to either buy one share, sell any number of shares that you own, or not make any transaction at all. Your task is to find the maximum profit you can obtain with an optimal trading strategy.
+''' Req: Pimco Java HackerRank: Each minute, your high frequency trading platform allows you to either buy one share, sell any number of shares that you own, or not make any transaction at all. Your task is to find the maximum calc1BullRun you can obtain with an optimal trading strategy.
 
 I remember having issues with some HackerRank test cases. Should use 64-bit int.
 '''
