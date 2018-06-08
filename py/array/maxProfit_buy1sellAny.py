@@ -37,10 +37,5 @@ def main():
   assert 197==trade1day([1,2,100])
   assert 3  ==trade1day([1,3,1,2])
 main()
-''' Req: Pimco Java HackerRank: Each minute, your high frequency trading platform allows 
-you to either buy one share, sell any number of shares that you own, or not make any 
-transaction at all. Your task is to find the maximum calc1BullRun you can obtain with 
-an optimal trading strategy.
-
-I remember having issues with some HackerRank test cases. Should use 64-bit int.
+''' Req: https://bintanvictor.wordpress.com/2018/06/08/day-trading-buy-1-sell-any-pimco/
 '''
