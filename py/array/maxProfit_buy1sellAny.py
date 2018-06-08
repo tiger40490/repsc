@@ -1,5 +1,3 @@
-# Note: Nsdq question has slightly different requirements but solution is completely different
-
 def trade1day(li, verbose=1):
   profit = 0
   buys=list()
