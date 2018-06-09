@@ -1,4 +1,4 @@
-
+# timing of the price points don't matter, so we can sort them.
 def trade(prices):
   sz = len (prices)
   smallHalf = sz/2
@@ -21,7 +21,9 @@ def trade(prices):
 def main():
   assert 8 == trade([5,3,6,1,2])
   assert 8 == trade([5,6,1,2])
+  assert 7 == trade([4,5,3,6,1])
+  assert 9 == trade([4,5,3,6,1,2])
+  assert 13 == trade([4,4,5, 4, 3, 4, 6,6,2,1,2])
 main()
 '''Req: https://1330152open.wordpress.com/2018/06/09/to-landlord-self-intro/
-Perhaps sort the data points and lose the order. Top half sell, bottom half buy.
 '''
