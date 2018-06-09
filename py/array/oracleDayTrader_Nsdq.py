@@ -1,5 +1,5 @@
-# timing of the price points don't matter, so we can sort them.
-def trade(prices):
+# Insight -- timing sequence of the price points don't matter, so we can sort them.
+def solve(prices):
   sz = len (prices)
   smallHalf = sz/2
   ascending = sorted(prices)
@@ -19,11 +19,11 @@ def trade(prices):
   return profit
 
 def main():
-  assert 8 == trade([5,3,6,1,2])
-  assert 8 == trade([5,6,1,2])
-  assert 7 == trade([4,5,3,6,1])
-  assert 9 == trade([4,5,3,6,1,2])
-  assert 13 == trade([4,4,5, 4, 3, 4, 6,6,2,1,2])
+  assert 8 == solve([5,3,6,1,2])
+  assert 8 == solve([5,6,1,2])
+  assert 7 == solve([4,5,3,6,1])
+  assert 9 == solve([4,5,3,6,1,2])
+  assert 13 == solve([4,4,5, 4, 3, 4, 6,6,2,1,2])
 main()
 '''Req: https://1330152open.wordpress.com/2018/06/09/to-landlord-self-intro/
 '''
