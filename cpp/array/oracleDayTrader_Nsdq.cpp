@@ -1,3 +1,6 @@
+//I now think the shrink() is buggy. We should not remove all non-turning points
+//because two such points can create a profitable trade.
+
 //showcasing vector erase while iterating
 #include <iostream>
 #include <vector>
