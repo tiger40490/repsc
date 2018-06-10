@@ -1,4 +1,4 @@
-# Insight -- timing sequence of the price points don't matter, so we can sort them.
+# Insight -- original sequence of the price points don't matter, so we can sort them.
 def solve(prices):
   sz = len (prices)
   smallHalf = sz/2
