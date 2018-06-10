@@ -15,6 +15,7 @@ def findLongestAbbr(hay, li):
     if isAbbr(hay, abb): return len(abb)
   return None 
 def isAbbr(hay, abb):
+  if len(abb) * len(hay) == 0: return False
   i=0
   sz=len(hay)
   for ch in abb:
