@@ -1,5 +1,5 @@
+# showcase sorting words by length. A max-heap might be faster.
 # showcase defining a function after calling it
-
 def main():
   findLongestAbbr("internationalization", 
     ['inter','national','nation','in','int','nationaliz'])
@@ -9,7 +9,7 @@ def main():
   assert     isAbbr("mamalonkey", "mamalon")
   assert     isAbbr("mamalonkey", "monkey")
 def findLongestAbbr(hay, li):
-  li.sort(key=len, reverse=True) # in-place !
+  li.sort(key=len, reverse=True) # in-place sort !
   for abb in li:
     print 'trying', abb, hay
     if isAbbr(hay, abb): return len(abb)
