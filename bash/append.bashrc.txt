@@ -7,8 +7,7 @@ ______________end_of_comment_1________________
 #     << var assignment >> should be first
 #
 # # # # # # # # # # # # # # # # # # # # # #
-export PS1='\n\s!\! \u@$SYS_ALIASES [ \t \d ] \w/ \n\$ '
-[ -z "$SYS_ALIASES" ] && export PS1='\n\s!\! \u@\h [ \t \d ] \w/ \n\$ '
+export PS1='\n\s!\! \u@\h [ \t \d ] \w/ \n\$ '
 export EDITOR=vi # primarily for sqlplus
 #export VIMINIT=":se nu | :map v :w!" # superceded by .vimrc
 export EXINIT=$VIMINIT # ignored if .vimrc found!
