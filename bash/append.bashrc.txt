@@ -7,7 +7,8 @@ ______________end_of_comment_1________________
 #     << var assignment >> should be first
 #
 # # # # # # # # # # # # # # # # # # # # # #
-export PS1='\n\s!\! \u@\h [ \t \d ] \w/ \n\$ '
+export PS1='\n\s!\! \u@$SYS_ALIASES [ \t \d ] \w/ \n\$ '
+[ -z "$SYS_ALIASES" ] && export PS1='\n\s!\! \u@\h [ \t \d ] \w/ \n\$ '
 export EDITOR=vi # primarily for sqlplus
 #export VIMINIT=":se nu | :map v :w!" # superceded by .vimrc
 export EXINIT=$VIMINIT # ignored if .vimrc found!
@@ -16,7 +17,7 @@ export TMOUT=987654; [ $root ] && export TMOUT=100600
 HISTSIZE=900
 set -o emacs
 set +o nounset
-export PATH=/usr/xpg4/bin:$PATH; [ $(id -u) = 0 ] && root=yesur
+export PATH=/usr/bin:/usr/xpg4/bin:$PATH; [ $(id -u) = 0 ] && root=yesur
 set +o noclobber; [ $root ] && set -o noclobber
 sav=$LOGNAME
 # # # # # # # # # # # # # # # # # # # # # #
@@ -148,8 +149,7 @@ exa(){ #testing: exa -t ss ~/.ssh
   fi
 
   [ -x $fullpath ] || return
-  # export "$shortname"="$fullpath"
-  set $shortname="$fullpath" # not working as of 2017
+  # set $shortname="$fullpath" # not working as of 2017 and also in MS
   eval $shortname="$fullpath"
   echo -e $shortname '\t' now set to $fullpath
   prj="$fullpath"
@@ -165,7 +165,6 @@ exa /tmp/
 add_path(){
   dir=`echo $1|perl -pe 's|/$||'`
   [ -r $dir ] || return
-  # old version:  [ "$(echo $PATH|grep :$1)" ] && return	
   echo $PATH|grep -P "$dir(:|$)" > /dev/null && return 0
   #todo: check world write perm, esp for root
   PATH=$PATH:$dir
