@@ -8,7 +8,7 @@ This simple demo is based on https://gist.github.com/rtv/4989304
 #include <iostream>
 using namespace std;
 
-const size_t NUMTHREADS = 20;
+const size_t NUMTHREADS = 4;
 /* a global count of the number of threads finished working. It will
    be protected by mutex and changes to it will be signaled to the
    main thread via cond */
@@ -28,9 +28,9 @@ void* ThreadEntry( void* id ){
   assert(sizeof(void*) == sizeof(long));
   const int myid = (long)id; // force the pointer to be a long integer
   
-  const int workloops = 5;
-  for( int i=0; i<workloops; i++ ){
-      printf( "[thread %d] working (%d/%d)\n", myid, i, workloops );
+  const int workloops = 3;
+  for( int i=1; i<=workloops; i++ ){
+      printf( "[thread %d] working (%d/%d), possibly interleaved\n", myid, i, workloops );
       sleep(1); // simulate doing some costly work
   }
   
