@@ -14,7 +14,7 @@ const size_t NUMTHREADS = 20;
    main thread via cond */
 
 int done = 0;
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER; //global var but not on heap!
 pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 
 /* Note: error checking on pthread_X calls omitted for clarity - you
@@ -39,7 +39,7 @@ void* ThreadEntry( void* id ){
 
   // increase the count of threads that have finished their work.
   done++;
-  printf( "[thread %d] done is now %d. Signalling cond.\n", myid, done );
+  printf( "[thread %d] done is now %d. Signaling cond.\n", myid, done );
 
   // wait up the main thread (if it is sleeping) to test the value of done  
   pthread_cond_signal( &cond ); 
@@ -48,21 +48,16 @@ void* ThreadEntry( void* id ){
   return NULL;
 }
 
-int main( int argc, char** argv )
-{
-  puts( "[thread main] starting" );
-
+int main( int argc, char** argv ){
+  cout<< "[thread main] starting\n" ;
   pthread_t threads[NUMTHREADS];
-
   for( int t=0; t<NUMTHREADS; t++ )
     pthread_create( &threads[t], NULL, ThreadEntry, (void*)(long)t );
 
   // we're going to test "done" so we need the mutex for safety
   pthread_mutex_lock( &mutex );
-
   // are the other threads still busy?
-  while( done < NUMTHREADS )
-    {
+  while( done < NUMTHREADS ){
       printf( "[thread main] done is %d which is < %d so waiting on cond\n", 
 	      done, (int)NUMTHREADS );
       
@@ -71,14 +66,9 @@ int main( int argc, char** argv )
 	 thread is woken up and the call returns. */ 
       pthread_cond_wait( & cond, & mutex ); 
       
-      puts( "[thread main] wake - cond was signalled." ); 
-      
-      /* we go around the loop with the lock held */
-    }
-  
+      cout<<"[thread main] wake - cond was signaled.\n"; 
+  }
   printf( "[thread main] done == %d so everyone is done\n", (int)NUMTHREADS );
-  
   pthread_mutex_unlock( & mutex );
-  
   return 0;
 }
