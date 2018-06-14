@@ -5,8 +5,17 @@
  */
 #include <queue>
 #include <pthread.h>
-typedef void (*func_t)(); //func ptr
+#include <unistd.h> //sleep()
+#include <iostream>
+using namespace std;
 
+typedef void (*func_t)(); //func ptr
+void play(){
+  static int i=150;
+  cout<<"Th-"<<pthread_self()<<" starting job "<<++i<<endl;
+  sleep(1);
+  cout<<"Th-"<<pthread_self()<<" done with job "<<i<<endl;  
+}
 class Tpool {
     std::queue<func_t> jobs;
     pthread_cond_t     cond; //initialized somehow
@@ -26,11 +35,15 @@ class Tpool {
       mutex = PTHREAD_MUTEX_INITIALIZER;
       cond  = PTHREAD_COND_INITIALIZER;
     }
-    void dequeue(){ //runs on consumer thread
+    void keepTaking(){ //runs on consumer thread
       for(;;){
         func_t job = NULL;
         { ScopedLock lk(this);
-          while (jobs.empty()) wait();
+          while (jobs.empty()){
+            cout<<"Th-"<<pthread_self()<<" [C] queue is empty ... waiting ...\n";
+            wait();
+            cout<<"Th-"<<pthread_self()<<" [C] woke up, will check queue, take up a job and run it..\n";
+          }
           //lock released automatically when going into wait, and acquaired when waking up
 
           job = jobs.front(); //guaranteed non-empty
@@ -52,13 +65,33 @@ class Tpool {
       // but checking size() is too lengthy for lock-holder threads.
       //
       // In java, signal() is usually called on a lock-holder thread.
-      if (jobs.size() == 1) signal();
+      if (jobs.size() == 1) {
+        cout<<"Th-"<<pthread_self()<<" [P] queue size has become 1, pulsing! \n";
+        signal();
+      }
     }
-};
-int main(){
+} tpool;
+void * start(void *){
+  tpool.keepTaking();
 }
-/* Requirement: Write the enqueue and dequeue methods for a single thread pool.
+int main(){
+  for (int i=0; i<2; ++i){
+    tpool.enqueue(play);
+  }
+  pthread_t t1;
+  pthread_create(&t1, NULL, &start, NULL);
+
+  sleep(2); // let consumer drain the queue
+  
+  for (int i=0; i<3; ++i){
+    sleep(2);
+    tpool.enqueue(play);
+  }
+  void* result;
+  //pthread_join(t1,&result);  
+}
+/* Requirement: Write the enqueue and keepTaking methods for a single thread pool.
  *
- * Given the following skeleton, write the dequeue() method that runs in a single worker thread and repeatedly removes jobs from the queue and executes them,
+ * Given the following skeleton, write the keepTaking() method that runs in a single worker thread and repeatedly removes jobs from the queue and executes them,
  * and write the enqueue() method that is called from the main thread and adds jobs to the queue.
  */
