@@ -26,7 +26,7 @@ class Tpool {
       mutex = PTHREAD_MUTEX_INITIALIZER;
       cond  = PTHREAD_COND_INITIALIZER;
     }
-    void run(){ //dequeue
+    void dequeue(){ //runs on consumer thread
       for(;;){
         func_t job = NULL;
         { ScopedLock lk(this);
@@ -39,7 +39,7 @@ class Tpool {
         if (job) job();
       }
     }
-    void enqueue(func_t job){
+    void enqueue(func_t job){//runs on producer thread
       {
         ScopedLock lk(this);
         jobs.push(job);
@@ -59,6 +59,6 @@ int main(){
 }
 /* Requirement: Write the enqueue and dequeue methods for a single thread pool.
  *
- * Given the following skeleton, write the run() method that runs in a single worker thread and repeatedly removes jobs from the queue and executes them,
+ * Given the following skeleton, write the dequeue() method that runs in a single worker thread and repeatedly removes jobs from the queue and executes them,
  * and write the enqueue() method that is called from the main thread and adds jobs to the queue.
  */
