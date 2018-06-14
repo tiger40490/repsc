@@ -1,7 +1,7 @@
-/* showcasing nested class
+/* showcasing nested class accessing enclosing class field
  * showcasing my own RAII scoped lock
- *
- * Dummy main(). Unable to test
+ * showcasing mutex + cond wait/signal
+ * showcasing std::queue
  */
 #include <queue>
 #include <pthread.h>
