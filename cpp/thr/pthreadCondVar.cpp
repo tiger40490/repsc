@@ -23,8 +23,8 @@ pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
  * (probably 64bits), which is a little hacky. */
 
 void* ThreadEntry( void* id ){
-  assert(sizeof(void*) == sizeof(long));
-  const int myid = (long)id; // force the pointer to be a long integer
+  assert(sizeof(void*) == sizeof(long long));
+  const int myid = (long long)id; // force the pointer to be a long integer
   
   const int workloops = 3;
   for( int i=1; i<=workloops; i++ ){
@@ -44,7 +44,7 @@ void* ThreadEntry( void* id ){
 int main( int argc, char** argv ){
   pthread_t threads[THREAD_CNT];
   for( int t=0; t<THREAD_CNT; t++ )
-    pthread_create( &threads[t], NULL, ThreadEntry, (void*)(long)t );
+    pthread_create( &threads[t], NULL, ThreadEntry, (void*)(long long)t );
 
   pthread_mutex_lock( &mutex ); //needed to read Done and use the cond var
   while( Done < THREAD_CNT ){
