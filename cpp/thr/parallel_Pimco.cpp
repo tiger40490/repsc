@@ -1,3 +1,4 @@
+// showcase thread returning a value via join()
 #include <vector>
 #include <numeric>  // std::iota
 #include <pthread.h>
@@ -19,6 +20,7 @@ template<typename CT> void dump(CT const & cont) {
 void * run(void* arg) {
   StartIndex * ptr = static_cast<StartIndex*>(arg);
   StartIndex const startIdx = *ptr;
+  delete ptr;
   //cout<<"Th-"<<pthread_self()<<" : "<<startIdx<<" = startIdx\n";
   long long sum=0;
   for (int idx=startIdx; idx<N; /* last valid index is N-1*/
@@ -28,8 +30,8 @@ void * run(void* arg) {
        usleep(1);
   }
   //results[startIdx] = sum;
-  return new int(sum);
   //cout<<"Th-"<<pthread_self()<<" returning "<<sum<<endl;
+  return new int(sum);
 }
 int main(){
   std::iota (arr.begin(), arr.end(), 1);  
@@ -41,7 +43,7 @@ int main(){
   
   vector<pthread_t> th(M);
   for (int i=0; i<M; ++i){
-    pthread_create(&th[i], NULL, &run, &starts[i]);
+    pthread_create(&th[i], NULL, &run, new int(i));
   }
 
   long long total = 0;
