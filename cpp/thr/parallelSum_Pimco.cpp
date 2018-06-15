@@ -3,6 +3,7 @@
 #include <numeric>  // std::iota
 #include <pthread.h>
 #include <assert.h>
+#include <sched.h> //sched_yield
 #include <unistd.h> //usleep()
 #include <iostream>
 using namespace std;
@@ -23,9 +24,9 @@ void * run(void* arg) {
   long long sum=0;
   for (int idx=startIdx; idx<N; /* last valid index is N-1*/
        idx += M){
-       //cout<<"Th-"<<pthread_self()<<" : adding "<<arr[idx]<<"\n";
+       cout<<"Th-"<<pthread_self()<<" : adding "<<arr[idx]<<"\n";
        sum += arr[idx];
-       usleep(1);
+       sched_yield(); //to see interleaving. Without this, first thread could finish the task very fast, before 2nd thread starts
   }
   //cout<<"Th-"<<pthread_self()<<" returning "<<sum<<endl;
   return new int(sum);
