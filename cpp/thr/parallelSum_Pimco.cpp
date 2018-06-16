@@ -8,7 +8,7 @@
 #include <unistd.h> //usleep()
 #include <iostream>
 using namespace std;
-typedef int StartIndex;
+typedef size_t StartIndex;
 
 long long const N = 100;
 int const M = 6; 
