@@ -26,7 +26,8 @@ template<typename T,             int min_width=4> ostream & operator<<(ostream &
    return os;
 }
 int main(){
-  vector<int> li={1,5,2,0};
+  //vector<int> li={1,5,2,0};
+  vector<string> li={"dabao", "meimei"};   
   map<int, int> tm={{1,11}, {2,22}};
   ss<<li<<tm;
 }
