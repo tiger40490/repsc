@@ -1,5 +1,5 @@
-// showcase thread returning a value via join()
-// showcase yield()
+// showcase thread returning a value via ..join()
+// showcase ..yield()
 #include <vector>
 #include <numeric>  // std::iota
 #include <pthread.h>
