@@ -11,11 +11,11 @@
 #include <iostream>
 using namespace std;
 typedef size_t StartIndex;
-typedef int Result;
+typedef long long Result;
 
-long long const N = 100;
+long long const N = 1000000;
 int const M = 6; 
-long long const correctAns = (1+N)*N/2;
+Result const correctAns = (1+N)*N/2;
 vector<int> arr(N);
 vector<Result> globalPerThrResult(M); // zeros
 
@@ -27,16 +27,16 @@ void * run(void* arg) {
   StartIndex const startIdx = *ptr;
   delete ptr;  //we know the addr is on heap
   //cout<<"Th-"<<pthread_self()<<" : "<<startIdx<<" = startIdx\n";
-  long long sum=0;
+  Result sum=0;
   for (int idx=startIdx; idx<N; /* last valid index is N-1*/
        idx += M){
-       cout<<"Th-"<<pthread_self()<<" : adding "<<arr[idx]<<"\n";
+       //cout<<"Th-"<<pthread_self()<<" : adding "<<arr[idx]<<"\n";
        sum += arr[idx];
        sched_yield(); //to see interleaving. Without this, first thread could finish the task very fast, before 2nd thread starts
   }
   //cout<<"Th-"<<pthread_self()<<" returning "<<sum<<endl;
   globalPerThrResult[startIdx] = sum;
-  return new int(sum); //must be deleted elsewhere
+  return new Result(sum); //must be deleted elsewhere
 }
 int main(){
   std::iota (arr.begin(), arr.end(), 1);  
@@ -47,11 +47,11 @@ int main(){
     pthread_create(&th[i], NULL, run, new int(i));
   }
 
-  long long total = 0;
+  Result total = 0;
   void * thrResult;
   for (int i=0; i<M; ++i){
     pthread_join(th[i], &thrResult);  
-    int * subtotal = (int*) thrResult;
+    Result * subtotal = (Result*) thrResult;
     cout<<*subtotal<<" returned"<<endl;
     total += *subtotal;
 	assert(globalPerThrResult[i] == *subtotal && "I prefer the array. See [1]");
@@ -60,5 +60,5 @@ int main(){
   assert (total == correctAns);
   cout<<total<<" = grand total\n";
 }
-/* Requirement: 3.	Implement a multithread program to sum up a large integer array [1,2,…,N].  The size of the array N is a parameter and number of the threads M is also a parameters.  Compute N=1,000,000 and M=6 in your main program.
+/* Requirement: 3.Implement a multithread program to sum up a large integer array [1,2,…,N].  The size of the array N is a parameter and number of the threads M is also a parameters.  Compute N=1,000,000 and M=6 in your main program.
  */
