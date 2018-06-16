@@ -2,10 +2,10 @@
 #include <unordered_map>
 #include <list>
 #include <vector>
-
-//showcase non-dummy-type template param min_width
-//Note body of map^vector dumpers are identical
-//Below is minimum code block for copy-paste
+//
+// Showcase non-dummy-type template param min_width.
+// Note body of map ^ vector dumpers are identical.
+// Below is minimum code block for copy-paste.
 #include <iostream>
 #include <iomanip>
 #define ss if(1>0)cout //to mass-disable cout before uploading to hacker rank
