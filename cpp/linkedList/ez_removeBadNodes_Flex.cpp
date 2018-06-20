@@ -55,8 +55,8 @@ Node* solution1(Node* listHead, int x){ //submitted to hackerrank
     }
     return listHead;
 }
-Node* solution2(Node* listHead, int x){ //showcase dummy node to simplify
-  Node FakeHead(-9999, listHead);
+Node* solution2(Node* listHead, int x){ //showcase dummy node to simplify head-hunting
+  Node FakeHead(INT_MIN, listHead);
   Node * p=&FakeHead;
   for (Node * q=p->next; q!=nullptr; q=q->next){
     if (q->data > x)continue;
