@@ -53,27 +53,42 @@ Node* solution1(Node* listHead, int x) {
     return listHead;
 }
 Node* solution2(Node* listHead, int x) {
-  Node FakeHead(0, listHead);
+  Node FakeHead(-9999, listHead);
   Node * p=&FakeHead;
   for (Node * q=p->next; q!=nullptr; q=q->next){
     if (q->data > x){
-      //cout<<"continue after "<<q->data<<endl;
       continue;
     }
     assert(q->data <= x);
     p->next=q;
     p=q;
   }
-  p->next = nullptr; //?
+  p->next = nullptr;
   return FakeHead.next;
 }
-Node* removeNodes(Node* listHead, int x) {
-  return solution1(listHead, x);
+Node* removeNodes(Node* listHead, int x){ //return head of modified list
+  return solution2(listHead, x);
 }
-int main(){ //run one of these tests, not 2 together!
-  //assert(dump(removeNodes(head, 15))==0);
-  //assert(dump(removeNodes(head, 35))==1);
-  //assert(dump(removeNodes(head, 55))==5);
-  assert(dump(removeNodes(head, 5555))==10);
+int main(int argc, char *argv[]){
+  if (argc < 2){
+    cout<<"Please specify a single test case by a single char\n";
+    return 0;
+  }
+  switch(argv[1][0]){
+   case '0': 
+      assert(dump(removeNodes(head, 15))==0);
+      break;
+   case '1':
+      assert(dump(removeNodes(head, 35))==1);
+      break;
+   case 'p': //partial
+      assert(dump(removeNodes(head, 55))==5);
+      break;
+   case 'a': //all
+      assert(dump(removeNodes(head, 5555))==10);
+      break;
+   default:
+      cout<<"unknown test case\n";
+  }
 }/*Req: write a function to remove all nodes whose data > x. Return the head of the modified list.
 */
