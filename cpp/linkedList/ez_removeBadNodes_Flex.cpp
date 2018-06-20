@@ -26,7 +26,7 @@ Node* removeNodes(Node* listHead, int x) {
     while (listHead != nullptr && listHead->data > x){
         Node* a = listHead;
         listHead = listHead->next;
-    }        
+    } // from now on, listHead is the correct value to return
     Node* p = listHead;
     if (p == nullptr){
       cout<<9999<<endl;
@@ -50,7 +50,7 @@ Node* removeNodes(Node* listHead, int x) {
     return listHead;
 }
 int main(){
-  head=removeNodes(head, 50);
+  head=removeNodes(head, 35);
   dump(head);
 }/*Req: write a function to remove all nodes whose data > x. Return the head of the modified list.
 */
