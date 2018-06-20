@@ -14,9 +14,14 @@ struct Node{
   _4(40, &_5),
   _3(30, &_4),
   _2(120, &_3),
-  _1(10, &_2);
+  _1(110, &_2);
 Node * head = &_1;
-
+void dump(Node *h){
+  for (; h; h=h->next){
+    cout<<h->data<<"->";
+  }
+  cout<<"nullptr\n";
+}
 Node* removeNodes(Node* listHead, int x) {
     while (listHead != nullptr && listHead->data > x){
         Node* a = listHead;
@@ -44,13 +49,8 @@ Node* removeNodes(Node* listHead, int x) {
     }
     return listHead;
 }
-void dump(Node *h){
-  for (; h; h=h->next){
-    cout<<h->data<<"->";
-  }
-  cout<<"nullptr\n";
-}
 int main(){
-  head=removeNodes(head, 55);
+  head=removeNodes(head, 50);
   dump(head);
-}
+}/*Req: write a function to remove all nodes whose data > x. Return the head of the modified list.
+*/
