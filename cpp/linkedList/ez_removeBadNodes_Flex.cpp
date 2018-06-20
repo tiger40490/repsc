@@ -1,4 +1,4 @@
-//todo: add tests
+//showcase command line arg to specif one test case
 #include <iostream>
 #include <cassert>
 using namespace std;
