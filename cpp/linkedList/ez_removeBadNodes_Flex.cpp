@@ -1,4 +1,5 @@
-//showcase command line arg to specif one test case
+//showcase command line arg to specif one test case. Below is a command to run multiple tests:
+//  g++ ez_removeBadNodes_Flex.cpp && ./a.exe 0 && ./a.exe p && ./a.exe a && ./a.exe 1
 #include <iostream>
 #include <cassert>
 using namespace std;
