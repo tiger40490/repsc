@@ -1,4 +1,4 @@
-//showcase command line arg to specif one test case. Below is a command to run multiple tests:
+//showcase switch-case + command line arg to specif one test case. Below is a command to run multiple tests:
 //  g++ ez_removeBadNodes_Flex.cpp && ./a.exe 0 && ./a.exe p && ./a.exe a && ./a.exe 1
 #include <iostream>
 #include <cassert>
@@ -27,7 +27,7 @@ size_t dump(Node *h){
   cout<<"nullptr\n";
   return ret;
 }
-Node* solution1(Node* listHead, int x) {
+Node* solution1(Node* listHead, int x){ //submitted to hackerrank
     while (listHead != nullptr && listHead->data > x){
         Node* a = listHead;
         listHead = listHead->next;
