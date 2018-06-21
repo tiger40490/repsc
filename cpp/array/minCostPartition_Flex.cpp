@@ -15,7 +15,7 @@ template<typename T,             int min_width=4> ostream & operator<<(ostream &
    os<<endl;
    return os;
 }
-size_t const T = 3;// each group/subarray can be up to this size
+int T = 0;// each group/subarray can be up to this size
 size_t grouped=0; //how many nodes already assigned to groups
 Cost grandTotal=0;
 vector<ele> arr;
@@ -44,8 +44,7 @@ void recurs(Idx le, Idx ri){ //ri is one past the range
 	  return;
   }
   ss<<peak<<" = peak idx\n";
-  Idx groupLe = le; 
-  if (peak > T-1) groupLe = max(le, peak-T+1); 
+  Idx groupLe = max((int)le, (int)peak-T+1); //cast required to avoid overflow
   Cost tot = 0; for (int i=groupLe; i<groupLe+T; ++i) tot += arr[i]; 
   Cost max = tot;
   //ss<<"sliding window starting at "<<groupLe<<" with tol = "<<max<<endl;
@@ -71,6 +70,7 @@ Cost solve(vector<ele> _tmp){
   return grandTotal;
 }
 int main(){
+  T = 3;
   assert(24 == solve({2,7,8,1,6,5,3,0,9,4})); 
   assert(19 == solve({8,1,3,2,5,9,7,0})); 
   assert(22 == solve({8,1,3,2,5,9,7,6})); 
