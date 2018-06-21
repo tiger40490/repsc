@@ -21,14 +21,14 @@ Cost grandTotal=0;
 vector<ele> arr;
 
 void makeGroup(Idx le, Idx ri, Idx peak){
-	static char ch='a';
-	static vector<char> paint(arr.size(), ' ');
-	grouped += ri-le;
-    grandTotal += arr[peak];
-	ss<<"new subarray: [ "<<le <<" - "<<ri-1<<" ], peak Idx = "<<peak<<" , grandTotal = "<<grandTotal<<endl;
-	for (Idx i=le; i<ri; ++i) paint[i]=ch;
-	ss<<arr<<paint;
-	++ch;
+  static char ch='a';
+  static vector<char> paint(arr.size(), ' ');
+  grouped += ri-le;
+  grandTotal += arr[peak];
+  ss<<"new subarray: [ "<<le <<" - "<<ri-1<<" ], peak Idx = "<<peak<<" , grandTotal = "<<grandTotal<<endl;
+  for (Idx i=le; i<ri; ++i) paint[i]=ch;
+  ss<<arr<<paint;
+  ++ch;
 }
 
 void recurs(Idx le, Idx ri){ //ri is one past the range
@@ -38,10 +38,9 @@ void recurs(Idx le, Idx ri){ //ri is one past the range
     if (arr[i] > arr[peak]) peak = i;
   }
   if (ri-le <= T){
-	  if (ri > le) {
-		makeGroup(le,ri, peak);
-	  }
-	  return;
+    if (ri > le) makeGroup(le,ri, peak);
+    //else there's zero node in the range.
+    return;
   }
   ss<<peak<<" = peak idx\n";
   Idx groupLe = max((int)le, (int)peak-T+1); //cast required to avoid overflow
@@ -50,12 +49,12 @@ void recurs(Idx le, Idx ri){ //ri is one past the range
   //ss<<"sliding window starting at "<<groupLe<<" with tol = "<<max<<endl;
   //now slide the window
   for (Idx tryLe = groupLe; tryLe<min(peak,ri-T); ++tryLe){
-	tot += arr[tryLe+T] - arr[tryLe];
-	if (tot > max){
-	  max = tot;
-	  groupLe = tryLe+1;
-	  ss<<"better window starting at "<<groupLe<<" with sum = "<<max<<endl;
-	}
+    tot += arr[tryLe+T] - arr[tryLe];
+    if (tot > max){
+      max = tot;
+      groupLe = tryLe+1;
+      ss<<"better window starting at "<<groupLe<<" with sum = "<<max<<endl;
+    }
   }
   makeGroup(groupLe, groupLe+T, peak);
   recurs(le, groupLe);
