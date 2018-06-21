@@ -1,5 +1,6 @@
-//showcase switch-case + command line arg to specify a single test case. Below is a composite command to run multiple tests:
-//  g++ ez_removeBadNodes_Flex.cpp && ./a.exe 0 && ./a.exe p && ./a.exe a && ./a.exe 1
+/*showcase switch-case + command line arg to specify a single test case. Below is a composite command to run multiple tests:
+  g++ ez_removeBadNodes_Flex.cpp && ./a.exe 0 && ./a.exe p && ./a.exe a && ./a.exe 1
+*/
 
 //todo: So far we have two in-place solutions. Add a copy-filter solution, less efficient but hopefully simpler.
 
