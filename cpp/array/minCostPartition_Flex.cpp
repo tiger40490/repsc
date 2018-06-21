@@ -20,8 +20,13 @@ size_t grouped=0; //how many nodes already assigned to groups
 vector<ele> arr;
 
 void makeGroup(Idx le, Idx ri){
+	static char ch='a';
+	static vector<char> paint(arr.size(), ' ');
 	ss<<"new subarray: [ "<<le <<" - "<<ri-1<<" ]\n";
 	grouped += ri-le;
+	for (Idx i=le; i<ri; ++i) paint[i]=ch;
+	ss<<arr<<paint;
+	++ch;
 }
 
 /* identify the peak within, create a subarray around it,
@@ -30,8 +35,7 @@ then call recurs on the left and right segments
 void recurs(Idx le, Idx ri){ //ri is one past the range
   ss<<le<<" === le; ri === "<<ri<<endl;
   if (ri-le <= T){
-	  if (ri > le)
-  	    makeGroup(le,ri);
+	  if (ri > le)  makeGroup(le,ri);
 	  return;
   }
   Idx peak=le; 
@@ -43,7 +47,7 @@ void recurs(Idx le, Idx ri){ //ri is one past the range
   if (peak > T-1) groupLe = peak-T+1;
   Cost tot = 0; for (int i=groupLe; i<groupLe+T; ++i) tot += arr[i]; 
   Cost max = tot;
-  ss<<"window starting at "<<groupLe<<" with tol = "<<max<<endl;
+  //ss<<"sliding window starting at "<<groupLe<<" with tol = "<<max<<endl;
   //now slide the window
   for (Idx tryLe = groupLe; tryLe<min(peak,ri-T); ++tryLe){
 	tot += arr[tryLe+T] - arr[tryLe];
