@@ -45,7 +45,7 @@ void recurs(Idx le, Idx ri){ //ri is one past the range
   }
   ss<<peak<<" = peak idx\n";
   Idx groupLe = le; 
-  if (peak > T-1) groupLe = peak-T+1;
+  if (peak > T-1) groupLe = max(le, peak-T+1); 
   Cost tot = 0; for (int i=groupLe; i<groupLe+T; ++i) tot += arr[i]; 
   Cost max = tot;
   //ss<<"sliding window starting at "<<groupLe<<" with tol = "<<max<<endl;
@@ -71,6 +71,7 @@ Cost solve(vector<ele> _tmp){
   return grandTotal;
 }
 int main(){
+  assert(24 == solve({2,7,8,1,6,5,3,0,9,4})); 
   assert(19 == solve({8,1,3,2,5,9,7,0})); 
   assert(22 == solve({8,1,3,2,5,9,7,6})); 
 }/*Req: https://bintanvictor.wordpress.com/2018/06/19/min-cost-partitioning-flextrade/
