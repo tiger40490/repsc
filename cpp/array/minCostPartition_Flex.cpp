@@ -17,25 +17,24 @@ template<typename T,             int min_width=4> ostream & operator<<(ostream &
 }
 size_t const T = 3;// each group/subarray can be up to this size
 size_t grouped=0; //how many nodes already assigned to groups
+Cost grandTotal=0;
 vector<ele> arr;
 
-void makeGroup(Idx le, Idx ri){
+void makeGroup(Idx le, Idx ri, Idx peak){
 	static char ch='a';
 	static vector<char> paint(arr.size(), ' ');
 	ss<<"new subarray: [ "<<le <<" - "<<ri-1<<" ]\n";
 	grouped += ri-le;
+    grandTotal += arr[peak];
 	for (Idx i=le; i<ri; ++i) paint[i]=ch;
 	ss<<arr<<paint;
 	++ch;
 }
 
-/* identify the peak within, create a subarray around it,
-then call recurs on the left and right segments
-*/
 void recurs(Idx le, Idx ri){ //ri is one past the range
   ss<<le<<" === le; ri === "<<ri<<endl;
   if (ri-le <= T){
-	  if (ri > le)  makeGroup(le,ri);
+	  if (ri > le) makeGroup(le,ri, le);
 	  return;
   }
   Idx peak=le; 
@@ -54,10 +53,10 @@ void recurs(Idx le, Idx ri){ //ri is one past the range
 	if (tot > max){
 	  max = tot;
 	  groupLe = tryLe+1;
-	  ss<<"found a better window starting at "<<groupLe<<" with tol = "<<max<<endl;
+	  ss<<"better window starting at "<<groupLe<<" with sum = "<<max<<endl;
 	}
   }
-  makeGroup(groupLe, groupLe+T);
+  makeGroup(groupLe, groupLe+T, peak);
   recurs(le, groupLe);
   recurs(groupLe+T, ri); //what if this group is smaller than T
 }
@@ -66,9 +65,9 @@ Cost solve(vector<ele> _tmp){
   ss<<arr;
   recurs(0, arr.size());
   assert(grouped == arr.size());
-  return 0;
+  return grandTotal;
 }
 int main(){
-  solve({8,1,3,2,5,9,7,0});
+  assert(19 == solve({8,1,3,2,5,9,7,0})); 
 }/*Req: https://bintanvictor.wordpress.com/2018/06/19/min-cost-partitioning-flextrade/
 */
