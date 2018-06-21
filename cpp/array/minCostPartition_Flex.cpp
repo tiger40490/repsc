@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <vector>
+#include <numeric>
 #include <iostream>
 #include <iomanip>
 #define ss if(1>0)cout //to mass-disable cout before uploading to hacker rank
@@ -22,9 +23,10 @@ vector<ele> arr;
 
 void makeGroup(Idx le, Idx ri, Idx peak){
   static char ch='a';
-  static vector<char> paint(arr.size(), ' ');
-  grouped += ri-le;
+  static vector<char> paint;
+  if (grandTotal == 0) paint=vector<char>(arr.size(), ' ');
   grandTotal += arr[peak];
+  grouped += ri-le;
   ss<<"new subarray: [ "<<le <<" - "<<ri-1<<" ], peak Idx = "<<peak<<" , grandTotal = "<<grandTotal<<endl;
   for (Idx i=le; i<ri; ++i) paint[i]=ch;
   ss<<arr<<paint;
@@ -45,6 +47,7 @@ void recurs(Idx le, Idx ri){ //ri is one past the range
   ss<<peak<<" = peak idx\n";
   Idx groupLe = max((int)le, (int)peak-T+1); //cast required to avoid overflow
   Cost tot = 0; for (int i=groupLe; i<groupLe+T; ++i) tot += arr[i]; 
+  //accumulate(arr.begin()+groupLe, arr.begin()+groupLe+T, 0);
   Cost max = tot;
   //ss<<"sliding window starting at "<<groupLe<<" with tol = "<<max<<endl;
   //now slide the window
