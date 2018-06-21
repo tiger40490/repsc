@@ -23,9 +23,9 @@ vector<ele> arr;
 void makeGroup(Idx le, Idx ri, Idx peak){
 	static char ch='a';
 	static vector<char> paint(arr.size(), ' ');
-	ss<<"new subarray: [ "<<le <<" - "<<ri-1<<" ]\n";
 	grouped += ri-le;
     grandTotal += arr[peak];
+	ss<<"new subarray: [ "<<le <<" - "<<ri-1<<" ], peak Idx = "<<peak<<" , grandTotal = "<<grandTotal<<endl;
 	for (Idx i=le; i<ri; ++i) paint[i]=ch;
 	ss<<arr<<paint;
 	++ch;
@@ -33,13 +33,15 @@ void makeGroup(Idx le, Idx ri, Idx peak){
 
 void recurs(Idx le, Idx ri){ //ri is one past the range
   ss<<le<<" === le; ri === "<<ri<<endl;
-  if (ri-le <= T){
-	  if (ri > le) makeGroup(le,ri, le);
-	  return;
-  }
   Idx peak=le; 
-  for (Idx i=0; i<ri; ++i){
+  for (Idx i=le+1; i<ri; ++i){
     if (arr[i] > arr[peak]) peak = i;
+  }
+  if (ri-le <= T){
+	  if (ri > le) {
+		makeGroup(le,ri, peak);
+	  }
+	  return;
   }
   ss<<peak<<" = peak idx\n";
   Idx groupLe = le; 
@@ -61,6 +63,7 @@ void recurs(Idx le, Idx ri){ //ri is one past the range
   recurs(groupLe+T, ri); //what if this group is smaller than T
 }
 Cost solve(vector<ele> _tmp){ 
+  grandTotal = grouped = 0;
   arr = move(_tmp);
   ss<<arr;
   recurs(0, arr.size());
@@ -69,5 +72,6 @@ Cost solve(vector<ele> _tmp){
 }
 int main(){
   assert(19 == solve({8,1,3,2,5,9,7,0})); 
+  assert(22 == solve({8,1,3,2,5,9,7,6})); 
 }/*Req: https://bintanvictor.wordpress.com/2018/06/19/min-cost-partitioning-flextrade/
 */
