@@ -1,6 +1,7 @@
 //showcase accumulate on part of a vector
 //showcase populating a vector with a custom default value
 //showcase std::move
+//This implmentation has visulization feature to "paint" the original array in different colors, where each colored section is one subarray.
 #include <assert.h>
 #include <vector>
 #include <numeric>
