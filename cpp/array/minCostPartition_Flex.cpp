@@ -46,8 +46,8 @@ void recurs(Idx le, Idx ri){ //ri is one past the range
   }
   ss<<peak<<" = peak idx\n";
   Idx groupLe = max((int)le, (int)peak-T+1); //cast required to avoid overflow
-  Cost tot = 0; for (int i=groupLe; i<groupLe+T; ++i) tot += arr[i]; 
-  //accumulate(arr.begin()+groupLe, arr.begin()+groupLe+T, 0);
+  Cost tot = //0; for (int i=groupLe; i<groupLe+T; ++i) tot += arr[i]; 
+  accumulate(arr.begin()+groupLe, arr.begin()+groupLe+T, 0);
   Cost max = tot;
   //ss<<"sliding window starting at "<<groupLe<<" with tol = "<<max<<endl;
   //now slide the window
