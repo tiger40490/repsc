@@ -76,6 +76,8 @@ Cost solve(vector<ele> _tmp){
 }
 int main(){
   T = 3;
+  assert(23 == solve({2,7,8,1,6,5,0,3,9,4})); 
+  assert(24 == solve({1,7,8,2,6,5,3,0,9,4})); 
   assert(24 == solve({2,7,8,1,6,5,3,0,9,4})); 
   assert(19 == solve({8,1,3,2,5,9,7,0})); 
   assert(22 == solve({8,1,3,2,5,9,7,6})); 
