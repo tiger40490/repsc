@@ -1,3 +1,6 @@
+//showcase accumulate on part of a vector
+//showcase populating a vector with a custom default value
+//showcase std::move
 #include <assert.h>
 #include <vector>
 #include <numeric>
@@ -46,8 +49,7 @@ void recurs(Idx le, Idx ri){ //ri is one past the range
   }
   ss<<peak<<" = peak idx\n";
   Idx groupLe = max((int)le, (int)peak-T+1); //cast required to avoid overflow
-  Cost tot = //0; for (int i=groupLe; i<groupLe+T; ++i) tot += arr[i]; 
-  accumulate(arr.begin()+groupLe, arr.begin()+groupLe+T, 0);
+  Cost tot = accumulate(arr.begin()+groupLe, arr.begin()+groupLe+T, 0);
   Cost max = tot;
   //ss<<"sliding window starting at "<<groupLe<<" with tol = "<<max<<endl;
   //now slide the window
@@ -66,7 +68,7 @@ void recurs(Idx le, Idx ri){ //ri is one past the range
 Cost solve(vector<ele> _tmp){ 
   grandTotal = grouped = 0;
   arr = move(_tmp);
-  ss<<arr;
+  assert(_tmp.size() == 0);
   recurs(0, arr.size());
   assert(grouped == arr.size());
   return grandTotal;
