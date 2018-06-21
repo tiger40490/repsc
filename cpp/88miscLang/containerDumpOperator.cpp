@@ -24,6 +24,8 @@ template<typename K, typename V, int min_width=4> ostream & operator<<(ostream &
 template<typename T,             int min_width=4> ostream & operator<<(ostream & os, vector<T> const & c){
    for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
    os<<endl;
+   for(int i=0; i<c.size(); ++i){ os<<setw(min_width)<<i<<" "; }
+   os<<endl;
    return os;
 }
 int main(){
