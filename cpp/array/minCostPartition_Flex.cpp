@@ -24,7 +24,7 @@ size_t grouped=0; //how many nodes already assigned to groups
 Cost grandTotal=0;
 vector<ele> arr;
 
-void makeGroup(Idx le, Idx ri, Idx peak){
+void demarcate1group(Idx le, Idx ri, Idx peak){
   static char ch='a';
   static vector<char> paint;
   if (grandTotal == 0) paint=vector<char>(arr.size(), ' ');
@@ -43,7 +43,7 @@ void recurs(Idx le, Idx ri){ //ri is one past the range
     if (arr[i] > arr[peak]) peak = i;
   }
   if (ri-le <= T){
-    if (ri > le) makeGroup(le,ri, peak);
+    if (ri > le) demarcate1group(le,ri, peak);
     //else there's zero node in the range.
     return;
   }
@@ -61,7 +61,7 @@ void recurs(Idx le, Idx ri){ //ri is one past the range
       ss<<"better window starting at "<<groupLe<<" with sum = "<<max<<endl;
     }
   }
-  makeGroup(groupLe, groupLe+T, peak);
+  demarcate1group(groupLe, groupLe+T, peak);
   recurs(le, groupLe);
   recurs(groupLe+T, ri); //what if this group is smaller than T
 }
