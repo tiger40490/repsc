@@ -1,10 +1,12 @@
 //showcase accumulate on part of a vector
 //showcase populating a vector with a custom default value
+//showcase priority_queue
+//showcase global operator<() on two priority_queues
 //showcase std::move
 //This implmentation has visulization feature to "paint" the original array in different colors, where each colored section is one subarray.
-//todo: the blog post shows an edge case to break this algo.
 #include <assert.h>
 #include <vector>
+#include <queue>
 #include <numeric>
 #include <iostream>
 #include <iomanip>
@@ -38,6 +40,19 @@ void demarcate1group(Idx le, Idx ri, Idx peak){
   ++ch;
 }
 
+bool operator <(priority_queue<ele> aa, priority_queue<ele> bb){
+    assert(aa.top() == bb.top() && "max is the current peak");
+	aa.pop(); bb.pop();
+	while (aa.size()){
+		if    (aa.top() <  bb.top()) return true;
+		if    (aa.top() >  bb.top()) return false;
+		assert(aa.top() == bb.top());
+		aa.pop();
+		bb.pop();
+	}
+	return false; //if every comparison shows equal
+}
+
 void recurs(Idx le, Idx ri){ //ri is one past the range
   ss<<le<<" === le; ri === "<<ri<<endl;
   Idx peak=le; 
@@ -51,16 +66,15 @@ void recurs(Idx le, Idx ri){ //ri is one past the range
   }
   ss<<peak<<" = peak idx\n";
   Idx groupLe = max((int)le, (int)peak-T+1); //cast required to avoid overflow
-  Cost groupSum = accumulate(arr.begin()+groupLe, arr.begin()+groupLe+T, 0);
-  Cost max = groupSum;
-  //ss<<"sliding window starting at "<<groupLe<<" with tol = "<<max<<endl;
+  priority_queue<ele> bestWindow(arr.begin()+groupLe, arr.begin()+groupLe+T);
+  ss<<"sliding window starting at "<<groupLe<<endl;
   //now slide the window
-  for (Idx tryLe = groupLe; tryLe<min(peak,ri-T); ++tryLe){
-    groupSum += arr[tryLe+T] - arr[tryLe];
-    if (groupSum > max){
-      max = groupSum;
-      groupLe = tryLe+1;
-      ss<<"better window starting at "<<groupLe<<" with sum = "<<max<<endl;
+  for (Idx tryLe = groupLe+1; tryLe<=min(peak,ri-T); ++tryLe){
+	priority_queue<ele> newWindow(arr.begin()+tryLe, arr.begin()+tryLe+T);
+    if (bestWindow < newWindow){
+      bestWindow = newWindow;
+      groupLe = tryLe;
+      ss<<"better window starting at "<<groupLe<<endl;
     }
   }
   demarcate1group(groupLe, groupLe+T, peak);
@@ -77,6 +91,7 @@ Cost solve(vector<ele> _tmp){
 }
 int main(){
   T = 3;
+  assert(149 == solve({49,50,99,0,98})); 
   assert(23 == solve({2,7,8,1,6,5,0,3,9,4})); 
   assert(24 == solve({1,7,8,2,6,5,3,0,9,4})); 
   assert(24 == solve({2,7,8,1,6,5,3,0,9,4})); 
