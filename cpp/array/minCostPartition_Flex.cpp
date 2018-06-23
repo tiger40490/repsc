@@ -42,15 +42,15 @@ void demarcate1group(Idx le, Idx ri, Idx peak){
 
 bool operator <(priority_queue<ele> aa, priority_queue<ele> bb){
     assert(aa.top() == bb.top() && "max is the current peak");
-	aa.pop(); bb.pop();
-	while (aa.size()){
-		if    (aa.top() <  bb.top()) return true;
-		if    (aa.top() >  bb.top()) return false;
-		assert(aa.top() == bb.top());
-		aa.pop();
-		bb.pop();
-	}
-	return false; //if every comparison shows equal
+    aa.pop(); bb.pop();
+    while (aa.size()){
+        if    (aa.top() <  bb.top()) return true;
+        if    (aa.top() >  bb.top()) return false;
+        assert(aa.top() == bb.top());
+        aa.pop();
+        bb.pop();
+    }
+    return false; //if every comparison shows equal
 }
 
 void recurs(Idx le, Idx ri){ //ri is one past the range
@@ -70,7 +70,7 @@ void recurs(Idx le, Idx ri){ //ri is one past the range
   ss<<"sliding window starting at "<<groupLe<<endl;
   //now slide the window
   for (Idx tryLe = groupLe+1; tryLe<=min(peak,ri-T); ++tryLe){
-	priority_queue<ele> newWindow(arr.begin()+tryLe, arr.begin()+tryLe+T);
+    priority_queue<ele> newWindow(arr.begin()+tryLe, arr.begin()+tryLe+T);
     if (bestWindow < newWindow){
       bestWindow = newWindow;
       groupLe = tryLe;
