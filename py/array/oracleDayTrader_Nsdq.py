@@ -25,5 +25,5 @@ def main():
   assert 9 == solve([4,5,3,6,1,2])
   assert 13 == solve([4,4,5, 4, 3, 4, 6,6,2,1,2])
 main()
-'''Req: https://1330152open.wordpress.com/2018/06/09/to-landlord-self-intro/
+'''Req: https://bintanvictor.wordpress.com/2018/04/07/best-day-trading-play-in-hindsight-nasdaq/
 '''
