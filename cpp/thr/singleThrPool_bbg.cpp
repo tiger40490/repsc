@@ -2,31 +2,36 @@
  * showcasing my own RAII scoped lock
  * showcasing mutex + cond wait/signal
  * showcasing std::queue
+ todo: use yield instead of sleep? Ineffective so far
  */
 #include <queue>
 #include <pthread.h>
-#include <unistd.h> //sleep()
+#include <unistd.h> //usleep()
 #include <iostream>
 using namespace std;
 
 typedef void (*func_t)(); //func ptr
 void play(){
   static int i=150;
-  cout<<"Th-"<<pthread_self()<<" starting job "<<++i<<endl;
-  sleep(1);
-  cout<<"Th-"<<pthread_self()<<" done with job "<<i<<endl;  
+  cout<<"Th-"<<pthread_self()<<" [C] starting job "<<++i<<endl;
+  usleep(1);
+  cout<<"Th-"<<pthread_self()<<" [C] done with job "<<i<<endl;  
 }
 class Tpool {
     std::queue<func_t> jobs;
-    pthread_cond_t     cond; //initialized somehow
+    pthread_cond_t     cond; //initialized by default
     pthread_mutex_t    mutex;
-    void lock()   { pthread_mutex_lock(&mutex); }
-    void unlock() { pthread_mutex_unlock(&mutex); }
+    void lock()   { pthread_mutex_lock(&mutex); 
+      //cout<<"Th-"<<pthread_self()<<" lock acquired"<<endl;
+    }
+    void unlock() { pthread_mutex_unlock(&mutex); 
+      //cout<<"Th-"<<pthread_self()<<" lock released"<<endl;
+    }
     void wait()   { pthread_cond_wait(&cond, &mutex); }
     void signal() { pthread_cond_signal(&cond); }
 // -------- end of skeleton given ---------
     struct ScopedLock{
-      ScopedLock(Tpool* m): _m(m){ m->lock();}
+      ScopedLock(Tpool* m): _m(m){ _m->lock();}
       ~ScopedLock(){_m->unlock();}
       Tpool* _m;
     };
@@ -40,12 +45,10 @@ class Tpool {
         func_t job = NULL;
         { ScopedLock lk(this);
           while (jobs.empty()){
-            cout<<"Th-"<<pthread_self()<<" [C] queue is empty ... waiting ...\n";
+            cout<<"Th-"<<pthread_self()<<" [C] queue empty! Waiting with lock released ..\n";
             wait();
-            cout<<"Th-"<<pthread_self()<<" [C] woke up, will check queue, take up a job and run it..\n";
+            cout<<"Th-"<<pthread_self()<<" [C] waking up with lock re-aquired.. will check queue..\n";
           }
-          //lock released automatically when going into wait, and acquaired when waking up
-
           job = jobs.front(); //guaranteed non-empty
           jobs.pop();
         } //lock released
@@ -57,6 +60,7 @@ class Tpool {
         ScopedLock lk(this);
         jobs.push(job);
       }
+      cout<<"Th-"<<pthread_self()<<"[P] added a job\n";
 
       // if this function call actually saw an empty queue, the size() call 
       // may still return a value greater than one.
@@ -66,7 +70,7 @@ class Tpool {
       //
       // In java, signal() is usually called on a lock-holder thread.
       if (jobs.size() == 1) {
-        cout<<"Th-"<<pthread_self()<<" [P] queue size has become 1, pulsing! \n";
+        cout<<"Th-"<<pthread_self()<<"[P] queue size has become 1, pulsing! \n";
         signal();
       }
     }
@@ -75,20 +79,19 @@ void * start(void *){
   tpool.keepTaking();
 }
 int main(){
-  for (int i=0; i<2; ++i){
+  for (int i=0; i<1; ++i){
     tpool.enqueue(play);
   }
-  pthread_t t1;
-  pthread_create(&t1, NULL, &start, NULL);
-
-  sleep(2); // let consumer drain the queue
+  pthread_t consumer;
+  pthread_create(&consumer, NULL, &start, NULL);
   
-  for (int i=0; i<3; ++i){
-    sleep(2);
+  for (int i=0; i<2; ++i){
+    usleep(1999); // let consumer drain the queue
     tpool.enqueue(play);
+    for (int j=0; j<1; ++j) sched_yield();
   }
   void* result;
-  //pthread_join(t1,&result);  
+  usleep(9999); // let consumer drain the queue
 }
 /* Requirement: Write the enqueue and keepTaking methods for a single thread pool.
  *
