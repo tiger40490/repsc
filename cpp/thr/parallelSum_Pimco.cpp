@@ -54,7 +54,7 @@ int main(){
     Result * subtotal = (Result*) thrResult;
     cout<<*subtotal<<" returned"<<endl;
     total += *subtotal;
-	assert(globalPerThrResult[i] == *subtotal && "I prefer the array. See [1]");
+    assert(globalPerThrResult[i] == *subtotal && "I prefer the array. See [1]");
     delete subtotal; //we know the addr is on heap
   }
   assert (total == correctAns);
