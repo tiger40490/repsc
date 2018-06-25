@@ -1,3 +1,6 @@
+# I know two algorithms -- disposibleCurSubArray and maxProfit (my own)
+# My algo is intuitive and flexible for level input or delta input. One pass. I feel it's not inferior in any way.
+#
 def maxProf_maxSubSum(deltas):
   print '------------------------------'  
   return [ maxByDeltaOld('profit', deltas),
