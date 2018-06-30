@@ -1,5 +1,6 @@
 //showcase: parsing a stringstream
 //todo: how to pass the stringstream object rather than a global variable
+//todo: more tests. Might be buggy
 #include <queue>
 #include <vector>
 #include <map>
