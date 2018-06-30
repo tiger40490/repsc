@@ -88,7 +88,7 @@ void reconstruct(stringstream & strstr){
     BreadthFirstTraversal(newRoot, dumpNode);
 }
 int main() {
-    BreadthFirstTraversal(&root, dumpNode);
+    genericWalk(&root, dumpNode);
     genericWalk(&root, serialize1node);
     ss<<strstr.str()<<endl;
     reconstruct(strstr);
