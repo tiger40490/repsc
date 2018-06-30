@@ -57,6 +57,7 @@ void serialize1node(Node * n){
   strstr<<n<<","<<n->data<<","<<n->left<<","<<n->right<<",";
 }
 void reconstruct(stringstream & arg){
+//Note no interview asked me about reconstruction. Don't assume this is a classic problem.
     Node * newRoot = NULL;
     map<string, Node*> lookup;
     vector<string> v; v.reserve(4);
