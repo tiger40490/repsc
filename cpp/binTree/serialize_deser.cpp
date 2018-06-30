@@ -56,12 +56,12 @@ void genericWalk(Node* root, void (*callback)(Node*)){
 void serialize1node(Node * n){
   strstr<<n<<","<<n->data<<","<<n->left<<","<<n->right<<",";
 }
-void reconstruct(stringstream & strstr){
+void reconstruct(stringstream & arg){
     Node * newRoot = NULL;
     map<string, Node*> lookup;
     vector<string> v; v.reserve(4);
     string token;
-    for(int i=0; getline(strstr,token, ','); ++i){
+    for(int i=0; getline(arg,token, ','); ++i){
       v.push_back(token);
       if (i%4 < 3) continue;
       string id=v[0], idLe=v[2], idRi=v[3]; Data d=stoi(v[1]);
