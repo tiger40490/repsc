@@ -3,7 +3,7 @@
 #include <iostream>
 using namespace std;
 
-int rob(vector<int>& nums) {
+int rob(vector<int> const& nums) {
         int bn = 0, //best plan up to current house
           bp=0, //best up to prev
           bpp=0; // bestUpToPrevPrev
