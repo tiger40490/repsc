@@ -1,5 +1,5 @@
-//accepted at Leetcode. Not very efficient, but relatively simple
-// There are simpler solutions but I find them less intuitive to me.
+//accepted at Leetcode. O(N) time, space O(1). 
+// There are simpler and faster solutions but I find them less intuitive to me.
 #include <vector>
 #include <iostream>
 using namespace std;
