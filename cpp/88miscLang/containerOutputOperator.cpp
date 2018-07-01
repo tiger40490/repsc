@@ -13,7 +13,9 @@
 using namespace std;
 
 template<typename K, typename V> ostream & operator<<(ostream & os, pair<K,V> const & p){
-   os<<p.first<<":"<<p.second;
+   stringstream tmp2;
+   tmp2<<p.first<<":"<<p.second;
+   os<<tmp2.str();   
    return os;
 }
 template<typename K, typename V, int min_width=4> ostream & operator<<(ostream & os,  Map<K,V> const & c){
@@ -21,7 +23,7 @@ template<typename K, typename V, int min_width=4> ostream & operator<<(ostream &
    os<<endl;
    return os;
 }
-template<typename T,             int min_width=4> ostream & operator<<(ostream & os, vector<T> const & c){
+template<typename T,             int min_width=8> ostream & operator<<(ostream & os, vector<T> const & c){
    for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
    os<<endl;
    for(int i=0; i<c.size(); ++i){ os<<setw(min_width)<<i<<" "; }
@@ -30,7 +32,7 @@ template<typename T,             int min_width=4> ostream & operator<<(ostream &
 }
 int main(){
   //vector<double> li={3.1, 5,2,9};
-  vector<string> li={"dabao", "meimei"};
+  vector<string> li={"dabao", "meimei", "princess"};
   Map<int, int> tm={{1,11}, {2,22}};
   ss<<li<<tm;
 }
