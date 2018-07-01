@@ -25,7 +25,7 @@ template<typename T,             int min_width=4> ostream & operator<<(ostream &
    return os;
 }
 
-struct MyLess: public binary_function<Pair, Pair, bool>{
+struct MyLessComparator: public binary_function<Pair, Pair, bool>{
   bool operator()(Pair a, Pair b) const{
     return a.first < b.first;
   }
@@ -41,7 +41,7 @@ The field is now immutable:) This technique eliminates all wasted temp objects*/
   Curve(Pairs && in):points(sorted(move(in))){
     assert(points.size() > 1 && "interpolation impossible");
   }
-  double lookup(double x){ //what if only 1 point
+  double lookup(double x){
   //four scenarios to handle: 1) perfect hit; 2) 2 neighbor points 3) way too high; 4) way too low; 
     cout<<"----- looking up "<<x<<endl;
     Pair target(x, x);
