@@ -1,4 +1,5 @@
-//showcase std::move
+//showcase ctor to pre-compute a field. Uses std::move
+//showcase binary_function (as alt to free function) for sorting
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -34,10 +35,11 @@ struct Curve{
   Pairs const points;
   static Pairs & sorted(Pairs && in){
     sort(in.begin(), in.end(), myLess);
-    return in;
-  }
+    return in; /*unsorted vector is passed in and sorted in-place and move-assigned to a field.
+The field is now immutable:) This technique eliminates all wasted temp objects*/
+  } 
   Curve(Pairs && in):points(sorted(move(in))){
-    assert(points.size() > 1 && "no interpolation");
+    assert(points.size() > 1 && "interpolation impossible");
   }
   double lookup(double x){ //what if only 1 point
   //four scenarios to handle: 1) perfect hit; 2) 2 neighbor points 3) way too high; 4) way too low; 
