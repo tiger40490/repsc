@@ -1,5 +1,6 @@
 //showcase ctor to pre-compute a field. Uses std::move
 //showcase binary_function (as alt to free function) for sorting
+//showcase lower_bound scenarios -- perfect hit; too high; too low
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -52,24 +53,32 @@ The field is now immutable:) This technique eliminates all wasted temp objects*/
       cout<<"perfect hit\n";      
       return p1->second;
     }else if (p1 == points.end()){
-      cout<<"need to extrapolate to the right\n";
+      cout<<"need to extrapolate to the right. p1 to be discarded!\n";
       p1 = prev(p2);
     }else if (p1 == points.begin()){
       cout<<"need to extrapolate to the left\n";
       p2 = next(p1);
     }
     cout<<p1->first<<" <-> "<<p2->first<<endl;
-    return 0;
+    auto x1=p1->first, 
+         y1=p1->second,
+    
+         x2=p2->first,
+         y2=p2->second;
+    
+    auto ret = (y2-y1)/(x2-x1) * (x-x1) + y1 ;
+    cout<<ret<<endl;
+    return ret;
   }
 };
 int main(){
-  Curve c({{4,4}, {1,1}, {2,2}, {3,3}});
+  Curve c({{4,6}, {1,0}, {2, 2}, {3,4}});
   cout<<c.points;
-  c.lookup(0.1); //extrapolate
-  c.lookup(1);
-  c.lookup(1.5);
-  c.lookup(4);
-  c.lookup(4.1); //extrapolate
+  assert(c.lookup(0) == -2); //extrapolate
+  assert(c.lookup(1) == 0);
+  assert(c.lookup(2.5) == 3);
+  assert(c.lookup(4) == 6);
+  assert(abs(c.lookup(4.1) - 6.2) < 0.00001); //extrapolate
 }
 /*requirement: https://bintanvictor.wordpress.com/2018/05/05/cva-c-iv-2/ piecewise linear interpolation
 This question is not tough algorithm but syntax
