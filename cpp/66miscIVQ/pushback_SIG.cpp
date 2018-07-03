@@ -1,8 +1,10 @@
 /*
-showcase copy-construct using placement-new
-showcase make_unique<T[]> 
+showcase copy-construct on heap but not allocating -- by placement-new!
+showcase make_unique<T[]> array-form
+showcase casting uninitialized heap ptr to char-ptr
 showcase unique_ptr::release()
 showcase unique_ptr::get()
+showcase casting from int to enum
 showcase scoped enum
 */
 #include <iostream>
@@ -12,7 +14,7 @@ using namespace std;
 
 enum class AllocMode{DC, PN};
 template<typename T> struct MyVec{
-	size_t sz, cap;
+	size_t sz, cap; //2 fields needed
 	AllocMode mode;
 	T* arr;
 	size_t size()    {return sz;}
@@ -25,10 +27,10 @@ template<typename T> struct MyVec{
 		sz=0;
 	}
 	T* alloc1(size_t const newcap){
-		assert(this->mode == AllocMode::DC);
+		assert(this->mode == AllocMode::DC); //DC = DefaultConstruct
 		unique_ptr<T[]> newArr //need to ensure delete[] is called
-		  = make_unique<T[]>(newcap); //default construct newcap instances
-		std::copy(arr, arr+sz, newArr.get());
+		  = make_unique<T[]>(newcap); //default-construct this many instances of T
+		std::copy(arr, arr+sz, newArr.get()); //copy from original arr to new array
 		cout<<"Returning from alloc11111\n";
 		return newArr.release();
 	}
@@ -36,16 +38,16 @@ template<typename T> struct MyVec{
 Below (efficient) uses placement new to copy-construct.
 */
 	T* alloc2(size_t const newcap){//tested
-		assert(this->mode == AllocMode::PN);	
+		assert(this->mode == AllocMode::PN);	//PlacementNew
 		
-		/*cast to char to support raw+1
+		/*cast to char ptr, to support raw+1
 		but why reinterpret_cast not needed?
 		*/
 		unique_ptr<char> raw(
 			static_cast<char*>(   malloc(sizeof(T)*newcap)   )
 		);
 		for(int i=0; i<sz; ++i){
-			new (raw.get()+i*sizeof(T)) T( *(arr+i) ); //what if throws?
+			new (raw.get()+i*sizeof(T)) T( *(arr+i) ); //what if throws? unique_ptr should free all memory
 		}
 		cout<<"Returning from alloc22222\n";
 		return (T*)raw.release();
@@ -56,7 +58,7 @@ Below (efficient) uses placement new to copy-construct.
 			cout<<i<<":"<<*(arr+i)<<"|";
 		}cout<<endl;
 	}
-	void push_back(T const & t){ //redefine
+	void push_back(T const & t){
 		size_t const sz=size();
 		if (sz == capacity() || sz==0){
 			size_t newcap = sz==0? 1:sz*2;
@@ -70,7 +72,7 @@ Below (efficient) uses placement new to copy-construct.
 			delete[] tmp;
 			this->cap=newcap;
 		}
-		*(this->arr+sz) = t; //assignment
+		*(this->arr+sz) = t; //assignment without calling the ctor?? I think PN mode needs another PN
 		this->sz++;
 		dump("leaving push_back");
 	}
