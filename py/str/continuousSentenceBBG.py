@@ -1,6 +1,7 @@
 import bisect
-
+Hopeless = -99
 input = ('al', 'ali', 'alice', 'bob', 'dan')
+
 hay = sorted(input)
 engDict = set(input) # the English dictionary
 matched=list() # list of words parsed
@@ -10,32 +11,44 @@ def myReturn(pw): # to reduce indentation levels
   matched.insert(0, pw)  
   return True
 
+def check1char(char):
+      print 'check1char', char
+      for word in engDict:
+        if char in word: 
+          return True
+      return False
+
 def parse(remain):
   sz = len(remain)
   if sz == 0: return True # entire sentence parsed :)
   if remain in engDict: return myReturn(remain)
   for i in range(1,sz+1):
     pw = remain[0:i] # possible word. remain[0:n] would return the first n characters from "remain".
-    print 'trying', pw
+    print i, '= i, trying possible word', pw
     if pw in engDict:    
-      if parse(remain[i:]): return myReturn(pw)
+      childResult = parse(remain[i:])
+      if childResult == Hopeless: return Hopeless
+      if childResult: 
+        return myReturn(pw)    
+    # The else block below is not needed to solve the problem. It's added purely for efficiency but I don't know any effective way to detct all Hopeless cases. 
+    else: 
+      if not check1char(remain[0]): return Hopeless;
       
-    # The else block below is not needed to solve the problem. It's added purely for efficiency.
-    else: # is pw a possible prefix? Locate the nearest 2 neighbours
+      # is pw a possible prefix? Locate the nearest 2 neighbours
       tmp = bisect.bisect_left(hay, pw)
-      le = hay[tmp-1] if tmp>=1 else '/'
+      le = hay[tmp-1] if tmp>=1 else '<empty_str>'
       tmp = bisect.bisect_right(hay, pw)
-      ri = hay[tmp]   if tmp<len(engDict) else '\\'
-      print pw, 'not in engDict. left/right are: ', le, ri 
+      ri = hay[tmp]   if tmp<len(engDict) else '<empty_str>'
+      #print pw, 'not in engDict. left/right are: ', le, '/', ri 
       if not   (le.startswith(pw) or ri.startswith(pw)):
-        print pw, 'is not a prefix of any word.. giving up on', remain
+        #print pw, 'is not a prefix of any word.. giving up on', remain
         return False;
   # end of for loop    
-  return False      
+  return False       
 def main():
-  result = parse('alicealx')
+  print engDict
+  result = parse('aliceali')
   print result, (matched if result else '')
 main()
-'''I think this is a classic algo question
-Given a English dictionary of words (no numbers no underscores) and a long sentence. Someone has removed all the spaces. Now restore it by adding the spaces. If there's no way to parse the sentence just return False, otherwise return True. 
+'''Req: https://bintanvictor.wordpress.com/2018/02/24/splitcontinuoussentenceusingdictionary/
 '''
