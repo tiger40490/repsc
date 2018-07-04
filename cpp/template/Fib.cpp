@@ -2,26 +2,24 @@
 #include <cassert>
 using namespace std;
 
-typedef int fn; //a Fib number
+typedef int fnum; //a Fib number
 
 /* 0,1,1,2,3,5...
-recurs(0,1,0) == 0
-recurs(0,1,1) == 1
 */
-recurs(size_t distance, fn first=0, fn second=1){
+recurs(size_t distance, fnum first=0, fnum second=1){
 	if (distance==0) return first;
 	//cout<<first<<","<<second<<","<<distance<<endl;
 	return recurs(distance-1, second, first+second);
 }
 
-template <int DISTANCE, int A=0, int B=1> struct Fibonacci{
+template <int DISTANCE, fnum A=0, fnum B=1> struct Fibonacci{
     enum { 
       value = Fibonacci<DISTANCE-1, B, A+B>::value 
     };
 };
 
-//specialization: When distance to target value == 0, we have reached target ..
-template <int A, int B> struct Fibonacci<0, A, B> {
+//specialization
+template <fnum A, fnum B> struct Fibonacci<0, A, B> {
     enum { value = A };
 };
 
