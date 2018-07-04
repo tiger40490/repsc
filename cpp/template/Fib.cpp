@@ -2,22 +2,19 @@
 #include <cassert>
 using namespace std;
 
-template <int T> struct Fibonacci{
+template <int DISTANCE, int A=0, int B=1> struct Fibonacci{
     enum { 
-      value = (Fibonacci<T - 1>::value + Fibonacci<T - 2>::value) 
+      value = Fibonacci<DISTANCE-1, B, A+B>::value 
     };
 };
 
-//specializations
-template <> struct Fibonacci<0> {
-    enum { value = 0 };
-};
-
-template <> struct Fibonacci<1> {
-    enum { value = 1 };
+//specialization: When distance to target value == 0, we have reached target ..
+template <int A, int B> struct Fibonacci<0, A, B> {
+    enum { value = A };
 };
 
 int main(){
-    assert (13 == Fibonacci<7>::value);
-    assert (8 == Fibonacci<6>::value);
+    assert (2 == (Fibonacci<3>::value));
+    assert (13 == (Fibonacci<7>::value));
+    assert (8 == (Fibonacci<6>::value));
 }
