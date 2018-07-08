@@ -1,5 +1,7 @@
 class Node(object):
+    cnt=0
     def __init__(self, data, next_node=None):
+        Node.cnt+=1
         self.data = data
         self.next = next_node
 _8 = Node(8)
@@ -14,8 +16,9 @@ rootA = _1
 rootB = _2
 rootC = _3
 rootD = _4
-def dump(node):
+def dump(node, isAll=False):
   last=0
+  dumpCnt=0
   while(1):
     if node is None:
       print 'end'
@@ -23,6 +26,9 @@ def dump(node):
     print node.data, '->',
     assert node.data >= last; last=node.data
     node = node.next
+    dumpCnt+=1
+  if isAll: 
+    assert Node.cnt == dumpCnt
 def merge2(A, B):
   return A
 def sol2(): # merge 2 lists
