@@ -18,6 +18,9 @@ def match(haystack, regex):
       if c != '.' : # literal-star. Example: Q* eating up none to all leading Q's, if any
          if 0==len(haystack): return match(haystack, regex[2:])
          print '   v v v v v   starting * loop with haystack %s vs %s' %(haystack, regex)
+         if haystack[0] != c: 
+           return match(haystack, regex[2:])
+         
          i = 0
          while haystack[i] == c:
            print 'trying in * loop with i = ', i
@@ -43,6 +46,7 @@ def match(haystack, regex):
       return False
 
 def main():
+  assert match('aab', 'c*a*b')
   assert match('ab', '.*')
   assert match('aa', 'a*')
   assert not match('', '.')
