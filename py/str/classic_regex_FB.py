@@ -40,12 +40,15 @@ def match(haystack, regex):
           if match(haystack[i:], regex[2:]) :
               if len(haystack): print '  ^^^^^ ending .* loop ^^^ good haystack %s vs %s' %(haystack[i:], regex[2:])
               return True
-          if match(haystack[i+1:], regex) :
+          
+          if len(haystack)>=i+1 and match(haystack[i+1:], regex) :
               return True
       print '      ^^^^^ ending .* loop ^^^  bad'
       return False
 
 def main():
+  assert not match("", ".*c")
+  assert not match("ab", ".*c")
   assert match('aab', 'c*a*b')
   assert match('ab', '.*')
   assert match('aa', 'a*')
