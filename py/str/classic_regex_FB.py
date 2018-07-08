@@ -1,3 +1,4 @@
+# Focus on correctness. The performance requirements are rarely needed so let's not spend too much time
 def match(haystack, regex):
       print 'haystack = ', haystack, '\t regex = ', regex
       if 0==len(regex): return 0==len(haystack)
@@ -46,6 +47,7 @@ def match(haystack, regex):
       return False
 
 def main():
+  #assert match("acaabbaccbbacaabbbb", "a*.*b*.*a*aa*a*") # .* need to be greedy as an optimization
   assert not match("", ".*c")
   assert match('aab', 'c*a*b')
   assert not match("aaaaaaaaaaaaaaaaab", "a*a*c")
