@@ -1,5 +1,5 @@
 def match(haystack, regex):
-      print   'regex = ', regex, '   haystack = ', haystack
+      print 'haystack = ', haystack, '\t regex = ', regex
       if 0==len(regex): return 0==len(haystack)
       c,d = (regex[0],'') if len(regex)==1 else regex[0:2]
       assert c != '*', "regex first char is star -- illegal"
