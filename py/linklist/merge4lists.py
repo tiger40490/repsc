@@ -15,12 +15,14 @@ rootB = _2
 rootC = _3
 rootD = _4
 def dump(node):
-    while(1):
-        if node is None:
-            print 'end'
-            break
-        print node.data, '->',
-        node = node.next
+  last=0
+  while(1):
+    if node is None:
+      print 'end'
+      break
+    print node.data, '->',
+    assert node.data >= last; last=node.data
+    node = node.next
 def merge2(A, B):
   return A
 def sol2(): # merge 2 lists
