@@ -21,10 +21,12 @@ def match(haystack, regex):
          i = 0
          while haystack[i] == c:
            print 'trying in * loop with i = ', i
-           if match(haystack[i:], regex[2:]): 
-              if len(haystack): print '  ^^^^^ ending * loop ^^^ good haystack %s vs %s' %(haystack[i:], regex[2:])
-              return True
+           if match(haystack[i:], regex[2:]): # try skipping the literal-star
+              return True 
+         
            i+=1 
+           if match(haystack[i:], regex): # try consuming the first char in haystack
+              return True 
          print '      ^^^^^ ending * loop ^^^  bad'
          return False
                          
@@ -37,14 +39,17 @@ def match(haystack, regex):
               return True
       print '      ^^^^^ ending .* loop ^^^  bad'
       return False
- 
-assert not match('', '.')
-assert match('xyab-abc', '.*ab.*c.*x*')
-assert match('xyab-abc', '.*ab.*c.*.*')
-assert match('xyab-abc', '.*ab.*c')
-assert match('aaaaaaab-abc', 'a*aab.*c')
-assert match('aab-abc', 'a*aab.*c')
-assert match('aabc', 'a*aab.*..*x*')
-assert not match('abc', 'a*aab.*c')
-assert match('a-aab', 'a*.*a*aab')
-assert not match('a-aab', 'a*a*aab')
+
+def main():
+  assert match('aa', 'a*')
+  assert not match('', '.')
+  assert match('xyab-abc', '.*ab.*c.*x*')
+  assert match('xyab-abc', '.*ab.*c.*.*')
+  assert match('xyab-abc', '.*ab.*c')
+  assert match('aaaaaaab-abc', 'a*aab.*c')
+  assert match('aab-abc', 'a*aab.*c')
+  assert match('aabc', 'a*aab.*..*x*')
+  assert not match('abc', 'a*aab.*c')
+  assert match('a-aab', 'a*.*a*aab')
+  assert not match('a-aab', 'a*a*aab')
+main()
