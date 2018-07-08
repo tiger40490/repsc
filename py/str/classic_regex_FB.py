@@ -14,14 +14,13 @@ def match(haystack, regex):
          if 0==len(haystack): return match('', regex[2:])
          print '   v v v v v   starting * loop with haystack %s vs %s' %(haystack, regex)
          
-         # first try skipping the literal-star
+         # first try skipping the literal-star, as this is a shorter recursion stack
          if match(haystack, regex[2:]): return True
-                  
-         i = 0
-         while haystack[i] == c:
-           i+=1 
-           print 'trying in * loop with i = ', i         
-           if match(haystack[i:], regex): # try consuming the first char in haystack
+         
+         while haystack[0] == c:
+           haystack = haystack[1:]
+           print 'trying in * loop'
+           if match(haystack, regex): # try consuming the first char in haystack
               return True 
          print '      ^^^^^ ending * loop ^^^  bad'
          return False
@@ -40,8 +39,8 @@ def match(haystack, regex):
       return False
 
 def main():
-  assert match('aab', 'c*a*b')
   assert not match("aaaab", "a*a*c") # aaaaaaab would take too long!
+  assert match('aab', 'c*a*b')
   assert not match("", ".*c")
   assert not match("ab", ".*c")
   assert match('ab', '.*')
