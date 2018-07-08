@@ -1,9 +1,3 @@
-"""
-Q: A simple regex (SRE) can use alphanumerics, dot and star. It is enclosed between implicit ^ and $. 
-Write a match() function taking a SRE and a word. No white space allowed.
-
-Detailed requirements https://wp.me/p74oew-32
-"""
 def match(haystack, regex):
       print   'regex = ', regex, '   haystack = ', haystack
       if 0==len(regex): return 0==len(haystack)
@@ -64,3 +58,9 @@ def main():
   assert match('a-aab', 'a*.*a*aab')
   assert not match('a-aab', 'a*a*aab')
 main()
+"""
+Q: A simple regex (SRE) can use alphanumerics, dot and star. It is enclosed between implicit ^ and $. 
+Write a match() function taking a SRE and a word. No white space allowed.
+
+Detailed requirements https://wp.me/p74oew-32
+"""
