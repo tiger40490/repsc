@@ -47,6 +47,7 @@ def match(haystack, regex):
       return False
 
 def main():
+  assert not match("aaaab", "a*a*c") # aaaaaaab would take too long!
   assert not match("", ".*c")
   assert not match("ab", ".*c")
   assert match('aab', 'c*a*b')
