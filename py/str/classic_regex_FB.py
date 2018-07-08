@@ -10,6 +10,13 @@ def match(haystack, regex):
           return match(haystack[1:], regex[1:])
           
       assert d == '*'
+      
+      # now deal with the right end as an optimization
+      z = regex[-1]
+      if z != '*' and z != '.' :
+        return len(haystack)>0 and haystack[-1] == z and match(haystack[:-1], regex[:-1])
+      
+      ##################3
       if c != '.' : # literal-star. Example: Q* eating up none to all leading Q's, if any
          if 0==len(haystack): return match('', regex[2:])
          print '   v v v v v   starting * loop with haystack %s vs %s' %(haystack, regex)
@@ -39,9 +46,9 @@ def match(haystack, regex):
       return False
 
 def main():
-  assert not match("aaaab", "a*a*c") # aaaaaaab would take too long!
-  assert match('aab', 'c*a*b')
   assert not match("", ".*c")
+  assert match('aab', 'c*a*b')
+  assert not match("aaaaaaaaaaaaaaaaab", "a*a*c")
   assert not match("ab", ".*c")
   assert match('ab', '.*')
   assert match('aa', 'a*')
