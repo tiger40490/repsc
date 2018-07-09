@@ -32,6 +32,7 @@ def dump(node, isAll=False):
     assert dumpCnt < 999
   if isAll: 
     assert Node.cnt == 1+dumpCnt
+    
 def merge2(A, B): 
   last = dummy #lastMerged
   while A and B:
@@ -53,7 +54,6 @@ def sol2(): # merge 2 lists
   rootA = merge2(rootA,rootD)
   return rootA
 def main():
-  #dump(merge2(rootA, rootB))
   dump(sol2(), True)
 main()
 #Req:  https://bintanvictor.wordpress.com/2018/07/08/merge-3-sorted-linked-list/
