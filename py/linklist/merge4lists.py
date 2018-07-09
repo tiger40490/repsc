@@ -13,6 +13,7 @@ _4 = Node(4, _7)
 _3 = Node(3, _8)
 _2 = Node(2, _5) #5
 _1 = Node(1, _6) #6
+dummy = Node(0.1)
 rootA = _1
 rootB = _2
 rootC = _3
@@ -28,11 +29,10 @@ def dump(node, isAll=False):
     assert node.data >= last; last=node.data
     node = node.next
     dumpCnt+=1
-    assert dumpCnt < 99
+    assert dumpCnt < 999
   if isAll: 
-    assert Node.cnt == dumpCnt
+    assert Node.cnt == 1+dumpCnt
 def merge2(A, B): 
-  dummy = Node(0.1)
   last = dummy #lastMerged
   while A and B:
     if A.data <= B.data:
@@ -42,9 +42,7 @@ def merge2(A, B):
       last.next = B
       B = B.next 
     last = last.next
-    #dump(dummy)
-  # now add the remaining values
-  
+    #dump(dummy)  
   assert A or B
   last.next = A or B
   return dummy.next
@@ -56,6 +54,6 @@ def sol2(): # merge 2 lists
   return rootA
 def main():
   #dump(merge2(rootA, rootB))
-  dump(sol2())
+  dump(sol2(), True)
 main()
 #Req:  https://bintanvictor.wordpress.com/2018/07/08/merge-3-sorted-linked-list/
