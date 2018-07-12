@@ -1,3 +1,4 @@
+// https://github.com/tiger40490/repo1/blob/cpp1/cpp/88miscLang/arrayNewDtor.cpp shows simpler ways to test if a type is a ptr type, but techniques here are valuable at least in job interviews.
 #include <assert.h>
 #include <iostream>
 using namespace std; 
