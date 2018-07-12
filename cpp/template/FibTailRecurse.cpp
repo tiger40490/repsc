@@ -1,6 +1,7 @@
 //showcase compile time recursive template instantiation
-//showcase enum with a specific base typedef
-//showcase macro
+//showcase template specialization
+//showcase enum with a specific base type using a typedef
+//showcase macro with arguments
 #include <iostream>
 #include <cassert>
 #define check(N) assert (recurFunc(N) == FibCompileTime<N>::value);
@@ -22,12 +23,12 @@ template <int DISTANCE, fnum A=0, fnum B=1> struct FibCompileTime{
     };
 };
 
-//specialization as a recursion exit
+//template specialization as a recursion exit
 template <fnum A, fnum B> struct FibCompileTime<0, A, B> {
     enum : fnum { value = A };
 };
 
 int main(){
-    check(91); //largest Fib number for long long
+    check(91); //largest Fib number for long-long
     check(90);
 }
