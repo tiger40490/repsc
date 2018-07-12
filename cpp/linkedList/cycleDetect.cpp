@@ -46,7 +46,7 @@ size_t hasLoopBrent(size_t const N=2){
       powOfN *= N;
       loopLenGuess = 0;
       cout<<"   "<<tortoise->val<<" set as (payload of) new tortoise ptr, with powOfN set to "<<powOfN<<endl;
-      }
+    }
     loopLenGuess++;
     }
     assert(loopLenGuess>0);
