@@ -37,5 +37,6 @@ int main(void){
   assert(2==isCustomPtr<FuncPtr>::value);
   assert(4==isCustomPtr<FooMemberPtr>::value);
   assert(8==isCustomPtr<FooMemFunPtr>::value);
-  cout<<isCustomPtr<float>::value;
+  assert(9==isCustomPtr<float>::value); //not a ptr at all
+  cout<<"All tests passed";
 }//based on https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/SFINAE
