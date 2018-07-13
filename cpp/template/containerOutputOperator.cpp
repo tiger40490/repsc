@@ -4,7 +4,7 @@
 #include <vector>
 //
 // Showcase non-dummy-type template param min_width.
-// Note body of map ^ vector dumpers are identical.
+// Note body of map ^ vector dumpers are identical, except some optional features.
 // Below is minimum code block for copy-paste.
 #include <iostream>
 #include <iomanip>
@@ -18,7 +18,7 @@ template<typename K, typename V> ostream & operator<<(ostream & os, pair<K,V> co
    os<<tmp2.str();   
    return os;
 }
-template<typename K, typename V, int min_width=4> ostream & operator<<(ostream & os,  Map<K,V> const & c){
+template<typename K, typename V, int min_width=8> ostream & operator<<(ostream & os,  Map<K,V> const & c){
    for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
    os<<endl;
    return os;
