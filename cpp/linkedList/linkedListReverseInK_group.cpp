@@ -5,6 +5,10 @@ struct Node{
   int const data;
   Node * next;
   Node (int payload, Node* n=NULL): data(payload), next(n){}
+  friend ostream & operator<<(ostream & os, Node const & t){
+    os<<static_cast<char>(t.data) <<"  # "<<&t<<" -> "<<t.next;
+    return os;
+  }
 } _1('1'), //tail
 _2('2', &_1),
 _3('3', &_2),
@@ -16,7 +20,8 @@ _7('7', &_6),
 void dump(string const& headline){
    cout<<headline<<endl<<"New head: ";
    for (Node* t=head; t; t=t->next)
-      cout<< static_cast<char>(t->data) <<"  # "<<t<<" -> "<<t->next<<endl;
+      cout<< *t <<endl;
+   cout<<"==================\n";
 }
 // Above is a useful, simple set-up of linked list for coding interview
 
@@ -27,7 +32,7 @@ void dump(string const& headline){
 void * reverse1(Node* A, Node* b){
   assert(A->next != b);
   Node * c = b->next;
-  b->next = A; //fix node b
+  b->next = A; cout<<*b<<" fixed\n"; //fix node b
   if (c == NULL) return head = b; //exit condition
   reverse1(b,c);
 }
@@ -59,9 +64,9 @@ void iterative(){
 }
 int main(int argc, char *argv[]) {
    iterative();
-   dump("Iterative Reverse Completed:");
+   dump("---Iterative Reverse Completed:");
    tailRecursion();
-   dump("Tail recursion Reverse Completed:");
+   dump("---Tail recursion Reverse Completed:");
 }/*Req: https://bintanvictor.wordpress.com/2018/07/14/reverse-link-list-in-k-groups/
 I won't bother to pass all leetcode tests. Real interview will focus on the key points, not those corner cases
 */
