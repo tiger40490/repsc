@@ -9,8 +9,10 @@ struct Node{
 _2('2', &_1),
 _3('3', &_2),
 _4('4', &_3),
-_5('5', &_4);
-Node * head = &_5;
+_5('5', &_4),
+_6('6', &_5),
+_7('7', &_6),
+* head = &_7;
 void dump(string const& headline){
    cout<<headline<<endl<<"New head: ";
    for (Node* t=head; t; t=t->next)
