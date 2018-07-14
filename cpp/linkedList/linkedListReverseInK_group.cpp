@@ -19,7 +19,7 @@ _7('7', &_6),
 _8('8', &_7),
 _9('9', &_8),
 _10('A', &_9),
-* head = &_10;
+* head = &_8;
 void dump(string const& headline){
    cout<<headline<<endl<<"New head: ";
    size_t cnt=0;
@@ -31,7 +31,7 @@ void dump(string const& headline){
 }
 // Above is a useful, simple set-up of linked list for coding interview
 
-size_t const K = 2; //reverse every group of K nodes.
+size_t const K = 4; //reverse every group of K nodes. This program allows K to be anything but meaningful value is between 2 and list length
 
 /** Each recursive call modifies exactly one node, b in this case
  * Pre-condition: A used to point to b but now A has already been fixed in the previous call
@@ -57,8 +57,8 @@ size_t size(){
   }
 }
 void iterative(){
-  if (K==1) return;
   size_t cnt=1, sz = size();
+  if (K<=1 || K > sz) return;
   Node * const oldHead = head;
   Node * tailFar = oldHead;
   Node * tailNear = oldHead;
