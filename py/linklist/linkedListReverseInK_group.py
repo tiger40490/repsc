@@ -39,5 +39,5 @@ def main():
   dump()
 main()
 '''Req: https://bintanvictor.wordpress.com/2018/07/14/reverse-link-list-in-k-groups/
-I won't bother to pass all leetcode tests. Real interview will focus on the key points, not those corner cases
+See the c++ solution https://github.com/tiger40490/repo1/blob/cpp1/cpp/linkedList/linkedListReverseInK_group.cpp
 '''
