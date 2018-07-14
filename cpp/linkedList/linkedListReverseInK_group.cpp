@@ -1,5 +1,5 @@
 //todo: support stub
-//todo: rename tailNear
+//todo: suppoprt K=1
 #include <iostream>
 #include <cassert>
 using namespace std;
@@ -21,7 +21,7 @@ _7('7', &_6),
 _8('8', &_7),
 _9('9', &_8),
 _10('A', &_9),
-* head = &_9;
+* head = &_10;
 void dump(string const& headline){
    cout<<headline<<endl<<"New head: ";
    size_t cnt=0;
@@ -33,7 +33,7 @@ void dump(string const& headline){
 }
 // Above is a useful, simple set-up of linked list for coding interview
 
-short const K = 3; //reverse every group of K nodes.
+short const K = 2; //reverse every group of K nodes.
 
 /** Each recursive call modifies exactly one node, b in this case
  * Pre-condition: A used to point to b but now A has already been fixed in the previous call
@@ -60,6 +60,7 @@ size_t size(){
 }
 void iterative(){
   size_t cnt=1, sz = size(); assert(sz%K == 0); //for now, i don't support stub group
+  assert (K > 1);
   Node * const oldHead = head;
   Node * tailFar = oldHead;
   Node * tailNear = oldHead;
@@ -80,7 +81,7 @@ void iterative(){
           tailNear->next = NULL;
           return;
       }
-      tailNear = c;
+      tailNear = c; //pointer therein to be adjusted
       //cout<<(char)tailNear->data<<" = tailNear\n";
     }
     assert(c != NULL);
