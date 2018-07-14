@@ -1,3 +1,5 @@
+//todo: support stub
+//todo: rename xGroupTail
 #include <iostream>
 #include <cassert>
 using namespace std;
@@ -19,7 +21,7 @@ _7('7', &_6),
 _8('8', &_7),
 _9('9', &_8),
 _10('A', &_9),
-* head = &_10;
+* head = &_4;
 void dump(string const& headline){
    cout<<headline<<endl<<"New head: ";
    size_t cnt=0;
@@ -31,7 +33,7 @@ void dump(string const& headline){
 }
 // Above is a useful, simple set-up of linked list for coding interview
 
-short const K = 5; //reverse every group of K nodes.
+short const K = 2; //reverse every group of K nodes.
 
 /** Each recursive call modifies exactly one node, b in this case
  * Pre-condition: A used to point to b but now A has already been fixed in the previous call
@@ -58,7 +60,7 @@ size_t size(){
 }
 void iterative(){
   size_t sz = size(); assert(sz%K == 0); //for now, i don't support stub group
-  
+  Node * const oldHead = head;
   Node * a=head;
   Node * b=a->next;
   Node * c=b->next;
@@ -66,28 +68,23 @@ void iterative(){
   Node * xGroupTail = a;
 
   static size_t cnt=1;
-  bool isG1 = true;
 
   for (;;){
     b->next = a; cout<<++cnt<<": fixing "<<*b<<" \n";
     if (cnt % K ==0){
       cout<<"end of a group\n";
 
-      if (isG1){
-        head = b;
-        isG1 = false;
-      }else{
-        prevGroupTail->next = b; 
-        prevGroupTail = xGroupTail;
-        cout<<(char)prevGroupTail->data<<" === prevGroupTail\n";
-        //save tail of current group needs to point it at head of new group
-      }
+      if (head == oldHead){ head = b; }
+      prevGroupTail->next = b; 
+      prevGroupTail = xGroupTail;
+      //cout<<(char)prevGroupTail->data<<" === prevGroupTail\n";
       if (c == NULL){
           xGroupTail->next = NULL;
           return;
       }
+      //save tail of current group needs to point it at head of new group
       xGroupTail = c;
-      cout<<(char)xGroupTail->data<<" = xGroupTail\n";
+      //cout<<(char)xGroupTail->data<<" = xGroupTail\n";
     }
     assert(c != NULL);
     a=b; b=c; c = c->next; //shift down the 3 markers
