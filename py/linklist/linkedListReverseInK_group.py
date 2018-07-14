@@ -39,5 +39,6 @@ def main():
   dump()
 main()
 '''Req: https://bintanvictor.wordpress.com/2018/07/14/reverse-link-list-in-k-groups/
+I set this up for python coding practice but stopped halfway.
 See the c++ solution https://github.com/tiger40490/repo1/blob/cpp1/cpp/linkedList/linkedListReverseInK_group.cpp
 '''
