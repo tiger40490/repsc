@@ -1,5 +1,3 @@
-//todo: support stub
-//todo: suppoprt K=1
 #include <iostream>
 #include <cassert>
 using namespace std;
@@ -33,7 +31,7 @@ void dump(string const& headline){
 }
 // Above is a useful, simple set-up of linked list for coding interview
 
-short const K = 2; //reverse every group of K nodes.
+size_t const K = 2; //reverse every group of K nodes.
 
 /** Each recursive call modifies exactly one node, b in this case
  * Pre-condition: A used to point to b but now A has already been fixed in the previous call
@@ -59,8 +57,8 @@ size_t size(){
   }
 }
 void iterative(){
-  size_t cnt=1, sz = size(); assert(sz%K == 0); //for now, i don't support stub group
-  assert (K > 1);
+  if (K==1) return;
+  size_t cnt=1, sz = size();
   Node * const oldHead = head;
   Node * tailFar = oldHead;
   Node * tailNear = oldHead;
@@ -68,7 +66,7 @@ void iterative(){
   Node * b=a->next;
   Node * c=b->next;
 
-  for (;;){
+  for (;;a=b, b=c, c = c->next){
     b->next = a; cout<<++cnt<<": fixing "<<*b<<" \n";
     if (cnt % K ==0){
       cout<<"end of a group\n";
@@ -77,15 +75,14 @@ void iterative(){
       tailFar->next = b; 
       tailFar = tailNear;
       //cout<<(char)tailFar->data<<" === tailFar\n";
-      if (c == NULL){
-          tailNear->next = NULL;
-          return;
+      if (cnt == sz/K*K){
+        tailNear->next = c;
+        return;
       }
       tailNear = c; //pointer therein to be adjusted
       //cout<<(char)tailNear->data<<" = tailNear\n";
     }
     assert(c != NULL);
-    a=b; b=c; c = c->next; //shift down the 3 markers
   }
 }
 int main(int argc, char *argv[]) {
