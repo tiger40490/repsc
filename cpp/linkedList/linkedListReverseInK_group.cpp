@@ -28,7 +28,7 @@ void dump(string const& headline){
 }
 // Above is a useful, simple set-up of linked list for coding interview
 
-short const K = 2; //reverse every group of K nodes.
+short const K = 6; //reverse every group of K nodes.
 
 /** Each recursive call modifies exactly one node, b in this case
  * Pre-condition: A used to point to b but now A has already been fixed in the previous call
@@ -61,9 +61,8 @@ void iterative(){
   Node * b=a->next;
   Node * c=b->next;
   Node * prevGroupTail = a;
-  Node * xGroupTail = NULL;
+  Node * xGroupTail = a;
 
-  a->next=NULL; // first fix the head node
   static size_t cnt=1;
   bool isG1 = true;
 
@@ -75,20 +74,16 @@ void iterative(){
 
       if (isG1){
         head = b;
-        if (c == NULL){
-          break;
-        }
         isG1 = false;
-        
       }else{
         prevGroupTail->next = b; 
-        if (c == NULL){
-          xGroupTail->next = NULL;
-          break;
-        }
         prevGroupTail = xGroupTail;
         cout<<(char)prevGroupTail->data<<" === prevGroupTail\n";
         //save tail of current group needs to point it at head of new group
+      }
+      if (c == NULL){
+          xGroupTail->next = NULL;
+          break;
       }
       xGroupTail = c;
       cout<<(char)xGroupTail->data<<" = xGroupTail\n";
