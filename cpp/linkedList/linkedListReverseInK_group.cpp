@@ -1,5 +1,5 @@
 //todo: support stub
-//todo: rename xGroupTail
+//todo: rename tailNear
 #include <iostream>
 #include <cassert>
 using namespace std;
@@ -21,7 +21,7 @@ _7('7', &_6),
 _8('8', &_7),
 _9('9', &_8),
 _10('A', &_9),
-* head = &_4;
+* head = &_9;
 void dump(string const& headline){
    cout<<headline<<endl<<"New head: ";
    size_t cnt=0;
@@ -33,7 +33,7 @@ void dump(string const& headline){
 }
 // Above is a useful, simple set-up of linked list for coding interview
 
-short const K = 2; //reverse every group of K nodes.
+short const K = 3; //reverse every group of K nodes.
 
 /** Each recursive call modifies exactly one node, b in this case
  * Pre-condition: A used to point to b but now A has already been fixed in the previous call
@@ -59,15 +59,13 @@ size_t size(){
   }
 }
 void iterative(){
-  size_t sz = size(); assert(sz%K == 0); //for now, i don't support stub group
+  size_t cnt=1, sz = size(); assert(sz%K == 0); //for now, i don't support stub group
   Node * const oldHead = head;
-  Node * a=head;
+  Node * tailFar = oldHead;
+  Node * tailNear = oldHead;
+  Node * a=oldHead;
   Node * b=a->next;
   Node * c=b->next;
-  Node * prevGroupTail = a;
-  Node * xGroupTail = a;
-
-  static size_t cnt=1;
 
   for (;;){
     b->next = a; cout<<++cnt<<": fixing "<<*b<<" \n";
@@ -75,20 +73,18 @@ void iterative(){
       cout<<"end of a group\n";
 
       if (head == oldHead){ head = b; }
-      prevGroupTail->next = b; 
-      prevGroupTail = xGroupTail;
-      //cout<<(char)prevGroupTail->data<<" === prevGroupTail\n";
+      tailFar->next = b; 
+      tailFar = tailNear;
+      //cout<<(char)tailFar->data<<" === tailFar\n";
       if (c == NULL){
-          xGroupTail->next = NULL;
+          tailNear->next = NULL;
           return;
       }
-      //save tail of current group needs to point it at head of new group
-      xGroupTail = c;
-      //cout<<(char)xGroupTail->data<<" = xGroupTail\n";
+      tailNear = c;
+      //cout<<(char)tailNear->data<<" = tailNear\n";
     }
     assert(c != NULL);
     a=b; b=c; c = c->next; //shift down the 3 markers
-    // now between a and b there's no link; a is fixed; b is intact
   }
 }
 int main(int argc, char *argv[]) {
