@@ -3,14 +3,10 @@ showcase simple VO class
 
 '''
 from pprint import pprint
-words = sorted(['fooo', 'barr', 'wing', 'ding', 'wing'])
+words=''
 s = 'lingmindraboofooowingdingbarrwingwingbarrdingfooo'
 #### above is input
 WORD_RECORD_OFFSET=400
-WIDTH = len(words[0])
-Dict=dict()
-sz = len(s)-WIDTH+1
-arr=range(sz)
 
 class WordRecord(object):
   def __init__(self, i):
@@ -19,6 +15,11 @@ class WordRecord(object):
   def __repr__(self): # supports pprint
     return str(self.wid) +'/' + str(self.frq)
 def solutionA():
+  Dict=dict()
+  WIDTH = len(words[0])
+  sz = len(s)-WIDTH+1
+  arr=range(sz)
+
   for i in xrange(len(words)):
     if words[i] not in Dict:
       Dict[ words[i] ] = WordRecord(i)
@@ -59,5 +60,7 @@ def solutionA():
   return ret
       
 def main():
-  print solutionA()
+  global words
+  words = sorted(['fooo', 'barr', 'wing', 'ding', 'wing'])
+  assert solutionA() == [13,29]
 main() # https://bintanvictor.wordpress.com/2012/12/03/locate-in-a-long-sentence-a-permutation-of-my-favorite-words/
