@@ -1,16 +1,20 @@
+'''showcase generator expression
+showcase simple VO class
+
+'''
 from pprint import pprint
-WORD_RECORD_OFFSET=400
 words = sorted(['fooo', 'barr', 'wing', 'ding', 'wing'])
-S = 'lingmindraboofooowingdingbarrwingmonkeypoundcake'
+s = 'lingmindraboofooowingdingbarrwingwingbarrdingfooo'
 #### above is input
+WORD_RECORD_OFFSET=400
 WIDTH = len(words[0])
 Dict=dict()
-sz = len(S)-WIDTH+1
+sz = len(s)-WIDTH+1
 arr=range(sz)
 
 class WordRecord(object):
-  def __init__(self, id):
-    self.wid = id+WORD_RECORD_OFFSET
+  def __init__(self, i):
+    self.wid = i + WORD_RECORD_OFFSET
     self.frq = 1
   def __repr__(self): # supports pprint
     return str(self.wid) +'/' + str(self.frq)
@@ -28,7 +32,7 @@ def solutionA():
   pprint(requiredFrq)
 
   for pos in xrange(sz):
-    substr = S[pos:pos+WIDTH]
+    substr = s[pos:pos+WIDTH]
     #print pos, substr
     rec = Dict.get(substr, None) # 2-digits
     if rec:
@@ -39,16 +43,15 @@ def solutionA():
   pprint(arr) 
 
   ret=list()
-  for dragonHead in xrange(sz):
+  for dragonHead in xrange(len(s) +1 - WIDTH * len(words) ):
     unused=dict(requiredFrq)
-    #print '---dragon search at', dragonHead # only need arr and used
+    print '---dragon search at', dragonHead # only need arr and used
     for i in xrange(dragonHead,sz,WIDTH):
-      wid = arr[i]
-      if not wid: break
-      if wid not in unused: break;
-      unused[wid]-=1
-      if unused[wid] == 0:
-        del unused[wid]
+      wid = arr[i] #could be None
+      if wid is None: break
+      if wid not in unused: break
+      unused[wid] -= 1
+      if unused[wid] == 0: del unused[wid]
       print arr[i], words[wid-WORD_RECORD_OFFSET], ' .. found at', i
     if len(unused) == 0: 
       ret.append(dragonHead)
@@ -57,6 +60,4 @@ def solutionA():
       
 def main():
   print solutionA()
-main()
-'''
-'''
+main() # https://bintanvictor.wordpress.com/2012/12/03/locate-in-a-long-sentence-a-permutation-of-my-favorite-words/
