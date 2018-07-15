@@ -3,7 +3,6 @@ showcase simple VO class
 
 '''
 from pprint import pprint
-words=''
 s = 'lingmindraboofooowingdingbarrwingwingbarrdingfooo'
 #### above is input
 WORD_RECORD_OFFSET=400
@@ -14,8 +13,9 @@ class WordRecord(object):
     self.frq = 1
   def __repr__(self): # supports pprint
     return str(self.wid) +'/' + str(self.frq)
-def solutionA():
+def solutionA(_words):
   Dict=dict()
+  words = sorted(_words)
   WIDTH = len(words[0])
   sz = len(s)-WIDTH+1
   arr=range(sz)
@@ -60,7 +60,5 @@ def solutionA():
   return ret
       
 def main():
-  global words
-  words = sorted(['fooo', 'barr', 'wing', 'ding', 'wing'])
-  assert solutionA() == [13,29]
+  assert [13,29] == solutionA(['fooo', 'barr', 'wing', 'ding', 'wing'])
 main() # https://bintanvictor.wordpress.com/2012/12/03/locate-in-a-long-sentence-a-permutation-of-my-favorite-words/
