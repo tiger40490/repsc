@@ -53,7 +53,7 @@ def solutionA(_words):
       if wid not in unused: break
       unused[wid] -= 1
       if unused[wid] == 0: del unused[wid]
-      print arr[i], words[wid-WORD_RECORD_OFFSET], ' .. found at', i
+      #print arr[i], words[wid-WORD_RECORD_OFFSET], ' .. found at', i
     if len(unused) == 0: 
       ret.append(dragonHead)
       print '   ! dragon found starting at', dragonHead
@@ -61,6 +61,7 @@ def solutionA(_words):
   return ret
       
 def main():
+  assert [11,12,13,45] == solutionA(['o', 'o', 'f'])
   assert [17,29,31,33] == solutionA(['wi', 'ng'])
   assert [13,29] == solutionA(['fooo', 'barr', 'wing', 'ding', 'wing'])
 main() # https://bintanvictor.wordpress.com/2012/12/03/locate-in-a-long-sentence-a-permutation-of-my-favorite-words/
