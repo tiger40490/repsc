@@ -1,6 +1,7 @@
 '''showcase generator expression
 showcase simple VO class
 
+If non-fixed word length, then I propose to add a self.sz to VO class.
 '''
 from pprint import pprint
 s = 'lingmindraboofooowingdingbarrwingwingbarrdingfooo'
