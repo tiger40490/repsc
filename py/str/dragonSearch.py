@@ -27,7 +27,7 @@ def solutionA(_words):
     else:
       Dict[ words[i] ].frq +=1
     assert len( words[i] ) == WIDTH
-  pprint(Dict)
+  pprint(Dict) //Dict now contains aWord -> its id and repetition within the original list
   
   # generator expression!
   requiredFrq=dict( [rec.wid, rec.frq] for _,rec in Dict.items() )  
