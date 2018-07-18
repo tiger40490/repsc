@@ -19,7 +19,7 @@ def check1char(char):
           return True
       return False
 
-def parse(remain):
+def parse(remain): # This solution uses backtracking but inefficient
   sz = len(remain)
   if sz == 0: return True # entire sentence parsed :)
   if remain in wordDict: return myReturn(remain)
@@ -33,7 +33,7 @@ def parse(remain):
         return myReturn(pw)    
     # The else block below is not needed to solve the problem. It's added purely for efficiency but I don't know any effective way to detct all Hopeless cases. 
     else: 
-      if not check1char(remain[0]): return Hopeless;
+      if not check1char(remain[0]): return Hopeless # optimization for a common edge case
       
       # is pw a possible prefix? Locate the nearest 2 neighbours
       tmp = bisect.bisect_left(hay, pw)
@@ -55,12 +55,12 @@ def sol1(sentence): # one-pass
     # print 'setting', idx
     for word in wordDict:
       hopBack = idx - len(word)
-      if hopBack < -1: continue #word is too long and we are near beginning of sentence
+      if hopBack < -1: continue # to next word in wordDict, since current word is too long and we are near beginning of sentence
       if word == sentence [hopBack+1 : hopBack+1+len(word)]:
          # -1 means this word is at the start of sentence
         if hopBack == -1 or aboveWater[hopBack]:
            # print word, 'provides a hop from ', hopBack
-           aboveWater[idx] = True
+           aboveWater[idx] = True #This position is reachable via some "dry ground". (Start from left end)
            break
   return aboveWater[-1]
   
