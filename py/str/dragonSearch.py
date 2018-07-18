@@ -1,14 +1,14 @@
-'''todo: convert requiredFrq to an array
-
+'''
+todo: rename "words", 
 showcase generator expression
 showcase simple VO class
 
-If non-fixed word length, then I propose to add a self.sz to VO class.
+If non-fixed word length, then I propose to add a self.sz to VO class, but the arr element would be multi-valued
 '''
 from pprint import pprint
 s = 'lingmindraboofooowingdingbarrwingwingbarrdingfooo'
 #### above is input
-WORD_RECORD_OFFSET=400
+WORD_RECORD_OFFSET=400 # easy visualization
 
 class WordRecord(object):
   def __init__(self, i):
@@ -29,37 +29,42 @@ def solutionA(_words):
     else:
       Dict[ words[i] ].frq +=1
     assert len( words[i] ) == WIDTH
-  pprint(Dict) //Dict now contains aWord -> its id and repetition within the original list
-  
-  # generator expression!
-  requiredFrq=dict( [rec.wid, rec.frq] for _,rec in Dict.items() )  
-  pprint(requiredFrq)
+  pprint(Dict) #Dict now contains aWord -> its id and repetition within the original list
+    
+  requiredFrq=[0] * len(Dict) 
+  for _,rec in Dict.items():
+    requiredFrq[rec.wid-WORD_RECORD_OFFSET] = rec.frq 
+  print requiredFrq
 
   for pos in xrange(sz):
     substr = s[pos:pos+WIDTH]
     #print pos, substr
-    rec = Dict.get(substr, None) # 2-digits
+    rec = Dict.get(substr, 0) # 2-digits
     if rec:
       arr[pos] = rec.wid;
       assert substr == words[rec.wid-WORD_RECORD_OFFSET]
     else:
-      arr[pos] = None
-  #pprint(arr) 
+      arr[pos] = '' # I don't like to use None to mean empty
+  pprint(arr) # you can see the pattern of a dragon
 
   ret=list()
   for dragonHead in xrange(len(s) +1 - WIDTH * len(words) ):
-    unused=dict(requiredFrq)
+    reqFrqClone=list(requiredFrq)
+    wordCnt = len(requiredFrq)
+    
     #print '---dragon search at', dragonHead # only need arr and used
     for i in xrange(dragonHead,sz,WIDTH):
-      wid = arr[i] #could be None
-      if wid is None: break
-      if wid not in unused: break
-      unused[wid] -= 1
-      if unused[wid] == 0: del unused[wid]
-      #print arr[i], words[wid-WORD_RECORD_OFFSET], ' .. found at', i
-    if len(unused) == 0: 
-      ret.append(dragonHead)
-      print '   ! dragon found starting at', dragonHead
+      wid = arr[i]
+      if wid == '': break
+      idx=wid-WORD_RECORD_OFFSET
+      if reqFrqClone[idx] == 0: break
+      reqFrqClone[idx] -= 1
+      if reqFrqClone[idx] == 0: wordCnt -= 1
+      #print arr[i], words[idx], ' .. found at', i
+      if wordCnt == 0: 
+        ret.append(dragonHead)
+        print '   ! dragon found starting at', dragonHead
+        break
   print ret
   return ret
       
