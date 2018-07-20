@@ -13,11 +13,11 @@ char Engine1::tickfile(std::string const & filename ) {
     istringstream iss(line);
     iss.imbue(locale(cin.getloc(), new comma_is_space));
 
-    string symbol, fname;
-    int tstamp;
-    double val;
-    iss >> tstamp >> symbol;
-    cout<<"new tick: "<<tstamp<<" symbol = "<<symbol<<endl;
+    string tstamp, symbol;
+    int qty, px;
+    iss >> tstamp >> symbol >> qty >> px;
+    cout<<line<<endl;
+    cout<<"new tick: "<<tstamp<<" symbol = "<<symbol<<", qty = "<<qty<<", px = "<<px<<endl;
   }
   return '0'; //0 means success
 }
