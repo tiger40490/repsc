@@ -8,7 +8,7 @@ char Engine1::tickfile(std::string const & filename ) {
   cout<<"Engine1 tickfile() "<<filename<<endl;
   ifstream infile(filename.c_str());
   string line;
-  while (std::getline(infile, line)) { //line length is limited by virtual memory only
+  while (std::getline(infile, line)) {
     if (line[0] == '#') continue;
     istringstream iss(line);
     iss.imbue(locale(cin.getloc(), new comma_is_space));
