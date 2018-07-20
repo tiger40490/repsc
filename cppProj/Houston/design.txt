@@ -1,0 +1,7 @@
+--command interface--
+The engine will listen to commands on stdin.
+
+One command will be "tickfie abc.txt" to support simple data loading, in incremental mode.
+
+
+Trade-off: 
