@@ -1,5 +1,6 @@
-/* Q: Why do we need this class? 
-   A: extensibility. Another engine can override any of the virtual functions
+/* 
+Q: Why do we need this class? 
+A: Extensibility -- Another engine can override the virtual functions to implement a different algorithm.
 */
 #ifndef AE_H
 #define AE_H 1
@@ -25,9 +26,8 @@ struct AbstractEngine{
   virtual ~AbstractEngine(){}
   virtual char tickfile(std::string const & filename ) = 0;
   virtual int getMaxPx(std::string const & symbol){return 0;}
-private:
-  AbstractEngine(AbstractEngine const &);
-  AbstractEngine & operator=(AbstractEngine const &);
+  AbstractEngine(AbstractEngine const &) = delete;
+  AbstractEngine & operator=(AbstractEngine const &) = delete;
 };
 
 #endif

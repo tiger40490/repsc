@@ -7,15 +7,13 @@
 #include <algorithm>
 #include <iterator>
 #include <vector>
-#include <map>
-// using namespace std; //should NOT put this in header!
 
-class Engine1: public AbstractEngine { // simple query engine
-  Engine1(Engine1 const &);
-  Engine1 & operator=(Engine1 const &);
-
+struct Engine1: public AbstractEngine { // simple query engine
 public:
   Engine1(){}
+  Engine1(Engine1 const &) = delete;
+  Engine1 & operator=(Engine1 const &) = delete;
+  
   virtual char tickfile(std::string const & filename ); 
 };
 

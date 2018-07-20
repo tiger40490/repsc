@@ -1,2 +1,1 @@
-#tickfile data.txt
 tickfile inputTiny.csv
