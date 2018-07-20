@@ -7,8 +7,7 @@
 #include <vector>
 using namespace std;
 
-char tokenize(vector<string> & words){
-    words.clear(); //reuse object to reduce memory allocation
+static char tokenizeCmd(vector<string> & words){
     string line;
     getline(std::cin, line);
     if (cin.eof()) return 'e'; //end of input
@@ -18,21 +17,11 @@ char tokenize(vector<string> & words){
          istream_iterator<string>(), back_inserter(words));
 }
 
-unsigned int toTimestamp(string s){
-  unsigned int ret = stoi(s);
-  return ret;
-}
-
-void myexit(string s, int status = 1780){
-  cerr<<"Fatal error: "<<s<<endl;
-  exit(status);
-}
-
 int main(){
  Engine1 * engine = new Engine1();
- vector<string> words;
  while(1){
-    char status = tokenize(words) ;
+    vector<string> words;
+    char status = tokenizeCmd(words) ;
     if (status == 'c') continue;
     if (status == 'e') break;
 
@@ -47,6 +36,5 @@ int main(){
     if (words[0] == "tickfile" && words.size() == 2){
 	    engine->tickfile(words[1]);
     }
-        
  }
 }
