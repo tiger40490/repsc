@@ -43,7 +43,7 @@ int main(){
       }else if (words[1] == "Engine3"){
         engine = new Engine3();
       }else{
-        assert(1==0 && "USE command has typo!");
+        assert(false && "USE command has typo!");
       }
     }else if (words[0] == "tickfile" && words.size() == 2){
 	    engine->tickfile(words[1]);
