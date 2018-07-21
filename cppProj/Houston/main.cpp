@@ -23,7 +23,7 @@ static char tokenizeCmd(vector<string> & words){
 
 int main(){
  ofstream outfile("output.csv", std::ofstream::out);
- AbstractEngine * engine = new Engine1();
+ AbstractEngine * engine = new Engine3();
  while(1){
     vector<string> words;
     char status = tokenizeCmd(words) ;
@@ -31,6 +31,7 @@ int main(){
     if (status == 'e') break;
 
     size_t wordCount = words.size();
+    if (wordCount == 0) continue;
 
     cout<<"[ STDIN ] received a command ------------> ";
     for(int i=0; i<wordCount; ++i) cout<<words[i]<<"   ";

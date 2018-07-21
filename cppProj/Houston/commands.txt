@@ -1,2 +1,5 @@
+# load a tick file
 tickfile inputTiny.csv
+
+# print per-symbol statistics
 stats
