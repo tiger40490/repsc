@@ -38,7 +38,7 @@ void AbstractEngine::simpleTest(ifstream & infile){
       return;
     }
   }
-  string errMsg = "target line not found in per-symbol statistics\n"; 
+  string errMsg = "  simpleTest failed: target line not found in per-symbol statistics:(\n"; 
   cerr<< errMsg;
   throw errMsg;
 }

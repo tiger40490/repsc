@@ -7,7 +7,7 @@ v0.9
 #include <map>
 #include <memory>
 
-class Engine1: public AbstractEngine { // simple query engine
+class Engine1: public AbstractEngine { // simple query engine, using red-black tree
   std::map<std::string, std::shared_ptr<PerSymbol> > lookup;
   
 public:
