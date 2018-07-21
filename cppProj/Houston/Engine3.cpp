@@ -34,15 +34,17 @@ void Engine3::save1tick(std::string const & symbol, TStamp tstamp, Quantity qty,
 
 void Engine3::printAscending(ofstream & outfile) const{
   cout<<"--- Engine-3 printAscending ---\n";
-  
+  size_t cnt=0;
   //Warning: symbol variable must be iniialized inside the for-loop if symbols can have different lengths !
   char symbol[ Engine3::symbolLen +1 ]={'\0'};
   
   for (long i=0; i<Engine3::arrayLen; ++i){
     subscriptToSymbol(i, symbol);
     if (this->lookup[i]){
+      ++cnt;
       outfile<<symbol<<","<<this->lookup[i]<<endl;
       cout   <<symbol<<","<<this->lookup[i]<<endl;
     }
   }
+  cout<<cnt<<" records printed\n";
 }

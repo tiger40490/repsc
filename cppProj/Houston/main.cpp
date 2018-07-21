@@ -7,6 +7,7 @@ v0.8
 #include <sstream>
 #include <iterator>
 #include <vector>
+#include <unistd.h> //usleep()
 //#include <pthread.h>
 
 using namespace std;
@@ -60,6 +61,8 @@ int main(){
       ifstream infile(outfileName);      
 	    engine->simpleTest(infile);
       infile.close();
+    }else if (words[0] == "sleep" && words.size() == 2){
+      usleep(stoi(words[1]));
     }else{
       cout<<"command unsupported at the moment\n";
     }
