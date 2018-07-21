@@ -24,7 +24,7 @@ struct PerSymbol{
     maxPx(_p){}
     
   consumeTick(TStamp _ts, Quantity _q, Price _p){
-    assert (_ts > lastUpd);
+    assert (_ts >= lastUpd);
     auto gap = _ts - lastUpd;
     if (gap > maxGap) maxGap = gap;
     lastUpd = _ts;

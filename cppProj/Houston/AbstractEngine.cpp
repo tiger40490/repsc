@@ -20,7 +20,7 @@ char AbstractEngine::tickfile(std::string const & filename ) {
       replace(line.begin(), line.end(), ',', ' ');
       auto is = istringstream(line);
       is >> tstamp >> symbol >> qty >> px;
-      cout<<"new tick: "<<tstamp<<" symbol = "<<symbol<<", qty = "<<qty<<", px = "<<px<<endl;
+      //cout<<"new tick: "<<tstamp<<" symbol = "<<symbol<<", qty = "<<qty<<", px = "<<px<<endl;
       if ( (is.rdstate() & std::ifstream::failbit ) != 0 ){
         cerr << "Error parsing a csv line\n";
         return 'f'; //failed while parsing csv

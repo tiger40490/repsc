@@ -1,7 +1,9 @@
 use Engine3
 
-# load a tick file
-tickfile inputTiny.csv
+# load a tiny tick file
+nextTickFile inputTiny.csv
+# load a big tick file
+#nextTickFile input.csv
 
 # print per-symbol statistics
 stats

@@ -24,7 +24,7 @@ void Engine3::save1tick(std::string const & symbol, TStamp tstamp, Quantity qty,
   auto & ptr = this->lookup[subscript];
   if (ptr){
     ptr->consumeTick(tstamp, qty, px);
-    cout<<symbol<<" updated "<<ptr<<endl;
+    //cout<<symbol<<" updated "<<ptr<<endl;
   }else{
     auto ptr = new PerSymbol(tstamp, qty, px);//deleted in Engine3 dtor
     this->lookup[subscript] = ptr;

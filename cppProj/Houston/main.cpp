@@ -45,7 +45,7 @@ int main(){
       }else{
         assert(false && "USE command has typo!");
       }
-    }else if (words[0] == "tickfile" && words.size() == 2){
+    }else if (words[0] == "nextTickFile" && words.size() == 2){
 	    engine->tickfile(words[1]);
     }else if(words[0] == "stats" && words.size() == 1){
 	    engine->printAscending(outfile);
