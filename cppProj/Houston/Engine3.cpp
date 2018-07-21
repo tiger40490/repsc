@@ -41,9 +41,8 @@ void Engine3::printAscending(ofstream & outfile) const{
   for (long i=0; i<Engine3::arrayLen; ++i){
     subscriptToSymbol(i, symbol);
     if (this->lookup[i]){
-      ++cnt;
       outfile<<symbol<<","<<this->lookup[i]<<endl;
-      cout   <<symbol<<","<<this->lookup[i]<<endl;
+      cout<<++cnt<<" : "<<symbol<<","<<this->lookup[i]<<endl;
     }
   }
   cout<<cnt<<" records printed\n";

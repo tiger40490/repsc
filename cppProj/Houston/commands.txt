@@ -11,5 +11,14 @@ stats
 verify
 
 # load-test using a big tick file
-# The async functionality is experimental. 
+# The async functionality is experimental
 nextTickFileAsync input.csv
+
+# print stats as the big tick file is loading, sometimes showing partial results
+stats
+
+# sleep that many microseconds
+sleep 30
+
+# Usually shows full results:
+stats
