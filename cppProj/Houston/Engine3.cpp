@@ -11,9 +11,8 @@ static long symbolToIndex(string const & symbol){
 
 static void indexToSymbol(long index, char * buf){
   for(int i=Engine3::symbolLen-1; i>=0; --i){
-    auto tmp = index % 26;
-    buf[i] = tmp + 'a';
-    index = (index-tmp)/26;
+    buf[i] = index % 26 + 'a';
+    index = index/26;
   }
 }
 
