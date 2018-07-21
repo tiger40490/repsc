@@ -1,13 +1,13 @@
 --todo: 
+async command processing. While worker thread is processing ticks, a query thread can print stats
+
+simulate heavy load without a huge file -- nextTickFile command to specify a sleep 
 
 --numeric test--
 See AbstractEngine::simpleTest() function
 
---load test--
-a python script to send data at a certain rate on stdin??
-
 --command interface--
-The engine will listen to commands on stdin.
+The engine will listen to commands on stdin. The attached command.txt lists the commands used in my test.
 
 --Trade-offs--
 See comments above Engine3 class.

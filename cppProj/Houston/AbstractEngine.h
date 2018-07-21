@@ -45,7 +45,15 @@ private:
   Price maxPx;
 };
 
+
+
 class AbstractEngine{
+  struct ThrBundle{
+    AbstractEngine * const engine;
+    std::string const & filename;
+    ThrBundle(AbstractEngine * e, std::string const & f):
+      engine(e), filename(f){}
+  };
 public:
   AbstractEngine(){}
   virtual ~AbstractEngine(){}
@@ -56,6 +64,17 @@ public:
   virtual char tickfile(std::string const & filename );
   virtual void printAscending(std::ofstream & outfile) const = 0;
   virtual void simpleTest(std::ifstream &);
+  
+  //A function to easy pthread_create
+  static void* runAsync(void* p) {
+    if (p == nullptr){
+      std::cout<<"runAsync(nullptr)\n";
+      return nullptr;
+    }
+    ThrBundle * bundle = static_cast<ThrBundle*>(p);
+    bundle->engine->tickfile(bundle->filename);
+    return nullptr;
+  }
 };
 
 #endif

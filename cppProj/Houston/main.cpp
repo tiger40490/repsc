@@ -7,6 +7,8 @@ v0.8
 #include <sstream>
 #include <iterator>
 #include <vector>
+//#include <pthread.h>
+
 using namespace std;
 
 static char tokenizeCmd(vector<string> & words){
@@ -23,6 +25,7 @@ static string const outfileName="output.csv";
 
 int main(){
  AbstractEngine * engine = nullptr;
+ bool isAsync=false;
  while(1){
     vector<string> words;
     char status = tokenizeCmd(words) ;
@@ -46,6 +49,10 @@ int main(){
       }
     }else if (words[0] == "nextTickFile" && words.size() == 2){
 	    engine->tickfile(words[1]);
+    }else if (words[0] == "nextTickFileAsync" && words.size() == 2){    
+      isAsync = true;    
+      pthread_t thr;
+	    pthread_create(&thr, nullptr, AbstractEngine::runAsync, nullptr);
     }else if(words[0] == "stats" && words.size() == 1){
       ofstream outfile(outfileName, std::ofstream::out);
 	    engine->printAscending(outfile);
@@ -58,5 +65,5 @@ int main(){
       cout<<"command unsupported at the moment\n";
     }
  }
- delete engine;
+ if ( !isAsync ) delete engine;
 }

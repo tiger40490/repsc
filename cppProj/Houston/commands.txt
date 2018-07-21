@@ -9,5 +9,5 @@ stats
 # use hard-coded numbers to verify the stats
 verify
 
-# load test using a big tick file
-nextTickFile input.csv
+# load-test using a big tick file
+nextTickFileAsync input.csv
