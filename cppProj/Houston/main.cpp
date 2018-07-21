@@ -21,8 +21,9 @@ static char tokenizeCmd(vector<string> & words){
          istream_iterator<string>(), back_inserter(words));
 }
 
+static string const outfileName="output.csv";
+
 int main(){
- ofstream outfile("output.csv", std::ofstream::out);
  AbstractEngine * engine = nullptr;
  while(1){
     vector<string> words;
@@ -48,11 +49,16 @@ int main(){
     }else if (words[0] == "nextTickFile" && words.size() == 2){
 	    engine->tickfile(words[1]);
     }else if(words[0] == "stats" && words.size() == 1){
+      ofstream outfile(outfileName, std::ofstream::out);
 	    engine->printAscending(outfile);
+      outfile.close(); 
+    }else if(words[0] == "verify" && words.size() == 1){
+      ifstream infile(outfileName);      
+	    engine->simpleTest(infile);
+      infile.close();
     }else{
-      cout<<"unsupported at the moment\n";
+      cout<<"command unsupported at the moment\n";
     }
  }
  delete engine;
- outfile.close();
 }

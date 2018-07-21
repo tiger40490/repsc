@@ -2,8 +2,13 @@ use Engine3
 
 # load a tiny tick file
 nextTickFile inputTiny.csv
-# load a big tick file
-#nextTickFile input.csv
 
 # print per-symbol statistics
 stats
+
+# use hard-coded numbers to verify the stats
+verify
+
+# load test using a big tick file
+#nextTickFile input.csv
+

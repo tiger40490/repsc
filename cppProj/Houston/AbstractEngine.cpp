@@ -29,3 +29,14 @@ char AbstractEngine::tickfile(std::string const & filename ) {
     }
     return '0'; //0 means everything fine, other values can be used to indicate error
 }  
+void AbstractEngine::simpleTest(ifstream & infile){
+  std::string line; 
+  while (std::getline(infile, line)){
+    if (line == "ggg,1674,100,163,171"){
+      return;
+    }
+  }
+  string errMsg = "target line not found in per-symbol statistics\n"; 
+  cerr<< errMsg;
+  throw errMsg;
+}

@@ -1,6 +1,7 @@
 --todo: 
-unit test with a statBySymbol()
 
+--numeric test--
+See AbstractEngine::simpleTest() function
 
 --load test--
 a python script to send data at a certain rate on stdin??
@@ -13,5 +14,6 @@ See comments above Engine3 class.
 
 --time spent-- 
 3H 
+
 --git repo--
 I have no time to install and learn git at the moment.

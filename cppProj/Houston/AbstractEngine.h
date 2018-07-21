@@ -53,8 +53,9 @@ public:
   AbstractEngine & operator=(AbstractEngine const &) = delete;
   
   virtual void save1tick(std::string const & symbol, TStamp tstamp, Quantity qty, Price px) = 0;
-  virtual void printAscending(std::ofstream & outfile) const = 0;
   virtual char tickfile(std::string const & filename );
+  virtual void printAscending(std::ofstream & outfile) const = 0;
+  virtual void simpleTest(std::ifstream &);
 };
 
 #endif
