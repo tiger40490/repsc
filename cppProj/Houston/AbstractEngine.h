@@ -11,6 +11,7 @@ A: Extensibility -- Another engine can override the virtual functions to impleme
 #include <algorithm>
 #include <iterator>
 #include <vector>
+#include <cassert>
 typedef long long TStamp;
 typedef long long Quantity;
 typedef int Price;

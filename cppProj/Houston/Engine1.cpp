@@ -19,7 +19,7 @@ void Engine1::save1tick(std::string const & symbol, TStamp tstamp, Quantity qty,
 }
 
 void Engine1::printAscending() const{
-  for (auto const & pair: this->lookup){
-    cout<<pair.first<<","<<pair.second.get()<<endl;
+  for (auto const & entry: this->lookup){ //not an iterator
+    cout<<entry.first<<","<<entry.second.get()<<endl;
   }
 }

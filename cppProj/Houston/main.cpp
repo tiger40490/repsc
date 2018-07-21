@@ -1,4 +1,5 @@
 #include <Engine1.h>
+#include <Engine3.h>
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -18,7 +19,7 @@ static char tokenizeCmd(vector<string> & words){
 }
 
 int main(){
- Engine1 * engine = new Engine1();
+ AbstractEngine * engine = new Engine1();
  while(1){
     vector<string> words;
     char status = tokenizeCmd(words) ;
