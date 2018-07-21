@@ -35,6 +35,7 @@ int main(){
     //unsigned int ts1, ts2;
     if (words[0] == "tickfile" && words.size() == 2){
 	    engine->tickfile(words[1]);
+	    engine->printAscending();
     }
  }
 }

@@ -13,6 +13,7 @@ public:
   Engine1 & operator=(Engine1 const &) = delete;
   
   virtual void save1tick(std::string const & symbol, TStamp tstamp, Quantity qty, Price px);
+  virtual void printAscending() const;
 };
 
 #endif

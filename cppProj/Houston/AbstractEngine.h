@@ -51,6 +51,7 @@ struct AbstractEngine{
   AbstractEngine & operator=(AbstractEngine const &) = delete;
   
   virtual void save1tick(std::string const & symbol, TStamp tstamp, Quantity qty, Price px) = 0;
+  virtual void printAscending() const = 0;
   char tickfile(std::string const & filename );
 };
 
