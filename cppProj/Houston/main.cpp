@@ -51,8 +51,7 @@ int main(){
 	    engine->tickfile(words[1]);
     }else if (words[0] == "nextTickFileAsync" && words.size() == 2){    
       isAsync = true;    
-      pthread_t thr;
-	    pthread_create(&thr, nullptr, AbstractEngine::runAsync, nullptr);
+      AbstractEngine::tickfileAsync(words[1], engine);
     }else if(words[0] == "stats" && words.size() == 1){
       ofstream outfile(outfileName, std::ofstream::out);
 	    engine->printAscending(outfile);
@@ -65,5 +64,9 @@ int main(){
       cout<<"command unsupported at the moment\n";
     }
  }
- if ( !isAsync ) delete engine;
+ if (isAsync){
+   pthread_exit(nullptr); //without this, any worker thread would get killed
+ }else{
+   delete engine;
+ }
 }

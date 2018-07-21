@@ -45,15 +45,22 @@ private:
   Price maxPx;
 };
 
-
-
 class AbstractEngine{
   struct ThrBundle{
     AbstractEngine * const engine;
-    std::string const & filename;
-    ThrBundle(AbstractEngine * e, std::string const & f):
-      engine(e), filename(f){}
+    std::string const filename; //move the string content here, as the original std::string would disappear before worker thread starts
+    ThrBundle(AbstractEngine * e, std::string const & f):engine(e), filename(std::move(f)){}
   };
+  static void* startThread(void* p){ // midwife function for pthread_create
+    if (p == nullptr){
+      std::cout<<"startThread(nullptr)\n";
+      return nullptr;
+    }
+    ThrBundle * bundle = static_cast<ThrBundle*>(p);
+    bundle->engine->tickfile(bundle->filename);
+    delete bundle;
+    return nullptr;
+  }
 public:
   AbstractEngine(){}
   virtual ~AbstractEngine(){}
@@ -65,16 +72,11 @@ public:
   virtual void printAscending(std::ofstream & outfile) const = 0;
   virtual void simpleTest(std::ifstream &);
   
-  //A function to easy pthread_create
-  static void* runAsync(void* p) {
-    if (p == nullptr){
-      std::cout<<"runAsync(nullptr)\n";
-      return nullptr;
-    }
-    ThrBundle * bundle = static_cast<ThrBundle*>(p);
-    bundle->engine->tickfile(bundle->filename);
-    return nullptr;
+  static char tickfileAsync(std::string const & filename, AbstractEngine * engine){
+      ThrBundle * bundle = new ThrBundle(engine, filename);
+      pthread_t * thr = new pthread_t;
+	    pthread_create(thr, nullptr, AbstractEngine::startThread, bundle);
+      return '0';
   }
 };
-
 #endif
