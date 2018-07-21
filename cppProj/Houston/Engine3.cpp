@@ -1,4 +1,4 @@
-/*
+/* 
 v0.9
 */
 #include <Engine3.h>
@@ -13,7 +13,7 @@ static long symbolToSubscript(string const & symbol){
 static void subscriptToSymbol(long subscript, char * buf){
   assert (subscript < Engine3::arrayLen);
   for(int i=Engine3::symbolLen-1; i>=0; --i){
-    assert (buf[i] == '\0' && "should be initialized to nulls");
+    //assert (buf[i] == '\0' && "should be initialized to nulls");
     buf[i] = subscript % 26 + 'a';
     subscript /= 26;
   }
@@ -32,12 +32,16 @@ void Engine3::save1tick(std::string const & symbol, TStamp tstamp, Quantity qty,
   }
 }
 
-void Engine3::printAscending() const{
+void Engine3::printAscending(ofstream & outfile) const{
   cout<<"--- Engine3 printAscending ---\n";
+  
+  //Warning: symbol variable must be iniialized inside the for-loop if symbols can have different lengths !
+  char symbol[ Engine3::symbolLen +1 ]={'\0'};
+  
   for (long i=0; i<Engine3::arrayLen; ++i){
-    char symbol[Engine3::symbolLen +1 ]={'\0'};
     subscriptToSymbol(i, symbol);
     if (this->lookup[i])
-      cout<<symbol<<","<<this->lookup[i]<<endl;
+      outfile<<symbol<<","<<this->lookup[i]<<endl;
+      //cout   <<symbol<<","<<this->lookup[i]<<endl;
   }
 }

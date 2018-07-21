@@ -39,7 +39,7 @@ public:
   Engine3 & operator=(Engine3 const &) = delete;
   
   virtual void save1tick(std::string const & symbol, TStamp tstamp, Quantity qty, Price px);
-  virtual void printAscending() const;
+  virtual void printAscending(std::ofstream & outfile) const;
 private:
   PerSymbol * lookup[arrayLen]={nullptr};  
 };

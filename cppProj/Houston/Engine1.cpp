@@ -1,4 +1,5 @@
-/*todo: try unique_ptr
+/*
+v1
 */
 
 #include <Engine1.h>
@@ -9,8 +10,9 @@ void Engine1::save1tick(std::string const & symbol, TStamp tstamp, Quantity qty,
   if (found == this->lookup.end()){
     //make_unique is possibly better but my compiler doesn't support make_unique
     auto rec = make_shared<PerSymbol>(tstamp, qty, px);
-    cout<<symbol<<" created "<<rec.get()<<endl;
+    
     this->lookup.insert(make_pair(symbol, rec));
+    cout<<symbol<<" created + "<<rec.get()<<endl;
   }else{
     auto rec = found->second;
     rec->consumeTick(tstamp, qty, px);
@@ -18,8 +20,11 @@ void Engine1::save1tick(std::string const & symbol, TStamp tstamp, Quantity qty,
   }
 }
 
-void Engine1::printAscending() const{
+void Engine1::printAscending(ofstream & outfile) const{
+  cout<<"--- Engine1 printAscending ---\n";
+
   for (auto const & entry: this->lookup){ //not an iterator
-    cout<<entry.first<<","<<entry.second.get()<<endl;
+      outfile<<entry.first<<","<<entry.second.get()<<endl;
+      cout   <<entry.first<<","<<entry.second.get()<<endl;
   }
 }

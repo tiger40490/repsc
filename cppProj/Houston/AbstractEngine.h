@@ -1,4 +1,7 @@
-/* 
+/* todo: clean up #include
+todo: type alias
+todo: move PerSymbol out?
+
 Q: Why do we need this class? 
 A: Extensibility -- Another engine can override the virtual functions to implement a different algorithm.
 */
@@ -8,6 +11,7 @@ A: Extensibility -- Another engine can override the virtual functions to impleme
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <fstream>
 #include <algorithm>
 #include <iterator>
 #include <vector>
@@ -52,7 +56,7 @@ struct AbstractEngine{
   AbstractEngine & operator=(AbstractEngine const &) = delete;
   
   virtual void save1tick(std::string const & symbol, TStamp tstamp, Quantity qty, Price px) = 0;
-  virtual void printAscending() const = 0;
+  virtual void printAscending(std::ofstream & outfile) const = 0;
   char tickfile(std::string const & filename );
 };
 

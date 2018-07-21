@@ -19,7 +19,8 @@ static char tokenizeCmd(vector<string> & words){
 }
 
 int main(){
- AbstractEngine * engine = new Engine3();
+ ofstream outfile("output.csv", std::ofstream::out);
+ AbstractEngine * engine = new Engine1();
  while(1){
     vector<string> words;
     char status = tokenizeCmd(words) ;
@@ -36,8 +37,9 @@ int main(){
     //unsigned int ts1, ts2;
     if (words[0] == "tickfile" && words.size() == 2){
 	    engine->tickfile(words[1]);
-	    engine->printAscending();
+	    engine->printAscending(outfile);
     }
  }
  delete engine;
+ outfile.close();
 }
