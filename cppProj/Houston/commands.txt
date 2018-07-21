@@ -1,3 +1,5 @@
+use Engine3
+
 # load a tick file
 tickfile inputTiny.csv
 

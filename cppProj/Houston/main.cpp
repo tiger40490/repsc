@@ -23,7 +23,7 @@ static char tokenizeCmd(vector<string> & words){
 
 int main(){
  ofstream outfile("output.csv", std::ofstream::out);
- AbstractEngine * engine = new Engine3();
+ AbstractEngine * engine = nullptr;
  while(1){
     vector<string> words;
     char status = tokenizeCmd(words) ;
@@ -37,10 +37,20 @@ int main(){
     for(int i=0; i<wordCount; ++i) cout<<words[i]<<"   ";
     cout<<endl;
     
-    if (words[0] == "tickfile" && words.size() == 2){
+    if (words[0] == "use" && words.size() == 2){
+      if       (words[1] == "Engine1"){
+        engine = new Engine1();
+      }else if (words[1] == "Engine3"){
+        engine = new Engine3();
+      }else{
+        assert(1==0 && "USE command has typo!");
+      }
+    }else if (words[0] == "tickfile" && words.size() == 2){
 	    engine->tickfile(words[1]);
     }else if(words[0] == "stats" && words.size() == 1){
 	    engine->printAscending(outfile);
+    }else{
+      cout<<"unsupported at the moment\n";
     }
  }
  delete engine;

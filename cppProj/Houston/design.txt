@@ -1,11 +1,13 @@
+--todo: 
+load test? use original input.csv?
+unit test with a statBySymbol()
+
+
+--load test--
+a python script to send data at a certain rate on stdin??
 
 --command interface--
 The engine will listen to commands on stdin.
-
-One command will be "tickfie abc.txt" to support simple data loading, in incremental mode.
-
---load test--
-a python script to send data at a certain rate on stdin
 
 --Trade-offs--
 See comments above Engine3 class.
