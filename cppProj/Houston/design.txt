@@ -1,3 +1,5 @@
+todo: Engine2 to use 3D array
+
 --command interface--
 The engine will listen to commands on stdin.
 

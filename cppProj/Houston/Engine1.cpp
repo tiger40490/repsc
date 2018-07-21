@@ -1,12 +1,20 @@
-/*todo: handle embeded space
+/*todo: try unique_ptr
 */
+
 #include <Engine1.h>
-#include <algorithm>
-#include <string>
-#include <locale>
 using namespace std;
 
-
-void Engine1::save1tick(std::string symbol, TStamp tstamp, Quantity qty, Price px){
+void Engine1::save1tick(std::string const & symbol, TStamp tstamp, Quantity qty, Price px){
+  auto found = this->lookup.find(symbol);
+  if (found == this->lookup.end()){
+    //make_unique is possibly better but my compiler doesn't support make_unique
+    auto rec = make_shared<PerSymbol>(tstamp, qty, px);
+    cout<<symbol<<" created "<<rec.get()<<endl;
+    this->lookup.insert(make_pair(symbol, rec));
+  }else{
+    auto rec = found->second;
+    rec->consumeTick(tstamp, qty, px);
+    cout<<symbol<<" updated "<<rec.get()<<endl;
+  }
 }
 

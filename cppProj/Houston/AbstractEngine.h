@@ -50,7 +50,7 @@ struct AbstractEngine{
   AbstractEngine(AbstractEngine const &) = delete;
   AbstractEngine & operator=(AbstractEngine const &) = delete;
   
-  virtual void save1tick(std::string symbol, TStamp tstamp, Quantity qty, Price px) = 0;
+  virtual void save1tick(std::string const & symbol, TStamp tstamp, Quantity qty, Price px) = 0;
   char tickfile(std::string const & filename );
 };
 
