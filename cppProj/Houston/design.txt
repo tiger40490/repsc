@@ -8,6 +8,7 @@ One command will be "tickfie abc.txt" to support simple data loading, in increme
 a python script to send data at a certain rate on stdin
 
 --Trade-offs--
+See comments above Engine3 class.
 
 --time spent-- 
 3H 

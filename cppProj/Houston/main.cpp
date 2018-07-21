@@ -39,4 +39,5 @@ int main(){
 	    engine->printAscending();
     }
  }
+ delete engine;
 }
