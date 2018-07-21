@@ -1,1 +1,2 @@
 tickfile inputTiny.csv
+stats

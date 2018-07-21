@@ -1,4 +1,5 @@
-/*todo: command to print
+/*
+v0.8
 */
 #include <Engine1.h>
 #include <Engine3.h>
@@ -22,7 +23,7 @@ static char tokenizeCmd(vector<string> & words){
 
 int main(){
  ofstream outfile("output.csv", std::ofstream::out);
- AbstractEngine * engine = new Engine3();
+ AbstractEngine * engine = new Engine1();
  while(1){
     vector<string> words;
     char status = tokenizeCmd(words) ;
@@ -30,15 +31,14 @@ int main(){
     if (status == 'e') break;
 
     size_t wordCount = words.size();
-    if (wordCount < 2 ) continue;
 
     cout<<"[ STDIN ] received a command ------------> ";
     for(int i=0; i<wordCount; ++i) cout<<words[i]<<"   ";
     cout<<endl;
-
-    //unsigned int ts1, ts2;
+    
     if (words[0] == "tickfile" && words.size() == 2){
 	    engine->tickfile(words[1]);
+    }else if(words[0] == "stats" && words.size() == 1){
 	    engine->printAscending(outfile);
     }
  }
