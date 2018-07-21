@@ -1,3 +1,5 @@
+/*todo: command to print
+*/
 #include <Engine1.h>
 #include <Engine3.h>
 #include <iostream>
@@ -20,7 +22,7 @@ static char tokenizeCmd(vector<string> & words){
 
 int main(){
  ofstream outfile("output.csv", std::ofstream::out);
- AbstractEngine * engine = new Engine1();
+ AbstractEngine * engine = new Engine3();
  while(1){
     vector<string> words;
     char status = tokenizeCmd(words) ;

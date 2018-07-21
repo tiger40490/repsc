@@ -1,7 +1,11 @@
-/*todo: handle embeded space
+/*
+Assumption: no embedded space in csv
+
+v0.92
 */
 
 #include <AbstractEngine.h>
+#include <sstream>
 using namespace std;
   
 char AbstractEngine::tickfile(std::string const & filename ) {
@@ -14,11 +18,14 @@ char AbstractEngine::tickfile(std::string const & filename ) {
     while (getline(infile, line)) {
       if (line[0] == '#') continue; //skip comment/header in input file
       replace(line.begin(), line.end(), ',', ' ');
-      istringstream(line)>> tstamp >> symbol >> qty >> px;
+      auto is = istringstream(line);
+      is >> tstamp >> symbol >> qty >> px;
       cout<<"new tick: "<<tstamp<<" symbol = "<<symbol<<", qty = "<<qty<<", px = "<<px<<endl;
-      //create or update record 
+      if ( (is.rdstate() & std::ifstream::failbit ) != 0 ){
+        cerr << "Error parsing a csv line\n";
+        return 'f'; //failed while parsing csv
+      }
       this->save1tick(symbol, tstamp, qty, px);
     }
-    
-    return '0'; //0 means success, other values can be used to indicate error
+    return '0'; //0 means everything fine, other values can be used to indicate error
 }  

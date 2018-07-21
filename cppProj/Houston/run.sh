@@ -4,5 +4,7 @@ g++ -I. -g -std=c++0x -c AbstractEngine.cpp
 g++ -I. -g -std=c++0x -c Engine1.cpp
 g++ -I. -g -std=c++0x -c Engine3.cpp
 g++ -I. -g -std=c++0x AbstractEngine.o Engine1.o Engine3.o main.cpp
+set +e
 printf "\n----- build done, now running -----\n" 
+rm -v output.csv
 cat commands.txt | ./a.exe

@@ -1,34 +1,30 @@
-/* todo: clean up #include
-todo: type alias
-todo: move PerSymbol out?
-
+/* 
 Q: Why do we need this class? 
 A: Extensibility -- Another engine can override the virtual functions to implement a different algorithm.
+
+v0.90
 */
 #ifndef AE_H
 #define AE_H 1
 
 #include <iostream>
-#include <string>
-#include <sstream>
 #include <fstream>
 #include <algorithm>
-#include <iterator>
-#include <vector>
 #include <cassert>
-typedef long long TStamp;
-typedef long long Quantity;
-typedef int Price;
+using TStamp = long long;
+using Quantity = long long;
+using Price = int;
 
 struct PerSymbol{
   PerSymbol(TStamp _ts, Quantity _q, Price _p):
     maxGap(0), 
     lastUpd(_ts), 
-    cum$vol(_q*_p),
+    cum$vol(_q*_p), //dollar amount traded
     cumVol(_q),
     maxPx(_p){}
     
   consumeTick(TStamp _ts, Quantity _q, Price _p){
+    assert (_ts > lastUpd);
     auto gap = _ts - lastUpd;
     if (gap > maxGap) maxGap = gap;
     lastUpd = _ts;
@@ -49,7 +45,8 @@ private:
   Price maxPx;
 };
 
-struct AbstractEngine{
+class AbstractEngine{
+public:
   AbstractEngine(){}
   virtual ~AbstractEngine(){}
   AbstractEngine(AbstractEngine const &) = delete;
@@ -57,7 +54,7 @@ struct AbstractEngine{
   
   virtual void save1tick(std::string const & symbol, TStamp tstamp, Quantity qty, Price px) = 0;
   virtual void printAscending(std::ofstream & outfile) const = 0;
-  char tickfile(std::string const & filename );
+  virtual char tickfile(std::string const & filename );
 };
 
 #endif
