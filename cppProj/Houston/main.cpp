@@ -4,9 +4,7 @@ v0.8
 #include <Engine1.h>
 #include <Engine3.h>
 #include <iostream>
-#include <string>
 #include <sstream>
-#include <algorithm>
 #include <iterator>
 #include <vector>
 using namespace std;

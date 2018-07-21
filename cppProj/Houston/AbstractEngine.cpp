@@ -1,7 +1,7 @@
 /*
 Assumption: no embedded space in csv
 
-v0.92
+v0.93
 */
 
 #include <AbstractEngine.h>
@@ -9,13 +9,13 @@ v0.92
 using namespace std;
   
 char AbstractEngine::tickfile(std::string const & filename ) {
-    cout<<"Engine1 tickfile() "<<filename<<endl;
     ifstream infile(filename.c_str());
     string line, symbol;
     TStamp tstamp;
     Quantity qty;
     Price px;
-    while (getline(infile, line)) {
+    size_t cnt=0;
+    for (;getline(infile, line); ++cnt) {
       if (line[0] == '#') continue; //skip comment/header in input file
       replace(line.begin(), line.end(), ',', ' ');
       auto is = istringstream(line);
@@ -27,12 +27,14 @@ char AbstractEngine::tickfile(std::string const & filename ) {
       }
       this->save1tick(symbol, tstamp, qty, px);
     }
+    cout<<cnt<<" <--- ticks loaded from "<<filename<<endl;
     return '0'; //0 means everything fine, other values can be used to indicate error
 }  
 void AbstractEngine::simpleTest(ifstream & infile){
   std::string line; 
   while (std::getline(infile, line)){
     if (line == "ggg,1674,100,163,171"){
+      cout<<"one symbol verified -- max gap, weighted average etc\n";
       return;
     }
   }

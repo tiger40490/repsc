@@ -10,5 +10,4 @@ stats
 verify
 
 # load test using a big tick file
-#nextTickFile input.csv
-
+nextTickFile input.csv
