@@ -33,7 +33,7 @@ void Engine3::save1tick(std::string const & symbol, TStamp tstamp, Quantity qty,
 }
 
 void Engine3::printAscending(ofstream & outfile) const{
-  cout<<"--- Engine3 printAscending ---\n";
+  cout<<"--- Engine-3 printAscending ---\n";
   
   //Warning: symbol variable must be iniialized inside the for-loop if symbols can have different lengths !
   char symbol[ Engine3::symbolLen +1 ]={'\0'};

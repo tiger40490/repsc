@@ -1,5 +1,5 @@
 /*todo: uniq ptr
-v0.8
+v0.9
 */
 #ifndef E1_H
 #define E1_H 1

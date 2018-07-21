@@ -1,5 +1,5 @@
 /*
-v1
+v0.92
 */
 
 #include <Engine1.h>
@@ -21,8 +21,7 @@ void Engine1::save1tick(std::string const & symbol, TStamp tstamp, Quantity qty,
 }
 
 void Engine1::printAscending(ofstream & outfile) const{
-  cout<<"--- Engine1 printAscending ---\n";
-
+  cout<<"--- Engine-1 printAscending ---\n";
   for (auto const & entry: this->lookup){ //not an iterator
       outfile<<entry.first<<","<<entry.second.get()<<endl;
       cout   <<entry.first<<","<<entry.second.get()<<endl;

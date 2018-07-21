@@ -1,5 +1,5 @@
 /* 
-v0.8
+v0.9
 */
 #ifndef E3_H
 #define E3_H 1
