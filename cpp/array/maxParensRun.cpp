@@ -51,7 +51,8 @@ Score solutionS(std::string const & str){
 }
 int main(){
   assert( 4 == solutionS(")()())") );
-  cout<<"all tests passed:(\n";
+  assert( 16 == solutionS(")(())(()()(())())") );
+  assert( 16 == solutionS(")(())(()())(())()))") );
 }/*Req: https://bintanvictor.wordpress.com/2018/07/22/longest-parentheses-run/
 Given a string containing nothing but the characters '(' and ')', find the length of the longest valid (well-formed) parentheses substring.
 */
