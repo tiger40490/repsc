@@ -1,8 +1,6 @@
 #include <cstdlib>
 #include <cstdio>
-#include <iostream>
-#include <iterator>
-#include <algorithm>
+#include <algorithm> //swap()
 #include <assert.h>
 using namespace std;
 typedef float Level;
@@ -52,6 +50,7 @@ void printAll(Level const* const L, Level const* const loPtr, Level const* const
 }
 //Rule: move the lo-side pointer only
 Level onePassAlgo(){
+  if (size <=2) return 0; //added to pass Leetcode test case
 	accu = 0;
 	Level*wallLo, *wallHi; //moving walls
 	Level*loPtr, *hiPtr; //moving pointer, moving-inward.
@@ -112,7 +111,7 @@ Level twoPassAlgo() {//less convoluted
 		printf("found new wall of %.0f^ at Pos#%d\n", *pos, pos - island);
 		wall = pos;
 	}
-	cout << "^^^ end of fwd scan ; beginning backward scan vvv\n";
+	printf("^^^ end of fwd scan ; beginning backward scan vvv\n");
 	//backward scan
 	pos = const_cast<Level*> (island) + size - 1;
 	wall = pos;
@@ -132,7 +131,7 @@ Level twoPassAlgo() {//less convoluted
 }
 int main() {
 	assert ( abs(16-twoPassAlgo()) < 0.001);
-	cout<<"-----------------------------\n";
+	printf("-----------------------------\n");
 	assert ( abs(16-onePassAlgo()) < 0.001);
 }/* Requirement -- a one-dimentional island is completely covered with columns of bricks.
  If  between Column
