@@ -22,6 +22,8 @@ Each vector, once instantiated, would reserve 26 slots. Therefore, these vectors
 The promised space-saving is due to on-demand allocation. If there's no symbol name starting with ab**, then the Level-2 vector corresponding to "ab**" is never created. Note there may exist a Level-2 vector for "aa**" and another Level-2 vector for "ac**". Between them there's a null pointer. In Engine3, that null pointer would be 26 x 26 = 676 null pointers.
 
 Engine4 is guaranteed to have constant-time read and update by index. Insertion has average constant time due to on-demand vector instantiation. 
+
+Engine4 data structure is similar to a trie. Some of the efficient trie implementations can possibly replace Engine4.
 */
 class Engine4: public AbstractEngine {  
 };
