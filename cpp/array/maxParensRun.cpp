@@ -38,11 +38,11 @@ Score solutionS(std::string const & str){
     assert(c==')');
     if (st.empty()) continue;
     Pos opener = st.top();
-    int score = i-opener+1;
+    int score = i-opener+1; //use int to check sign
     st.pop();
     assert(score >= 2);        
-    if (Score tmp=scores[opener-1])
-      score += tmp;
+    if (Score predecessorScore = scores[opener-1])
+      score += predecessorScore;
     scores[i] = score;
     if ( score > ret) ret = score;
   }
