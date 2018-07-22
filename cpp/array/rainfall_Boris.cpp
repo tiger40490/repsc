@@ -51,7 +51,8 @@ void printAll(Level const* const L, Level const* const loPtr, Level const* const
 	printf("%.0f=Accu\n", accu);
 }
 //Rule: move the lo-side pointer only
-void onePassAlgo(){
+Level onePassAlgo(){
+	accu = 0;
 	Level*wallLo, *wallHi; //moving walls
 	Level*loPtr, *hiPtr; //moving pointer, moving-inward.
 	// loPtr is the moving pointer on the side of the lower wall
@@ -89,8 +90,10 @@ void onePassAlgo(){
 		else
 			--loPtr; //lo side is on the right, move loptr left
 	}
+  return accu;  
 }
-void twoPassAlgo() {//less convoluted
+Level twoPassAlgo() {//less convoluted
+	accu = 0;
 	Level const* const peak = max_element_last(island, island + size);
 	printf("highest peak (last if multiple) is %.0f, at Pos %d\n", *peak, peak
 			- island);
@@ -125,12 +128,12 @@ void twoPassAlgo() {//less convoluted
 		wall = pos;
 	}
 	printf("T=%.0f\n", accu);
+  return accu;
 }
 int main() {
-	twoPassAlgo();
-	accu = 0;
+	assert ( abs(16-twoPassAlgo()) < 0.001);
 	cout<<"-----------------------------\n";
-	onePassAlgo();
+	assert ( abs(16-onePassAlgo()) < 0.001);
 }/* Requirement -- a one-dimentional island is completely covered with columns of bricks.
  If  between Column
  A(height 9) and Column B(10) all columns are lower, then we get a basin to
