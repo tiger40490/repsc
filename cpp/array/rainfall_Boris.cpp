@@ -1,17 +1,4 @@
-/* Requirement -- a one-dimentional island is completely covered with columns of bricks.
- If  between Column
- A(height 9) and Column B(10) all columns are lower, then we get a basin to
- collect rainfall. Watermark height (absolute) will be 9.  We can easily calculate the
- amount of water. If I give you all the column heights, give me total rainfall collected.
- Code showcasing
- - stl algo over raw array
- - array/pointer manipulation
- - array initialization
- - array size detection
- - std::max_element modified
- - std::swap
- */
- #include <cstdlib>
+#include <cstdlib>
 #include <cstdio>
 #include <iostream>
 #include <iterator>
@@ -138,9 +125,21 @@ void twoPassAlgo() {//less convoluted
 	}
 	printf("T=%.0f\n", accu);
 }
-int main(int argc, char *argv[]) {
+int main() {
 	twoPassAlgo();
 	accu = 0;
 	cout<<"-----------------------------\n";
 	onePassAlgo();
-}
+}/* Requirement -- a one-dimentional island is completely covered with columns of bricks.
+ If  between Column
+ A(height 9) and Column B(10) all columns are lower, then we get a basin to
+ collect rainfall. Watermark height (absolute) will be 9.  We can easily calculate the
+ amount of water. If I give you all the column heights, give me total rainfall collected.
+ Code showcasing
+ - stl algo over raw array
+ - array/pointer manipulation
+ - array initialization
+ - array size detection
+ - std::max_element modified
+ - std::swap
+ */
