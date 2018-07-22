@@ -25,9 +25,10 @@ using Pos = int;
 using Score = size_t;
 
 Score solutionS(std::string const & str){
+  size_t sz = str.size();
+  if (sz <=1) return 0;  
   Score ret=0;
   stack<Pos> st; 
-  size_t sz = str.size();
   Score scores[sz]={0};
   for (Pos i=0; i< sz; ++i){
     char const c = str[i];
@@ -50,6 +51,8 @@ Score solutionS(std::string const & str){
   return ret;
 }
 int main(){
+  assert( 0 == solutionS("") );
+  assert( 0 == solutionS(")") );
   assert( 4 == solutionS(")()())") );
   assert( 16 == solutionS(")(())(()()(())())") );
   assert( 16 == solutionS(")(())(()())(())()))") );
