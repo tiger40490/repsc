@@ -8,9 +8,9 @@ v0.9
 
 /* This engine is based on a sorted array.
 
-Array is generally faster than hash table due to 
+Array is generally faster than red-black tree and hash table due to 
 1) cache efficiency
-2) smaller footprint
+2) possibly smaller footprint
 3) guaranteed constant-time access, not subject to hashcode distribution
 
 My array is inherently sorted by symbol.
@@ -19,7 +19,7 @@ Assuming symbol length is up to 13-characters (It is 3 in the current requiremen
 
 Implementation-wise, a flattened 1D array is chosen. Therefore, a 64-bit int can qualify as an array index to address all the array elements, because 2^64 is greater than 26^13.
 
-(Tradeoff) However, my array is sparse, leading to more waste of memory compared to hash table. The unused array elements are filled with null pointers, probably 8 bytes each in a 64-bit machine.
+(Tradeoff) However, my array is sparse, leading to more waste of memory compared to hash table. The unused array elements are filled with null pointers, probably 8 bytes each in a 64-bit machine. To deal with sparse array, I outlined an Engine4. Pleae read the documentation therein.
 
 (Tradeoff) Storing unique_ptr instead of raw pointer would take up more than 8 bytes each, but would automate memory deallocation.
 */

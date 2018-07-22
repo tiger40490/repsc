@@ -17,8 +17,8 @@ nextTickFileAsync input.csv
 # print stats as the big tick file is loading, sometimes showing partial results
 stats
 
-# sleep that many microseconds
-sleep 30
+# sleep that many microseconds to let the async job complete
+sleep 100
 
 # Usually shows full results:
 stats

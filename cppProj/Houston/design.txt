@@ -1,19 +1,32 @@
---todo: 
-async command processing. While worker thread is processing ticks, a query thread can print stats
+--todo-- 
+none
 
-simulate heavy load without a huge file -- nextTickFile command to specify a sleep 
+--algorithm and data structure--
+Engine1 uses a red-black tree to hold stats per symbol.
+Engine3 uses a 3-D array to hold the same. If symbols are four-characters then 4-D. Engine3 can support up to 13-D.
+
+For each symbol, we keep only 5 statistics, as defined in PerSymbol struct. Therefore, memory footprint is approximately the number of symbols times the 5 fields. This estimate applies to Engine1. Engine3 uses possibly more memory but is faster than balanced binary search tree or hashtable. 
+
+Engine4 is not implemented but addresses the limitations of Engine3. Please find the detailed documentations in the header files.
 
 --numeric test--
-See AbstractEngine::simpleTest() function
+See AbstractEngine::simpleTest() function. It uses one symbol and verifies the weighted average calc and other calculations.
 
 --command interface--
 The engine will listen to commands on stdin. The attached command.txt lists the commands used in my test.
 
+--Asynchronous data loading --
+startThread() is an experimental feature. If the input file is large and takes a while to load, then it can be run on a worker thread. The main thread can process other commands such as print stats.
+
 --Trade-offs--
-See comments above Engine3 class.
+See comments on top of Engine3 class.
 
 --time spent-- 
-3H 
+2H for the Engine1 + Engine3
+
+The automated testing and documentation took additional one hour.
+
+The asynchronous functionality took additional one hour.
 
 --git repo--
 I have no time to install and learn git at the moment.
