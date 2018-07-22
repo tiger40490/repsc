@@ -5,11 +5,12 @@
 #include <algorithm>
 #include <assert.h>
 using namespace std;
-//float const island[] = { 50, 50, 54, 54, 55, 55, 59, 59, 56, 56, 52, 50 }; //pyramid!
-float const island[] = { 54, 50, 54, 54, 52, 55, 51, 59, 50, 56, 52, 50 };
+typedef float Level;
+//Level const island[] = { 50, 50, 54, 54, 55, 55, 59, 59, 56, 56, 52, 50 }; //pyramid!
+Level const island[] = { 54, 50, 54, 54, 52, 55, 51, 59, 50, 56, 52, 50 };
 ///////////////     Pos # 0   1   2   3   4   5   6   7   8   9  10  11
-int const size = sizeof(island) / sizeof(int);
-float accu = 0;
+int const size = sizeof(island) / sizeof(Level);
+Level accu = 0;
 //adapted from STL, only needed in the twoPassAlgo
 template<class ForwardIterator>
 ForwardIterator max_element_last(ForwardIterator scanner, ForwardIterator const end) {
@@ -22,13 +23,13 @@ ForwardIterator max_element_last(ForwardIterator scanner, ForwardIterator const 
 	return ret;
 }
 //print height and address of a column
-void print1(float const* const pos, char const * const label) {
+void print1(Level const* const pos, char const * const label) {
 	//int const height = *pos;
 	printf("%s=%.0f/%d ", label, *pos, pos - island);
 }
 //print the current 2 walls and 2 moving pointers. All 4 "markers" keep moving inward
-void printAll(float const* const L, float const* const loPtr, float const* const hiPtr,
-		float const* const H) {
+void printAll(Level const* const L, Level const* const loPtr, Level const* const hiPtr,
+		Level const* const H) {
 	static bool is1stCall = true;
 	if (is1stCall){
 		is1stCall = false;
@@ -51,13 +52,13 @@ void printAll(float const* const L, float const* const loPtr, float const* const
 }
 //Rule: move the lo-side pointer only
 void onePassAlgo(){
-	float*wallLo, *wallHi; //moving walls
-	float*loPtr, *hiPtr; //moving pointer, moving-inward.
+	Level*wallLo, *wallHi; //moving walls
+	Level*loPtr, *hiPtr; //moving pointer, moving-inward.
 	// loPtr is the moving pointer on the side of the lower wall
 
 	//1st we ASSUME the first left side wall will be lower than the first right side wall
-	wallLo = loPtr = const_cast<float*> (island);
-	wallHi = hiPtr = const_cast<float*> (island) + size - 1;
+	wallLo = loPtr = const_cast<Level*> (island);
+	wallHi = hiPtr = const_cast<Level*> (island) + size - 1;
 	//2nd, we validate that assumption
 	if (*wallLo > *wallHi) {
 		std::swap(wallLo, wallHi);
@@ -90,13 +91,13 @@ void onePassAlgo(){
 	}
 }
 void twoPassAlgo() {//less convoluted
-	float const* const peak = max_element_last(island, island + size);
+	Level const* const peak = max_element_last(island, island + size);
 	printf("highest peak (last if multiple) is %.0f, at Pos %d\n", *peak, peak
 			- island);
 
 	//forward scan towards peak
-	float* pos = const_cast<float*> (island); //left edge of island
-	float* wall = pos;
+	Level* pos = const_cast<Level*> (island); //left edge of island
+	Level* wall = pos;
 	for (++pos; pos < peak; ++pos) {
 		if (*wall > *pos) {
 			accu += *wall - *pos; // accumulate water
@@ -110,7 +111,7 @@ void twoPassAlgo() {//less convoluted
 	}
 	cout << "^^^ end of fwd scan ; beginning backward scan vvv\n";
 	//backward scan
-	pos = const_cast<float*> (island) + size - 1;
+	pos = const_cast<Level*> (island) + size - 1;
 	wall = pos;
 	for (--pos; pos > peak; --pos) {
 		if (*wall > *pos) {
