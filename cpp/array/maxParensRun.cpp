@@ -1,21 +1,7 @@
-/*
-for each index
-  if opener
-    push the index 
-    continue;
-  If a closer:
-    if stack empty: 
-      leave the default score of 0 in the array
-      continue
-    pop 
-    compute the pair score (min 2)
-    loop:
-      check if there is a score at the position right before the opener, then add that score.
-      if zero score there, then exit loop
+/* showcase type alias
+   showcase array initialization with zeros
 
-    Now we have a score for the closer. save it in the closing_scores array
-    update max_so_far if needed
-end
+100% pass at Leetcode
 */
 #include <iostream>
 #include <stack>
@@ -25,11 +11,11 @@ using Pos = int;
 using Score = size_t;
 
 Score solutionS(std::string const & str){
-  size_t sz = str.size();
-  if (sz <=1) return 0;  
+  size_t const sz = str.size();
+  if (sz<=1) return 0;  
   Score ret=0;
   stack<Pos> st; 
-  Score scores[sz]={0};
+  Score closerScore[sz]={0};
   for (Pos i=0; i< sz; ++i){
     char const c = str[i];
     if (c=='('){
@@ -38,15 +24,16 @@ Score solutionS(std::string const & str){
     }
     assert(c==')');
     if (st.empty()) continue;
-    Pos opener = st.top();
-    int score = i-opener+1; //use int to check sign
+    
+    Pos const opener = st.top();
     st.pop();
+    int score = i-opener+1; //use int to check sign
     assert(score >= 2);        
     
-    if (opener>0) 
-      if (Score predecessorScore = scores[opener-1])
+    if (opener != 0) 
+      if (Score const predecessorScore = closerScore[opener-1])
         score += predecessorScore;
-    scores[i] = score;
+    closerScore[i] = score;
     if ( score > ret) ret = score;
   }
   cout<<"returning "<<ret<<endl;
