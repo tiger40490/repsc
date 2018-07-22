@@ -42,8 +42,10 @@ Score solutionS(std::string const & str){
     int score = i-opener+1; //use int to check sign
     st.pop();
     assert(score >= 2);        
-    if (Score predecessorScore = scores[opener-1])
-      score += predecessorScore;
+    
+    if (opener>0) 
+      if (Score predecessorScore = scores[opener-1])
+        score += predecessorScore;
     scores[i] = score;
     if ( score > ret) ret = score;
   }
@@ -53,6 +55,7 @@ Score solutionS(std::string const & str){
 int main(){
   assert( 0 == solutionS("") );
   assert( 0 == solutionS(")") );
+  assert( 2 == solutionS("()") );
   assert( 4 == solutionS(")()())") );
   assert( 16 == solutionS(")(())(()()(())())") );
   assert( 16 == solutionS(")(())(()())(())()))") );
