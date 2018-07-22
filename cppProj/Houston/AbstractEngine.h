@@ -22,7 +22,10 @@ struct PerSymbol{
     cum$vol(_q*_p), //dollar amount traded
     cumVol(_q),
     maxPx(_p){}
-    
+   
+  /*Multithreaded execution is unsupported. The asymchronous 
+  functionality should not use this function without some mutex.
+  */  
   consumeTick(TStamp _ts, Quantity _q, Price _p){
     assert (_ts >= lastUpd);
     auto gap = _ts - lastUpd;

@@ -15,8 +15,17 @@ See AbstractEngine::simpleTest() function. It uses one symbol and verifies the w
 --command interface--
 The engine will listen to commands on stdin. The attached command.txt lists the commands used in my test.
 
+Administration command interface is extremely useful in real time trading and market data engines.
+
+--additional data fields in the future--
+It is very likely to get more than 5 data fields in a future csv. The current designs can support average, moving average, sum, max/min. I think variance, volatility, median will be hard to support in the current design.
+
 --Asynchronous data loading --
 startThread() is an experimental feature. If the input file is large and takes a while to load, then it can be run on a worker thread. The main thread can process other commands such as print stats.
+
+However, a key concurrency flaw in the current implementation of VWAP is inconsistency between cumVol vs cum$vol. The query thread may see a new cumVol but an old cum$vol number, and compute an invalid VWAP number. 
+
+One solution is mutex, a real drag on the tickfile() function. An optimistic locking might be better.
 
 --Trade-offs--
 See comments on top of Engine3 class.
