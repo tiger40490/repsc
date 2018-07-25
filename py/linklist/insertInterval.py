@@ -1,5 +1,7 @@
-A='A'
-B='B'
+'''
+showcase double linked list
+'''
+A='A'; B='B'
 class Node(object): # each node is a segment
     cnt=0
     def __init__(self, leftMark, prev_node=None, color=A):
@@ -26,10 +28,11 @@ _8 = Node(88, _7, B)
 _9 = Node(99, _8)
 head=_1
 
-def print3(node):
+def print3(node): #print 3+1 attributes 
+  defaultRightMark=9999 #I choose not to save rightMark into each node instance
   if node:
     a = node.next
-    rightMarkDerived = a.leftMark-1 if a else 99999
+    rightMarkDerived = a.leftMark-1 if a else defaultRightMark
     print node.prev, '<= [', str(node), rightMarkDerived, '] =>', node.next
   else:
     print '_none_'
