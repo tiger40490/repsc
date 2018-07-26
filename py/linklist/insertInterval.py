@@ -1,7 +1,7 @@
 '''
 showcase double linked list
 '''
-import sys
+import sys, bisect
 A='A'; B='B'
 class Node(object): # each node is a segment
     cnt=0
@@ -57,21 +57,29 @@ def dumpList(isStrict=False):
     assert Node.cnt == dumpCnt
 
 ### Above is a fairly reusable doubly-linked list
-
-def solD(li): # dlist-based solution
+def solD(intervals, incoming): # dlist-based solution
   global head
   Node.cnt=-1
   gap = head = Node(sys.maxint)
-  for a,b in li: # b is left mark of gap
+  nodePointers=list()
+  for a,b in intervals: # b is left mark of ensuing gap
     #print a, b
     itv = Node(a, gap)
     gap = Node(b, itv, B)
+    nodePointers.extend([itv,gap])
   head = head.next
   head.prev=None
   dumpList(True)  
-
+  # dlist constructed :)
+  li = [node.leftMark for node in nodePointers]
+  print li
+  idx = [bisect.bisect_right(li, i)-1 for i in incoming]
+  print idx
+  print3(nodePointers[idx[0]])
+  print3(nodePointers[idx[1]])
+  
 def main():
-  solD([[1,2],[3,5],[6,7],[8,10],[12,16]])
+  solD([[1,2],[3,5],[6,7],[8,10],[12,16]], [4,8])
   #dumpList()
 main()
 '''Req: https://bintanvictor.wordpress.com/2018/07/29/merge-intervals/
