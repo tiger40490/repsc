@@ -26,39 +26,43 @@ _6 = Node(66, _5, B)
 _7 = Node(77, _6)
 _8 = Node(88, _7, B)
 _9 = Node(99, _8)
-head=_1
-
-def print3(node): #print 3+1 attributes of a node
-  if node:
-    nx = node.next
-    rightMark = nx.leftMark-1 if nx else sys.maxint
-    print node.prev, '<= [', str(node), rightMark, '] =>', node.next
-  else:
-    print '_none_'
-def dumpList(isStrict=False):
-  last=0
-  dumpCnt=0
-  node = head
-  line=str()
-  while 1:
-    if node is None:
-      line += 'end'
-      break
-    print3(node)
-    line += str(node) + ' > '
-    assert node.leftMark > last; last=node.leftMark
-    nx = node.next
-    if nx: assert nx.prev == node
-    node = nx
-    dumpCnt+=1
-    assert dumpCnt < 999
-  print line
-  if isStrict:
-    assert Node.cnt == dumpCnt
+class DL_list(object):
+  def __init__(self, head):
+    assert head is not None
+    self.head=head
+    
+  @staticmethod  
+  def print3(node): #print 3+1 attributes of a node
+    if node:
+      nx = node.next
+      rightMark = nx.leftMark-1 if nx else sys.maxint
+      print node.prev, '<= [', str(node), rightMark, '] =>', node.next
+    else:
+      print '_none_'
+  def dumpList(self, isStrict=False):
+    last=0
+    dumpCnt=0
+    node = self.head
+    line=str()
+    while 1:
+      if node is None:
+        line += 'end'
+        break
+      DL_list.print3(node)
+      line += str(node) + ' > '
+      assert node.leftMark > last; last=node.leftMark
+      nx = node.next
+      if nx: assert nx.prev == node
+      node = nx
+      dumpCnt+=1
+      assert dumpCnt < 999
+    print line, '\n'
+    if isStrict:
+      assert Node.cnt == dumpCnt
 
 ### Above is a fairly reusable doubly-linked list
+
 def solD(intervals, incoming): # dlist-based solution
-  global head
   Node.cnt=-1
   gap = head = Node(sys.maxint)
   nodePointers=list()
@@ -69,21 +73,22 @@ def solD(intervals, incoming): # dlist-based solution
     nodePointers.extend([itv,gap])
   head = head.next
   head.prev=None
-  dumpList(True)  
+  dlist = DL_list(head)
+  dlist.dumpList(True)  
   # dlist constructed :)
   li = [node.leftMark for node in nodePointers]
   print li
   idx = [bisect.bisect_right(li, i)-1 for i in incoming]
   print idx
-  print3(nodePointers[idx[0]])
-  print3(nodePointers[idx[1]])
+  segment1=nodePointers[idx[0]]
+  DL_list.print3(segment1)
+  segment2=nodePointers[idx[1]]
+  DL_list.print3(segment2)
+  # now the different cases
   
 def main():
   solD([[1,2],[3,5],[6,7],[8,10],[12,16]], [4,8])
-  #dumpList()
+  #DL_list(_1).dumpList()
 main()
 '''Req: https://bintanvictor.wordpress.com/2018/07/29/merge-intervals/
-
-first let's create a dumpList() function
-
 '''
