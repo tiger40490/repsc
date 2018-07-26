@@ -78,13 +78,15 @@ def solD(intervals, incoming): # dlist-based solution
   # dlist constructed :)
   li = [node.leftMark for node in nodePointers]
   print li
+  incoming[1] -= 1
   idx = [bisect.bisect_right(li, i)-1 for i in incoming]
-  print idx
   segment1=nodePointers[idx[0]]
   DL_list.print3(segment1)
   segment2=nodePointers[idx[1]]
   DL_list.print3(segment2)
   # now the different cases
+  #if segment1.color == A:
+    
   
 def main():
   solD([[1,2],[3,5],[6,7],[8,10],[12,16]], [4,8])
