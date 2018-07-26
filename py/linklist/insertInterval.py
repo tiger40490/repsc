@@ -1,13 +1,14 @@
 '''
 showcase double linked list
 '''
+import sys
 A='A'; B='B'
 class Node(object): # each node is a segment
     cnt=0
     def __init__(self, leftMark, prev_node=None, color=A):
         assert leftMark > 0
         Node.cnt+=1
-        self.leftMark = leftMark # rightMark would be self.next.leftMark-1
+        self.leftMark = leftMark # rightMark would be self.next.leftMark-1. I choose not to save rightMark into each node instance
         assert color in 'AB'
         self.color=color
         self.prev = prev_node
@@ -28,14 +29,13 @@ _9 = Node(99, _8)
 head=_1
 
 def print3(node): #print 3+1 attributes of a node
-  defaultRightMark=9999 #I choose not to save rightMark into each node instance
   if node:
     nx = node.next
-    rightMark = nx.leftMark-1 if nx else defaultRightMark
+    rightMark = nx.leftMark-1 if nx else sys.maxint
     print node.prev, '<= [', str(node), rightMark, '] =>', node.next
   else:
     print '_none_'
-def dumpList():
+def dumpList(isStrict=False):
   last=0
   dumpCnt=0
   node = head
@@ -53,15 +53,26 @@ def dumpList():
     dumpCnt+=1
     assert dumpCnt < 999
   print line
-  assert Node.cnt == dumpCnt
+  if isStrict:
+    assert Node.cnt == dumpCnt
 
 ### Above is a fairly reusable doubly-linked list
 
-def solD(): # dlist-based solution
-  pass
+def solD(li): # dlist-based solution
+  global head
+  Node.cnt=-1
+  gap = head = Node(sys.maxint)
+  for a,b in li: # b is left mark of gap
+    #print a, b
+    itv = Node(a, gap)
+    gap = Node(b, itv, B)
+  head = head.next
+  head.prev=None
+  dumpList(True)  
 
 def main():
-  dumpList()
+  solD([[1,2],[3,5],[6,7],[8,10],[12,16]])
+  #dumpList()
 main()
 '''Req: https://bintanvictor.wordpress.com/2018/07/29/merge-intervals/
 
