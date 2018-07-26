@@ -7,7 +7,7 @@ class Node(object): # each node is a segment
     def __init__(self, leftMark, prev_node=None, color=A):
         assert leftMark > 0
         Node.cnt+=1
-        self.leftMark = leftMark # rightMarkDerived would be next.leftMark-1
+        self.leftMark = leftMark # rightMark would be self.next.leftMark-1
         assert color in 'AB'
         self.color=color
         self.prev = prev_node
@@ -16,7 +16,6 @@ class Node(object): # each node is a segment
           prev_node.next = self
     def __str__(self):
       return str(self.leftMark)+' '+self.color
-    
 _1 = Node(11) 
 _2 = Node(22, _1, B)
 _3 = Node(33, _2)
@@ -28,15 +27,15 @@ _8 = Node(88, _7, B)
 _9 = Node(99, _8)
 head=_1
 
-def print3(node): #print 3+1 attributes 
+def print3(node): #print 3+1 attributes of a node
   defaultRightMark=9999 #I choose not to save rightMark into each node instance
   if node:
-    a = node.next
-    rightMarkDerived = a.leftMark-1 if a else defaultRightMark
-    print node.prev, '<= [', str(node), rightMarkDerived, '] =>', node.next
+    nx = node.next
+    rightMark = nx.leftMark-1 if nx else defaultRightMark
+    print node.prev, '<= [', str(node), rightMark, '] =>', node.next
   else:
     print '_none_'
-def dump():
+def dumpList():
   last=0
   dumpCnt=0
   node = head
@@ -48,22 +47,24 @@ def dump():
     print3(node)
     line += str(node) + ' > '
     assert node.leftMark > last; last=node.leftMark
-    next = node.next
-    if next: assert next.prev == node
-    node = next
+    nx = node.next
+    if nx: assert nx.prev == node
+    node = nx
     dumpCnt+=1
     assert dumpCnt < 999
   print line
   assert Node.cnt == dumpCnt
 
+### Above is a fairly reusable doubly-linked list
+
 def solD(): # dlist-based solution
   pass
 
 def main():
-  dump()
+  dumpList()
 main()
 '''Req: https://bintanvictor.wordpress.com/2018/07/29/merge-intervals/
 
-first let's create a dump() function
+first let's create a dumpList() function
 
 '''
