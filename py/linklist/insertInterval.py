@@ -33,6 +33,12 @@ class DoublyLinkedList(object):
     assert head is not None
     self.head=head
     
+  @staticmethod  
+  def link2(node1, node2):
+    assert node1 is not None
+    assert node2 is not None
+    node1.next = node2
+    node2.prev = node1
   #print 3+1 attributes of a node  
   # to support None, this can't be a Node method
   @staticmethod  
@@ -82,15 +88,35 @@ def solD(intervals, incoming): # dlist-based solution
   dlist = DoublyLinkedList(head)
   dlist.dumpList(True)  
   # dlist constructed :)
-  seg=[segmentPointers[bisect.bisect_left(leftMarks, i)-1] for i in incoming]
-  DoublyLinkedList.print3(seg[0])
-  DoublyLinkedList.print3(seg[1])
+  incomingEnd = incoming[1]
+  incoming[1] -= 1 # to get its rightMark
+  segP,segQ=[segmentPointers[bisect.bisect_right(leftMarks, i)-1] for i in incoming]
+  DoublyLinkedList.print3(segP)
+  DoublyLinkedList.print3(segQ)
   
-  # now the different cases
-  #if segment1.color == A:
-    
+  # now the various cases
+  if segP.color == A == segQ.color:
+    print 'bridge case'
+    gap = segQ.next
+    DoublyLinkedList.link2(segP, gap)
+    return dlist
+  elif segP.color == B == segQ.color:
+    nextInterval = segQ.next
+    newInterval = Node(incoming[0], segP)
+    if segP is segQ:
+      print 'tiny-interval-in-gap case like [23,24]'
+      newGap = Node(incomingEnd, newInterval, B)
+      DoublyLinkedList.link2(newGap, nextInterval)
+      return dlist
+    print 'wipeout case like [23,87]'
+    DoublyLinkedList.link2(newInterval, segQ)
+    segQ.leftMark = incomingEnd
+    return dlist
+  
 def main():
-  solD([[11,22],[33,55],[66,77],[88,100],[122,166]], [44,80])
+  ret=solD([[11,22],[33,55],[66,77],[88,100],[122,166]], [33,76])
+  if ret: ret.dumpList()
+  
   # 4 -> hits the [3-4]
   # 8 -> hits the [7-7]
   #DoublyLinkedList(_1).dumpList() # unit test
