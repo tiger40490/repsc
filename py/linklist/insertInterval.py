@@ -82,7 +82,6 @@ def solD(intervals, incoming): # dlist-based solution
   dlist = DoublyLinkedList(head)
   dlist.dumpList(True)  
   # dlist constructed :)
-  print leftMarks 
   seg=[segmentPointers[bisect.bisect_left(leftMarks, i)-1] for i in incoming]
   DoublyLinkedList.print3(seg[0])
   DoublyLinkedList.print3(seg[1])
@@ -91,7 +90,7 @@ def solD(intervals, incoming): # dlist-based solution
   #if segment1.color == A:
     
 def main():
-  solD([[1,2],[3,5],[6,7],[8,10],[12,16]], [4,8])
+  solD([[11,22],[33,55],[66,77],[88,100],[122,166]], [44,80])
   # 4 -> hits the [3-4]
   # 8 -> hits the [7-7]
   #DoublyLinkedList(_1).dumpList() # unit test
