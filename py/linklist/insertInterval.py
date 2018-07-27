@@ -96,7 +96,7 @@ def solD(intervals, incoming): # dlist-based solution
   
   # now the various cases
   if segP.color == A == segQ.color:
-    print 'bridge case'
+    print 'bridge case, like [33,76], or even [33,34]'
     gap = segQ.next
     DoublyLinkedList.link2(segP, gap)
     return dlist
@@ -112,13 +112,20 @@ def solD(intervals, incoming): # dlist-based solution
     DoublyLinkedList.link2(newInterval, segQ)
     segQ.leftMark = incomingEnd
     return dlist
-  
+  elif segP.color == A and B == segQ.color:
+    print 'bridge-Into-gap case, like [33,111] or even [33,61]'
+    DoublyLinkedList.link2(segP, segQ)
+    segQ.leftMark = incomingEnd
+    return dlist
+  elif segP.color == B and A == segQ.color:
+    print 'bridge-From-gap case, like [30,90] or even [30,40]'
+    DoublyLinkedList.link2(segP, segQ)
+    segQ.leftMark=incoming[0]
+    return dlist
+    
 def main():
-  ret=solD([[11,22],[33,55],[66,77],[88,100],[122,166]], [33,76])
+  ret=solD([[11,22],[33,55],[66,77],[88,100],[122,166]], [30,40])
   if ret: ret.dumpList()
-  
-  # 4 -> hits the [3-4]
-  # 8 -> hits the [7-7]
   #DoublyLinkedList(_1).dumpList() # unit test
 main()
 '''Req: https://bintanvictor.wordpress.com/2018/07/29/merge-intervals/
