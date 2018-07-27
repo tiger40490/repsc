@@ -69,32 +69,31 @@ class DoublyLinkedList(object):
 def solD(intervals, incoming): # dlist-based solution
   Node.cnt=-1 # for isStrict
   gap = head = Node(sys.maxint)
-  nodePointers=list()
+  segmentPointers=list()
+  leftMarks=list()
   for a,b in intervals: # b is left mark of ensuing gap
     #print a, b
     itv = Node(a, gap)
     gap = Node(b, itv, B)
-    nodePointers.extend([itv,gap])
+    segmentPointers.extend([itv,gap])
+    leftMarks.extend([a,b]) # b is left mark of a gap segment
   head = head.next
   head.prev=None
   dlist = DoublyLinkedList(head)
   dlist.dumpList(True)  
   # dlist constructed :)
-  li = [node.leftMark for node in nodePointers]
-  print li
-  incoming[1] -= 1
-  idx = [bisect.bisect_right(li, i)-1 for i in incoming]
-  segment1=nodePointers[idx[0]]
-  DoublyLinkedList.print3(segment1)
-  segment2=nodePointers[idx[1]]
-  DoublyLinkedList.print3(segment2)
+  print leftMarks 
+  seg=[segmentPointers[bisect.bisect_left(leftMarks, i)-1] for i in incoming]
+  DoublyLinkedList.print3(seg[0])
+  DoublyLinkedList.print3(seg[1])
   
   # now the different cases
   #if segment1.color == A:
     
-  
 def main():
   solD([[1,2],[3,5],[6,7],[8,10],[12,16]], [4,8])
+  # 4 -> hits the [3-4]
+  # 8 -> hits the [7-7]
   #DoublyLinkedList(_1).dumpList() # unit test
 main()
 '''Req: https://bintanvictor.wordpress.com/2018/07/29/merge-intervals/
