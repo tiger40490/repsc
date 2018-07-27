@@ -94,6 +94,17 @@ egi(){
   needle=` echo $1 | perl -pe 's/-/_/g' ` # replace dash
   export |grep -i $needle
 }
+forcepush(){
+  br=$1
+  printf "\n\t$br    <-- branch to be deleted remotely? [ n / any_other_key_for_yes ] ";
+  unset REPLY
+  read $REPLY
+  [ "$REPLY" = "n" ] && return
+  set -x
+  git push origin :$br
+  git push -u origin $br
+  { set +x; } 2>/dev/null
+}
 ls1page(){
   /bin/ls -ahlF --color=always $*
 }
