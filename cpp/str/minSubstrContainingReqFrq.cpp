@@ -63,7 +63,7 @@ string minWindow(string s, string t) {
     }
   }
   ////// We have a good window, now slide/truncae it, never growing it
-  for(; ri<sz; ){
+  for(;ri<sz-1; ){
     auto evicted=s[le]; ++le; ++ri;
     if (auto & cnt = frq[ evicted-aa ]){
       --cnt;
@@ -74,6 +74,7 @@ string minWindow(string s, string t) {
     auto idx = s[ri]-aa;
     if( reqfrq[ idx ] ){
       ++frq[ idx ];
+      cout<<"After successful decrement+increment :\n"<<frq; 
       if (frq >= reqfrq){ //O(1)
         cout<<s.substr(le, ri-le+1)<<" <-- another good substring\n";
         // truncate on left after moving le
@@ -90,12 +91,14 @@ string minWindow(string s, string t) {
           return clean;
         }
       }
-      cout<<"After successful decrement+increment :\n"<<frq; 
     }
   }  
   return clean;
 }
 int main(){
+  //assert(minWindow("bba", "ab")=="ba");
+  //return 0;
+  assert(minWindow("adobecodebanc", "abcda")=="adobecodeba");
   assert(minWindow("ccbabccbabcb", "bbc")=="bcb");
   assert(minWindow("abccabccb", "bbc")=="bccb");
   assert(minWindow("abcabccbabcc", "bbc")=="bcab");
