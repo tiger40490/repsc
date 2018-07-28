@@ -72,7 +72,7 @@ class DoublyLinkedList(object):
 
 ### Above is a fairly reusable doubly-linked list
 dlist=list()
-leftMarks=list()
+#leftMarks=list()
 segmentPointers=list()
 def solD(intervals, incoming): # dlist-based solution
   global dlist 
@@ -82,18 +82,21 @@ def solD(intervals, incoming): # dlist-based solution
     itv = Segment(a, gap)
     gap = Segment(b, itv, B)
     segmentPointers.extend([itv,gap])
-    leftMarks.extend([a,b]) # b is left mark of a gap segment
+    #leftMarks.extend([a,b]) # b is left mark of a gap segment
   head = head.next
   head.prev=None
   dlist = DoublyLinkedList(head)
   dlist.dumpList(True)  
   # dlist constructed :)
+  print 'incoming =', incoming
   return recur(incoming)
   
 def recur(incoming):  
-  assert incoming[0]<incoming[1]  
+  assert incoming[0] < incoming[1]  
   incomingEnd = incoming[1]
   incoming[1] -= 1 # to get its rightMark
+  
+  leftMarks=[node.leftMark for node in segmentPointers]
   idx = [bisect.bisect_right(leftMarks, i)-1 for i in incoming]
   segP,segQ=[segmentPointers[j] for j in idx]
 
@@ -112,7 +115,7 @@ def recur(incoming):
       return dlist
       
     dlist.head.leftMark = incoming[0]
-    segP = dlist.head
+    return recur([incoming[0], incomingEnd])
   
   if segP.color == B and incoming[0] == segP.leftMark:
     return recur([incoming[0]-1, incomingEnd])
@@ -147,11 +150,13 @@ def recur(incoming):
     print 'bridge-From-gap case, like [30,90] or even [30,40]'
     DoublyLinkedList.link2(segP, segQ)
     segQ.leftMark=incoming[0]
+  else:
+     assert 1==0  
     
   return dlist
     
 def main():
-  ret=solD([[11,22],[33,55],[66,77],[88,100],[122,166]], [25,33])
+  ret=solD([[11,22],[33,55],[66,77],[88,100],[122,166]], [2,33])
   if ret: ret.dumpList()
   #DoublyLinkedList(_1).dumpList() # unit test
 main()
