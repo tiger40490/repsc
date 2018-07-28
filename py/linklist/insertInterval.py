@@ -1,5 +1,4 @@
 '''
-todo: use slist
 '''
 import sys, bisect
 A='A' # Above-water 
@@ -18,12 +17,12 @@ class Segment(object): # each node is a segment
     def __str__(self):
       return str(self.leftMark)+' '+self.color
       
-    ''' print 3+1 attributes of a node  
+    ''' print 3 attributes of a node  
     '''
     def print3(self):
       nx = self.next
       rightMark = nx.leftMark-1 if nx else sys.maxint
-      print self, rightMark, '] =>', self.next
+      print '[', self, rightMark, '] =>', self.next
 
 class DoublyLinkedList(object):
   def __init__(self, head):
