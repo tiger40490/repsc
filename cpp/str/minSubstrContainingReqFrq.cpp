@@ -20,6 +20,13 @@ vector<int> frqTable(string const & t){
   //cout<<"required frq : \n"<<tmp;
   return tmp;
 }  
+bool operator >=(vector<int> const & a, vector<int> const & b){//O(1)
+  if (a.size() != b.size()) return false;
+  for (int i=a.size()-1; i>=0; --i){
+    if (a[i] < b[i]) return false;
+  }
+  return true;
+}
 void truncate(size_t & le, string const & s, vector<int> & frq, vector<int> const & reqfrq){
   for(;;++le){
     auto idx = s[le]-aa ;
@@ -29,13 +36,6 @@ void truncate(size_t & le, string const & s, vector<int> & frq, vector<int> cons
     assert (frq >= reqfrq);
   }
   //cout<<"truncate returning with le = "<<le<<endl;
-}
-bool operator >=(vector<int> const & a, vector<int> const & b){//O(1)
-  if (a.size() != b.size()) return false;
-  for (int i=a.size()-1; i>=0; --i){
-    if (a[i] < b[i]) return false;
-  }
-  return true;
 }
 string minWindow(string s, string t) {
   size_t sz=s.size();
