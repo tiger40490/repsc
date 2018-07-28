@@ -1,8 +1,7 @@
 '''
 showcase homemade double linked list
-todo: remove dlist global var
 todo: unit tests
-todo: recursive call when in those special situations (after adjusting the incoming interval
+todo: too high
 '''
 import sys, bisect
 A='A' # Above-water 
@@ -78,11 +77,11 @@ def solD(intervals, incoming): # dlist-based solution
   assert len(intervals)>1 
   assert incoming[0] < incoming[1]  
   if incoming[1] < intervals[0][0]:
-    print 'incoming interval rightMark is also very low. This is LOW case, like [1,2]'
+    print 'incoming interval rightMark is very low. This is LOW case, like [1,2]'
     intervals.insert(0, incoming)
     
   elif incoming[0] < intervals[0][0]:
-    print 'incoming interval leftMark is very low'      
+    print 'incoming interval leftMark is very low, like [2,13]' 
     intervals[0][0] = incoming[0]
     
   Segment.cnt=-1 # for isStrict
@@ -111,8 +110,10 @@ def recur(incoming, segments):
   segP,segQ=[segments[j] for j in idx]
   
   if segP.color == B and incoming[0] == segP.leftMark:
+    print 'adjusting incoming left mark'
     return recur([incoming[0]-1, incomingEnd], segments)
   if segQ.color == B and incomingEnd == segQ.next.leftMark:
+    print 'adjusting incoming right mark'
     return recur([incoming[0], incomingEnd+1], segments)
     
   segP.print3()
@@ -147,8 +148,12 @@ def recur(incoming, segments):
      assert 1==0  
     
 def main():
-  assert(solD([[11,22],[33,55],[66,77],[88,100],[122,166]], [2,4])
-  =='2 A 4 B 11 A 22 B 33 A 55 B 66 A 77 B 88 A 100 B 122 A 166 B end')
+  assert(solD([[11,22],[33,55],[66,77],[88,99],[122,166]], [30,40])
+  =='11 A 22 B 30 A 55 B 66 A 77 B 88 A 99 B 122 A 166 B end')
+  assert(solD([[11,22],[33,55],[66,77],[88,99],[122,166]], [2,11])
+  =='2 A 22 B 33 A 55 B 66 A 77 B 88 A 99 B 122 A 166 B end')
+  assert(solD([[11,22],[33,55],[66,77],[88,99],[122,166]], [2,4])
+  =='2 A 4 B 11 A 22 B 33 A 55 B 66 A 77 B 88 A 99 B 122 A 166 B end')
   #DoublyLinkedList(_1).dumpList() # unit test
 main()
 '''Req: https://bintanvictor.wordpress.com/2018/07/29/merge-intervals/
