@@ -85,10 +85,12 @@ string minWindow(string s, string t) {
         cout<<s.substr(le, ri-le+1)<<" <-- another good substring\n";
         // truncate on left after moving le
         truncate(le, s, reqfrq);
+        
+        assert(minsz >= ri-le+1 && "sliding window never growing");
+        if    (minsz == ri-le+1) continue;
+        //we have a shorter window!
         minsz=ri-le+1;
-        string const cleanOld(clean);
         clean=move(s.substr(le, minsz));
-        assert(clean.size() <= cleanOld.size() && "sliding window never growing");
         cout<<clean<<" <== clean substring\n";
         if (minsz == t.size()){
           cout<<"impossible to improve:)\n";
@@ -101,8 +103,9 @@ string minWindow(string s, string t) {
   return clean;
 }
 int main(){
+  assert(minWindow("ccbabccbabcb", "bbc")=="bcb");
   assert(minWindow("abccabccb", "bbc")=="bccb");
-  assert(minWindow("abcabccbabcc", "bbc")=="babc");
+  assert(minWindow("abcabccbabcc", "bbc")=="bcab");
 }
 /*Req: https://bintanvictor.wordpress.com/2018/07/28/find-min-substring-containing-all-my-chars/
 Given a string Haystack and a string T, find the minimum window in Haystack which contains all the characters in T in complexity O(n).
