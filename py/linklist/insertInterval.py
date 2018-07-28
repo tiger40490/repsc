@@ -71,12 +71,13 @@ class DoublyLinkedList(object):
       assert Segment.cnt == dumpCnt
 
 ### Above is a fairly reusable doubly-linked list
-
+dlist=list()
+leftMarks=list()
+segmentPointers=list()
 def solD(intervals, incoming): # dlist-based solution
+  global dlist 
   Segment.cnt=-1 # for isStrict
   gap = head = Segment(sys.maxint)
-  segmentPointers=list()
-  leftMarks=list()
   for a,b in intervals: # b is left mark of ensuing gap
     itv = Segment(a, gap)
     gap = Segment(b, itv, B)
@@ -87,12 +88,13 @@ def solD(intervals, incoming): # dlist-based solution
   dlist = DoublyLinkedList(head)
   dlist.dumpList(True)  
   # dlist constructed :)
+  return recur(incoming)
   
+def recur(incoming):  
   assert incoming[0]<incoming[1]  
   incomingEnd = incoming[1]
   incoming[1] -= 1 # to get its rightMark
   idx = [bisect.bisect_right(leftMarks, i)-1 for i in incoming]
-
   segP,segQ=[segmentPointers[j] for j in idx]
 
   if idx[0] == -1: 
@@ -100,8 +102,7 @@ def solD(intervals, incoming): # dlist-based solution
     if idx[1] == -1:
       if incomingEnd==dlist.head.leftMark:
         print 'head-left case, like [2,11]'
-        dlist.head.leftMark = incoming[0]
-        return dlist
+        return recur([incoming[0], incomingEnd+1])
       print 'incoming interval rightMark is also very low. This is LOW case, like [1,2]'
       # what if it is right before the head segment?
       newHead = Segment(incoming[0])
@@ -113,18 +114,16 @@ def solD(intervals, incoming): # dlist-based solution
     dlist.head.leftMark = incoming[0]
     segP = dlist.head
   
-  # now the various cases
   if segP.color == B and incoming[0] == segP.leftMark:
-    print 'incoming interval leftMark is adjacent to an interval'
-    segP = segP.prev
+    return recur([incoming[0]-1, incomingEnd])
   if segQ.color == B and incomingEnd == segQ.next.leftMark:
-    print 'incoming interval rightMark is adjacent to an interval'
-    segQ = segQ.next
-
+    return recur([incoming[0], incomingEnd+1])
+    
   segP.print3()
   segQ.print3()
   assert segP.leftMark <= segQ.leftMark
   
+  # now the various cases
   if segP.color == A == segQ.color:
     print 'bridge case, like [33,76], or even [33,34]'
     gap = segQ.next
@@ -152,7 +151,7 @@ def solD(intervals, incoming): # dlist-based solution
   return dlist
     
 def main():
-  ret=solD([[11,22],[33,55],[66,77],[88,100],[122,166]], [2,11])
+  ret=solD([[11,22],[33,55],[66,77],[88,100],[122,166]], [25,33])
   if ret: ret.dumpList()
   #DoublyLinkedList(_1).dumpList() # unit test
 main()
