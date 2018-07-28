@@ -33,7 +33,7 @@ bool operator >=(vector<int> const & a, vector<int> const & b){//O(1)
 void chopLeft(size_t & le, string const & s, vector<int> & frq, vector<int> const & reqfrq){
   for(;;++le){
     auto idx = getIdx(s[le]);
-    if (reqfrq[ idx ] == 0) continue;
+    if (reqfrq[ idx ] == 0) continue; //chop
     if (reqfrq[ idx ] == frq[idx]) break;
     --frq[idx];
     assert (frq >= reqfrq);
@@ -43,23 +43,19 @@ void chopLeft(size_t & le, string const & s, vector<int> & frq, vector<int> cons
 string minWindow(string s, string t) {
   size_t sz=s.size();
   if (t.empty() || s.empty()) return "";
-  vector<int> const reqfrq = move(frqTable(t)); //should invoke move ctor or RVO
+  vector<int> const reqfrq = move(frqTable(t)); //should invoke move ctor or RVO, even without move()
   
   // now build the first usable window
   size_t le=0, ri=0, bestsize=0;
   string clean;
   vector<int> frq(TABLE_SZ, 0); 
   for(;;++ri){
-    if (ri == sz){
-      cout<<"failed\n";
-      return "";
-    }
+    if (ri == sz)return "";
     auto idx = getIdx(s[ri]);
     if( reqfrq[ idx ] == 0 ) continue;
     ++frq[ idx ];
-    //cout<<"incremeting "<<s[ri]<<endl<<frq;
     if (frq >= reqfrq){ //O(1)
-      //cout<<s.substr(le, ri-le+1)<<" <-- first good substring\n";
+      //cout<<s.substr(le, ri-le+1)<<" <-- first usable substring\n";
       chopLeft(le, s, frq, reqfrq);
       bestsize = ri-le+1;
       clean=move(s.substr(le, bestsize));
@@ -71,34 +67,32 @@ string minWindow(string s, string t) {
       break;
     }
   }
-  ////// We have a good window, now slide/truncae it, never growing it
+  ////// We have a usable window, now slide it, never growing it
   for(;ri<sz-1; ){
     auto evicted=s[le]; ++le; ++ri;
     if (auto & cnt = frq[ evicted-BASE ]){
       --cnt;
     }
-    cout<<"after sliding ... "<<s.substr(le, ri-le+1)<<endl;
+    //cout<<"after sliding ... "<<s.substr(le, ri-le+1)<<endl;
     
-    //increment on ri
     auto idx = getIdx(s[ri]);
     if( reqfrq[ idx ] == 0) continue;
-    
     ++frq[ idx ];
     //cout<<"After successful decrement+increment :\n"<<frq; 
-    if (frq >= reqfrq){ //O(1)
-        cout<<s.substr(le, ri-le+1)<<" <-- another good substring\n";
-        chopLeft(le, s, frq, reqfrq);
-        
-        assert(bestsize >= ri-le+1 && "sliding window never growing");
-        if    (bestsize == ri-le+1) continue;
-        //we have a shorter window!
-        bestsize=ri-le+1;
-        clean=move(s.substr(le, bestsize));
-        cout<<clean<<" <== clean substring\n";
-        if (bestsize == t.size()){
+    if (! ( frq >= reqfrq)) continue; //O(1)
+      
+    cout<<s.substr(le, ri-le+1)<<" <-- another usable substring\n";
+    chopLeft(le, s, frq, reqfrq);
+    auto const newsize = ri-le+1;            
+    if    (bestsize == newsize) continue;
+    assert(bestsize > newsize && "sliding window never growing");
+        //we have a shorter newsize:)
+    bestsize = newsize;
+    clean=move(s.substr(le, bestsize));
+    cout<<clean<<" <== clean substring\n";
+    if (bestsize == t.size()){
           cout<<"impossible to improve:)\n";
           return clean;
-        }
     }
   }  
   return clean;
