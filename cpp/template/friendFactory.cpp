@@ -1,8 +1,10 @@
-//todo: singleton
+//showcase: singleton enforced by private ctor and factory (instead of static method)
+//showcase: factory maintains a single instance of each type. The lookup map uses typeid as key, and void pointer as value.
+//showcase: template factory function to support any number of target classes
+//showcase: 
 #include <typeindex>
 #include <typeinfo>
 #include <map>
-#include <unordered_map>
 #include <iostream>
 #include <cassert>
 using namespace std;
@@ -10,13 +12,14 @@ using namespace std;
 static map<type_index, void*> lookup;
 
 template<typename T> T* create(){
-  auto const & type //must use a reference as typeid ctor is private
+  auto const & type //must use a reference, as typeid has a private ctor
     = typeid(T);
-  if (lookup.count(type)) {
+  T* ret = static_cast<T*>(lookup[type]);
+  if (ret) {
     cout<<"returning cached instance... won't create another instance of this type.\n";
-    return (T*)lookup[type]; 
+    return ret; 
   }
-  T* ret= new T();
+  ret= new T();
   lookup[type] = ret;
   return ret;
 }
