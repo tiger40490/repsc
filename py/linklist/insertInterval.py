@@ -126,7 +126,7 @@ def recur(incoming, segments):
     SList.link2(segP, segQ)
     segQ.leftMark=incoming[0]
   else:
-     assert 1==0  
+     assert 1==0, 'should never reach here'
     
 def main():
   assert(solS([[11,22],[33,55],[66,77],[88,99],[122,166]], [165,169]) =='11 A 22 B 33 A 55 B 66 A 77 B 88 A 99 B 122 A 169 B end')
