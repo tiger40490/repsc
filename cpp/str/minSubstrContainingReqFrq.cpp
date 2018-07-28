@@ -20,8 +20,14 @@ vector<int> frqTable(string const & t){
   //cout<<"required frq : \n"<<tmp;
   return tmp;
 }  
-void truncate(size_t & le, string const & s, vector<int> const & reqfrq){
-  for(;reqfrq[ s[le]-aa ] == 0;++le); // empty for-loop
+void truncate(size_t & le, string const & s, vector<int> & frq, vector<int> const & reqfrq){
+  for(;;++le){
+    auto idx = s[le]-aa ;
+    if (reqfrq[ idx ] == 0) continue;
+    if (reqfrq[ idx ] == frq[idx]) break;
+    --frq[idx];
+    assert (frq >= reqfrq);
+  }
   //cout<<"truncate returning with le = "<<le<<endl;
 }
 bool operator >=(vector<int> const & a, vector<int> const & b){//O(1)
@@ -51,7 +57,7 @@ string minWindow(string s, string t) {
     //cout<<"incremeting "<<s[ri]<<endl<<frq;
     if (frq >= reqfrq){ //O(1)
       //cout<<s.substr(le, ri-le+1)<<" <-- first good substring\n";
-      truncate(le, s, reqfrq);
+      truncate(le, s, frq, reqfrq);
       bestsize = ri-le+1;
       clean=move(s.substr(le, bestsize));
       if (bestsize == t.size()){
@@ -77,8 +83,7 @@ string minWindow(string s, string t) {
       cout<<"After successful decrement+increment :\n"<<frq; 
       if (frq >= reqfrq){ //O(1)
         cout<<s.substr(le, ri-le+1)<<" <-- another good substring\n";
-        // truncate on left after moving le
-        truncate(le, s, reqfrq);
+        truncate(le, s, frq, reqfrq);
         
         assert(bestsize >= ri-le+1 && "sliding window never growing");
         if    (bestsize == ri-le+1) continue;
@@ -96,8 +101,7 @@ string minWindow(string s, string t) {
   return clean;
 }
 int main(){
-  //assert(minWindow("bba", "ab")=="ba");
-  //return 0;
+  assert(minWindow("bba", "ab")=="ba");
   assert(minWindow("adobecodebanc", "abcda")=="adobecodeba");
   assert(minWindow("ccbabccbabcb", "bbc")=="bcb");
   assert(minWindow("abccabccb", "bbc")=="bccb");
