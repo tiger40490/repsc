@@ -23,12 +23,13 @@ inline int const getIdx(char c){
     assert (0 <= idx && idx < TABLE_SZ && "perhaps BASE needs adjusting");
     return idx;
 }
-bool operator >=(vector<int> const & a, vector<int> const & b){//O(1)
-  if (a.size() != b.size()) return false;
+//if any element is "<", then return true immediately !
+bool operator < (vector<int> const & a, vector<int> const & b){//O(1)
+  assert (a.size() == b.size());
   for (int i=a.size()-1; i>=0; --i){
-    if (a[i] < b[i]) return false;
+    if (a[i] < b[i]) return true;
   }
-  return true;
+  return false;
 }
 void chopLeft(size_t & le, string const & s, vector<int> & frq, vector<int> const & reqfrq){
   for(;;++le){
@@ -36,16 +37,14 @@ void chopLeft(size_t & le, string const & s, vector<int> & frq, vector<int> cons
     if (reqfrq[ idx ] == 0) continue; //chop
     if (reqfrq[ idx ] == frq[idx]) break;
     --frq[idx];
-    assert (frq >= reqfrq);
+    assert (!(frq < reqfrq)); //not a single frq element is less than reqfrq element.
   }
-  //cout<<"chopLeft returning with le = "<<le<<endl;
 }
 string minWindow(string s, string t) {
   size_t sz=s.size();
   if (t.empty() || s.empty()) return "";
   vector<int> const reqfrq = move(frqTable(t)); //should invoke move ctor or RVO, even without move()
   
-  // now build the first usable window
   size_t le=0, ri=0, bestsize=0;
   string clean;
   vector<int> frq(TABLE_SZ, 0); 
@@ -54,18 +53,19 @@ string minWindow(string s, string t) {
     auto idx = getIdx(s[ri]);
     if( reqfrq[ idx ] == 0 ) continue;
     ++frq[ idx ];
-    if (frq >= reqfrq){ //O(1)
-      //cout<<s.substr(le, ri-le+1)<<" <-- first usable substring\n";
-      chopLeft(le, s, frq, reqfrq);
-      bestsize = ri-le+1;
-      clean=move(s.substr(le, bestsize));
-      if (bestsize == t.size()){
+    
+    if (frq < reqfrq) continue; //O(1)
+      
+    //cout<<s.substr(le, ri-le+1)<<" <-- first usable substring, as ALL required frequencies are met\n";
+    chopLeft(le, s, frq, reqfrq);
+    bestsize = ri-le+1;
+    clean=move(s.substr(le, bestsize));
+    if (bestsize == t.size()){
         cout<<"impossible to improve:)\n";
         return clean;
-      }
-      cout<<clean<<" <== clean substring\n";
-      break;
     }
+    cout<<clean<<" <== clean substring\n";
+    break;
   }
   ////// We have a usable window, now slide it, never growing it
   for(;ri<sz-1; ){
@@ -79,7 +79,7 @@ string minWindow(string s, string t) {
     if( reqfrq[ idx ] == 0) continue;
     ++frq[ idx ];
     //cout<<"After successful decrement+increment :\n"<<frq; 
-    if (! ( frq >= reqfrq)) continue; //O(1)
+    if (frq < reqfrq) continue; //O(1)
       
     cout<<s.substr(le, ri-le+1)<<" <-- another usable substring\n";
     chopLeft(le, s, frq, reqfrq);
