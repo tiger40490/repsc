@@ -1,23 +1,19 @@
 '''
 showcase homemade double linked list
 '''
-import sys, bisect
-A='A' # Above-water 
-B='B' # Below-Water
+import sys
 class Segment(object): # each node is a segment
     cnt=0
-    def __init__(self, leftMark, prev_node=None, color=A):
+    def __init__(self, leftMark, prev_node=None):
         assert leftMark > 0
         Segment.cnt+=1
         self.leftMark = leftMark # rightMark would be self.next.leftMark-1. I choose not to save rightMark into each node instance
-        assert color in [A,B]
-        self.color=color
         self.prev = prev_node
         self.next = None
         if prev_node:
           prev_node.next = self
     def __str__(self):
-      return str(self.leftMark)+' '+self.color
+      return str(self.leftMark)
       
     ''' print 3+1 attributes of a node  
     '''
@@ -28,13 +24,13 @@ class Segment(object): # each node is a segment
     
 #some test data      
 _1 = Segment(11) 
-_2 = Segment(22, _1, B)
+_2 = Segment(22, _1)
 _3 = Segment(33, _2)
-_4 = Segment(44, _3, B)
+_4 = Segment(44, _3)
 _5 = Segment(55, _4)
-_6 = Segment(66, _5, B)
+_6 = Segment(66, _5)
 _7 = Segment(77, _6)
-_8 = Segment(88, _7, B)
+_8 = Segment(88, _7)
 _9 = Segment(99, _8)
 class DoublyLinkedList(object):
   def __init__(self, head):
