@@ -1,5 +1,6 @@
 '''
 showcase homemade double linked list
+todo: unit tests
 todo: recursive call when in those special situations (after adjusting the incoming interval
 '''
 import sys, bisect
@@ -72,10 +73,14 @@ class DoublyLinkedList(object):
 
 ### Above is a fairly reusable doubly-linked list
 dlist=list()
-#leftMarks=list()
 segmentPointers=list()
 def solD(intervals, incoming): # dlist-based solution
   global dlist 
+  assert len(intervals)>1 
+  assert incoming[0] < incoming[1]  
+  if incoming[1] < intervals[0][0]:
+    print 'incoming interval rightMark is also very low. This is LOW case, like [1,2]'
+    intervals.insert(0, incoming)
   Segment.cnt=-1 # for isStrict
   gap = head = Segment(sys.maxint)
   for a,b in intervals: # b is left mark of ensuing gap
@@ -88,11 +93,10 @@ def solD(intervals, incoming): # dlist-based solution
   dlist = DoublyLinkedList(head)
   dlist.dumpList(True)  
   # dlist constructed :)
-  print 'incoming =', incoming
   return recur(incoming)
   
 def recur(incoming):  
-  assert incoming[0] < incoming[1]  
+  print 'incoming =', incoming
   incomingEnd = incoming[1]
   incoming[1] -= 1 # to get its rightMark
   
@@ -101,19 +105,7 @@ def recur(incoming):
   segP,segQ=[segmentPointers[j] for j in idx]
 
   if idx[0] == -1: 
-    print 'incoming interval leftMark is very low'
-    if idx[1] == -1:
-      if incomingEnd==dlist.head.leftMark:
-        print 'head-left case, like [2,11]'
-        return recur([incoming[0], incomingEnd+1])
-      print 'incoming interval rightMark is also very low. This is LOW case, like [1,2]'
-      # what if it is right before the head segment?
-      newHead = Segment(incoming[0])
-      newGap = Segment(incomingEnd, newHead, B)
-      DoublyLinkedList.link2(newGap, dlist.head)
-      dlist.head = newHead
-      return dlist
-      
+    print 'incoming interval leftMark is very low'      
     dlist.head.leftMark = incoming[0]
     return recur([incoming[0], incomingEnd])
   
@@ -156,7 +148,7 @@ def recur(incoming):
   return dlist
     
 def main():
-  ret=solD([[11,22],[33,55],[66,77],[88,100],[122,166]], [2,33])
+  ret=solD([[11,22],[33,55],[66,77],[88,100],[122,166]], [2,11])
   if ret: ret.dumpList()
   #DoublyLinkedList(_1).dumpList() # unit test
 main()
