@@ -1,5 +1,6 @@
 '''
 showcase homemade double linked list
+todo: recursive call when in those special situations (after adjusting the incoming interval
 '''
 import sys, bisect
 A='A' # Above-water 
@@ -77,7 +78,6 @@ def solD(intervals, incoming): # dlist-based solution
   segmentPointers=list()
   leftMarks=list()
   for a,b in intervals: # b is left mark of ensuing gap
-    #print a, b
     itv = Segment(a, gap)
     gap = Segment(b, itv, B)
     segmentPointers.extend([itv,gap])
@@ -87,18 +87,48 @@ def solD(intervals, incoming): # dlist-based solution
   dlist = DoublyLinkedList(head)
   dlist.dumpList(True)  
   # dlist constructed :)
+  
+  assert incoming[0]<incoming[1]  
   incomingEnd = incoming[1]
   incoming[1] -= 1 # to get its rightMark
-  segP,segQ=[segmentPointers[bisect.bisect_right(leftMarks, i)-1] for i in incoming]
-  segP.print3()
-  segQ.print3()
+  idx = [bisect.bisect_right(leftMarks, i)-1 for i in incoming]
+
+  segP,segQ=[segmentPointers[j] for j in idx]
+
+  if idx[0] == -1: 
+    print 'incoming interval leftMark is very low'
+    if idx[1] == -1:
+      if incomingEnd==dlist.head.leftMark:
+        print 'head-left case, like [2,11]'
+        dlist.head.leftMark = incoming[0]
+        return dlist
+      print 'incoming interval rightMark is also very low. This is LOW case, like [1,2]'
+      # what if it is right before the head segment?
+      newHead = Segment(incoming[0])
+      newGap = Segment(incomingEnd, newHead, B)
+      DoublyLinkedList.link2(newGap, dlist.head)
+      dlist.head = newHead
+      return dlist
+      
+    dlist.head.leftMark = incoming[0]
+    segP = dlist.head
   
   # now the various cases
+  if segP.color == B and incoming[0] == segP.leftMark:
+    print 'incoming interval leftMark is adjacent to an interval'
+    segP = segP.prev
+  if segQ.color == B and incomingEnd == segQ.next.leftMark:
+    print 'incoming interval rightMark is adjacent to an interval'
+    segQ = segQ.next
+
+  segP.print3()
+  segQ.print3()
+  assert segP.leftMark <= segQ.leftMark
+  
   if segP.color == A == segQ.color:
     print 'bridge case, like [33,76], or even [33,34]'
     gap = segQ.next
     DoublyLinkedList.link2(segP, gap)
-    return dlist
   elif segP.color == B == segQ.color:
     nextInterval = segQ.next
     newInterval = Segment(incoming[0], segP)
@@ -106,24 +136,23 @@ def solD(intervals, incoming): # dlist-based solution
       print 'tiny-interval-in-gap case like [23,24]'
       newGap = Segment(incomingEnd, newInterval, B)
       DoublyLinkedList.link2(newGap, nextInterval)
-      return dlist
-    print 'wipeout case like [23,87]'
-    DoublyLinkedList.link2(newInterval, segQ)
-    segQ.leftMark = incomingEnd
-    return dlist
+    else:
+      print 'wipeout case like [23,87]'
+      DoublyLinkedList.link2(newInterval, segQ)
+      segQ.leftMark = incomingEnd
   elif segP.color == A and B == segQ.color:
     print 'bridge-Into-gap case, like [33,111] or even [33,61]'
     DoublyLinkedList.link2(segP, segQ)
     segQ.leftMark = incomingEnd
-    return dlist
   elif segP.color == B and A == segQ.color:
     print 'bridge-From-gap case, like [30,90] or even [30,40]'
     DoublyLinkedList.link2(segP, segQ)
     segQ.leftMark=incoming[0]
-    return dlist
+    
+  return dlist
     
 def main():
-  ret=solD([[11,22],[33,55],[66,77],[88,100],[122,166]], [30,40])
+  ret=solD([[11,22],[33,55],[66,77],[88,100],[122,166]], [2,11])
   if ret: ret.dumpList()
   #DoublyLinkedList(_1).dumpList() # unit test
 main()
