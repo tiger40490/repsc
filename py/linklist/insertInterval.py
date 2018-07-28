@@ -18,6 +18,14 @@ class Segment(object): # each node is a segment
           prev_node.next = self
     def __str__(self):
       return str(self.leftMark)+' '+self.color
+      
+    ''' print 3+1 attributes of a node  
+    '''
+    def print3(self):
+      nx = self.next
+      rightMark = nx.leftMark-1 if nx else sys.maxint
+      print self.prev, '<= [', self, rightMark, '] =>', self.next
+    
 '''some test data      
 _1 = Segment(11) 
 _2 = Segment(22, _1, B)
@@ -39,16 +47,7 @@ class DoublyLinkedList(object):
     assert node2 is not None
     node1.next = node2
     node2.prev = node1
-  #print 3+1 attributes of a node  
-  # to support None, this can't be a Segment method
-  @staticmethod  
-  def print3(node): 
-    if node:
-      nx = node.next
-      rightMark = nx.leftMark-1 if nx else sys.maxint
-      print node.prev, '<= [', str(node), rightMark, '] =>', node.next
-    else:
-      print '_none_'
+    
   def dumpList(self, isStrict=False):
     last=0
     dumpCnt=0
@@ -58,7 +57,7 @@ class DoublyLinkedList(object):
       if node is None:
         line += 'end'
         break
-      DoublyLinkedList.print3(node)
+      node.print3()
       line += str(node) + ' > '
       assert node.leftMark > last; last=node.leftMark
       nx = node.next
@@ -91,8 +90,8 @@ def solD(intervals, incoming): # dlist-based solution
   incomingEnd = incoming[1]
   incoming[1] -= 1 # to get its rightMark
   segP,segQ=[segmentPointers[bisect.bisect_right(leftMarks, i)-1] for i in incoming]
-  DoublyLinkedList.print3(segP)
-  DoublyLinkedList.print3(segQ)
+  segP.print3()
+  segQ.print3()
   
   # now the various cases
   if segP.color == A == segQ.color:
