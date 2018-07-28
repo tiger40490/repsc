@@ -1,6 +1,5 @@
 '''
 showcase homemade double linked list
-todo: too high
 '''
 import sys, bisect
 A='A' # Above-water 
@@ -90,12 +89,10 @@ def solD(intervals, incoming): # dlist-based solution
     itv = Segment(a, gap)
     gap = Segment(b, itv, B)
     segments.extend([itv,gap])
-    #leftMarks.extend([a,b]) # b is left mark of a gap segment
   head = head.next
   head.prev=None
   dlist = DoublyLinkedList(head)
-  #dlist.dumpList(True)  
-  # dlist constructed :)
+  # # dlist constructed :)
   recur(incoming, segments)
   return dlist.dumpList() 
   
@@ -120,11 +117,7 @@ def recur(incoming, segments):
   assert segP.leftMark <= segQ.leftMark
   
   # now the various cases
-  if segP.next is None: 
-    print 'incoming interval left mark very high'
-    newInterval = Segment(incoming[0], segP)
-    newGap = Segment(incomingEnd, newInterval, B)    
-  elif segP.color == A == segQ.color:
+  if segP.color == A == segQ.color:
     print 'bridge case, like [33,76], or even [33,34]'
     DoublyLinkedList.link2(segP, segQ.next)
   elif segP.color == B == segQ.color:
@@ -133,7 +126,8 @@ def recur(incoming, segments):
       nextInterval = segQ.next
       newInterval = Segment(incoming[0], segP)
       newGap = Segment(incomingEnd, newInterval, B)
-      DoublyLinkedList.link2(newGap, nextInterval)
+      if nextInterval is not None:
+        DoublyLinkedList.link2(newGap, nextInterval)
     else:
       print 'swallow-up case like [23,87]'
       segP.next.leftMark=incoming[0] 
