@@ -2,7 +2,7 @@
 #include <cassert>
 #include <iostream>
 #include <iomanip>
-#include <vector> //reqFrq
+#include <vector> 
 using namespace std;
 
 template<typename T,             int min_width=8> ostream & operator<<(ostream & os, vector<T> const & c){
@@ -16,9 +16,7 @@ static char const aa='a';
 static size_t tableSz=3; //26 if all chars are a-z
 vector<int> frqTable(string const & t){
   vector<int> tmp(tableSz, 0); 
-  for (auto const c: t){
-    ++tmp[c-aa];
-  }
+  for (auto const c: t) ++tmp[c-aa];
   //cout<<"required frq : \n"<<tmp;
   return tmp;
 }  
@@ -27,23 +25,19 @@ void truncate(size_t & le, string const & s, vector<int> const & reqfrq){
   //cout<<"truncate returning with le = "<<le<<endl;
 }
 bool operator >=(vector<int> const & a, vector<int> const & b){//O(1)
-  //cout<<111111111111111<<endl;
   if (a.size() != b.size()) return false;
-  //cout<<a<<b;
   for (int i=a.size()-1; i>=0; --i){
     if (a[i] < b[i]) return false;
   }
-  //cout<<"operator >= passed:)\n";
   return true;
 }
 string minWindow(string s, string t) {
-  //string const & haystack = s;
   size_t sz=s.size();
   if (t.empty() || s.empty()) return "";
-
   vector<int> const reqfrq = move(frqTable(t)); //should invoke move ctor or RVO
-  // now build the first barely good window
-  size_t le=0, ri=0, minsz=0;
+  
+  // now build the first usable window
+  size_t le=0, ri=0, bestsize=0;
   string clean;
   vector<int> frq(tableSz, 0); 
   for(;;++ri){
@@ -58,13 +52,13 @@ string minWindow(string s, string t) {
     if (frq >= reqfrq){ //O(1)
       //cout<<s.substr(le, ri-le+1)<<" <-- first good substring\n";
       truncate(le, s, reqfrq);
-      minsz=ri-le+1;
-      clean=move(s.substr(le, minsz));
-      cout<<clean<<" <== clean substring\n";
-      if (minsz == t.size()){
+      bestsize = ri-le+1;
+      clean=move(s.substr(le, bestsize));
+      if (bestsize == t.size()){
         cout<<"impossible to improve:)\n";
         return clean;
       }
+      cout<<clean<<" <== clean substring\n";
       break;
     }
   }
@@ -73,7 +67,6 @@ string minWindow(string s, string t) {
     auto evicted=s[le]; ++le; ++ri;
     if (auto & cnt = frq[ evicted-aa ]){
       --cnt;
-      //cout<<"Before increment, After decrement frq of "<<evicted<<":"<<endl<<frq; //keep the minsz
     }
     cout<<"after sliding ... "<<s.substr(le, ri-le+1)<<endl;
     
@@ -86,18 +79,18 @@ string minWindow(string s, string t) {
         // truncate on left after moving le
         truncate(le, s, reqfrq);
         
-        assert(minsz >= ri-le+1 && "sliding window never growing");
-        if    (minsz == ri-le+1) continue;
+        assert(bestsize >= ri-le+1 && "sliding window never growing");
+        if    (bestsize == ri-le+1) continue;
         //we have a shorter window!
-        minsz=ri-le+1;
-        clean=move(s.substr(le, minsz));
+        bestsize=ri-le+1;
+        clean=move(s.substr(le, bestsize));
         cout<<clean<<" <== clean substring\n";
-        if (minsz == t.size()){
+        if (bestsize == t.size()){
           cout<<"impossible to improve:)\n";
           return clean;
         }
       }
-      cout<<"After decrement+increment :\n"<<frq; 
+      cout<<"After successful decrement+increment :\n"<<frq; 
     }
   }  
   return clean;
