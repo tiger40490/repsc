@@ -67,7 +67,7 @@ class DoublyLinkedList(object):
       node = nx
       dumpCnt+=1
       assert dumpCnt < 999
-    print line, '\n'
+    print 'returning', line, '\n'
     if isStrict:
       assert Segment.cnt == dumpCnt
     return line
@@ -95,7 +95,7 @@ def solD(intervals, incoming): # dlist-based solution
   head = head.next
   head.prev=None
   dlist = DoublyLinkedList(head)
-  dlist.dumpList(True)  
+  #dlist.dumpList(True)  
   # dlist constructed :)
   recur(incoming, segments)
   return dlist.dumpList() 
@@ -150,10 +150,13 @@ def recur(incoming, segments):
 def main():
   assert(solD([[11,22],[33,55],[66,77],[88,99],[122,166]], [2,11]) =='2 A 22 B 33 A 55 B 66 A 77 B 88 A 99 B 122 A 166 B end')
   assert(solD([[11,22],[33,55],[66,77],[88,99],[122,166]], [2,4]) =='2 A 4 B 11 A 22 B 33 A 55 B 66 A 77 B 88 A 99 B 122 A 166 B end')
-  assert(solD([[11,22],[33,55],[66,77],[88,99],[122,166]], [30,40]) =='11 A 22 B 30 A 55 B 66 A 77 B 88 A 99 B 122 A 166 B end')
   assert(solD([[11,22],[33,55],[66,77],[88,99],[122,166]], [33,34]) =='11 A 22 B 33 A 55 B 66 A 77 B 88 A 99 B 122 A 166 B end')
   assert(solD([[11,22],[33,55],[66,77],[88,99],[122,166]], [33,76]) =='11 A 22 B 33 A 77 B 88 A 99 B 122 A 166 B end')
   assert(solD([[11,22],[33,55],[66,77],[88,99],[122,166]], [23,24]) =='11 A 22 B 23 A 24 B 33 A 55 B 66 A 77 B 88 A 99 B 122 A 166 B end')
+  assert(solD([[11,22],[33,55],[66,77],[88,99],[122,166]], [23,87]) =='11 A 22 B 23 A 87 B 88 A 99 B 122 A 166 B end')  
+  assert(solD([[11,22],[33,55],[66,77],[88,99],[122,166]], [33,61]) =='11 A 22 B 33 A 61 B 66 A 77 B 88 A 99 B 122 A 166 B end')
+  assert(solD([[11,22],[33,55],[66,77],[88,99],[122,166]], [33,111]) =='11 A 22 B 33 A 111 B 122 A 166 B end')
+  assert(solD([[11,22],[33,55],[66,77],[88,99],[122,166]], [30,40]) =='11 A 22 B 30 A 55 B 66 A 77 B 88 A 99 B 122 A 166 B end')
   
   #DoublyLinkedList(_1).dumpList() # unit test
 main()
