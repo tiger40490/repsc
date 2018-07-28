@@ -1,4 +1,5 @@
 //showcase concise, empty for-loop
+//todo assert on char range
 #include <cassert>
 #include <iostream>
 #include <iomanip>
@@ -12,11 +13,11 @@ template<typename T,             int min_width=8> ostream & operator<<(ostream &
    os<<endl;
    return os;
 }
-static char const aa='a';
-static size_t tableSz=3; //26 if all chars are a-z
+static char const BASE='a';
+static size_t TABLE_SZ=3; //26 if all chars are a-z
 vector<int> frqTable(string const & t){
-  vector<int> tmp(tableSz, 0); 
-  for (auto const c: t) ++tmp[c-aa];
+  vector<int> tmp(TABLE_SZ, 0); 
+  for (auto const c: t) ++tmp[c-BASE];
   //cout<<"required frq : \n"<<tmp;
   return tmp;
 }  
@@ -29,11 +30,11 @@ bool operator >=(vector<int> const & a, vector<int> const & b){//O(1)
 }
 void truncate(size_t & le, string const & s, vector<int> & frq, vector<int> const & reqfrq){
   for(;;++le){
-    auto idx = s[le]-aa ;
+    auto idx = s[le]-BASE ;
     if (reqfrq[ idx ] == 0) continue;
     if (reqfrq[ idx ] == frq[idx]) break;
     --frq[idx];
-    assert (frq >= reqfrq);
+    //assert (frq >= reqfrq);
   }
   //cout<<"truncate returning with le = "<<le<<endl;
 }
@@ -45,13 +46,13 @@ string minWindow(string s, string t) {
   // now build the first usable window
   size_t le=0, ri=0, bestsize=0;
   string clean;
-  vector<int> frq(tableSz, 0); 
+  vector<int> frq(TABLE_SZ, 0); 
   for(;;++ri){
     if (ri == sz){
       cout<<"failed\n";
       return "";
     }
-    auto idx = s[ri]-aa;
+    auto idx = s[ri]-BASE;
     if( reqfrq[ idx ] == 0 ) continue;
     ++frq[ idx ];
     //cout<<"incremeting "<<s[ri]<<endl<<frq;
@@ -71,17 +72,18 @@ string minWindow(string s, string t) {
   ////// We have a good window, now slide/truncae it, never growing it
   for(;ri<sz-1; ){
     auto evicted=s[le]; ++le; ++ri;
-    if (auto & cnt = frq[ evicted-aa ]){
+    if (auto & cnt = frq[ evicted-BASE ]){
       --cnt;
     }
     cout<<"after sliding ... "<<s.substr(le, ri-le+1)<<endl;
     
     //increment on ri
-    auto idx = s[ri]-aa;
-    if( reqfrq[ idx ] ){
-      ++frq[ idx ];
-      cout<<"After successful decrement+increment :\n"<<frq; 
-      if (frq >= reqfrq){ //O(1)
+    auto idx = s[ri]-BASE;
+    if( reqfrq[ idx ] == 0) continue;
+    
+    ++frq[ idx ];
+    //cout<<"After successful decrement+increment :\n"<<frq; 
+    if (frq >= reqfrq){ //O(1)
         cout<<s.substr(le, ri-le+1)<<" <-- another good substring\n";
         truncate(le, s, frq, reqfrq);
         
@@ -95,11 +97,11 @@ string minWindow(string s, string t) {
           cout<<"impossible to improve:)\n";
           return clean;
         }
-      }
     }
   }  
   return clean;
 }
+
 int main(){
   assert(minWindow("bba", "ab")=="ba");
   assert(minWindow("adobecodebanc", "abcda")=="adobecodeba");
