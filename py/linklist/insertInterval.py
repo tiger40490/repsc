@@ -1,5 +1,5 @@
 '''
-showcase homemade double linked list
+todo: use slist
 '''
 import sys, bisect
 A='A' # Above-water 
@@ -12,7 +12,6 @@ class Segment(object): # each node is a segment
         self.leftMark = leftMark # rightMark would be self.next.leftMark-1. I choose not to save rightMark into each node instance
         assert color in [A,B]
         self.color=color
-        self.prev = prev_node
         self.next = None
         if prev_node:
           prev_node.next = self
@@ -24,18 +23,8 @@ class Segment(object): # each node is a segment
     def print3(self):
       nx = self.next
       rightMark = nx.leftMark-1 if nx else sys.maxint
-      print self.prev, '<= [', self, rightMark, '] =>', self.next
-    
-'''some test data      
-_1 = Segment(11) 
-_2 = Segment(22, _1, B)
-_3 = Segment(33, _2)
-_4 = Segment(44, _3, B)
-_5 = Segment(55, _4)
-_6 = Segment(66, _5, B)
-_7 = Segment(77, _6)
-_8 = Segment(88, _7, B)
-_9 = Segment(99, _8)'''
+      print self, rightMark, '] =>', self.next
+
 class DoublyLinkedList(object):
   def __init__(self, head):
     assert head is not None
@@ -46,7 +35,6 @@ class DoublyLinkedList(object):
     assert node1 is not None
     assert node2 is not None
     node1.next = node2
-    node2.prev = node1
     
   def dumpList(self, isStrict=False):
     last=0
@@ -61,7 +49,6 @@ class DoublyLinkedList(object):
       line += str(node) + ' '
       assert node.leftMark > last; last=node.leftMark
       nx = node.next
-      if nx: assert nx.prev == node
       node = nx
       dumpCnt+=1
       assert dumpCnt < 999
@@ -90,7 +77,6 @@ def solD(intervals, incoming): # dlist-based solution
     gap = Segment(b, itv, B)
     segments.extend([itv,gap])
   head = head.next
-  head.prev=None
   dlist = DoublyLinkedList(head)
   # # dlist constructed :)
   recur(incoming, segments)
