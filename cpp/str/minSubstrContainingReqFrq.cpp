@@ -14,13 +14,18 @@ template<typename T,             int min_width=8> ostream & operator<<(ostream &
    return os;
 }
 static char const BASE='a';
-static size_t TABLE_SZ=3; //26 if all chars are a-z
+static size_t TABLE_SZ=26; //26 if all chars are a-z
 vector<int> frqTable(string const & t){
   vector<int> tmp(TABLE_SZ, 0); 
   for (auto const c: t) ++tmp[c-BASE];
   //cout<<"required frq : \n"<<tmp;
   return tmp;
 }  
+int const getIdx(char c){
+    int const idx = c-BASE;
+    assert (0 <= idx && idx < TABLE_SZ && "perhaps BASE needs adjusting");
+    return idx;
+}
 bool operator >=(vector<int> const & a, vector<int> const & b){//O(1)
   if (a.size() != b.size()) return false;
   for (int i=a.size()-1; i>=0; --i){
@@ -30,7 +35,7 @@ bool operator >=(vector<int> const & a, vector<int> const & b){//O(1)
 }
 void truncate(size_t & le, string const & s, vector<int> & frq, vector<int> const & reqfrq){
   for(;;++le){
-    auto idx = s[le]-BASE ;
+    auto idx = getIdx(s[le]);
     if (reqfrq[ idx ] == 0) continue;
     if (reqfrq[ idx ] == frq[idx]) break;
     --frq[idx];
@@ -52,7 +57,7 @@ string minWindow(string s, string t) {
       cout<<"failed\n";
       return "";
     }
-    auto idx = s[ri]-BASE;
+    auto idx = getIdx(s[ri]);
     if( reqfrq[ idx ] == 0 ) continue;
     ++frq[ idx ];
     //cout<<"incremeting "<<s[ri]<<endl<<frq;
@@ -78,7 +83,7 @@ string minWindow(string s, string t) {
     cout<<"after sliding ... "<<s.substr(le, ri-le+1)<<endl;
     
     //increment on ri
-    auto idx = s[ri]-BASE;
+    auto idx = getIdx(s[ri]);
     if( reqfrq[ idx ] == 0) continue;
     
     ++frq[ idx ];
@@ -101,7 +106,6 @@ string minWindow(string s, string t) {
   }  
   return clean;
 }
-
 int main(){
   assert(minWindow("bba", "ab")=="ba");
   assert(minWindow("adobecodebanc", "abcda")=="adobecodeba");
