@@ -1,4 +1,5 @@
 '''
+showcase: custom class features
 '''
 import sys, bisect
 A='A' # Above-water 
@@ -24,7 +25,7 @@ class Segment(object): # each node is a segment
       rightMark = nx.leftMark-1 if nx else sys.maxint
       print '[', self, rightMark, '] =>', self.next
 
-class DoublyLinkedList(object):
+class SList(object):
   def __init__(self, head):
     assert head is not None
     self.head=head
@@ -76,7 +77,7 @@ def solD(intervals, incoming): # dlist-based solution
     gap = Segment(b, itv, B)
     segments.extend([itv,gap])
   head = head.next
-  dlist = DoublyLinkedList(head)
+  dlist = SList(head)
   # # dlist constructed :)
   recur(incoming, segments)
   return dlist.dumpList() 
@@ -104,7 +105,7 @@ def recur(incoming, segments):
   # now the various cases
   if segP.color == A == segQ.color:
     print 'bridge case, like [33,76], or even [33,34]'
-    DoublyLinkedList.link2(segP, segQ.next)
+    SList.link2(segP, segQ.next)
   elif segP.color == B == segQ.color:
     if segP is segQ:
       print 'tiny-interval-in-gap case like [23,24]'
@@ -112,18 +113,18 @@ def recur(incoming, segments):
       newInterval = Segment(incoming[0], segP)
       newGap = Segment(incomingEnd, newInterval, B)
       if nextInterval is not None:
-        DoublyLinkedList.link2(newGap, nextInterval)
+        SList.link2(newGap, nextInterval)
     else:
       print 'swallow-up case like [23,87]'
       segP.next.leftMark=incoming[0] 
       return recur([incoming[0], incomingEnd], segments)
   elif segP.color == A and B == segQ.color:
     print 'bridge-Into-gap case, like [33,111] or even [33,61]'
-    DoublyLinkedList.link2(segP, segQ)
+    SList.link2(segP, segQ)
     segQ.leftMark = incomingEnd
   elif segP.color == B and A == segQ.color:
     print 'bridge-From-gap case, like [30,90] or even [30,40]'
-    DoublyLinkedList.link2(segP, segQ)
+    SList.link2(segP, segQ)
     segQ.leftMark=incoming[0]
   else:
      assert 1==0  
@@ -141,7 +142,7 @@ def main():
   assert(solD([[11,22],[33,55],[66,77],[88,99],[122,166]], [33,111]) =='11 A 22 B 33 A 111 B 122 A 166 B end')
   assert(solD([[11,22],[33,55],[66,77],[88,99],[122,166]], [30,40]) =='11 A 22 B 30 A 55 B 66 A 77 B 88 A 99 B 122 A 166 B end')
   
-  #DoublyLinkedList(_1).dumpList() # unit test
+  #SList(_1).dumpList() # unit test
 main()
 '''Req: https://bintanvictor.wordpress.com/2018/07/29/merge-intervals/
 '''
