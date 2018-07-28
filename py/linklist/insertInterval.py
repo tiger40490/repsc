@@ -1,5 +1,6 @@
 '''
 showcase homemade double linked list
+todo: remove dlist global var
 todo: unit tests
 todo: recursive call when in those special situations (after adjusting the incoming interval
 '''
@@ -60,7 +61,7 @@ class DoublyLinkedList(object):
         line += 'end'
         break
       node.print3()
-      line += str(node) + ' > '
+      line += str(node) + ' '
       assert node.leftMark > last; last=node.leftMark
       nx = node.next
       if nx: assert nx.prev == node
@@ -70,49 +71,49 @@ class DoublyLinkedList(object):
     print line, '\n'
     if isStrict:
       assert Segment.cnt == dumpCnt
+    return line
 
 ### Above is a fairly reusable doubly-linked list
-dlist=list()
-segmentPointers=list()
 def solD(intervals, incoming): # dlist-based solution
-  global dlist 
   assert len(intervals)>1 
   assert incoming[0] < incoming[1]  
   if incoming[1] < intervals[0][0]:
     print 'incoming interval rightMark is also very low. This is LOW case, like [1,2]'
     intervals.insert(0, incoming)
+    
+  elif incoming[0] < intervals[0][0]:
+    print 'incoming interval leftMark is very low'      
+    intervals[0][0] = incoming[0]
+    
   Segment.cnt=-1 # for isStrict
   gap = head = Segment(sys.maxint)
+  segments=list()
   for a,b in intervals: # b is left mark of ensuing gap
     itv = Segment(a, gap)
     gap = Segment(b, itv, B)
-    segmentPointers.extend([itv,gap])
+    segments.extend([itv,gap])
     #leftMarks.extend([a,b]) # b is left mark of a gap segment
   head = head.next
   head.prev=None
   dlist = DoublyLinkedList(head)
   dlist.dumpList(True)  
   # dlist constructed :)
-  return recur(incoming)
+  recur(incoming, segments)
+  return dlist.dumpList() 
   
-def recur(incoming):  
+def recur(incoming, segments):  
   print 'incoming =', incoming
   incomingEnd = incoming[1]
   incoming[1] -= 1 # to get its rightMark
   
-  leftMarks=[node.leftMark for node in segmentPointers]
+  leftMarks=[node.leftMark for node in segments]
   idx = [bisect.bisect_right(leftMarks, i)-1 for i in incoming]
-  segP,segQ=[segmentPointers[j] for j in idx]
-
-  if idx[0] == -1: 
-    print 'incoming interval leftMark is very low'      
-    dlist.head.leftMark = incoming[0]
-    return recur([incoming[0], incomingEnd])
+  segP,segQ=[segments[j] for j in idx]
   
   if segP.color == B and incoming[0] == segP.leftMark:
-    return recur([incoming[0]-1, incomingEnd])
+    return recur([incoming[0]-1, incomingEnd], segments)
   if segQ.color == B and incomingEnd == segQ.next.leftMark:
-    return recur([incoming[0], incomingEnd+1])
+    return recur([incoming[0], incomingEnd+1], segments)
     
   segP.print3()
   segQ.print3()
@@ -145,11 +146,9 @@ def recur(incoming):
   else:
      assert 1==0  
     
-  return dlist
-    
 def main():
-  ret=solD([[11,22],[33,55],[66,77],[88,100],[122,166]], [2,11])
-  if ret: ret.dumpList()
+  assert(solD([[11,22],[33,55],[66,77],[88,100],[122,166]], [2,4])
+  =='2 A 4 B 11 A 22 B 33 A 55 B 66 A 77 B 88 A 100 B 122 A 166 B end')
   #DoublyLinkedList(_1).dumpList() # unit test
 main()
 '''Req: https://bintanvictor.wordpress.com/2018/07/29/merge-intervals/
