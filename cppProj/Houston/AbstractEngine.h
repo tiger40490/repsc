@@ -23,7 +23,7 @@ struct PerSymbol{
     cumVol(_q),
     maxPx(_p){}
    
-  /*Multithreaded execution is unsupported. The asymchronous 
+  /*Multithreaded execution is unsupported. The asynchronous 
   functionality should not use this function without some mutex.
   */  
   consumeTick(TStamp _ts, Quantity _q, Price _p){
@@ -54,7 +54,7 @@ class AbstractEngine{
     std::string const filename; //move the string content here, as the original std::string would disappear before worker thread starts
     ThrBundle(AbstractEngine * e, std::string const & f):engine(e), filename(std::move(f)){}
   };
-  static void* startThread(void* p){ // midwife function for pthread_create
+  static void* startThread(void* p){ // static method as a midwife function for pthread_create
     if (p == nullptr){
       std::cout<<"startThread(nullptr)\n";
       return nullptr;
