@@ -2,9 +2,9 @@
 showcase: custom class features
 '''
 import sys, bisect
-A='A' # Above-water 
-B='B' # Below-Water
-class Segment(object): # each node is a segment
+A='A' # Above-water i.e. interval
+B='B' # Below-Water i.e. gap
+class Segment(object): # can be an interval or a gap
     cnt=0
     def __init__(self, leftMark, prev_node=None, color=A):
         assert leftMark > 0
@@ -18,7 +18,7 @@ class Segment(object): # each node is a segment
     def __str__(self):
       return str(self.leftMark)+' '+self.color
       
-    ''' print 3 attributes of a node  
+    ''' print 3 attributes of a segment 
     '''
     def print3(self):
       nx = self.next
