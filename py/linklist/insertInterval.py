@@ -1,7 +1,6 @@
 '''
 showcase homemade double linked list
 todo: too high
-todo: combine more cases
 '''
 import sys, bisect
 A='A' # Above-water 
@@ -112,7 +111,7 @@ def recur(incoming, segments):
   if segP.color == B and incoming[0] == segP.leftMark:
     print 'adjusting incoming left mark'
     return recur([incoming[0]-1, incomingEnd], segments)
-  if segQ.color == B and incomingEnd == segQ.next.leftMark:
+  if segQ.color == B and segQ.next and incomingEnd == segQ.next.leftMark:
     print 'adjusting incoming right mark'
     return recur([incoming[0], incomingEnd+1], segments)
     
@@ -121,7 +120,11 @@ def recur(incoming, segments):
   assert segP.leftMark <= segQ.leftMark
   
   # now the various cases
-  if segP.color == A == segQ.color:
+  if segP.next is None: 
+    print 'incoming interval left mark very high'
+    newInterval = Segment(incoming[0], segP)
+    newGap = Segment(incomingEnd, newInterval, B)    
+  elif segP.color == A == segQ.color:
     print 'bridge case, like [33,76], or even [33,34]'
     DoublyLinkedList.link2(segP, segQ.next)
   elif segP.color == B == segQ.color:
@@ -147,8 +150,8 @@ def recur(incoming, segments):
      assert 1==0  
     
 def main():
-  #assert(solD([[11,22],[33,55],[66,77],[88,99],[122,166]], [166,167]) =='2 A 22 B 33 A 55 B 66 A 77 B 88 A 99 B 122 A 167 B end')
-
+  assert(solD([[11,22],[33,55],[66,77],[88,99],[122,166]], [165,169]) =='11 A 22 B 33 A 55 B 66 A 77 B 88 A 99 B 122 A 169 B end')
+  assert(solD([[11,22],[33,55],[66,77],[88,99],[122,166]], [168,169]) =='11 A 22 B 33 A 55 B 66 A 77 B 88 A 99 B 122 A 166 B 168 A 169 B end')
   assert(solD([[11,22],[33,55],[66,77],[88,99],[122,166]], [2,11]) =='2 A 22 B 33 A 55 B 66 A 77 B 88 A 99 B 122 A 166 B end')
   assert(solD([[11,22],[33,55],[66,77],[88,99],[122,166]], [2,4]) =='2 A 4 B 11 A 22 B 33 A 55 B 66 A 77 B 88 A 99 B 122 A 166 B end')
   assert(solD([[11,22],[33,55],[66,77],[88,99],[122,166]], [33,34]) =='11 A 22 B 33 A 55 B 66 A 77 B 88 A 99 B 122 A 166 B end')
