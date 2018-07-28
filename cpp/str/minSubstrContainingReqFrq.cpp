@@ -1,5 +1,3 @@
-//showcase concise, empty for-loop
-//todo assert on char range
 #include <cassert>
 #include <iostream>
 #include <iomanip>
@@ -18,10 +16,9 @@ static size_t TABLE_SZ=26; //26 if all chars are a-z
 vector<int> frqTable(string const & t){
   vector<int> tmp(TABLE_SZ, 0); 
   for (auto const c: t) ++tmp[c-BASE];
-  //cout<<"required frq : \n"<<tmp;
   return tmp;
 }  
-int const getIdx(char c){
+inline int const getIdx(char c){
     int const idx = c-BASE;
     assert (0 <= idx && idx < TABLE_SZ && "perhaps BASE needs adjusting");
     return idx;
@@ -33,15 +30,15 @@ bool operator >=(vector<int> const & a, vector<int> const & b){//O(1)
   }
   return true;
 }
-void truncate(size_t & le, string const & s, vector<int> & frq, vector<int> const & reqfrq){
+void chopLeft(size_t & le, string const & s, vector<int> & frq, vector<int> const & reqfrq){
   for(;;++le){
     auto idx = getIdx(s[le]);
     if (reqfrq[ idx ] == 0) continue;
     if (reqfrq[ idx ] == frq[idx]) break;
     --frq[idx];
-    //assert (frq >= reqfrq);
+    assert (frq >= reqfrq);
   }
-  //cout<<"truncate returning with le = "<<le<<endl;
+  //cout<<"chopLeft returning with le = "<<le<<endl;
 }
 string minWindow(string s, string t) {
   size_t sz=s.size();
@@ -63,7 +60,7 @@ string minWindow(string s, string t) {
     //cout<<"incremeting "<<s[ri]<<endl<<frq;
     if (frq >= reqfrq){ //O(1)
       //cout<<s.substr(le, ri-le+1)<<" <-- first good substring\n";
-      truncate(le, s, frq, reqfrq);
+      chopLeft(le, s, frq, reqfrq);
       bestsize = ri-le+1;
       clean=move(s.substr(le, bestsize));
       if (bestsize == t.size()){
@@ -90,7 +87,7 @@ string minWindow(string s, string t) {
     //cout<<"After successful decrement+increment :\n"<<frq; 
     if (frq >= reqfrq){ //O(1)
         cout<<s.substr(le, ri-le+1)<<" <-- another good substring\n";
-        truncate(le, s, frq, reqfrq);
+        chopLeft(le, s, frq, reqfrq);
         
         assert(bestsize >= ri-le+1 && "sliding window never growing");
         if    (bestsize == ri-le+1) continue;
