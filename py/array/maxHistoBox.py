@@ -18,7 +18,9 @@ class RunRecord(object): #RunRecord
 def largestRectangleArea(heights):
   if 'helps Notepad++folding':
     di=dict()
-    for h in heights:
+    for i in xrange(len(heights)):
+      heights[i] += 1
+      h = heights[i]
       assert h > 0
       di[h]= RunRecord(h)
     tree=[ di[key] for key in sorted(di.iterkeys())]
@@ -61,15 +63,14 @@ def largestRectangleArea(heights):
   # now select final winner
   ret = 0
   for rec in tree:
-    area = rec.hei * rec.maxRun
+    area = (rec.hei-1) * rec.maxRun
     if ret < area: 
        ret = area
   return ret
 def main():
+  assert(9==largestRectangleArea([0,9]))
   assert(10==largestRectangleArea([2,2,5,2,2]))
   assert(10==largestRectangleArea([2,1,5,6,2,3]))  
 main()
 '''Req:  https://bintanvictor.wordpress.com/2018/07/29/max-rectangle-histogram/
-
-Given N (non-unique) natural numbers representing the histogram's bar heights where the width of each bar is 1, find the area of largest rectangle in the histogram.
 '''
