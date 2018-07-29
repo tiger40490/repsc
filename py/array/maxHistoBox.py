@@ -15,6 +15,20 @@ class RunRecord(object): #RunRecord
   def __repr__(self):
     return self.__str__()
     
+def binsearch(tree, hei): # returns the tree index matching hei, or throw exception
+  print 'binsearch() for', hei
+  if hei <= 0: return 0
+  ret = le = 0; ri = len(tree)-1
+  while le < ri: 
+    ret = (le+ri)/2
+    print 'trying', ret
+    if tree[ret].hei == hei: 
+      print 'returning', ret
+      return ret
+    if tree[ret].hei >  hei: ri = ret
+    else: le = ret
+  assert 1==2, 'needle not found'
+    
 def largestRectangleArea(heights):
   if 'helps Notepad++folding':
     di=dict()
@@ -27,26 +41,30 @@ def largestRectangleArea(heights):
     #print tree # sorted array of non-repeating RunRecords
     
   arr=[0] + heights + [0]
+  print '======= raised and extended bars =', arr
   sz=len(arr)
   for i in xrange(sz-1):
     j=i+1
     assert j <= sz-1, 'j should grow to last index'
     prev,cur= arr[i:i+2]
-    #print cur, 
-    if   prev==cur: pass
-      #print 'flatline'
+    print cur, 
+    if   prev==cur: 
+      print 'flatline'
     elif prev< cur: 
-      #print 'rising'
+      print 'rising'
+      #for i in xrange(binsearch(tree, prev)+1, len(tree)):
+        #rec = tree[i] # iterate from prev +1 to cur
+        #assert rec.hei > prev
       for rec in tree: # iterate from prev +1 to cur
         if rec.hei <= prev: 
           assert rec.currentRunStart > 0
           continue 
         if rec.hei > cur: break
         rec.currentRunStart = j
-        #print 'started a run in', rec
+        print 'started a run in', rec
     else:
       assert prev> cur
-      #print 'falling'
+      print 'falling'
       for rec in tree: # iterate from cur+1 to prev
         if rec.hei <= cur:
           assert rec.currentRunStart > 0
@@ -68,6 +86,7 @@ def largestRectangleArea(heights):
        ret = area
   return ret
 def main():
+  #largestRectangleArea(range(19999))
   assert(9==largestRectangleArea([0,9]))
   assert(10==largestRectangleArea([2,2,5,2,2]))
   assert(10==largestRectangleArea([2,1,5,6,2,3]))  
