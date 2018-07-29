@@ -1,4 +1,6 @@
 '''
+showcase inserting element at front of a list
+showcase assign 2 adjacent list slements to 2 scalar variables
 showcase __repr__ using __str__ to support pprint
 '''
 class RunRecord(object): #RunRecord
@@ -22,31 +24,27 @@ def largestRectangleArea(heights):
     tree=[ di[key] for key in sorted(di.iterkeys())]
     #print tree # sorted array of non-repeating RunRecords
     
-  arr=[0]
-  arr.extend(heights)
-  arr.append(0)
+  arr=[0] + heights + [0]
   sz=len(arr)
-  # i prefer to iterate over arr, to take care of fist bar
   for i in xrange(sz-1):
     j=i+1
     assert j <= sz-1, 'j should grow to last index'
-    prev= arr[i]
-    cur = arr[j]
-    print cur, 
-    if   prev==cur:
-      print 'flatline'
+    prev,cur= arr[i:i+2]
+    #print cur, 
+    if   prev==cur: pass
+      #print 'flatline'
     elif prev< cur: 
-      print 'rising'
+      #print 'rising'
       for rec in tree: # iterate from prev +1 to cur
         if rec.hei <= prev: 
           assert rec.currentRunStart > 0
           continue 
         if rec.hei > cur: break
         rec.currentRunStart = j
-        print 'started a run in', rec
+        #print 'started a run in', rec
     else:
       assert prev> cur
-      print 'falling'
+      #print 'falling'
       for rec in tree: # iterate from cur+1 to prev
         if rec.hei <= cur:
           assert rec.currentRunStart > 0
@@ -57,7 +55,7 @@ def largestRectangleArea(heights):
         lastRun = j - rec.currentRunStart
         if rec.maxRun < lastRun: 
            rec.maxRun = lastRun
-           print 'updated maxRun in', rec
+           #print 'updated maxRun in', rec
         rec.currentRunStart = 0
   
   # now select final winner
