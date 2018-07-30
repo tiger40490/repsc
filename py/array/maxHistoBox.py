@@ -1,7 +1,6 @@
-'''todo: 
+'''
 showcase inserting element at front of a list
 showcase assign 2 adjacent list slements to 2 scalar variables
-showcase __repr__ using __str__ to support pprint
 '''
 class RunRecord(object): #RunRecord
   def __init__(self, hei):
@@ -12,7 +11,7 @@ class RunRecord(object): #RunRecord
     self.currentRunStart=0 # 0 to indicate no current run
   def __str__(self):
     return str(self.hei)+":"+str(self.maxRun)+'!'+str(self.currentRunStart)
-  def __repr__(self):
+  def __repr__(self): # to support pprint
     return self.__str__()
     
 def binsearch(sortedRecords, hei): # to compensate for lack of treemap
