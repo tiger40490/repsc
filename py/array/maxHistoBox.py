@@ -1,4 +1,4 @@
-'''
+'''todo: 
 showcase inserting element at front of a list
 showcase assign 2 adjacent list slements to 2 scalar variables
 showcase __repr__ using __str__ to support pprint
@@ -15,18 +15,18 @@ class RunRecord(object): #RunRecord
   def __repr__(self):
     return self.__str__()
     
-def binsearch(tree, hei): # returns the tree index matching hei, or throw exception
-  print 'binsearch() for', hei
-  if hei <= 0: return 0
-  ret = le = 0; ri = len(tree)-1
+def binsearch(sortedRecords, hei): # returns the sortedRecords index matching hei, or throw exception
+  #print 'binsearch() for', hei
+  if hei == 0: return -1 # not a real hit
+  hit = le = 0; ri = len(sortedRecords)-1
   while le < ri: 
-    ret = (le+ri)/2
-    print 'trying', ret
-    if tree[ret].hei == hei: 
-      print 'returning', ret
-      return ret
-    if tree[ret].hei >  hei: ri = ret
-    else: le = ret
+    hit = (le+ri)/2
+    #print 'trying', hit
+    if sortedRecords[hit].hei == hei: 
+      #print 'returning hit =', hit
+      return hit
+    if sortedRecords[hit].hei >  hei: ri = hit
+    else: le = hit
   assert 1==2, 'needle not found'
     
 def largestRectangleArea(heights):
@@ -37,11 +37,11 @@ def largestRectangleArea(heights):
       h = heights[i]
       assert h > 0
       di[h]= RunRecord(h)
-    tree=[ di[key] for key in sorted(di.iterkeys())]
-    #print tree # sorted array of non-repeating RunRecords
+    sortedRecords=[ di[key] for key in sorted(di.iterkeys())]
     
   arr=[0] + heights + [0]
   print '======= raised and extended bars =', arr
+  print sortedRecords # sorted array of non-repeating RunRecords
   sz=len(arr)
   for i in xrange(sz-1):
     j=i+1
@@ -52,20 +52,16 @@ def largestRectangleArea(heights):
       print 'flatline'
     elif prev< cur: 
       print 'rising'
-      #for i in xrange(binsearch(tree, prev)+1, len(tree)):
-        #rec = tree[i] # iterate from prev +1 to cur
-        #assert rec.hei > prev
-      for rec in tree: # iterate from prev +1 to cur
-        if rec.hei <= prev: 
-          assert rec.currentRunStart > 0
-          continue 
+      for i in xrange(binsearch(sortedRecords,prev)+1, len(sortedRecords)):
+        rec = sortedRecords[i] # iterate from prev +1 to cur
+        assert rec.hei > prev
         if rec.hei > cur: break
         rec.currentRunStart = j
-        print 'started a run in', rec
+        #print 'started a run in', rec
     else:
       assert prev> cur
       print 'falling'
-      for rec in tree: # iterate from cur+1 to prev
+      for rec in sortedRecords: # iterate from cur+1 to prev
         if rec.hei <= cur:
           assert rec.currentRunStart > 0
           continue
@@ -77,10 +73,9 @@ def largestRectangleArea(heights):
            rec.maxRun = lastRun
            #print 'updated maxRun in', rec
         rec.currentRunStart = 0
-  
   # now select final winner
   ret = 0
-  for rec in tree:
+  for rec in sortedRecords:
     area = (rec.hei-1) * rec.maxRun
     if ret < area: 
        ret = area
