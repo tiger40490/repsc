@@ -15,7 +15,7 @@ class RunRecord(object): #RunRecord
   def __repr__(self):
     return self.__str__()
     
-def binsearch(sortedRecords, hei): # returns the sortedRecords index matching hei, or throw exception
+def binsearch(sortedRecords, hei): # to compensate for lack of treemap
   #print 'binsearch() for', hei
   if hei == 0: return -1 # not a real hit
   hit = le = 0; ri = len(sortedRecords)-1
