@@ -40,18 +40,20 @@ def largestRectangleArea(heights):
     sortedRecords=[ di[key] for key in sorted(di.iterkeys())]
     
   arr=[0] + heights + [0]
-  print '======= raised and extended bars =', arr
-  print sortedRecords # sorted array of non-repeating RunRecords
   sz=len(arr)
+  dbg = sz < 9
+  if dbg:
+    print '======= raised and extended bars =', arr
+    print sortedRecords # sorted array of non-repeating RunRecords
   for i in xrange(sz-1):
     j=i+1
     assert j <= sz-1, 'j should grow to last index'
     prev,cur= arr[i:i+2]
-    print cur, 
+    if dbg: print cur, 
     if   prev==cur: 
-      print 'flatline'
+      if dbg: print 'flatline'
     elif prev< cur: 
-      print 'rising'
+      if dbg: print 'rising'
       for i in xrange(binsearch(sortedRecords,prev)+1, len(sortedRecords)):
         rec = sortedRecords[i] # iterate from prev +1 to cur
         assert rec.hei > prev
@@ -60,14 +62,11 @@ def largestRectangleArea(heights):
         #print 'started a run in', rec
     else:
       assert prev> cur
-      print 'falling'
-      for rec in sortedRecords: # iterate from cur+1 to prev
-        if rec.hei <= cur:
-          assert rec.currentRunStart > 0
-          continue
+      if dbg: print 'falling'
+      for i in xrange(binsearch(sortedRecords,cur)+1, len(sortedRecords)):
+        rec = sortedRecords[i] # iterate from cur+1 to prev
         if rec.hei > prev: break
         #print 'updating', rec
-        # end the current run, update maxRun
         lastRun = j - rec.currentRunStart
         if rec.maxRun < lastRun: 
            rec.maxRun = lastRun
@@ -81,7 +80,7 @@ def largestRectangleArea(heights):
        ret = area
   return ret
 def main():
-  #largestRectangleArea(range(19999))
+  largestRectangleArea(range(19999))
   assert(9==largestRectangleArea([0,9]))
   assert(10==largestRectangleArea([2,2,5,2,2]))
   assert(10==largestRectangleArea([2,1,5,6,2,3]))  
