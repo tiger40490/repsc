@@ -72,7 +72,7 @@ recurs(deque<T> const & pool){
 #endif
   return global_coll;
 }
-deque<deque<char> > const & generate(std::string const & s){
+deque<deque<char> > const & generateAsc(std::string const & s){
   deque<char> v(s.begin(), s.end());
   auto const & ret = recurs(v);
   return ret;
