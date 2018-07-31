@@ -1,3 +1,5 @@
+/*todo: don't use namespace std
+*/
 //As a Recursive solution , this one suffer from stack overflow
 //but it's able to print out all abbreviations in ascending order,
 //where 'ascending' is defined on the basis that within the
@@ -70,6 +72,11 @@ recurs(deque<T> const & pool){
   show(global_coll);
 #endif
   return global_coll;
+}
+deque<deque<char> > const & generate(std::string const & s){
+  deque<char> v(s.begin(), s.end());
+  auto const & ret = recurs(v);
+  return ret;
 }
 /* abbreviation or subsequence generator, to be included in ..
 */
