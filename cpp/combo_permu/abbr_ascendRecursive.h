@@ -21,7 +21,6 @@
 #include <deque>
 #include <set>
 #include <assert.h>
-#define DEBUG
 using namespace std;
 size_t calls=0, combos=0;
 

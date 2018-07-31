@@ -1,3 +1,4 @@
+#define DEBUG
 #include "abbr_ascendRecursive.h"
 
 int main() {

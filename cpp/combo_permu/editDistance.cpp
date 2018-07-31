@@ -1,4 +1,5 @@
 #include "abbr_ascendRecursive.h"
+//#define DEBUG
 
 int main() {
   string small = "abcd";
