@@ -1,7 +1,7 @@
 /*
 todo: simplify before creating the iterative solution
-todo: assert sorted order
 todo: inserting after 1st element is very slow
+todo: do we need deque?
 */
 //As a Recursive solution , this one suffer from stack overflow
 //but it's able to print out all abbreviations in ascending order,
@@ -27,8 +27,8 @@ todo: inserting after 1st element is very slow
 size_t calls=0, combos=0;
 
 
-template<typename T> void dump1abbr(std::deque<T> const & p, std::string const & s=""){
-  std::cout<<"------------ "<<s<<" ------------ size = "<<p.size()<<std::endl;
+template<typename T> void dumpPool(std::deque<T> const & p, std::string const & s=""){
+  std::cout<<"------------ "<<s<<" ------------ size = "<<p.size()<<": ";
   for(int i=0; i<p.size(); ++i) std::cout<<p[i];
   std::cout<<std::endl;
 }
@@ -54,10 +54,11 @@ recurs(std::deque<T> const & pool, bool isFresh=false){
   ++calls;
   static std::deque<std::deque<T> > global_coll;
   if (isFresh) global_coll.clear();
-//  dump1abbr(pool, "entering");
+  dumpPool(pool, "entering");
   if (pool.size() == 1){ //exit condition
     global_coll.push_back(std::deque<T>());
     global_coll.push_back(pool);
+    show(global_coll);
     return global_coll;
   }
   recurs( std::deque<T>(pool.begin()+1,pool.end()) );  //the new pool passed in is shorter
