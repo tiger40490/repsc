@@ -1,7 +1,6 @@
 /*
 todo: simplify before creating the iterative solution
-todo: inserting after 1st element is very slow
-todo: do we need deque?
+todo: inserting after 1st element is very slow. better remove 1st, append, then append empty dequeue
 */
 //As a Recursive solution , this one suffer from stack overflow
 //but it's able to print out all abbreviations in ascending order,
