@@ -1,4 +1,4 @@
-# merged into abbrIterative.py
+# merged into abbrIterative.py, but do not remove yet....
 
 
 def genLongestFirst(original):
