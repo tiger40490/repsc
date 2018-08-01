@@ -2,20 +2,20 @@
 ''' Efficiency -- relies on hash table. I try to minimize memory allocation
 '''
 def genlevel(original):
-  old = set([original])
-  new = set()
+  oldBatch = set([original])
+  newBatch = set()
   cnt=0
-  while len(next(iter(old))) > 1:
-    for abbr in old:
+  while len(next(iter(oldBatch))) > 1:
+    for abbr in oldBatch:
       chars=list(abbr)
       for i in range(len(chars)):
         newAbbr = tuple(chars[:i] + chars[i+1:])
-        if newAbbr not in new:
-          new.add(newAbbr)
-    print len(new), [''.join(tu) for tu in new]
-    cnt += len(new)
-    old=new
-    new=set()
+        if newAbbr not in newBatch:
+          newBatch.add(newAbbr)
+    print len(newBatch), [''.join(tu) for tu in newBatch]
+    cnt += len(newBatch)
+    oldBatch=newBatch
+    newBatch=set()
   assert cnt+2 == 2**len(original)
   
 def main():
