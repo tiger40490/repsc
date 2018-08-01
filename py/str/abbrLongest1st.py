@@ -1,3 +1,6 @@
+# merged into abbrIterative.py
+
+
 def genLongestFirst(original):
   ''' Efficiency -- relies on hash table. 
   I try to minimize memory allocation in the innermost loop
