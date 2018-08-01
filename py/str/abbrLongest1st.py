@@ -1,15 +1,17 @@
+# todo: move to combo_perm
 
 ''' Efficiency -- relies on hash table. 
-I try to minimize memory allocation
+I try to minimize memory allocation in the innermost loop
 '''
-def genlevel(original):
-  oldBatch = set([original])
-  newBatch = set()
+def genLongestFirst(original):
+  oldBatch = set([original]) # longer abbreviations
+  newBatch = set() # slightly shorter abbreviations
   cnt=0
   while len(next(iter(oldBatch))) > 1:
     for abbr in oldBatch:
       chars=list(abbr)
-      for i in range(len(chars)): #allocating a new abbr
+      for i in range(len(chars)): 
+        #allocating a new abbr
         newBatch.add( ''.join(chars[:i] + chars[i+1:]) )
     print len(newBatch), newBatch # here u can process the abbreviations
     cnt += len(newBatch)
@@ -20,7 +22,7 @@ def genlevel(original):
     assert cnt+2 == 2**len(original)
   
 def main():
- genlevel('abcde')
+ genLongestFirst('abcde')
  
 main()
 '''Req: https://wp.me/p74oew-5V3
