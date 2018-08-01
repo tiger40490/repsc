@@ -1,6 +1,6 @@
 /*
 todo: simplify before creating the iterative solution
-todo: can use a list? queue can't take in a range
+showcase template type alias for a container
 */
 //As a Recursive solution , this one suffer from stack overflow
 //but it's able to print out all abbreviations in ascending order,
@@ -23,7 +23,7 @@ todo: can use a list? queue can't take in a range
 #include <deque>
 #include <set>
 #include <assert.h>
-#define outer std::list
+template<typename T> using outer = std::list<T>;
 size_t calls=0, combos=0;
 
 template<typename T> void dumpPool(std::deque<T> const & p, std::string const & s=""){
@@ -62,7 +62,7 @@ recurs(std::deque<T> const & pool, bool isFresh=false){
   recurs( std::deque<T>(pool.begin()+1,pool.end()) );  //the new pool passed in is shorter
 
   outer<std::deque<T> > tmpColl;
-  for(auto abbr //clone each item in global_coll
+  for(auto abbr //clone an item from global_coll
        : global_coll){
     abbr.push_front (pool[0]); //prepend 1st char in pool to make a new abbr
     tmpColl.push_back(abbr);
