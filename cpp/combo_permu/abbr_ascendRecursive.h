@@ -1,6 +1,5 @@
 /*
 todo: simplify before creating the iterative solution
-todo: inserting after 1st element is very slow. better remove 1st, append, then append empty dequeue
 */
 //As a Recursive solution , this one suffer from stack overflow
 //but it's able to print out all abbreviations in ascending order,
@@ -68,7 +67,9 @@ recurs(std::deque<T> const & pool, bool isFresh=false){
     abbr.push_front (pool[0]); //prepend 1st char in pool to make a new abbr
     tmpColl.push_back(abbr);
   }// tmpColl to be merged into global_coll
-  global_coll.insert(global_coll.begin()+1, tmpColl.begin(), tmpColl.end());
+  global_coll.pop_front();
+  global_coll.insert(global_coll.begin(), tmpColl.begin(), tmpColl.end());
+  global_coll.push_front(std::deque<T>());
 
 #ifdef DEBUG
   assert(global_coll[0].size() == 0 && "1st abbreviation in the collection must be the empty abbreviation");
