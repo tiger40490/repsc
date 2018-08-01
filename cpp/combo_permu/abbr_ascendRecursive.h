@@ -1,4 +1,4 @@
-/*todo: don't use namespace std
+/*todo: simplify before creating the iterative solution
 */
 //As a Recursive solution , this one suffer from stack overflow
 //but it's able to print out all abbreviations in ascending order,
@@ -17,46 +17,45 @@
 //lookup device.
 #include <iostream>
 #include <sstream>
-#include <vector>
 #include <deque>
 #include <set>
 #include <assert.h>
-using namespace std;
+//using namespace std;
 size_t calls=0, combos=0;
 
-template<typename T> void dump1abbr(deque<T> const & p, string const & s=""){
-  cout<<"------------ "<<s<<" ------------ size = "<<p.size()<<endl;
-  for(int i=0; i<p.size(); ++i) cout<<p[i];
-  cout<<endl;
+template<typename T> void dump1abbr(std::deque<T> const & p, std::string const & s=""){
+  std::cout<<"------------ "<<s<<" ------------ size = "<<p.size()<<std::endl;
+  for(int i=0; i<p.size(); ++i) std::cout<<p[i];
+  std::cout<<std::endl;
 }
-template<typename T> int show(deque<deque<T> > const & p){
-  stringstream ss;
+template<typename T> int show(std::deque<std::deque<T> > const & p){
+  std::stringstream ss;
   for(int i=0; i<p.size(); ++i){
-    deque<T> const & v = p[i];
+    std::deque<T> const & v = p[i];
     if (v.size() ){
       for(int j=0; j<v.size(); ++j) ss<<v[j];
     }else ss<<"<empty>";
-    ss<<endl;
+    ss<<std::endl;
   }
-  cout<<"abbr count = "<<p.size()<<endl<<ss.str()<<endl;
+  std::cout<<"abbr count = "<<p.size()<<std::endl<<ss.str()<<std::endl;
 }
 
 // Below is the actual algo .. rather short
-template<typename T> deque<deque<T> > const & //void return type is enough for this algo
-recurs(deque<T> const & pool){
+template<typename T> std::deque<std::deque<T> > const & //void return type is enough for this algo
+recurs(std::deque<T> const & pool){
   ++calls;
-  static deque<deque<T> > global_coll;
+  static std::deque<std::deque<T> > global_coll;
 //  dump1abbr(pool, "entering");
   if (pool.size() == 1){ //exit condition
-    global_coll.push_back(deque<T>());
+    global_coll.push_back(std::deque<T>());
     global_coll.push_back(pool);
     return global_coll;
   }
-  recurs( deque<T>(pool.begin()+1,pool.end()) );  //the new pool passed in is shorter
+  recurs( std::deque<T>(pool.begin()+1,pool.end()) );  //the new pool passed in is shorter
 
-  deque<deque<T> > tmpColl;
+  std::deque<std::deque<T> > tmpColl;
   for(int i=0; i<global_coll.size(); ++i){
-    deque<T> abbr = global_coll[i];
+    std::deque<T> abbr = global_coll[i];
     abbr.push_front (pool[0]); //prepend 1st char in pool to make a new abbr
     tmpColl.push_back(abbr);
   }// tmpColl to be merged into global_coll
@@ -72,8 +71,8 @@ recurs(deque<T> const & pool){
 #endif
   return global_coll;
 }
-deque<deque<char> > const & generateAsc(std::string const & s){
-  deque<char> v(s.begin(), s.end());
+std::deque<std::deque<char> > const & generateAsc(std::string const & s){
+  std::deque<char> v(s.begin(), s.end());
   auto const & ret = recurs(v);
   return ret;
 }
