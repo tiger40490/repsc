@@ -1,4 +1,5 @@
-/*todo: simplify before creating the iterative solution
+/*
+todo: simplify before creating the iterative solution
 */
 //As a Recursive solution , this one suffer from stack overflow
 //but it's able to print out all abbreviations in ascending order,
@@ -20,7 +21,6 @@
 #include <deque>
 #include <set>
 #include <assert.h>
-//using namespace std;
 size_t calls=0, combos=0;
 
 template<typename T> void dump1abbr(std::deque<T> const & p, std::string const & s=""){
@@ -42,9 +42,10 @@ template<typename T> int show(std::deque<std::deque<T> > const & p){
 
 // Below is the actual algo .. rather short
 template<typename T> std::deque<std::deque<T> > const & //void return type is enough for this algo
-recurs(std::deque<T> const & pool){
+recurs(std::deque<T> const & pool, bool isFresh=false){
   ++calls;
   static std::deque<std::deque<T> > global_coll;
+  if (isFresh) global_coll.clear();
 //  dump1abbr(pool, "entering");
   if (pool.size() == 1){ //exit condition
     global_coll.push_back(std::deque<T>());
@@ -73,7 +74,7 @@ recurs(std::deque<T> const & pool){
 }
 std::deque<std::deque<char> > const & generateAsc(std::string const & s){
   std::deque<char> v(s.begin(), s.end());
-  auto const & ret = recurs(v);
+  auto const & ret = recurs(v, true);
   return ret;
 }
 /* abbreviation or subsequence generator, to be included in ..
