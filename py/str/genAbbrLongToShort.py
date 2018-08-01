@@ -16,10 +16,11 @@ def genlevel(original):
     cnt += len(newBatch)
     oldBatch=newBatch
     newBatch=set()
-  assert cnt+2 == 2**len(original)
+  if len(original) == len(set(original)):
+    assert cnt+2 == 2**len(original)
   
 def main():
- genlevel('abcde')
+ genlevel('aabcde')
  
 main()
 '''Req: https://wp.me/p74oew-5V3
