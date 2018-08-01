@@ -67,9 +67,7 @@ recurs(std::deque<T> const & pool, bool isFresh=false){
     abbr.push_front (pool[0]); //prepend 1st char in pool to make a new abbr
     tmpColl.push_back(abbr);
   }// tmpColl to be merged into global_coll
-  global_coll.pop_front();
-  global_coll.insert(global_coll.begin(), tmpColl.begin(), tmpColl.end());
-  global_coll.push_front(std::deque<T>());
+  global_coll.splice(++(global_coll.begin()), tmpColl);
 
 #ifdef DEBUG
   assert(global_coll.front().size() == 0 && "1st abbreviation in the collection must be the empty abbreviation");
