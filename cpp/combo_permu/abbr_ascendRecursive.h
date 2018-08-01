@@ -1,5 +1,7 @@
 /*
 todo: simplify before creating the iterative solution
+todo: assert sorted order
+todo: inserting after 1st element is very slow
 */
 //As a Recursive solution , this one suffer from stack overflow
 //but it's able to print out all abbreviations in ascending order,
@@ -21,7 +23,9 @@ todo: simplify before creating the iterative solution
 #include <deque>
 #include <set>
 #include <assert.h>
+#define inner std::deque
 size_t calls=0, combos=0;
+
 
 template<typename T> void dump1abbr(std::deque<T> const & p, std::string const & s=""){
   std::cout<<"------------ "<<s<<" ------------ size = "<<p.size()<<std::endl;
@@ -30,14 +34,18 @@ template<typename T> void dump1abbr(std::deque<T> const & p, std::string const &
 }
 template<typename T> int show(std::deque<std::deque<T> > const & p){
   std::stringstream ss;
+  std::string last = "";
   for(int i=0; i<p.size(); ++i){
     std::deque<T> const & v = p[i];
     if (v.size() ){
       for(int j=0; j<v.size(); ++j) ss<<v[j];
     }else ss<<"<empty>";
-    ss<<std::endl;
+    assert(last < ss.str());
+    std::cout<<ss.str()<<std::endl; //one abbr
+    last = ss.str();
+    ss.str("");
   }
-  std::cout<<"abbr count = "<<p.size()<<std::endl<<ss.str()<<std::endl;
+  std::cout<<"--- abbr count = "<<p.size()<<"\n";
 }
 
 // Below is the actual algo .. rather short
@@ -56,7 +64,7 @@ recurs(std::deque<T> const & pool, bool isFresh=false){
 
   std::deque<std::deque<T> > tmpColl;
   for(int i=0; i<global_coll.size(); ++i){
-    std::deque<T> abbr = global_coll[i];
+    std::deque<T> abbr = global_coll[i]; //clone
     abbr.push_front (pool[0]); //prepend 1st char in pool to make a new abbr
     tmpColl.push_back(abbr);
   }// tmpColl to be merged into global_coll
