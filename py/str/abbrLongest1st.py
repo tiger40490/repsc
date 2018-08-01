@@ -9,9 +9,7 @@ def genlevel(original):
     for abbr in oldBatch:
       chars=list(abbr)
       for i in range(len(chars)):
-        newAbbr = tuple(chars[:i] + chars[i+1:])
-        if newAbbr not in newBatch:
-          newBatch.add(newAbbr)
+        newBatch.add(tuple(chars[:i] + chars[i+1:]))
     print len(newBatch), [''.join(tu) for tu in newBatch]
     cnt += len(newBatch)
     oldBatch=newBatch
@@ -20,7 +18,7 @@ def genlevel(original):
     assert cnt+2 == 2**len(original)
   
 def main():
- genlevel('aabcde')
+ genlevel('abcde')
  
 main()
 '''Req: https://wp.me/p74oew-5V3
