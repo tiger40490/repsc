@@ -7,6 +7,5 @@ using namespace std;
 int main() {
   string small = "abcd";
   deque<deque<char> > ret = generateAsc(small);
-  show(ret);
 }/*Req:
 */
