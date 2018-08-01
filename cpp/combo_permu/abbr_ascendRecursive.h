@@ -1,7 +1,7 @@
 /*
 todo: simplify before creating the iterative solution
 showcase template type alias for a container
-*/
+
 //As a Recursive solution , this one suffer from stack overflow
 //but it's able to print out all abbreviations in ascending order,
 //where 'ascending' is defined on the basis that within the
@@ -17,6 +17,7 @@ showcase template type alias for a container
 
 //If any char is not unique, the only solution I know relies on an external
 //lookup device.
+*/
 #include <iostream>
 #include <sstream>
 #include <list>
