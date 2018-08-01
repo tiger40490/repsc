@@ -1,5 +1,6 @@
 
-''' Efficiency -- relies on hash table. I try to minimize memory allocation
+''' Efficiency -- relies on hash table. 
+I try to minimize memory allocation
 '''
 def genlevel(original):
   oldBatch = set([original])
@@ -9,8 +10,8 @@ def genlevel(original):
     for abbr in oldBatch:
       chars=list(abbr)
       for i in range(len(chars)):
-        newBatch.add(tuple(chars[:i] + chars[i+1:]))
-    print len(newBatch), [''.join(tu) for tu in newBatch]
+        newBatch.add( ''.join(chars[:i] + chars[i+1:]) )
+    print len(newBatch), newBatch
     cnt += len(newBatch)
     oldBatch=newBatch
     newBatch=set()
