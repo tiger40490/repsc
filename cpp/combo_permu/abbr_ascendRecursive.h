@@ -1,5 +1,6 @@
 /*
 todo: simplify before creating the iterative solution
+todo: can use a list? queue can't take in a range
 */
 //As a Recursive solution , this one suffer from stack overflow
 //but it's able to print out all abbreviations in ascending order,
@@ -18,23 +19,22 @@ todo: simplify before creating the iterative solution
 //lookup device.
 #include <iostream>
 #include <sstream>
+#include <list>
 #include <deque>
 #include <set>
 #include <assert.h>
-#define inner std::deque
+#define outer std::list
 size_t calls=0, combos=0;
-
 
 template<typename T> void dumpPool(std::deque<T> const & p, std::string const & s=""){
   std::cout<<"------------ "<<s<<" ------------ size = "<<p.size()<<": ";
   for(int i=0; i<p.size(); ++i) std::cout<<p[i];
   std::cout<<std::endl;
 }
-template<typename T> int show(std::deque<std::deque<T> > const & p){
+template<typename T> int show(outer<std::deque<T> > const & p){
   std::stringstream ss;
   std::string last = "";
-  for(int i=0; i<p.size(); ++i){
-    std::deque<T> const & v = p[i];
+  for(auto const & v : p){
     if (v.size() ){
       for(int j=0; j<v.size(); ++j) ss<<v[j];
     }else ss<<"<empty>";
@@ -47,13 +47,13 @@ template<typename T> int show(std::deque<std::deque<T> > const & p){
 }
 
 // Below is the actual algo .. rather short
-template<typename T> std::deque<std::deque<T> > const & //void return type is enough for this algo
+template<typename T> outer<std::deque<T> > const & //void return type is enough for this algo
 recurs(std::deque<T> const & pool, bool isFresh=false){
   ++calls;
-  static std::deque<std::deque<T> > global_coll;
+  static outer<std::deque<T> > global_coll;
   if (isFresh) global_coll.clear();
   dumpPool(pool, "entering");
-  if (pool.size() == 1){ //exit condition
+  if (pool.size() == 1){ //recursion exit condition
     global_coll.push_back(std::deque<T>());
     global_coll.push_back(pool);
     show(global_coll);
@@ -61,9 +61,9 @@ recurs(std::deque<T> const & pool, bool isFresh=false){
   }
   recurs( std::deque<T>(pool.begin()+1,pool.end()) );  //the new pool passed in is shorter
 
-  std::deque<std::deque<T> > tmpColl;
-  for(int i=0; i<global_coll.size(); ++i){
-    std::deque<T> abbr = global_coll[i]; //clone
+  outer<std::deque<T> > tmpColl;
+  for(auto abbr //clone each item in global_coll
+       : global_coll){
     abbr.push_front (pool[0]); //prepend 1st char in pool to make a new abbr
     tmpColl.push_back(abbr);
   }// tmpColl to be merged into global_coll
@@ -72,7 +72,7 @@ recurs(std::deque<T> const & pool, bool isFresh=false){
   global_coll.push_front(std::deque<T>());
 
 #ifdef DEBUG
-  assert(global_coll[0].size() == 0 && "1st abbreviation in the collection must be the empty abbreviation");
+  assert(global_coll.front().size() == 0 && "1st abbreviation in the collection must be the empty abbreviation");
   static int lastSize= -1 ;
   size_t newSize = global_coll.size();
   assert(lastSize < 0 || lastSize*2 == newSize && "global_coll.size() should double after the insert()");
@@ -81,7 +81,7 @@ recurs(std::deque<T> const & pool, bool isFresh=false){
 #endif
   return global_coll;
 }
-std::deque<std::deque<char> > const & generateAsc(std::string const & s){
+auto const & generateAsc(std::string const & s){
   std::deque<char> v(s.begin(), s.end());
   auto const & ret = recurs(v, true);
   return ret;

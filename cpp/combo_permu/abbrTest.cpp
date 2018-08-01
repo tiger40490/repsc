@@ -3,8 +3,7 @@
 using namespace std;
 
 int main() {
-  deque<deque<char> > ret = generateAsc("abcd");
-  show(ret);
+  outer<deque<char> > ret = generateAsc("abcd");
   set<deque<char> > unique(ret.begin(), ret.end());
   cout<<calls<<"  calls to the recursive funcion to generate "<<ret.size()<<" abbreviations. Including the empty, unique count = "<<unique.size()<<endl;
 }
