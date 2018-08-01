@@ -38,3 +38,7 @@ def main():
   genShortestFirst('abcde')
   genLongestFirst('abcde')
 if __name__ == '__main__': main()
+'''Req: https://wp.me/p74oew-5V3 describes the longest-first
+
+This python script is usable as a standalone or a module.
+'''
