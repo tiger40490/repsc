@@ -4,12 +4,10 @@ showcase global declaration and assignment on one line
 '''
 from abbrIterative import genLongestFirst 
 
-long=''
-def _checkPair(aa, bb):
-  print aa, '^', bb
+def _checkPair(sh, long):
+  print sh, '^', long
 
 def solve(word1, word2): # find distance betwewn word1 and word2
-  global long
   if len(word1) > len(word2):
     long,s=word1,word2
   else:
