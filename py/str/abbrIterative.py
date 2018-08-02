@@ -1,7 +1,10 @@
-def genLongestFirst(original):
-  ''' Efficiency -- relies on hash table. 
+def genLongestFirst(original, func=None, isStrict=False):
+  ''' isStrict means strictly abbreviations only.
+  Efficiency -- relies on hash table. 
   I try to minimize memory allocation in the innermost loop
   '''
+  if func and not isStrict:
+    func(original)
   oldBatch = set([original]) # longer abbreviations
   newBatch = set() # slightly shorter abbreviations
   cnt=0
@@ -11,13 +14,18 @@ def genLongestFirst(original):
       for i in range(len(chars)): 
         #allocating a new abbr
         newBatch.add( ''.join(chars[:i] + chars[i+1:]) )
-    print len(newBatch), newBatch # here u can process the abbreviations
+    if func:    
+      for ab in newBatch: func(ab)
+    else:
+      print len(newBatch), newBatch
     cnt += len(newBatch)
     oldBatch=newBatch
     newBatch=set()
   #end of while  
   if len(original) == len(set(original)):
     assert cnt+2 == 2**len(original)
+  if func and not isStrict:
+    func('')
 
 def genShortestFirst(original):
   '''Supose we have scanned 3 chars in the original, and we have a collection of N abbreviations. 
@@ -33,10 +41,12 @@ def genShortestFirst(original):
       print len(growing), growing
   if len(original) == len(set(original)):
     assert len(growing) == 2**len(original)
-      
+
+def dummyFunc(abbr):
+  print ':', abbr
 def main():
   genShortestFirst('abcde')
-  genLongestFirst('abcde')
+  genLongestFirst('abcde', dummyFunc)
 if __name__ == '__main__': main()
 '''Req: https://wp.me/p74oew-5V3 describes the longest-first
 
