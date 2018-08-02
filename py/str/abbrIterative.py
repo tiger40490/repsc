@@ -1,8 +1,12 @@
 def genLongestFirst(original, func=None, isStrict=False):
-  ''' isStrict means strictly abbreviations only.
-  Efficiency -- relies on hash table. 
-  I try to minimize memory allocation in the innermost loop
-  '''
+  ''' This longest-first algo is useful for identifying the longest abbreviation among 99 potential abbreviations, such as the edit-distance problem 
+
+  isStrict means strictly abbreviations-only.
+  
+  Efficiency -- 
+  * relies on hash table. 
+  * I try to minimize memory allocation in the innermost loop
+  '''  
   if func and not isStrict:
     func(original)
   oldBatch = set([original]) # longer abbreviations
