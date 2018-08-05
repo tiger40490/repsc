@@ -43,8 +43,9 @@ void test1(int expected, vector<int> v){
   assert(expected == maxArea(v));
 }
 int main(){
+  test1(7, {7,9});
+  test1(56, {7,1,9,9,5,4,9,5,7});
   test1(40, {5,9,5,3,4,0,8,5,2});
 }/*Req: Given an array of size N (>=2) of non-negative numbers representing N walls, find a pair of walls trapping the most rain water.
-Here's a rewrite based on the rainfall_Boris idea.
-
+This is a rewrite based on my recall of the rainfall_Boris idea.
 */
