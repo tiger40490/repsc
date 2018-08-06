@@ -1,7 +1,7 @@
 def genLongestFirst(original, func=None, isStrict=False):
-  ''' This longest-first algo is useful for identifying the longest abbreviation among 99 potential abbreviations, such as the edit-distance problem 
+  ''' This longest-first algo is useful for identifying the longest abbreviation among 99 potential abbreviations 
 
-  isStrict means strictly abbreviations-only.
+  isStrict means strictly abbreviations-only, i.e. no empty string no original string
   
   Efficiency -- 
   * relies on hash table. 
@@ -9,8 +9,8 @@ def genLongestFirst(original, func=None, isStrict=False):
   '''  
   if func and not isStrict:
     func(original)
-  oldBatch = set([original]) # longer abbreviations
-  newBatch = set() # slightly shorter abbreviations
+  oldBatch = set([original]) # this set will hold longer abbreviations
+  newBatch = set() # this set will hold slightly shorter abbreviations
   cnt=0
   while len(next(iter(oldBatch))) > 1:
     for abbr in oldBatch:
@@ -23,10 +23,11 @@ def genLongestFirst(original, func=None, isStrict=False):
     else:
       print len(newBatch), newBatch
     cnt += len(newBatch)
+    # prepare for next iteration in while-loop:
     oldBatch=newBatch
     newBatch=set()
   #end of while  
-  if len(original) == len(set(original)):
+  if len(original) == len(set(original)): # no duplicate char
     assert cnt+2 == 2**len(original)
   if func and not isStrict:
     func('')

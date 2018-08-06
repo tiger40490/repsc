@@ -26,7 +26,6 @@ def solve(word1, word2): # find distance betwewn word1 and word2
     long,s=word2,word1  
   
   genLongestFirst(s,   lambda p:checkPair(p,long)  )
-  # if longest abbreviation has length 5, then edit distance is len(long) - 5
 def main():
   solve('intention', 'execution')
 main()
