@@ -56,13 +56,16 @@ def sol1(sentence): # one-pass
     for word in wordDict:
       hopBack = idx - len(word)
       if hopBack < -1: continue # to next word in wordDict, since current word is too long and we are near beginning of sentence
+      
       if word == sentence [hopBack+1 : hopBack+1+len(word)]:
+      # (assuming the word's size is 4) counting back from idx, the last 4 chars  matches the word:)
+      
          # -1 means this word is at the start of sentence
         if hopBack == -1 or aboveWater[hopBack]:
            # print word, 'provides a hop from ', hopBack
-           aboveWater[idx] = True #This position is reachable via some "dry ground". (Start from left end)
+           aboveWater[idx] = True #This position is reachable via some "dry ground", if we start from left end.
            break
-  return aboveWater[-1]
+  return aboveWater[-1] # a boolean to indicate punctuating completed or failed
   
 def main():
   print wordDict
