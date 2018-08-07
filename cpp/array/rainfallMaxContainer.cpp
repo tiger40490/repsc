@@ -1,3 +1,5 @@
+/*todo: 
+*/
 #include <iostream>
 #include <iomanip>
 #include <cassert>
@@ -11,7 +13,9 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    os<<endl;
    return os;
 }
-int maxArea(vector<int>& height) {
+/*I keep 4 moving pointers mostly to avoid overhead. When the low-side pointer moves in and hits a very low wall, I can skip recalc and keep moving it, but need to remember the low-side best wall.
+*/
+int maxAreaMyAlgo(vector<int>& height) {
   cout<<height;
   idx le = 0,   ri = height.size()-1; //the walls
   idx lem = le, rim=ri; // the moving markers
@@ -22,6 +26,8 @@ int maxArea(vector<int>& height) {
       return ret;
     }
     int area=0;
+    
+    //We can have more granular cases than these two. For some problems like trapping rain water, we might need them. Overkill for this case. Overall, the more granular technique is reusable and valuable.
     if (height[le] <= height[ri]){
       ++lem; 
       cout<<"moving lem --> "<<lem<<endl;
@@ -34,6 +40,7 @@ int maxArea(vector<int>& height) {
       if (height[rim] <= height[ri]) continue; //nothing to do
       ri = rim;
     }
+    assert(ri==rim && le==lem);
     area = (ri-le)*min(height[le], height[ri]);
     cout<<area<<" = new area computed\n";
     if (ret < area) ret = area;
@@ -41,23 +48,16 @@ int maxArea(vector<int>& height) {
 }
 int maxAreaCSY(vector<int>& height) {
   cout<<height;
-  idx left = 0,   right = height.size()-1;
-  idx left2, right2; 
-  int max=0;
-  while (left != right){
+  for (int max=0, left=0, right=height.size()-1;;){    
+    if (left == right) return max;
     int vol = (right-left)*min( height[left], height[right] );
-    if (vol > max){
-      max = vol;
-      left2=left;
-      right2=right;
-    }
+    if (vol > max){      max = vol;}      //left2=left; right2=right;
     if (height[left] <= height[right]) left++;
     else right--;
   }
-  return max;
 }
 void test1(int expected, vector<int> v){
-  assert(expected == maxAreaCSY(v));
+  assert(expected == maxAreaMyAlgo(v));
 }
 int main(){
   test1(7, {7,9});
@@ -65,5 +65,5 @@ int main(){
   test1(40, {5,9,5,3,4,0,8,5,2});
 }/*Req: Q: Given an array of size N (>=2) of non-negative numbers representing N walls, find a pair of walls that can hold the most water.
 
-This is a rewrite based on my recall of the rainfall_Boris idea.
+This is a rewrite based on my recall of the rainfall_Boris idea. I decided to include my friend CSY's shorter solution because contrasting these 2 solutions might provide valuable insight and help me remember some useful implementation/ECT techniques.
 */
