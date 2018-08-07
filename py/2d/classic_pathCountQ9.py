@@ -1,4 +1,7 @@
-#todo: early exit when no path
+'''todo: early exit if either origin or destination is an island
+
+There are three solutions presented here -- DFT, BFT and Ashish
+'''
 import sys, os, operator # locate max entry from dict
 from collections import deque
 from pprint import pprint
@@ -28,6 +31,11 @@ def test1():
   m.append([1,1,0,1])
   m.append([1,1,1,1])
 def startDFT(r,c, verbose): 
+  if len(m)*len(m[0]) > 9999: 
+    print 'too large for DFT recursion'
+    return
+  '''DFT is less efficient than BFT due to deep stack
+  '''
   global finalCnt, revisits
   addr=(r,c)
   revisits[addr] = revisits.get(addr, 0) + 1
@@ -40,10 +48,10 @@ def startDFT(r,c, verbose):
     startDFT(r, c+1, verbose)
     
   if r == height-1 and c == width-1:
-    finalCnt += 1
+    finalCnt += 1 # found a path to destination
     if verbose: print 'incremented finalCnt to', finalCnt
 ######## non-recursive BFT solution
-class Q: #class based on deque
+class Q: #class based on collections.deque
     def __init__(self):
         self.list = deque()
     def enQ(self, item):
@@ -83,11 +91,11 @@ def startBFT(verbose=1):
         q.enQ((r, c+1))
   finalCnt = score[-1][-1]
 
-def startSpreadsheet(): #Based on Ashish Singh's tips
+def startSpreadsheet(): #Based on Ashish Singh's tips, much faster than BFT
   global finalCnt, score
-  score=[[0 for x in xrange(width)] for y in xrange(height)] # init
+  score=[[0 for _ in xrange(width)] for _ in xrange(height)] # init
   
-  for r in xrange(height): # populate left-nost column
+  for r in xrange(height): # populate left-most column
     if m[r][0] == 0: 
       break
     score[r][0] = m[r][0]
@@ -99,6 +107,7 @@ def startSpreadsheet(): #Based on Ashish Singh's tips
   for r in xrange(1,height):  
     for c in xrange(1,width): 
        if m[r][c]: 
+         # key insight -- there are only 2 ways to reach current node: from upper or from left node. My score=score(upperNode)+score(leftNode)
          score[r][c] = score[r-1][c] + score[r][c-1]   
   finalCnt = score[-1][-1]
 def work(setup1test, verbose=1):
