@@ -39,8 +39,25 @@ int maxArea(vector<int>& height) {
     if (ret < area) ret = area;
   }
 }
+int maxAreaCSY(vector<int>& height) {
+  cout<<height;
+  idx left = 0,   right = height.size()-1;
+  idx left2, right2; 
+  int max=0;
+  while (left != right){
+    int vol = (right-left)*min( height[left], height[right] );
+    if (vol > max){
+      max = vol;
+      left2=left;
+      right2=right;
+    }
+    if (height[left] <= height[right]) left++;
+    else right--;
+  }
+  return max;
+}
 void test1(int expected, vector<int> v){
-  assert(expected == maxArea(v));
+  assert(expected == maxAreaCSY(v));
 }
 int main(){
   test1(7, {7,9});
