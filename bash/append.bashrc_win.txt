@@ -1,0 +1,14 @@
+alias s-='  source  $HOME/.bashrc  '
+alias s+='       vi $HOME/.bashrc  '
+alias py='winpty python.exe'
+
+alias ..='cd .. ; ls1page'
+
+ls1page(){
+  ls -ahlF --color=always $*
+}
+run(){
+  g++ $1 && ./a.exe
+}
+
+printf "done sourcing .bashrc"
