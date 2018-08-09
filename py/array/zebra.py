@@ -74,12 +74,12 @@ def dump(seen):
   for key, hit in seen.iteritems():    
     print key, ':', hit
 def main():
-  assert 15==solve2([4, 10, 13,5, 8,12, 1,9,11,6,15,3, 7,14,2])
+  solve2Wrapper(random.sample(xrange(-99, 100), 150)) # 150 2-digit ints
   solve2Wrapper([100, 4, 200, 1, 3, 2])
   solve2Wrapper([7, 4, 5, 1, 3, 2])
   solve2Wrapper([8, 4, 6, 1, 3, 2])
   solve2Wrapper([9, 4, 7, 1, 5, 8, 3, 6, 2])
-  solve2Wrapper(random.sample(xrange(-99, 100), 150)) # 50 2-digit ints
+  assert 15==solve2([4, 10, 13,5, 8,12, 1,9,11,6,15,3, 7,14,2])
 main()
 '''Req: 
 '''
