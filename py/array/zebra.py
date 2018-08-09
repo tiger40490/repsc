@@ -15,9 +15,10 @@ class Stripe(object):
 
 def solve2Wrapper(randomList):
   li = list(set(randomList))
-  interleaved = li[1::2]+li[::2]
-  act = solve2(interleaved)
-  exp = sort_check(interleaved) 
+  for _ in xrange(9):
+    li = li[1::2]+li[::2]
+  act = solve2(li)
+  exp = sort_check(li) 
   assert exp == act, 'expecting ' + str(exp)
 def sort_check(uniq):
   isVerbose=16 > len(uniq)
