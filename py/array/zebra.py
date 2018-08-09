@@ -1,16 +1,16 @@
 '''
-showcase defining 2 vars on one line
+showcase defining 2 vars to one value, on the same line
+showcase defining 2 unrealted vars on the same line;; separated by semicolon
 '''
 class Stripe(object):
-  def __init__(self, a):
-    self.min=a
-    self.max=a
+  def __init__(self, q):
+    self.min=q
+    self.max=q
   def __str__(self):
-    return 'Stripe['+str(self.min) + ' ' + str(self.max) + ']\t@ ' + str(id(self)%1000)       
-seen=dict() # item -> stripe. Every item must be the min or max of a stripe
-
+    return 'Stripe['+str(self.min) + ' ' + str(self.max) + ']\t@ ' + str(id(self)%1000)
+    
 def solve2(unsorted):
-  max=0
+  max=0; seen=dict() # item -> stripe. Every item must be the min or max of a stripe
   for q in unsorted:
     print 'procssing --> ', q
     assert q not in seen, 'original values should be unique'
@@ -35,17 +35,17 @@ def solve2(unsorted):
       print stripeLe, 'merged stripeLen =', stripeLen
       if max < stripeLen: 
         max=stripeLen
-        dump()
+        dump(seen)
     if q not in seen:
       seen[q]=Stripe(q)
       #print seen[q], 'created'
   return max
-def dump():
+def dump(seen):
   for key, hit in seen.iteritems():    
     print key, ':', hit
 def main():
   assert 15==solve2([4, 10, 13,5, 8,12, 1,9,11,6,15,3, 7,14,2])
-#  solve1([100, 4, 200, 1, 3, 2])
+  assert 4 ==solve2([100, 4, 200, 1, 3, 2])
 main()
 '''Req: 
 '''
