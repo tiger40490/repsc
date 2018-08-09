@@ -1,5 +1,7 @@
 '''
 todo: simplify further, like more del
+showcase object id printing
+showcase stride slicing
 showcase defining 2 vars to one value, on the same line
 showcase defining 2 unrealted vars on the same line;; separated by semicolon
 '''
