@@ -1,5 +1,4 @@
 '''
-todo: simplify further, like more del
 showcase object id printing
 showcase stride slicing
 showcase defining 2 vars to one value, on the same line
@@ -41,21 +40,20 @@ def solve2(uniq):
     if isVerbose: print 'procssing --> ', q
     assert q not in seen, 'original values should be unique'
     stripeLe=stripeRi=None
+    stripeLen=0
     if q-1 in seen:
       stripeLe=seen[q-1]
       assert stripeLe.max+1==q
       stripeLe.max=q
       seen[q]=stripeLe
-      tmp = stripeLe.max+1-stripeLe.min
-      if max < tmp: max = tmp
+      stripeLen = stripeLe.max+1-stripeLe.min
       if isVerbose: print stripeLe, 'expanded to right'
     if q+1 in seen:
       stripeRi=seen[q+1]
       assert stripeRi.min-1==q
       stripeRi.min=q
       seen[q]=stripeRi
-      tmp = stripeRi.max+1-stripeRi.min
-      if max < tmp: max = tmp      
+      stripeLen = stripeRi.max+1-stripeRi.min
       if isVerbose: print stripeRi, 'expanded to left'
     if stripeLe and stripeRi: #they both contain "q"
       del seen[q] # to reduce dict size...sometimes broken
@@ -63,24 +61,24 @@ def solve2(uniq):
       seen[stripeRi.max]=stripeLe
       stripeLen=stripeRi.max+1-stripeLe.min
       print stripeLe, 'merged stripeLen =', stripeLen
-      if max < stripeLen: 
+    if max < stripeLen: 
         max=stripeLen
-        if isVerbose: dump(seen)
+        #if isVerbose: dump(seen)
     if q not in seen:
       seen[q]=Stripe(q)
-      #print seen[q], 'created'
   print 'returning', max
   return max
 def dump(seen):
   for key, hit in seen.iteritems():    
     print key, ':', hit
 def main():
+  assert 15==solve2([4, 10, 13,5, 8,12, 1,9,11,6,15,3, 7,14,2])
+  #return
   solve2Wrapper(random.sample(xrange(-99, 100), 150)) # 150 2-digit ints
   solve2Wrapper([100, 4, 200, 1, 3, 2])
   solve2Wrapper([7, 4, 5, 1, 3, 2])
   solve2Wrapper([8, 4, 6, 1, 3, 2])
   solve2Wrapper([9, 4, 7, 1, 5, 8, 3, 6, 2])
-  assert 15==solve2([4, 10, 13,5, 8,12, 1,9,11,6,15,3, 7,14,2])
 main()
 '''Req: 
 '''
