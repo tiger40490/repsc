@@ -2,7 +2,7 @@
 reusable technique -- outer loop to visit every matrix node, but most of them were already visited in earlier graph walk, so use "grey" to avoid revisiting
 
 showcase collections.deque
-showcase myFunc(*pair) which calls myFunc(pair[0], pair[1])
+showcase myFunc( * xy) which calls myFunc(xy[0], xy[1])
 '''
 width, height = 0,0
 m = list() 
@@ -30,10 +30,9 @@ def dft(r,c): # find all black cells connected and repaint them grey
   tmp = readCell(r-1, c); assert tmp is None or tmp == g, 'i doubt we ever need to explore upward'
   
 def checkEnqueue(pair, queue):
-  if readCell(*pair) == b: queue.append(pair)
+  if readCell( * pair) == b: queue.append(pair)
 def bft(aa,bb): # avoids deep recursion stack :)
-  from collections import deque
-  queue = deque()
+  from collections import deque; queue = deque()
   queue.append((aa,bb))
   while(queue):
     r,c = queue.popleft()
