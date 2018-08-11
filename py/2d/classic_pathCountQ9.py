@@ -1,4 +1,9 @@
 '''todo: early exit if either origin or destination is an island
+todo: assert on final count
+
+Key idea: DP
+
+Path generation is my weakness. Needs more practice, esp. with BFT
 
 There are three solutions presented here -- DFT, BFT and Ashish
 '''
@@ -16,30 +21,42 @@ def test9():
   global m
   m = [[1 for x in xrange(bigMatSize)] for y in xrange(bigMatSize)]
   assert len(m) == bigMatSize and len(m[0]) == bigMatSize
+  return -1
+def test4():
+  global m
+  m.append([1,1,1])
+  m.append([1,0,1])
+  m.append([1,1,1])
+  return 2
 def test3():
   global m
   m.append([1,1,0,1])
   m.append([0,0,1,1])
   m.append([1,1,1,1])
+  return 0
 def test2():
   global m
   m.append([1,1,1,1])
   m.append([1,1,1,1])
   m.append([1,1,1,1])
+  return 10 # Q9 test case
 def test1():
   global m
   m.append([1,1,0,1])
   m.append([1,1,1,1])
+  return 2
 def startDFT(r,c, verbose): 
   if len(m)*len(m[0]) > 9999: 
     print 'too large for DFT recursion'
     return
-  '''DFT is less efficient than BFT due to deep stack
+  '''DFT is simpler but less efficient than BFT due to deep stack
   '''
   global finalCnt, revisits
   addr=(r,c)
-  revisits[addr] = revisits.get(addr, 0) + 1
+
+  revisits[addr] = revisits.get(addr,0)+1
   if verbose and revisits[addr] > 4: print addr, 'visited', revisits[addr], 'times :('
+
   if m[r][c]==0: #dead end
     return
   if r < height-1: #move down before moving right
@@ -50,7 +67,7 @@ def startDFT(r,c, verbose):
   if r == height-1 and c == width-1:
     finalCnt += 1 # found a path to destination
     if verbose: print 'incremented finalCnt to', finalCnt
-######## non-recursive BFT solution
+######## BFT solution:
 class Q: #class based on collections.deque
     def __init__(self):
         self.list = deque()
@@ -59,7 +76,7 @@ class Q: #class based on collections.deque
     def deQ(self): 
         return self.list.popleft() # throws error if empty
 
-score=list() 
+score=list() #shadow matrix
 
 def readScore(r,c):
   '''Created for revisit accounting, which hurts performance. 
@@ -113,7 +130,7 @@ def startSpreadsheet(): #Based on Ashish Singh's tips, much faster than BFT
 def work(setup1test, verbose=1):
   global m, width, height, finalCnt, revisits
   m = list()
-  setup1test()
+  exp = setup1test()
   height, width = len(m), len(m[0])
   assert m[0][0] == m[-1][-1] == 1
   finalCnt=0
@@ -122,15 +139,17 @@ def work(setup1test, verbose=1):
   if 1>2: 
     startSpreadsheet()
   else:
-    startBFT(verbose)  
-    #startDFT(0,0, verbose)
+    #startBFT(verbose)  
+    startDFT(0,0, verbose)
   if revisits: 
     print 'most revisited node is ', max(revisits.iteritems(), key=operator.itemgetter(1))
   print '-----------> finalCnt =', finalCnt
+  if exp >=0: assert exp == finalCnt
 def main():
   work(test1)
   work(test2)
   work(test3)
+  work(test4)
   
   startTime=datetime.now()
   work(test9, verbose=0)
