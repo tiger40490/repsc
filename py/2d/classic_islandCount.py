@@ -1,5 +1,8 @@
 '''
 reusable technique -- outer loop to visit every matrix node, but most of them were already visited in earlier graph walk, so use "grey" to avoid revisiting
+
+showcase collections.deque
+showcase myFunc(*pair) which calls myFunc(pair[0], pair[1])
 '''
 width, height = 0,0
 m = list() 
@@ -26,17 +29,20 @@ def dft(r,c): # find all black cells connected and repaint them grey
   if readCell(r+1, c) == b: coverEntireIsland(r+1,c)
   tmp = readCell(r-1, c); assert tmp is None or tmp == g, 'i doubt we ever need to explore upward'
   
-def bft(aa,bb): 
-  queue=list()
-  queue.insert(0, (aa,bb))
+def checkEnqueue(pair, queue):
+  if readCell(*pair) == b: queue.append(pair)
+def bft(aa,bb): # avoids deep recursion stack :)
+  from collections import deque
+  queue = deque()
+  queue.append((aa,bb))
   while(queue):
-    r,c = queue.pop()
-    if readCell(r, c+1) == b: queue.insert(0, (r,c+1))
-    if readCell(r, c-1) == b: queue.insert(0, (r,c-1))
-    if readCell(r+1, c) == b: queue.insert(0, (r+1,c))
-    if readCell(r-1, c) == b: queue.insert(0, (r-1,c))
+    r,c = queue.popleft()
+    checkEnqueue((r,c+1), queue)
+    checkEnqueue((r,c-1), queue)
+    checkEnqueue((r+1,c), queue)
+    checkEnqueue((r-1,c), queue)
 def coverEntireIsland(r,c): # bft/dft both OK. BFT turns out a bit tricky to implement
-  dft(r,c)      
+  bft(r,c)      
 def solve1(m):
   global width, height, islands
   height = len(m); width = len(m[0]) # to ease readCell()
