@@ -1,11 +1,15 @@
 '''todo: early exit if either origin or destination is an island
-todo: assert on final count
+todo: improve BFT Test 9 performance from 20 sec
+* fill the top row and left column first to eliminate the if r>0...
 
 Key idea: DP
+Key idea: BFT to enqueue a [x,y] pair
 
 Path generation is my weakness. Needs more practice, esp. with BFT
 
 There are three solutions presented here -- DFT, BFT and Ashish
+
+showcase: passing test function as input to a HigherOrderFunction
 '''
 import sys, os, operator # locate max entry from dict
 from collections import deque
@@ -21,7 +25,7 @@ def test9():
   global m
   m = [[1 for x in xrange(bigMatSize)] for y in xrange(bigMatSize)]
   assert len(m) == bigMatSize and len(m[0]) == bigMatSize
-  return -1
+  return 15305440000
 def test4():
   global m
   m.append([1,1,1])
@@ -78,30 +82,29 @@ class Q: #class based on collections.deque
 
 score=list() #shadow matrix
 
-def readScore(r,c):
+def readScore(r,c, verbose=1):
   '''Created for revisit accounting, which hurts performance. 
   Comment out next line after verifying revisits.  
   '''
-  addr=(r,c); revisits[addr] = revisits.get(addr, 0) + 1  
+  if verbose: addr=(r,c); revisits[addr] = revisits.get(addr, 0) + 1  
   return score[r][c]
-def startBFT(verbose=1): 
+def startBFT(verbose): 
   global finalCnt, score
   # 0 means unknown; None means unreachable though I don't use None for now
-  score=[[0 for x in xrange(width)] for y in xrange(height)]
+  score=[[0 for _ in xrange(width)] for _ in xrange(height)]
   score[0][0] = 1
   q = Q()
   q.enQ((1,0))
   q.enQ((0,1))
   while q.list:
     r,c = q.deQ()
+    if readScore(r,c,verbose) > 0: continue # See Keynote in blog
     if m[r][c] == 0: continue
-    if readScore(r,c) > 0: continue # See Keynote in blog
-    tmp  = readScore(r-1, c) if r>0 else 0
-    tmp += readScore(r, c-1) if c>0 else 0
+    tmp  = readScore(r-1, c,verbose) if r>0 else 0
+    tmp += readScore(r, c-1,verbose) if c>0 else 0
     assert tmp > 0
-    score[r][c] = tmp # if tmp > 0 else None
+    score[r][c] = tmp 
     if verbose: print r,c,' --> score set to ', score[r][c]   
-    #if tmp == 0: continue # current node is unreachable   
     if r < height-1 : 
         q.enQ((r+1, c))
     if c < width-1 :
@@ -127,7 +130,7 @@ def startSpreadsheet(): #Based on Ashish Singh's tips, much faster than BFT
          # key insight -- there are only 2 ways to reach current node: from upper or from left node. My score=score(upperNode)+score(leftNode)
          score[r][c] = score[r-1][c] + score[r][c-1]   
   finalCnt = score[-1][-1]
-def work(setup1test, verbose=1):
+def work(setup1test):
   global m, width, height, finalCnt, revisits
   m = list()
   exp = setup1test()
@@ -139,12 +142,13 @@ def work(setup1test, verbose=1):
   if 1>2: 
     startSpreadsheet()
   else:
-    #startBFT(verbose)  
-    startDFT(0,0, verbose)
+    startBFT(exp<99999)  
+    #startDFT(0,0, verbose)
+  
   if revisits: 
     print 'most revisited node is ', max(revisits.iteritems(), key=operator.itemgetter(1))
   print '-----------> finalCnt =', finalCnt
-  if exp >=0: assert exp == finalCnt
+  assert exp == finalCnt%100000000000
 def main():
   work(test1)
   work(test2)
@@ -152,7 +156,7 @@ def main():
   work(test4)
   
   startTime=datetime.now()
-  work(test9, verbose=0)
+  work(test9)
   print (datetime.now()-startTime).total_seconds(), 'seconds'
 
 main()
