@@ -2,6 +2,7 @@
 todo: improve BFT Test 9 performance from 11 sec
 
 Key idea: DP
+Key idea: BFT doesn't scan the matrix in type-writer zigzag
 Key idea: BFT to enqueue a [x,y] pair
 
 Path generation is my weakness. Needs more practice, esp. with BFT
@@ -92,7 +93,9 @@ def readScore(r,c, verbose=1):
   '''Created for revisit accounting, which hurts performance. 
   Comment out next line after verifying revisits.  
   '''
-  if verbose: addr=(r,c); revisits[addr] = revisits.get(addr, 0) + 1  
+  if verbose: 
+    addr=(r,c); revisits[addr] = revisits.get(addr, 0) + 1  
+    assert r>=0 and c>=0
   return score[r][c]
 def startBFT(verbose): 
   global finalCnt, score
@@ -120,7 +123,6 @@ def startBFT(verbose):
 def startSpreadsheet(): #Based on Ashish Singh's tips, faster than BFT
   global finalCnt, score
   score=[[0 for _ in xrange(width)] for _ in xrange(height)] # init
-  
   for r in xrange(height): # populate left-most column
     if m[r][0] == 0: 
       break
@@ -129,7 +131,7 @@ def startSpreadsheet(): #Based on Ashish Singh's tips, faster than BFT
     if m[0][c] == 0: 
       break
     score[0][c] = m[0][c]
-  # all top and left boundary cells have scores 1 (unless blocked) since for each cell there's only one path from origin.
+
   for r in xrange(1,height):  
     for c in xrange(1,width): 
        if m[r][c]: 
