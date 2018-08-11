@@ -1,6 +1,5 @@
-'''todo: early exit if either origin or destination is an island
-todo: improve BFT Test 9 performance from 20 sec
-* fill the top row and left column first to eliminate the if r>0...
+'''todo: early exit if either origin or destination is an island, but detecting it could be slower than the main scan.
+todo: improve BFT Test 9 performance from 11 sec
 
 Key idea: DP
 Key idea: BFT to enqueue a [x,y] pair
@@ -26,6 +25,12 @@ def test9():
   m = [[1 for x in xrange(bigMatSize)] for y in xrange(bigMatSize)]
   assert len(m) == bigMatSize and len(m[0]) == bigMatSize
   return 15305440000
+def test9b():
+  global m
+  m = [[1 for x in xrange(bigMatSize)] for y in xrange(bigMatSize)]
+  assert len(m) == bigMatSize and len(m[0]) == bigMatSize
+  m[-1][-1]=0
+  return 0
 def test4():
   global m
   m.append([1,1,1])
@@ -91,7 +96,7 @@ def readScore(r,c, verbose=1):
   return score[r][c]
 def startBFT(verbose): 
   global finalCnt, score
-  # 0 means unknown; None means unreachable though I don't use None for now
+  # 0 means unknown
   score=[[0 for _ in xrange(width)] for _ in xrange(height)]
   score[0][0] = 1
   q = Q()
@@ -112,7 +117,7 @@ def startBFT(verbose):
         q.enQ((r, c+1))
   finalCnt = score[-1][-1]
 
-def startSpreadsheet(): #Based on Ashish Singh's tips, much faster than BFT
+def startSpreadsheet(): #Based on Ashish Singh's tips, faster than BFT
   global finalCnt, score
   score=[[0 for _ in xrange(width)] for _ in xrange(height)] # init
   
@@ -136,15 +141,15 @@ def work(setup1test):
   m = list()
   exp = setup1test()
   height, width = len(m), len(m[0])
-  assert m[0][0] == m[-1][-1] == 1
   finalCnt=0
   revisits=dict()
   
   if 1>2: 
     startSpreadsheet()
   else:
-    #startBFT(exp<99999)  
-    startDFT(0,0, exp<99999)
+    verbose = (height * width < 99999)
+    startBFT(verbose)  
+    #startDFT(0,0, verbose)
   
   if revisits: 
     print 'most revisited node is ', max(revisits.iteritems(), key=operator.itemgetter(1))
@@ -159,6 +164,7 @@ def main():
   startTime=datetime.now()
   work(test9)
   print (datetime.now()-startTime).total_seconds(), 'seconds'
+  work(test9b)
 main()
 ''' Req: https://bintanvictor.wordpress.com/2018/05/28/count-paths-between-2-tree-nodes/
 '''
