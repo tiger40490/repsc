@@ -50,12 +50,13 @@ def test1():
   m.append([1,1,1,1])
   return 2
 def startDFT(r,c, verbose): 
+  global finalCnt, revisits
   if len(m)*len(m[0]) > 9999: 
     print 'too large for DFT recursion'
+    finalCnt = -1
     return
   '''DFT is simpler but less efficient than BFT due to deep stack
   '''
-  global finalCnt, revisits
   addr=(r,c)
 
   revisits[addr] = revisits.get(addr,0)+1
@@ -142,13 +143,13 @@ def work(setup1test):
   if 1>2: 
     startSpreadsheet()
   else:
-    startBFT(exp<99999)  
-    #startDFT(0,0, verbose)
+    #startBFT(exp<99999)  
+    startDFT(0,0, exp<99999)
   
   if revisits: 
     print 'most revisited node is ', max(revisits.iteritems(), key=operator.itemgetter(1))
   print '-----------> finalCnt =', finalCnt
-  assert exp == finalCnt%100000000000
+  if finalCnt >= 0: assert exp == finalCnt%100000000000
 def main():
   work(test1)
   work(test2)
@@ -158,7 +159,6 @@ def main():
   startTime=datetime.now()
   work(test9)
   print (datetime.now()-startTime).total_seconds(), 'seconds'
-
 main()
 ''' Req: https://bintanvictor.wordpress.com/2018/05/28/count-paths-between-2-tree-nodes/
 '''
