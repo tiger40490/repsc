@@ -2,7 +2,7 @@
 todo: improve BFT Test 9 performance from 11 sec
 
 Key idea: DP
-Key idea: BFT doesn't scan the matrix in type-writer zigzag
+Key idea: BFT doesn't scan the matrix in type-writer zigzag. DFT (not BFT) solution requires recursion within a loop
 Key idea: BFT to enqueue a [x,y] pair
 
 Path generation is my weakness. Needs more practice, esp. with BFT
@@ -123,7 +123,7 @@ def startBFT(verbose):
 def startSpreadsheet(): #Based on Ashish Singh's tips, faster than BFT
   global finalCnt, score
   score=[[0 for _ in xrange(width)] for _ in xrange(height)] # init
-  for r in xrange(height): # populate left-most column
+  for r in xrange(height): # populate first column
     if m[r][0] == 0: 
       break
     score[r][0] = m[r][0]
@@ -135,7 +135,7 @@ def startSpreadsheet(): #Based on Ashish Singh's tips, faster than BFT
   for r in xrange(1,height):  
     for c in xrange(1,width): 
        if m[r][c]: 
-         # key insight -- there are only 2 ways to reach current node: from upper or from left node. My score=score(upperNode)+score(leftNode)
+         # key insight -- there are only 2 ways to reach current node: from above or from left node. My score = score(aboveNode) + score(leftNode)
          score[r][c] = score[r-1][c] + score[r][c-1]   
   finalCnt = score[-1][-1]
 def work(setup1test):
@@ -146,7 +146,7 @@ def work(setup1test):
   finalCnt=0
   revisits=dict()
   
-  if 1>2: 
+  if 11>2: 
     startSpreadsheet()
   else:
     verbose = (height * width < 99999)
