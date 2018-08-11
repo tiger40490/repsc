@@ -1,9 +1,9 @@
 '''todo: early exit if either origin or destination is an island, but detecting it could be slower than the main scan.
 todo: improve BFT Test 9 performance from 11 sec
 
-Key idea: DP
-Key idea: BFT doesn't scan the matrix in type-writer zigzag. DFT (not BFT) solution requires recursion within a loop
-Key idea: BFT to enqueue a [x,y] pair
+* Key idea: DP
+* Key idea: BFT doesn't scan the matrix in type-writer zigzag. DFT (not BFT) solution requires recursion within a loop
+* Key idea: BFT to enqueue a [x,y] pair
 
 Path generation is my weakness. Needs more practice, esp. with BFT
 
