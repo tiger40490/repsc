@@ -55,14 +55,12 @@ def test1():
   m.append([1,1,0,1])
   m.append([1,1,1,1])
   return 2
-def startDFT(r,c, verbose): 
+def startDFT(r,c, verbose): ### see comment in blog
   global finalCnt, revisits
   if len(m)*len(m[0]) > 9999: 
     print 'too large for DFT recursion'
     finalCnt = -1
     return
-  '''DFT is simpler but less efficient than BFT due to deep stack
-  '''
   addr=(r,c)
 
   revisits[addr] = revisits.get(addr,0)+1
@@ -78,7 +76,7 @@ def startDFT(r,c, verbose):
   if r == height-1 and c == width-1:
     finalCnt += 1 # found a path to destination
     if verbose: print 'incremented finalCnt to', finalCnt
-######## BFT solution:
+######## BFT -- see comments in blog
 class Q: #class based on collections.deque
     def __init__(self):
         self.list = deque()
