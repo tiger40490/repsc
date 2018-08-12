@@ -1,62 +1,70 @@
-'''todo: add more tests
-todo: simplify
-todo: revisit accounting
-todo: move the bound check into bft
-
-key idea: deal with cycles in graph BFT
-
-showcase: BFT with levels for shortest path
 '''
+todo: count how many shortest paths
+
+key idea: deal with cycles in graph BFT. No cycles if monotonic traversal in matrix
+key idea: add [x,y] addresses to queue
+
+showcase: level-aware BFT for shortest path
+'''
+import operator # locate max entry from dict
 from collections import deque
 from pprint import pprint
 from datetime import datetime
-bigMatSize=1000
 marker=[None,0]
-
 def dump(q):
   for r in xrange(q.height):
     for c in xrange(q.width):
       print q.m[r][c],
     print 
-  print q.start, '->', q.dest
-def makeMat1():
+  print q.start, ' <----==========----> ', q.dest # both direction should give same result
+
+big=400
+def mat9():
+  m = [[1 for x in xrange(big)] for y in xrange(big)]
+  assert len(m) == big and len(m[0]) == big
+  m[-1][0]=0
+  return m
+def test9():
+  startTime=datetime.now()
+  assert big*2-2 == startBFT(Q(mat9(), [[0,0], [big-1, big-1]]))
+  print (datetime.now()-startTime).total_seconds(), 'seconds. You may want to stop the remaining load tests:)'
+  if big > 200: return
+  assert       0 == startBFT(Q(mat9(), [[0,0], [big-1, 0]]))
+def mat1():
   m=list()
   m.append([1,1,0,1])
   m.append([0,1,1,1])
   m.append([1,0,1,1])
   return m  
 def test1():
-  assert 3 == startBFT(Q(makeMat1(), [[0,1], [1,3]]))
-  assert 5 == startBFT(Q(makeMat1(), [[0,3], [0,0]]))  
-  assert 0 == startBFT(Q(makeMat1(), [[0,3], [2,0]]))
+  assert 3 == startBFT(Q(mat1(), [[0,1], [1,3]]))
+  assert 5 == startBFT(Q(mat1(), [[0,3], [0,0]]))  
+  assert 0 == startBFT(Q(mat1(), [[0,3], [2,0]]))
 class Q: #class based on collections.deque
     def __init__(self, m, twoEnds):
         self.list = deque()
         self.m=m
         self.height=len(m)
         self.width =len(m[0])
-        self.start=twoEnds[0]
-        self.dest=twoEnds[1]
+        self.dest=twoEnds.pop()
+        self.start=twoEnds.pop()
         self.revisits = dict()
     def enQ(self, item):
-        if item[0] is not None:
-          r,c=item
-          if r<0 or c<0: return
-          if r>=self.height or c>=self.width: return
         self.list.append(item)
     def deQ(self): 
         return self.list.popleft() # throws error if empty
-def read(r,c, q, verbose=1):
+def read(r,c, q, isVerbose=1):
   '''Created for revisit accounting, which hurts performance. 
   Comment out next line after verifying revisits.  
   '''
-  if verbose: 
+  if isVerbose: 
     addr=(r,c); q.revisits[addr] = q.revisits.get(addr, 0) + 1  
     assert r>=0 and c>=0
   return q.m[r][c]
 def startBFT(q): 
   global finalCnt, score
-  dump(q)
+  isVerbose = (q.height*q.width < 99)
+  if isVerbose: dump(q)
   q.enQ(q.start)
   q.enQ(marker)
   steps=0
@@ -65,31 +73,29 @@ def startBFT(q):
     if cell == marker:
       if not q.list: break
       q.enQ(marker)
-      print 'marker rotated to end of', q.list
+      if isVerbose: print 'marker rotated to end of', q.list
       steps += 1
       continue
-    if read(r,c,q) != 1: continue
-    print 'visiting', cell
-    if cell == q.dest: 
-      print 'returning', steps
-      return steps
+    if read(r,c,q, isVerbose) != 1: continue
+    if isVerbose: print 'visiting', cell
+    if cell == q.dest: break
     q.m[r][c]=2
-    q.enQ([r-1, c])
-    q.enQ([r+1, c])
-    q.enQ([r, c-1])
-    q.enQ([r, c+1])
-  print '   :( unconnected :('; return 0
+    if r > 0: q.enQ([r-1, c])
+    if r < q.height-1: q.enQ([r+1, c])
+    if c > 0: q.enQ([r, c-1])
+    if c < q.width-1: q.enQ([r, c+1])
+  if q.revisits: 
+    print '\t most revisited node is ', max(q.revisits.iteritems(), key=operator.itemgetter(1))    
+  if not q.list: 
+    print '\t :( unconnected'; 
+    return 0
+  else:
+    print '\t returning', steps
+    return steps
 def main():
   test1()
-  return
-  startTime=datetime.now()
-  #work(test9)
-  print (datetime.now()-startTime).total_seconds(), 'seconds'
+  test9()
   #work(test9b)
 main()
 ''' Req: https://bintanvictor.wordpress.com/2018/08/11/check-2-matrix-nodes-are-connected/
-    def clear(self):
-      return
-      del self.m[:]
-      del self.twoEnds[:]
 '''
