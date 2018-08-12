@@ -12,25 +12,25 @@ from pprint import pprint
 from datetime import datetime
 marker=[None,0]
 
-big=400
-def mat9():
-  m = [[1 for x in xrange(big)] for y in xrange(big)]
-  assert len(m) == big and len(m[0]) == big
-  m[-1][0]=0
-  return m
 def test9():
+  big=400
+  def mat9():
+    m = [[1 for x in xrange(big)] for y in xrange(big)]
+    assert len(m) == big and len(m[0]) == big
+    m[-1][0]=0
+    return m
   startTime=datetime.now()
   assert big*2-2 == startBFT(Q(mat9(), [[0,0], [big-1, big-1]]))
   print (datetime.now()-startTime).total_seconds(), 'seconds. You may want to stop the remaining load tests:)'
   if big > 200: return
   assert       0 == startBFT(Q(mat9(), [[0,0], [big-1, 0]]))
-def mat1():
-  m=list()
-  m.append([1,1,0,1])
-  m.append([0,1,1,1])
-  m.append([1,0,1,1])
-  return m  
 def test1():
+  def mat1():
+    m=list()
+    m.append([1,1,0,1])
+    m.append([0,1,1,1])
+    m.append([1,0,1,1])
+    return m  
   assert 3 == startBFT(Q(mat1(), [[0,1], [1,3]]))
   assert 5 == startBFT(Q(mat1(), [[0,3], [0,0]]))  
   assert 0 == startBFT(Q(mat1(), [[0,3], [2,0]]))
