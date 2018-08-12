@@ -1,103 +1,95 @@
-'''todo: 
-showcase: 
+'''todo: add more tests
+todo: simplify
+todo: revisit accounting
+todo: move the bound check into bft
+
+key idea: deal with cycles in graph BFT
+
+showcase: BFT with levels for shortest path
 '''
 from collections import deque
 from pprint import pprint
 from datetime import datetime
 bigMatSize=1000
-if bigMatSize > 7: 
-    sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
-m = list() 
-pair=list()
-revisits = dict()
+marker=[None,0]
 
-def test9():
-  global m
-  m = [[1 for x in xrange(bigMatSize)] for y in xrange(bigMatSize)]
-  assert len(m) == bigMatSize and len(m[0]) == bigMatSize
-  return 15305440000
-def test9b():
-  global m
-  m = [[1 for x in xrange(bigMatSize)] for y in xrange(bigMatSize)]
-  assert len(m) == bigMatSize and len(m[0]) == bigMatSize
-  m[-1][-1]=0
-  return 0
-def test4():
-  global m
-  m.append([1,1,1])
-  m.append([1,0,1])
-  m.append([1,1,1])
-  return 2
-def test3():
-  global m
+def dump(q):
+  for r in xrange(q.height):
+    for c in xrange(q.width):
+      print q.m[r][c],
+    print 
+  print q.start, '->', q.dest
+def makeMat1():
+  m=list()
   m.append([1,1,0,1])
-  m.append([0,0,1,1])
-  m.append([1,1,1,1])
-  return 0
-def test2():
-  global m
-  m.append([1,1,1,1])
-  m.append([1,1,1,1])
-  m.append([1,1,1,1])
-  return 10 # Q9 test case
+  m.append([0,1,1,1])
+  m.append([1,0,1,1])
+  return m  
 def test1():
-  m.append([1,1,0,1])
-  m.append([1,1,1,1])
-  del pair[:]
-  pair.extend([0,1], [-1:-2])
-  return true
+  assert 3 == startBFT(Q(makeMat1(), [[0,1], [1,3]]))
+  assert 5 == startBFT(Q(makeMat1(), [[0,3], [0,0]]))  
+  assert 0 == startBFT(Q(makeMat1(), [[0,3], [2,0]]))
 class Q: #class based on collections.deque
-    def __init__(self):
+    def __init__(self, m, twoEnds):
         self.list = deque()
+        self.m=m
+        self.height=len(m)
+        self.width =len(m[0])
+        self.start=twoEnds[0]
+        self.dest=twoEnds[1]
+        self.revisits = dict()
     def enQ(self, item):
+        if item[0] is not None:
+          r,c=item
+          if r<0 or c<0: return
+          if r>=self.height or c>=self.width: return
         self.list.append(item)
     def deQ(self): 
         return self.list.popleft() # throws error if empty
-
-score=list() #shadow matrix
-
-def readScore(r,c, verbose=1):
+def read(r,c, q, verbose=1):
   '''Created for revisit accounting, which hurts performance. 
   Comment out next line after verifying revisits.  
   '''
   if verbose: 
-    addr=(r,c); revisits[addr] = revisits.get(addr, 0) + 1  
+    addr=(r,c); q.revisits[addr] = q.revisits.get(addr, 0) + 1  
     assert r>=0 and c>=0
-  return score[r][c]
-def startBFT(verbose): 
+  return q.m[r][c]
+def startBFT(q): 
   global finalCnt, score
-  # 0 means unknown
-  score=[[0 for _ in xrange(width)] for _ in xrange(height)]
-  score[0][0] = 1
-  q = Q()
-  q.enQ((1,0))
-  q.enQ((0,1))
-  while q.list:
-    r,c = q.deQ()
-    if readScore(r,c,verbose) > 0: continue # See Keynote in blog
-    if m[r][c] == 0: continue
-    tmp  = readScore(r-1, c,verbose) if r>0 else 0
-    tmp += readScore(r, c-1,verbose) if c>0 else 0
-    assert tmp > 0
-    score[r][c] = tmp 
-    if verbose: print r,c,' --> score set to ', score[r][c]   
-    if r < height-1 : 
-        q.enQ((r+1, c))
-    if c < width-1 :
-        q.enQ((r, c+1))
-  finalCnt = score[-1][-1]
-
+  dump(q)
+  q.enQ(q.start)
+  q.enQ(marker)
+  steps=0
+  while(q.list):
+    r,c = cell = q.deQ()
+    if cell == marker:
+      if not q.list: break
+      q.enQ(marker)
+      print 'marker rotated to end of', q.list
+      steps += 1
+      continue
+    if read(r,c,q) != 1: continue
+    print 'visiting', cell
+    if cell == q.dest: 
+      print 'returning', steps
+      return steps
+    q.m[r][c]=2
+    q.enQ([r-1, c])
+    q.enQ([r+1, c])
+    q.enQ([r, c-1])
+    q.enQ([r, c+1])
+  print '   :( unconnected :('; return 0
 def main():
-  work(test1)
+  test1()
   return
-  work(test2)
-  work(test3)
-  work(test4)
-  
   startTime=datetime.now()
-  work(test9)
+  #work(test9)
   print (datetime.now()-startTime).total_seconds(), 'seconds'
-  work(test9b)
+  #work(test9b)
 main()
 ''' Req: https://bintanvictor.wordpress.com/2018/08/11/check-2-matrix-nodes-are-connected/
+    def clear(self):
+      return
+      del self.m[:]
+      del self.twoEnds[:]
 '''
