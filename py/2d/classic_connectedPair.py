@@ -11,12 +11,6 @@ from collections import deque
 from pprint import pprint
 from datetime import datetime
 marker=[None,0]
-def dump(q):
-  for r in xrange(q.height):
-    for c in xrange(q.width):
-      print q.m[r][c],
-    print 
-  print q.start, ' <----==========----> ', q.dest # both direction should give same result
 
 big=400
 def mat9():
@@ -49,6 +43,14 @@ class Q: #class based on collections.deque
         self.dest=twoEnds.pop()
         self.start=twoEnds.pop()
         self.revisits = dict()
+    def __str__(self):
+      ret=''
+      for r in xrange(self.height):
+        for c in xrange(self.width):
+          ret += str(self.m[r][c])+' '
+        ret +='\n'
+      ret += str(self.start) + ' <----==========----> ' +str(self.dest) # both direction should give same result    
+      return ret
     def enQ(self, item):
         self.list.append(item)
     def deQ(self): 
@@ -64,7 +66,7 @@ def read(r,c, q, isVerbose=1):
 def startBFT(q): 
   global finalCnt, score
   isVerbose = (q.height*q.width < 99)
-  if isVerbose: dump(q)
+  if isVerbose: print q
   q.enQ(q.start)
   q.enQ(marker)
   steps=0
