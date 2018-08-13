@@ -16,7 +16,6 @@ class Q: #designed for BFT but useful for DFT
     self.dest=twoEnds.pop()
     self.start=twoEnds.pop()
     self.revisits = dict()
-    self.pathCnt=0
     self.paths=set()
   def __str__(self):
     ret=''
@@ -83,8 +82,9 @@ def startDFT(q): #return simple path count
     if 0 == read(r,c,q,len(ancestors),isVerbose): return # 0
     if me == q.dest:
       print '\t\t:) path found', ancestors
-      q.pathCnt += 1
-      q.paths.add(str(ancestors))
+      tmp = str(ancestors)
+      assert tmp not in q.paths
+      q.paths.add(tmp)
       return 
     ancestors.append(me)
     if r-1 >= 0: 
@@ -101,9 +101,8 @@ def startDFT(q): #return simple path count
   isVerbose = (q.height*q.width < 99)
   ancestors=list()
   recurs(q.start)
-  assert len(q.paths) == q.pathCnt
-  print 'returning pathCnt =', q.pathCnt
-  return q.pathCnt  
+  print 'returning pathCnt =', len(q.paths)
+  return len(q.paths)  
 def main(): 
   test1()
   test2()
