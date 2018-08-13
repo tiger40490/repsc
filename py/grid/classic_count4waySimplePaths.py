@@ -87,10 +87,10 @@ def startDFT(q): #return simple path count
       return
     breadcrumb.append(me); breadlookup.add(myname)
     assert len(breadcrumb) == len(breadlookup), 'breadcrumb has no dupes'
-    if r-1 >= 0:          stat = recurs([r-1,c])
-    if c+1 <= q.width-1:  stat = recurs([r,c+1])
-    if r+1 <= q.height-1: stat = recurs([r+1,c])
-    if c-1 >= 0:          stat = recurs([r,c-1])
+    if r-1 >= 0:         stat = recurs([r-1,c])
+    if c+1 <= q.width-1: stat = recurs([r,c+1])
+    if r+1 <=q.height-1: stat = recurs([r+1,c])
+    if c-1 >= 0:         stat = recurs([r,c-1])
     breadcrumb.pop(); breadlookup.remove(myname) #throws if not in
   # end of recurs ()  
   print q
