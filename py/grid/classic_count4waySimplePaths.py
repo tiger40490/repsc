@@ -77,7 +77,7 @@ def read(r,c, q, recursLevel, isVerbose=1):
     #print '. '*(recursLevel)+str(r)+str(c),':', ret #,
   return ret
 def startDFT(q): #return simple path count
-  def recurs(me, ancestors):
+  def recurs(me):
     if me in ancestors: return #check cycle before checking dest
     r,c = me
     if 0 == read(r,c,q,len(ancestors),isVerbose): return # 0
@@ -85,21 +85,22 @@ def startDFT(q): #return simple path count
       print '\t\t:) path found', ancestors
       q.pathCnt += 1
       q.paths.add(str(ancestors))
-      return #999
+      return 
     ancestors.append(me)
     if r-1 >= 0: 
-      stat = recurs([r-1,c], ancestors)
+      stat = recurs([r-1,c])
     if c+1 <= q.width-1:   
-      stat = recurs([r,c+1], ancestors)
+      stat = recurs([r,c+1])
     if r+1 <= q.height-1:  
-      stat = recurs([r+1,c], ancestors)
+      stat = recurs([r+1,c])
     if c-1 >= 0:  
-      stat = recurs([r,c-1], ancestors)
+      stat = recurs([r,c-1])
     ancestors.pop()
   # end of recurs  
   print q
   isVerbose = (q.height*q.width < 99)
-  recurs(q.start, list())
+  ancestors=list()
+  recurs(q.start)
   assert len(q.paths) == q.pathCnt
   print 'returning pathCnt =', q.pathCnt
   return q.pathCnt  
