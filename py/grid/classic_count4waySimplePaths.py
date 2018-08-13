@@ -35,7 +35,9 @@ def test2():
     m.append([0,0,1,0])
     m.append([1,0,B,0])
     return m  
-  assert startDFT(Q(mat(), [[1,2], [0,0]]))==6 # A
+  q = Q(mat(), [[0,0], [1,2]]) # A
+  assert startDFT(q)==6 
+  assert str([[0,0],[1,0],[1,1],[0,1],[0,2],[0,3],[1,3]]) in q.paths
   assert startDFT(Q(mat(), [[3,2], [0,0]]))==6 # B
 def test1():
   def mat():
