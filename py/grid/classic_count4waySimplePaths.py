@@ -1,9 +1,9 @@
 '''
-todo: check revisits
 key idea:
+showcase: nested function to avoid passing lots of arguments
 showcase: print indent to indicate recursive level
 '''
-import sys
+import sys, operator # locate max entry from dict
 A=B=1 # helps me understand the tests
 class Q: #designed for BFT but useful for DFT
   def __init__(self, m, twoEnds):
@@ -65,9 +65,9 @@ def test1():
 def read(r,c, q, recursLevel, isVerbose=1):
   ret = q.m[r][c]
   if ret > 0:
-    addr=(r,c); 
-    tmp = q.revisits[addr] = q.revisits.get(addr, 0) + 1  
     assert ret == 1
+    addr=(r,c); 
+    q.revisits[addr] = q.revisits.get(addr, 0) + 1  
   if isVerbose: 
     assert r>=0 and c>=0
     assert r<q.height and c<q.width
@@ -75,30 +75,28 @@ def read(r,c, q, recursLevel, isVerbose=1):
   return ret
 def startDFT(q): #return simple path count
   def recurs(me):
-    if me in ancestors: return #check cycle before checking dest
+    if me in breadcrumb: return #check cycle before checking dest
     r,c = me
-    if 0 == read(r,c,q,len(ancestors),isVerbose): return
+    if 0 == read(r,c,q,len(breadcrumb),isVerbose): return
     if me == q.dest:
-      print '\t\t:) path found', ancestors
-      tmp = str(ancestors)
+      print ':) path', breadcrumb
+      tmp = str(breadcrumb)
       assert tmp not in q.paths
       q.paths.add(tmp)
       return
-    ancestors.append(me)
-    if r-1 >= 0: 
-      stat = recurs([r-1,c])
-    if c+1 <= q.width-1:   
-      stat = recurs([r,c+1])
-    if r+1 <= q.height-1:  
-      stat = recurs([r+1,c])
-    if c-1 >= 0:  
-      stat = recurs([r,c-1])
-    ancestors.pop()
-  # end of recurs  
+    breadcrumb.append(me)
+    if r-1 >= 0:          stat = recurs([r-1,c])
+    if c+1 <= q.width-1:  stat = recurs([r,c+1])
+    if r+1 <= q.height-1: stat = recurs([r+1,c])
+    if c-1 >= 0:          stat = recurs([r,c-1])
+    breadcrumb.pop()
+  # end of recurs ()  
   print q
   isVerbose = (q.height*q.width < 99)
-  ancestors = list()
+  breadcrumb = list()
   recurs(q.start)
+  if q.revisits: 
+    print '\t most revisited node is ', max(q.revisits.iteritems(), key=operator.itemgetter(1))      
   print 'returning pathCnt =', len(q.paths)
   return len(q.paths)  
 def main(): 
