@@ -64,7 +64,7 @@ def read(r,c, q, isVerbose=1):
     assert r>=0 and c>=0
     assert r<q.height and c<q.width
   return q.m[r][c]
-def startBFT(q): 
+def startBFT(q): # return short path length
   global finalCnt, score
   isVerbose = (q.height*q.width < 99)
   if isVerbose: print q
