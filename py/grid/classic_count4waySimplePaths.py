@@ -1,5 +1,4 @@
 '''
-todo: add more complex tests
 todo: simplify ancestor passing
 todo: tuning
 todo: check revisits
@@ -27,6 +26,19 @@ class Q: #designed for BFT but useful for DFT
       ret +='\n'
     ret += str(self.start) + ' <----==========----> ' +str(self.dest) # both direction should give same result    
     return ret
+def test3():
+  def mat():
+    m=list() # create a new editable matrix each time
+    m.append([1,1,1,1])
+    m.append([0,1,0,1])
+    m.append([A,0,1,1])
+    m.append([1,1,1,0])
+    return m  
+  q = Q(mat(), [[0,0], [2,0]]) # A
+  assert startDFT(q)==1
+  import ast
+  li=ast.literal_eval(list(q.paths)[0])
+  assert len(li)==10, 'path length should be 10'
 def test2():
   def mat():
     m=list() # create a new editable matrix each time
@@ -94,6 +106,7 @@ def startDFT(q): #return simple path count
 def main(): 
   test1()
   test2()
+  test3()
 main()
 '''Req:my blog https://wp.me/p74oew-603
 given 2 nodes in a C by R matrix grid, where every node is connected to (up to) four neighbors, generate all cycle-free paths.tors as a vector)
