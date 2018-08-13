@@ -1,5 +1,5 @@
 '''
-key idea:
+key idea: deal with cycle by inspecting breadcrumb
 showcase: nested function to avoid passing lots of arguments
 showcase: print indent to indicate recursive level
 '''
@@ -75,25 +75,27 @@ def read(r,c, q, recursLevel, isVerbose=1):
   return ret
 def startDFT(q): #return simple path count
   def recurs(me):
-    if me in breadcrumb: return #check cycle before checking dest
+    myname = str(me)
+    if myname in breadlookup: return #check cycle before checking dest
     r,c = me
     if 0 == read(r,c,q,len(breadcrumb),isVerbose): return
     if me == q.dest:
-      print ':) path', breadcrumb
       tmp = str(breadcrumb)
+      print ':) path', tmp
       assert tmp not in q.paths
       q.paths.add(tmp)
       return
-    breadcrumb.append(me)
+    breadcrumb.append(me); breadlookup.add(myname)
+    assert len(breadcrumb) == len(breadlookup), 'breadcrumb has no dupes'
     if r-1 >= 0:          stat = recurs([r-1,c])
     if c+1 <= q.width-1:  stat = recurs([r,c+1])
     if r+1 <= q.height-1: stat = recurs([r+1,c])
     if c-1 >= 0:          stat = recurs([r,c-1])
-    breadcrumb.pop()
+    breadcrumb.pop(); breadlookup.remove(myname) #throws if not in
   # end of recurs ()  
   print q
   isVerbose = (q.height*q.width < 99)
-  breadcrumb = list()
+  breadcrumb = list(); breadlookup = set()
   recurs(q.start)
   if q.revisits: 
     print '\t most revisited node is ', max(q.revisits.iteritems(), key=operator.itemgetter(1))      
