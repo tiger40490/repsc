@@ -1,6 +1,4 @@
 '''
-todo: simplify ancestor passing
-todo: tuning
 todo: check revisits
 key idea:
 showcase: print indent to indicate recursive level
@@ -79,13 +77,13 @@ def startDFT(q): #return simple path count
   def recurs(me):
     if me in ancestors: return #check cycle before checking dest
     r,c = me
-    if 0 == read(r,c,q,len(ancestors),isVerbose): return # 0
+    if 0 == read(r,c,q,len(ancestors),isVerbose): return
     if me == q.dest:
       print '\t\t:) path found', ancestors
       tmp = str(ancestors)
       assert tmp not in q.paths
       q.paths.add(tmp)
-      return 
+      return
     ancestors.append(me)
     if r-1 >= 0: 
       stat = recurs([r-1,c])
@@ -99,7 +97,7 @@ def startDFT(q): #return simple path count
   # end of recurs  
   print q
   isVerbose = (q.height*q.width < 99)
-  ancestors=list()
+  ancestors = list()
   recurs(q.start)
   print 'returning pathCnt =', len(q.paths)
   return len(q.paths)  
