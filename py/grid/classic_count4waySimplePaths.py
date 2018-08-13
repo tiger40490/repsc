@@ -1,8 +1,10 @@
 '''
-todo:
+todo: add tests
+todo: simplify
 key idea:
-showcase:
+showcase: print indent to indicate recursive level
 '''
+A=B=1
 class Q: #designed for BFT but useful for DFT
   def __init__(self, m, twoEnds):
     #self.list = deque()
@@ -11,7 +13,8 @@ class Q: #designed for BFT but useful for DFT
     self.width =len(m[0])
     self.dest=twoEnds.pop()
     self.start=twoEnds.pop()
-    #self.revisits = dict()
+    self.revisits = dict()
+    self.pathCnt=0
   def __str__(self):
     ret=''
     for r in xrange(self.height):
@@ -20,22 +23,72 @@ class Q: #designed for BFT but useful for DFT
       ret +='\n'
     ret += str(self.start) + ' <----==========----> ' +str(self.dest) # both direction should give same result    
     return ret
-def test1():
-  def mat1():
+def test2():
+  def mat():
     m=list() # create a new editable matrix each time
     m.append([1,1,1,1])
+    m.append([1,1,A,1])
+    m.append([0,0,1,0])
+    m.append([1,0,B,0])
+    return m  
+  assert startDFT(Q(mat(), [[1,2], [0,0]]))==6 # A
+  assert startDFT(Q(mat(), [[3,2], [0,0]]))==6 # B
+def test1():
+  def mat():
+    m=list() # create a new editable matrix each time
+    m.append([1,A,1,1])
     m.append([0,1,0,1])
     m.append([0,1,1,1])
     m.append([1,0,1,0])
     return m  
-  assert startDFT(Q(mat1(), [[0,1], [0,0]]))==1
-  #assert startDFT(Q(mat1(), [[1,1], [0,0]]))==2
-  #assert startDFT(Q(mat1(), [[0,3], [3,0]]))==0
+  assert startDFT(Q(mat(), [[0,1], [0,0]]))==1 # Node A
+  assert startDFT(Q(mat(), [[1,1], [0,0]]))==2
+  assert startDFT(Q(mat(), [[1,1], [2,2]]))==2
+  assert startDFT(Q(mat(), [[0,3], [3,0]]))==0 # diagonal
+def read(r,c, q, recursLevel, isVerbose=1):
+  ret = q.m[r][c]
+  if isVerbose: 
+    assert r>=0 and c>=0
+    assert r<q.height and c<q.width
+  if ret > 0:
+    addr=(r,c); 
+    tmp = q.revisits[addr] = q.revisits.get(addr, 0) + 1  
+    assert ret == 1
+  print '. '*(recursLevel)+str(r)+str(c),':', ret #,
+  return ret
 def startDFT(q): #return # of simple paths
+  def recurs(me, ancestors, dest=q.dest):
+    '''ancestor does not include me
+    '''
+    if me in ancestors: return #check this before checking dest
+    r,c = me
+    val = read(r,c,q,len(ancestors),isVerbose)
+    #print ancestors
+    if 0 == val: return # 0
+    ancestors.append(me)    
+    if me == dest:
+      print '\t\t:) path found', ancestors
+      q.pathCnt += 1
+      ancestors.pop()
+      return #999
+    if r-1 >= 0: 
+      stat = recurs([r-1,c], ancestors)
+    if c+1 <= q.width-1:   
+      stat = recurs([r,c+1], ancestors)
+    if r+1 <= q.height-1:  
+      stat = recurs([r+1,c], ancestors)
+    if c-1 >= 0:  
+      stat = recurs([r,c-1], ancestors)
+    ancestors.pop()
+  # end of recurs  
   print q
-  return 1  
+  isVerbose = (q.height*q.width < 99)
+  recurs(q.start, list(), q.dest)
+  print 'returning pathCnt =', q.pathCnt
+  return q.pathCnt  
 def main(): 
   test1()
+  test2()
 main()
 '''Req:my blog https://wp.me/p74oew-603
 given 2 nodes in a C by R matrix grid, where every node is connected to (up to) four neighbors, generate all cycle-free paths.
