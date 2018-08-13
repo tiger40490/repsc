@@ -1,7 +1,6 @@
 '''
-todo: populate a global collection of  and verify that
 todo: add more complex tests
-todo: simplify
+todo: simplify ancestor passing
 todo: tuning
 todo: check revisits
 key idea:
@@ -11,7 +10,7 @@ import sys
 A=B=1 # helps me understand the tests
 class Q: #designed for BFT but useful for DFT
   def __init__(self, m, twoEnds):
-    #self.list = deque()
+    #self.list = deque() # only needed for BFT
     self.m=m
     self.height=len(m)
     self.width =len(m[0])
@@ -63,15 +62,11 @@ def read(r,c, q, recursLevel, isVerbose=1):
     assert r<q.height and c<q.width
     #print '. '*(recursLevel)+str(r)+str(c),':', ret #,
   return ret
-def startDFT(q): #return # of simple paths
+def startDFT(q): #return simple path count
   def recurs(me, ancestors):
-    '''ancestor does not include me
-    '''
-    if me in ancestors: return #check this before checking dest
+    if me in ancestors: return #check cycle before checking dest
     r,c = me
-    val = read(r,c,q,len(ancestors),isVerbose)
-    #print ancestors
-    if 0 == val: return # 0
+    if 0 == read(r,c,q,len(ancestors),isVerbose): return # 0
     if me == q.dest:
       print '\t\t:) path found', ancestors
       q.pathCnt += 1
@@ -99,11 +94,5 @@ def main():
   test2()
 main()
 '''Req:my blog https://wp.me/p74oew-603
-given 2 nodes in a C by R matrix grid, where every node is connected to (up to) four neighbors, generate all cycle-free paths.
-
-from NodeA start a trail with an empty lookup hashtable to hold brown i.e. visited nodes. We can't revisit any node already visited on current trail
-if this is a matrix, then instead of a hashtable, we can also use a shadow matrix, but how do we efficiently clear it before the next trail?
-if we can reach a node surrounded by brown nodes, then the trail fails
-else we will reach NodeB :)
-Print the path.. I would say each recurs(ancestors as a vector)
+given 2 nodes in a C by R matrix grid, where every node is connected to (up to) four neighbors, generate all cycle-free paths.tors as a vector)
 '''
