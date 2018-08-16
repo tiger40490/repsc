@@ -1,10 +1,11 @@
+// This recursion-in-loop technique is powerful but easily hits SOF. If no other choice, we may need to convert recursion into iterative.
 #include <iomanip>
 #include <iostream>
 #include <vector>
 #include <cassert>
 using namespace std;
 
-template<typename T,             int min_width=8> ostream & operator<<(ostream & os, vector<T> const & c){
+template<typename T,             int min_width=2> ostream & operator<<(ostream & os, vector<T> const & c){
    for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
    os<<endl;
    //for(int i=0; i<c.size(); ++i){ os<<setw(min_width)<<i<<" "; }
@@ -14,7 +15,7 @@ template<typename T,             int min_width=8> ostream & operator<<(ostream &
 vector<vector<int> > solutions;
 vector<int> partial;
 vector<int> const * cand;
-void recurs(int gap, int startIndex){
+void recurs(int gap, int startIndex){ //Warning: SOF if N is large like 99999
   cout<<"trying "<<partial;
   if (gap == 0){
       solutions.push_back(partial);
@@ -31,7 +32,7 @@ void recurs(int gap, int startIndex){
   }
 }
 vector<vector<int> > combinationSum(vector<int>& candidates, int target) {
-  cout<<" v v v v v v "<<candidates;
+  cout<<target<<" to be broken into v v v v v v    "<<candidates;
   cand = &candidates;
   solutions.clear();
   partial.clear();
