@@ -58,10 +58,12 @@ int main(){
   assert(solutions.size() == 4 + 1 + 6);
   combinationSum(*(new vector<int>({2,3,4})), 7);
   assert(solutions.size() == 2);
+  rerun(true); //with isPermutation
+  assert(solutions.size() == 3 + 2);
   combinationSum(*(new vector<int>({2,3,6,7})), 7);
   combinationSum(*(new vector<int>({2,3,5})), 8);
   assert(solutions.size() == 3);
-}/*Req:
+}/*Req: https://bintanvictor.wordpress.com/2018/08/05/combination-sum-reusable-backtracking/
 Q1: generate all combinations
 Q2: generate all permutations of all combinations
 */
