@@ -1,34 +1,35 @@
 from math import sqrt
 cnt=0; recursionLevel=0
-def recursCSY(tgt, smallFactors=tuple()):
-  '''find each formula to factorize tgt, but when print it, also print smallFactors
+def recursCSY(remain, lowerFactors=tuple()):
+  '''job: find each formula to factorize remain, but when print it, also print lowerFactors
   '''
   global cnt, recursionLevel
-  assert sorted(smallFactors) == list(smallFactors), 'should be sorted low to high'
-  assert len( smallFactors ) == recursionLevel
+  assert sorted(lowerFactors) == list(lowerFactors), 'should be sorted low to high'
+  assert len( lowerFactors ) == recursionLevel
   recursionLevel += 1
-  if smallFactors: # i.e. non-empty
-    assert smallFactors[-1] <= tgt
+  if lowerFactors: # i.e. non-empty
+    assert lowerFactors[-1] <= remain, 'last lowerFactors item should not exceed remain'
     cnt+=1
-    _start = smallFactors[-1] # highest existing factor -- smartest trick in this algorithm
-    #print smallFactors, tgt
+    _start = lowerFactors[-1] # highest existing factor -- #1 trick in this algorithm
+    print '. '*(recursionLevel-2) + str(lowerFactors), remain
   else: 
+    print '------- factorizing', remain
     cnt=0
-    _start = 2
-    print '------- factorizing', tgt
-  for f in xrange(_start, int(sqrt(tgt))+1):
-    if tgt%f: continue
-    recursCSY(tgt/f, smallFactors+(f,))
+    _start = 2 # smallest factor in the universe
+    
+  # loop below is too ineffient. Should use the "non-distinct prime factors" described in blog
+  for f in xrange(_start, int(sqrt(remain))+1):
+    if remain%f: continue
+    recursCSY(remain/f, lowerFactors+(f,))
   recursionLevel -= 1
-  return cnt
-def factorize(tgt):
-  return recursCSY(tgt)
+def factorize(remain):
+  recursCSY(remain)
 def main():
-  assert(8  == factorize(36));
-  #return
-  assert(10 == factorize(60));
-  assert(6  == factorize(24));
-  assert(3  == factorize(12));  
+  factorize(36); assert(8  == cnt)
+  factorize(60); assert(10 == cnt)
+  factorize(24); assert(6  == cnt)
+  factorize(12); assert(3  == cnt)
+  return
   A=2; B=3; C=5; D=7
   factorize((A*C)**12) # a trillion
   factorize(A**10 * B**8 * C**6 * D**4) # need to use q(python -u)
