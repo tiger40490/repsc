@@ -15,7 +15,7 @@ def primes(tgt): # simple Sieve of Eratosthenes
    sieve = set(sum([range(q*q, n+1, q+q) for q in odds],[]))
    return [2] + [p for p in odds if p not in sieve]
    
-def gen_groups(bigNum): # generate the non-uniq prime factors and all the partial products they could produce i.e. all the factors of bigNum
+def get_divisors(bigNum): # generate the non-uniq prime factors and all the partial products they could produce i.e. all the factors of bigNum
   tgt = bigNum
   p=primes(tgt) # empty list means tgt is prime
   frq = defaultdict(lambda: 0);   i=0
@@ -40,25 +40,40 @@ def gen_groups(bigNum): # generate the non-uniq prime factors and all the partia
   assert factors[0] == 1
   assert factors[-1] == bigNum
   assert checkSum == len(factors)
-  return factors
+  
+  return factors[1:]
+def getSmallDivisors(bigNum):
+  ret = list()
+  for i in get_divisors(bigNum):
+    if i == 1: continue
+    ret.append(i)
+    if i > sqrt(bigNum): break
+  return ret
       
-def recurs(remain, lowerFactors=tuple()):
+def recurs(bigNum, remain, lowerFactors=tuple()):
   '''job: find each formula to factorize remain, but when print it, also print lowerFactors
   '''
   global cnt, recursionLevel
+  if bigNum == 1: return # to optimize
+  #print lowerFactors
   assert sorted(lowerFactors) == list(lowerFactors), 'should be sorted low to high'
   assert len( lowerFactors ) == recursionLevel
   recursionLevel += 1
   if lowerFactors: # i.e. non-empty
     #assert lowerFactors[-1] <= remain, 'last lowerFactors item should not exceed remain'
     cnt+=1
-    print '. '*(recursionLevel-2) + str(lowerFactors), reduce(mul, remain, 1)
+    _start = lowerFactors[-1] # highest existing factor -- #1 trick in this algorithm    
+    print '. '*(recursionLevel-2) + str(lowerFactors), bigNum
   else: 
     print '------- factorizing', remain
     cnt=0
+    _start = 2 # smallest factor in the universe    
     
   for f in remain:
-    recurs(remain[1:], lowerFactors+(f,))
+    if f < _start: continue
+    if bigNum % f: continue
+    if lowerFactors and bigNum/f < f: break
+    recurs(bigNum/f, remain, lowerFactors+(f,))
   recursionLevel -= 1
 def recursCSY(remain, lowerFactors=tuple()):
   '''job: find each formula to factorize remain, but when print it, also print lowerFactors
@@ -83,10 +98,12 @@ def recursCSY(remain, lowerFactors=tuple()):
     recursCSY(remain/f, lowerFactors+(f,))
   recursionLevel -= 1
 def factorize(bigNum):
-  recurs(gen_groups(bigNum))
+  recursCSY(bigNum)
+  recurs(bigNum, getSmallDivisors(bigNum))
 def main():
-  print gen_groups(600)
+  #print get_divisors(600)
   factorize(36); assert(8  == cnt)
+  return
   factorize(60); assert(10 == cnt)
   factorize(24); assert(6  == cnt)
   factorize(12); assert(3  == cnt)
