@@ -2,8 +2,6 @@
 todo extract to module get_divisors
 '''
 from math import sqrt
-#from operator import mul
-from collections import defaultdict
 import generic_factorize
 cnt=0; recursionLevel=0
   
