@@ -1,9 +1,13 @@
 '''
+Poor scalablity -- can't handle a 6x6 matrix
+
 key idea: deal with cycle by inspecting breadcrumb
 showcase: nested function to avoid passing lots of arguments
 showcase: print indent to indicate recursive level
 '''
 import sys, operator # locate max entry from dict
+from datetime import datetime
+
 A=B=1 # helps me understand the tests
 class Q: #designed for BFT but useful for DFT
   def __init__(self, m, twoEnds):
@@ -23,6 +27,16 @@ class Q: #designed for BFT but useful for DFT
       ret +='\n'
     ret += str(self.start) + ' <----==========----> ' +str(self.dest) # both direction should give same result    
     return ret
+def test9():
+  big=5 # 6x6 is overwhelming
+  def mat():
+    m = [[1 for _ in xrange(big)] for _ in xrange(big)]
+    assert len(m) == big and len(m[0]) == big
+    return m
+  startTime=datetime.now()
+  q = Q(mat(), [[0,0], [big-1, 0]])
+  startDFT(q)
+  print (datetime.now()-startTime).total_seconds(), 'seconds'
 def test3():
   def mat():
     m=list() # create a new editable matrix each time
@@ -81,7 +95,7 @@ def startDFT(q): #return simple path count
     if 0 == read(r,c,q,len(breadcrumb),isVerbose): return
     if me == q.dest:
       tmp = str(breadcrumb)
-      print ':) path', tmp
+      if isVerbose: print ':) path', tmp
       assert tmp not in q.paths
       q.paths.add(tmp)
       return
@@ -94,7 +108,7 @@ def startDFT(q): #return simple path count
     breadcrumb.pop(); breadlookup.remove(myname) #throws if not in
   # end of recurs ()  
   print q
-  isVerbose = (q.height*q.width < 99)
+  isVerbose = (q.height*q.width < 16)
   breadcrumb = list(); breadlookup = set()
   recurs(q.start)
   if q.revisits: 
@@ -105,6 +119,7 @@ def main():
   test1()
   test2()
   test3()
+  test9()
 main()
 '''Req:my blog https://wp.me/p74oew-603
 given 2 nodes in a C by R matrix grid, where every node is connected to (up to) four neighbors, generate all cycle-free paths.tors as a vector)
