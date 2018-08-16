@@ -1,6 +1,6 @@
 from math import sqrt
 cnt=0; recursionLevel=0
-def factorize(tgt, smallFactors=tuple()):
+def recursCSY(tgt, smallFactors=tuple()):
   '''find each formula to factorize tgt, but when print it, also print smallFactors
   '''
   global cnt, recursionLevel
@@ -18,10 +18,11 @@ def factorize(tgt, smallFactors=tuple()):
     print '------- factorizing', tgt
   for f in xrange(_start, int(sqrt(tgt))+1):
     if tgt%f: continue
-    factorize(tgt/f, smallFactors+(f,))
+    recursCSY(tgt/f, smallFactors+(f,))
   recursionLevel -= 1
   return cnt
-
+def factorize(tgt):
+  return recursCSY(tgt)
 def main():
   assert(8  == factorize(36));
   #return
