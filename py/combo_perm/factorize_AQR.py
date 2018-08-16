@@ -1,5 +1,65 @@
+'''
+todo: replace "remain" with a sorted "group" list derived from the list of non-unique prime factors. Each "group" is the product of any group of the non-unique prime factors
+
+If the nupf list has xxxyyz, then there are (3+1)*(2+1)*(1+1) factors. 
+
+'''
 from math import sqrt
+from operator import mul
+from collections import defaultdict
 cnt=0; recursionLevel=0
+
+def primes(tgt): # simple Sieve of Eratosthenes 
+   n = int(sqrt(tgt))+1 
+   odds = range(3, n+1, 2)
+   sieve = set(sum([range(q*q, n+1, q+q) for q in odds],[]))
+   return [2] + [p for p in odds if p not in sieve]
+   
+def gen_groups(bigNum): # generate the non-uniq prime factors and all the partial products they could produce i.e. all the factors of bigNum
+  tgt = bigNum
+  p=primes(tgt) # empty list means tgt is prime
+  frq = defaultdict(lambda: 0);   i=0
+  while tgt > 1 and i < len(p):
+    primeFac = p[i]
+    if tgt%primeFac:
+      i+=1
+      continue
+    tgt = tgt/primeFac
+    frq[primeFac] += 1
+  print 'nupf =', dict(frq)
+  factors = [1]; checkSum=1
+  for prime, cnt in frq.iteritems():
+    checkSum *= (cnt+1)
+    new = list()
+    for i in xrange(1,cnt+1):
+      for g in factors:
+        new.append(g * prime**i)
+    factors.extend(new)
+  print len(factors), 'factors', factors
+  factors = sorted(factors)
+  assert factors[0] == 1
+  assert factors[-1] == bigNum
+  assert checkSum == len(factors)
+  return factors
+      
+def recurs(remain, lowerFactors=tuple()):
+  '''job: find each formula to factorize remain, but when print it, also print lowerFactors
+  '''
+  global cnt, recursionLevel
+  assert sorted(lowerFactors) == list(lowerFactors), 'should be sorted low to high'
+  assert len( lowerFactors ) == recursionLevel
+  recursionLevel += 1
+  if lowerFactors: # i.e. non-empty
+    #assert lowerFactors[-1] <= remain, 'last lowerFactors item should not exceed remain'
+    cnt+=1
+    print '. '*(recursionLevel-2) + str(lowerFactors), reduce(mul, remain, 1)
+  else: 
+    print '------- factorizing', remain
+    cnt=0
+    
+  for f in remain:
+    recurs(remain[1:], lowerFactors+(f,))
+  recursionLevel -= 1
 def recursCSY(remain, lowerFactors=tuple()):
   '''job: find each formula to factorize remain, but when print it, also print lowerFactors
   '''
@@ -17,14 +77,15 @@ def recursCSY(remain, lowerFactors=tuple()):
     cnt=0
     _start = 2 # smallest factor in the universe
     
-  # loop below is too ineffient. Should use the "non-distinct prime factors" described in blog
+  # loop below is too ineffient. Should replace the xrange with the remaining "factors"
   for f in xrange(_start, int(sqrt(remain))+1):
     if remain%f: continue
     recursCSY(remain/f, lowerFactors+(f,))
   recursionLevel -= 1
-def factorize(remain):
-  recursCSY(remain)
+def factorize(bigNum):
+  recurs(gen_groups(bigNum))
 def main():
+  print gen_groups(600)
   factorize(36); assert(8  == cnt)
   factorize(60); assert(10 == cnt)
   factorize(24); assert(6  == cnt)
