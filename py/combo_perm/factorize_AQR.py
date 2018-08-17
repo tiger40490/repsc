@@ -1,5 +1,4 @@
 '''todo: clean up
-todo extract to module get_divisors
 '''
 from math import sqrt
 import generic_factorize
