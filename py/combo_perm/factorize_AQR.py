@@ -6,7 +6,7 @@ import generic_factorize
 import bisect
 cnt=0; recursionLevel=0
   
-def getSmallDivisors(bigNum): # 
+def getSmallDivisors(bigNum):
   divisors, _ = generic_factorize.get_divisors(bigNum)
   return divisors[ : bisect.bisect_right(divisors, sqrt(bigNum))]
       
@@ -17,23 +17,22 @@ def recurs(bigNum, divisors, lowerFactors=tuple()):
   recursionLevel += 1
   if lowerFactors: # i.e. non-empty
     cnt+=1
-    _start = lowerFactors[-1] # highest existing factor -- #1 trick in this algorithm    
     print '. '*(recursionLevel-2) + str(list(lowerFactors)), bigNum
   else: 
     print '------- factorizing', bigNum
     cnt=0
-    _start = 2 # smallest factor in the universe    
     
   '''  for f in xrange(_start, int(sqrt(remain))+1):
     if remain%f: continue
     recursCSY(remain/f, lowerFactors+(f,))
   '''    
-  for f in divisors: # scan all divisors from _start to sqrt of current bigNum
+  for i in xrange(len(divisors)): # scan all divisors from _start to sqrt of current bigNum
+    f = divisors[i]
     if bigNum % f: continue
-    if f < _start: continue
     new=bigNum/f
     if new < f: break
-    recurs(new, divisors, lowerFactors+(f,))
+    
+    recurs(new, divisors[i:], lowerFactors+(f,))
   recursionLevel -= 1
 def recursCSY(remain, lowerFactors=tuple()):
   '''job: find each formula to factorize remain, but when print it, also print lowerFactors
