@@ -1,4 +1,5 @@
 '''todo: clean up
+todo: load test
 '''
 from math import sqrt
 import generic_factorize
@@ -15,12 +16,10 @@ def getSmallDivisors(bigNum): # to optimize away
       
 def recurs(bigNum, divisors, lowerFactors=tuple()):
   global cnt, recursionLevel
-  if bigNum == 1: return # to optimize away
   assert sorted(lowerFactors) == list(lowerFactors), 'should be sorted low to high'
   assert len( lowerFactors ) == recursionLevel
   recursionLevel += 1
   if lowerFactors: # i.e. non-empty
-    #assert lowerFactors[-1] <= divisors, 'last lowerFactors item should not exceed divisors'
     cnt+=1
     _start = lowerFactors[-1] # highest existing factor -- #1 trick in this algorithm    
     print '. '*(recursionLevel-2) + str(lowerFactors), bigNum
@@ -36,8 +35,9 @@ def recurs(bigNum, divisors, lowerFactors=tuple()):
   for f in divisors: # scan all divisors from _start to sqrt of current bigNum
     if f < _start: continue
     if bigNum % f: continue
-    if bigNum/f < f: break
-    recurs(bigNum/f, divisors, lowerFactors+(f,))
+    new=bigNum/f
+    if new < f: break
+    recurs(new, divisors, lowerFactors+(f,))
   recursionLevel -= 1
 def recursCSY(remain, lowerFactors=tuple()):
   '''job: find each formula to factorize remain, but when print it, also print lowerFactors
@@ -67,6 +67,7 @@ def factorize(bigNum):
 def main():
   #print get_divisors(600)
   factorize(60); assert(10 == cnt)
+  #return
   factorize(36); assert(8  == cnt)
   factorize(24); assert(6  == cnt)
   factorize(12); assert(3  == cnt)
