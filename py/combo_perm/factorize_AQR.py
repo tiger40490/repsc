@@ -3,16 +3,12 @@ todo: load test
 '''
 from math import sqrt
 import generic_factorize
+import bisect
 cnt=0; recursionLevel=0
   
-def getSmallDivisors(bigNum): # to optimize away
-  ret = list()
-  divisors, frq = generic_factorize.get_divisors(bigNum)
-  for i in divisors:
-    if i == 1: continue
-    ret.append(i)
-    if i > sqrt(bigNum): break
-  return ret
+def getSmallDivisors(bigNum): # 
+  divisors, _ = generic_factorize.get_divisors(bigNum)
+  return divisors[ : bisect.bisect_right(divisors, sqrt(bigNum))]
       
 def recurs(bigNum, divisors, lowerFactors=tuple()):
   global cnt, recursionLevel
@@ -22,7 +18,7 @@ def recurs(bigNum, divisors, lowerFactors=tuple()):
   if lowerFactors: # i.e. non-empty
     cnt+=1
     _start = lowerFactors[-1] # highest existing factor -- #1 trick in this algorithm    
-    print '. '*(recursionLevel-2) + str(lowerFactors), bigNum
+    print '. '*(recursionLevel-2) + str(list(lowerFactors)), bigNum
   else: 
     print '------- factorizing', bigNum
     cnt=0
@@ -33,8 +29,8 @@ def recurs(bigNum, divisors, lowerFactors=tuple()):
     recursCSY(remain/f, lowerFactors+(f,))
   '''    
   for f in divisors: # scan all divisors from _start to sqrt of current bigNum
-    if f < _start: continue
     if bigNum % f: continue
+    if f < _start: continue
     new=bigNum/f
     if new < f: break
     recurs(new, divisors, lowerFactors+(f,))

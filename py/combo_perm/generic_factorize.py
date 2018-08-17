@@ -26,10 +26,10 @@ def get_divisors(tgt): # generate all divisors of tgt
   for prime, cnt in frq.iteritems():
     checkSum *= (cnt+1)
     divisors.extend([g * prime**i for g in divisors for i in xrange(1,cnt+1)])
-  print len(divisors), 'divisors', divisors
   assert checkSum == len(divisors)
   divisors = sorted(divisors)
   assert divisors[0] == 1
   assert divisors[-1] == tgt
-  return divisors, frq
+  print len(divisors), 'divisors', divisors
+  return divisors[1:], frq
 ##### reusable functions to be extracted into module
