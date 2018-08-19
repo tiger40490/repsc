@@ -1,9 +1,10 @@
 /*
-todo: clean-up
 todo: figure out why pow(2, staircase-1)
+showcase: ctor call on vector , via a type alias Path
 */
 #include <vector>
 #include <queue>
+#include <numeric>
 #include <iostream>
 #include <iomanip>
 #include <cmath>
@@ -18,33 +19,33 @@ template<typename T,             int min_width=8> ostream & operator<<(ostream &
 using Length=int;
 using Path=vector<Length>;
 int solBFT(Length staircase){
-  bool isVerbose = staircase < 7;
+  bool isVerbose = staircase < 8;
   queue<Path> q; q.push(Path());
-  int cnt=0;
-  for (;!q.empty();){
-    Path pa=q.front(); q.pop();
-    Length gap = staircase;
-    for (Length step: pa) 
-      gap -= step;
-    //cout<<gap<<" = gap "<<pa;
-    assert(gap > 0);
-    for (Length step=1; step<gap; ++step){ //if gap is 2 then append 1.. 2 
-      auto newpa(pa);
-      newpa.push_back(step);
-      q.push(newpa);
+  for (int cnt=0;;++cnt){
+    if (q.empty()){
+      assert( pow(2,staircase-1) == cnt);
+      cout<<staircase<<"-level staircase: returning "<<cnt<<endl;
+      return cnt;
     }
-    pa.push_back(gap);
-    if (isVerbose) cout<<":)"<<pa;
-    ++cnt;
-  }
-  assert( pow(2,staircase-1) == cnt);
-  cout<<staircase<<"-level staircase: returning "<<cnt<<endl;
-  return cnt;
+    Path pa=q.front(); q.pop();
+    Length gap = staircase - accumulate(pa.begin(), pa.end(), 0);
+    assert(gap > 0);
+    for (Length step=1; step<gap; ++step){ 
+      q.push(pa); //vector clone
+      q.back().push_back(step); //append on the cloned vector
+    }
+    pa.push_back(gap); //a complete path
+    if (isVerbose){
+      assert( accumulate(pa.begin(), pa.end(), 0) == staircase && "a complete path must have total length == staircase");
+      cout<<":)"<<pa; 
+    }
+  } //for
 }
 
 int main(){
+  solBFT(4);
   solBFT(5);
-  solBFT(9);
+  solBFT(7);
   solBFT(13);
-}/*Req: https://wp.me/p74oew-61P
+}/*Req: https://wp.me/p74oew-61P count how many ways to climb a staircase of length N
 */
