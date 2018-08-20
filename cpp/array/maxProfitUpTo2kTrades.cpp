@@ -33,7 +33,7 @@ struct Rec{
   }
 };
 
-int sol1(vector<Price> const orig){
+int sol1(vector<Price> const orig, size_t const topN=2){
   vector<Price> v;
   v.push_back(orig[0]);
   for (int i=1; i<orig.size(); ++i){
@@ -63,12 +63,18 @@ int sol1(vector<Price> const orig){
   sort(profits.begin(), profits.end());
   reverse(profits.begin(), profits.end());
   ss<<"profits: "<<profits;
+  
+  Profit ret=0;
+  for (int i=0; i<topN && i<profits.size(); ++i){
+    ret += profits[i];
+  }
+  return ret;
 }
 int main(){
-  assert(sol1({3,3,5,0,0,3,1,2,4}));
-  assert(sol1({4,3,5,0,0,3,1,2,4}));
-  sol1({7,5,4,2,1});
-  assert(sol1({2,3,5,0,10,15,11,4}));
+  assert(6==sol1({3,3,5,0,0,3,1,2,4}));
+  assert(6==sol1({4,3,5,0,0,3,1,2,4}));
+  assert(0 == sol1({7,5,4,2,1}));
+  assert(18==sol1({2,3,5,0,10,15,11,4}));
 }
 /*Requirmenet: 
 */
