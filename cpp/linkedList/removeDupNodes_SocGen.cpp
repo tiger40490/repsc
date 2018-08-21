@@ -1,13 +1,12 @@
 /*
-todo: clean up
-todo: relink often unnecessary
-todo: check nullptr only in one place
+todo: avoid memory leak
 
 showcase switch-case + command line arg to specify a single test case. Below is a composite command to run multiple tests:
   g++ ez_removeBadNodes_Flex.cpp && ./a.exe 0 && ./a.exe p && ./a.exe a && ./a.exe 1
 */
 #include <iostream>
 #include <cassert>
+#include <memory>
 using namespace std;
 struct Node{
   size_t data; Node * next;
@@ -62,10 +61,22 @@ Node* solution1(Node* listHead){ //
   }
   cerr<<"endless loop\n";
 }
-Node* solution2(Node* listHead){ //showcase 
+Node* solutionSimple(Node* listHead){ //showcase 
   int seen[1001]={0}; //list payloads always between 0 and 1000
   seen[listHead->data]=1;
   for(auto n=listHead; n->next;){
+    if (seen[n->next->data]){
+      n->next = n->next->next;
+    }else{
+      n = n->next;
+      seen[n->data]=1;
+    }
+  }
+  return listHead;
+}
+Node* solution2(Node* listHead){ //showcase 
+  int seen[1001]={0}; //list payloads always between 0 and 1000
+  for(Node* n=make_shared<Node>(0, listHead).get(); n->next;){
     if (seen[n->next->data]){
       n->next = n->next->next;
     }else{
