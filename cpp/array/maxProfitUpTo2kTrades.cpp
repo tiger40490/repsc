@@ -55,7 +55,8 @@ int sol1(vector<Price> const orig, size_t const topN=2){
     zigzag.push_back(Rec(last, true));
   else if(b4last.hi && b4last.val > last)
     zigzag.push_back(Rec(last, false));
-  ss<<zigzag;
+  ss<<zigzag; //good so far.
+  
   vector<Profit> profits;
   for (int i=1; i<zigzag.size(); i +=2){
     profits.push_back(zigzag[i].val - zigzag[i-1].val);
@@ -71,10 +72,20 @@ int sol1(vector<Price> const orig, size_t const topN=2){
   return ret;
 }
 int main(){
+  assert(6+7==sol1({1,2,4,2,5,7,2,4,9,0}));
+  assert(14+2==sol1({1,13,12,14,13,15,14,16,5}));
   assert(6==sol1({3,3,5,0,0,3,1,2,4}));
   assert(6==sol1({4,3,5,0,0,3,1,2,4}));
   assert(0 == sol1({7,5,4,2,1}));
   assert(18==sol1({2,3,5,0,10,15,11,4}));
 }
 /*Requirmenet: 
+We can keep track of all profitable pairs along with le/ri indices, and also a pointer to the best pair that's not overlapping with "me".
+
+After creating 2nd pair, IFF no overlap, then we update the pointers in both instances.
+
+After creating 7th pair, if it doesn't overlap with the #3 pair, then try to update the pointer in #3.
+
+case: need to break the best pair into 2 pairs
+case: best pair + another pair outside
 */
