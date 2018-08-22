@@ -1,8 +1,7 @@
 /*
-todo: avoid memory leak
-
+showcase make_shared to avoid memory leak
 showcase switch-case + command line arg to specify a single test case. Below is a composite command to run multiple tests:
-  g++ ez_removeBadNodes_Flex.cpp && ./a.exe 0 && ./a.exe p && ./a.exe a && ./a.exe 1
+  g++ removeDupNodes_SocGen.cpp && ./a.exe 0 && ./a.exe p && ./a.exe 1
 */
 #include <iostream>
 #include <cassert>
@@ -31,10 +30,10 @@ size_t dump(Node *h){
   cerr<<"nullptr\n";
   return ret;
 }
-Node* solution1(Node* listHead){ //
+Node* solutionComplicated(Node* listHead){ //
   int seen[1001]={0}; //list payloads always between 0 and 1000
   int cnt=0;
-  auto i=listHead, j=listHead->next; //two pointers needed
+  auto i=listHead, j=listHead->next; //two pointers .. over-complicated
   seen[i->data]=1; //code smell
   for(;;){
     int val = j->data;
@@ -74,8 +73,9 @@ Node* solutionSimple(Node* listHead){ //showcase
   }
   return listHead;
 }
-Node* solution2(Node* listHead){ //showcase 
+Node* solutionSimple2(Node* listHead){ //showcase 
   int seen[1001]={0}; //list payloads always between 0 and 1000
+  //make_shared creates a fake head, to be deleted soon.
   for(Node* n=make_shared<Node>(0, listHead).get(); n->next;){
     if (seen[n->next->data]){
       n->next = n->next->next;
@@ -92,7 +92,7 @@ Node* removeNodes(Node* listHead, int hi, int lo=0){
   }
   cout<<"After tweaking... \n ";
   dump(listHead);
-  return solution2(listHead );
+  return solutionSimple2(listHead );
 }
 int main(int argc, char *argv[]){
   if (argc < 2){
