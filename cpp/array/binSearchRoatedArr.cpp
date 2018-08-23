@@ -72,7 +72,8 @@ public:
         else               return _2high(nums,target);
     }
 } inst;
-int pivot(vector<int> const & a){// return index of max item
+//////////// new solution
+int pivot(vector<int> const & a){// return index of max item. A well-defined module, ez to test and reason about
   for (pos le=0, ri=a.size()-1;;){
     if (le+1 == ri) return le;
     pos mi=(le+ri)/2;
@@ -83,11 +84,31 @@ int pivot(vector<int> const & a){// return index of max item
     assert(a[le] >= a[ri]);
   }
 }
+int simplefind(vector<int> const & a, int const needle, pos le, pos ri){ //return index 
+  for (;;){
+    pos mi = (le+ri)/2;
+    if (a[mi] == needle) return mi;
+    if (le+1 == ri) return -1;
+    if (a[mi] > needle)
+      ri=mi;
+    else
+      le=mi;
+  }
+}
+int searchTgt(vector<int> const & a, int const needle){ //return index or -1
+  cout<<a;
+  auto maxpos = pivot(a);
+  if (needle < a[maxpos+1]) return -2;
+  if (needle > a[maxpos])   return -3;
+  if (needle >= a[0]) return simplefind(a, needle, 0, maxpos);
+  return simplefind(a, needle, maxpos+1, a.size()-1);
+}
 int main(){
   vector<int> a={33,35,37,39,40,42,44,55,1,3,4,11,22};
-  auto max = pivot(a);
-  cout<<a[max]<<endl;
-  auto ret = inst.search(a,62);
+  pos found = searchTgt(a, 33);
+  cout<<found<<endl;
+  return 0;
+  auto ret = inst.search(a,42);
   cout<<ret<<" is the answer\n";
 }/*Req: https://bintanvictor.wordpress.com/2018/06/23/binary-search-in-rotated-sorted-array/
 too long. There must be shorter simpler solutions
