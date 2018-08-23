@@ -87,8 +87,12 @@ int pivot(vector<int> const & a){// return index of max item.
 int simplefind(vector<int> const & a, int const needle, pos le, pos ri){ //return index 
   for (;;){
     pos mi = (le+ri)/2;
-    if (a[mi] == needle) return mi;
-    if (le+1 == ri) return -1;
+    //cout<<le<<" - "<<ri<<endl;
+    if (le+1 == ri){
+      if (a[mi] == needle) return mi;
+      if (a[ri] == needle) return ri; //int division rounds down
+      return -1;
+    }
     if (a[mi] > needle)
       ri=mi;
     else
@@ -98,14 +102,15 @@ int simplefind(vector<int> const & a, int const needle, pos le, pos ri){ //retur
 int searchTgt(vector<int> const & a, int const needle){ //return index or -1
   cout<<a;
   auto peakPos = pivot(a);
+  cout<<a[peakPos]<<endl;
   if (needle < a[peakPos+1]) return -2; //too low
   if (needle > a[peakPos])   return -3; //too high
   if (needle >= a[0]) return simplefind(a, needle, 0, peakPos);
   return simplefind(a, needle, peakPos+1, a.size()-1);
 }
 int main(){
-  vector<int> a={33,35,37,39,40,42,44,55,1,3,4,11,22};
-  pos found = searchTgt(a, 55);
+  vector<int> a={33,35,37,39,40,42,44,47,55,1,3,4,11,22};
+  pos found = searchTgt(a, 66);
   cout<<found<<endl;
   return 0;
   auto ret = inst.search(a,42);
