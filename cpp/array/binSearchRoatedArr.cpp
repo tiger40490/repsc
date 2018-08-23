@@ -72,8 +72,8 @@ public:
         else               return _2high(nums,target);
     }
 } inst;
-//////////// new solution
-int pivot(vector<int> const & a){// return index of max item. A well-defined module, ez to test and reason about
+//////////// new solution based on well-defined modules, ez to test and reason about.
+int pivot(vector<int> const & a){// return index of max item. 
   for (pos le=0, ri=a.size()-1;;){
     if (le+1 == ri) return le;
     pos mi=(le+ri)/2;
@@ -97,15 +97,15 @@ int simplefind(vector<int> const & a, int const needle, pos le, pos ri){ //retur
 }
 int searchTgt(vector<int> const & a, int const needle){ //return index or -1
   cout<<a;
-  auto maxpos = pivot(a);
-  if (needle < a[maxpos+1]) return -2;
-  if (needle > a[maxpos])   return -3;
-  if (needle >= a[0]) return simplefind(a, needle, 0, maxpos);
-  return simplefind(a, needle, maxpos+1, a.size()-1);
+  auto peakPos = pivot(a);
+  if (needle < a[peakPos+1]) return -2; //too low
+  if (needle > a[peakPos])   return -3; //too high
+  if (needle >= a[0]) return simplefind(a, needle, 0, peakPos);
+  return simplefind(a, needle, peakPos+1, a.size()-1);
 }
 int main(){
   vector<int> a={33,35,37,39,40,42,44,55,1,3,4,11,22};
-  pos found = searchTgt(a, 33);
+  pos found = searchTgt(a, 55);
   cout<<found<<endl;
   return 0;
   auto ret = inst.search(a,42);
