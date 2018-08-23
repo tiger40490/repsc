@@ -1,3 +1,7 @@
+/*I thought it was code smell to run multiple passes when one-pass is enough but I guess the interviewer doesn't care.
+
+The one-pass algo is messy
+*/
 #include <vector>
 #include <iostream>
 #include <iomanip>
