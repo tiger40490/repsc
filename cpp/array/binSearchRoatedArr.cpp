@@ -4,7 +4,7 @@
 #include <cassert>
 #define ss if(1>0)cout //to mass-disable cout before uploading to hacker rank
 using namespace std;
-
+using pos=int;
 template<typename T,             int min_width=4> ostream & operator<<(ostream & os, vector<T> const & c){
    for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
    os<<endl;
@@ -72,8 +72,24 @@ public:
         else               return _2high(nums,target);
     }
 } inst;
+int pivot(vector<int> const & a){// return index of max item
+  for (pos le=0, ri=a.size()-1;;){
+    if (le+1 == ri) return le;
+    pos mi=(le+ri)/2;
+    if (a[mi] <= a[ri])
+      ri=mi;
+    else
+      le=mi;
+    assert(a[le] >= a[ri]);
+  }
+}
 int main(){
   vector<int> a={33,35,37,39,40,42,44,55,1,3,4,11,22};
+  auto max = pivot(a);
+  cout<<a[max]<<endl;
   auto ret = inst.search(a,62);
   cout<<ret<<" is the answer\n";
-}//Req: https://bintanvictor.wordpress.com/2018/06/23/binary-search-in-rotated-sorted-array/
+}/*Req: https://bintanvictor.wordpress.com/2018/06/23/binary-search-in-rotated-sorted-array/
+too long. There must be shorter simpler solutions
+*/
+
