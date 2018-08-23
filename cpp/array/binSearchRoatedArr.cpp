@@ -8,7 +8,7 @@ The one-pass algo is messy
 #include <cassert>
 #define ss if(1>0)cout //to mass-disable cout before uploading to hacker rank
 using namespace std;
-using pos=int;
+using Idx=int;
 template<typename T,             int min_width=4> ostream & operator<<(ostream & os, vector<T> const & c){
    for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
    os<<endl;
@@ -77,23 +77,22 @@ public:
     }
 } inst;
 //////////// new solution based on well-defined modules, ez to test and reason about.
-int pivot(vector<int> const & a){// return index of max item. 
-  for (pos le=0, ri=a.size()-1;;){
+int pivotPoint(vector<int> const & a){// return index of max item. 
+  for (Idx le=0, ri=a.size()-1;;){
     if (le+1 == ri) return le;
-    pos mi=(le+ri)/2;
-    if (a[mi] <= a[ri])
+    Idx mi=(le+ri)/2;
+    if (a[mi] <= a[ri]) //mi is in right section
       ri=mi;
-    else
+    else //mi is in the left section
       le=mi;
     assert(a[le] >= a[ri]);
   }
 }
-int simplefind(vector<int> const & a, int const needle, pos le, pos ri){ //return index 
+int simpleBsearch(vector<int> const & a, int const needle, Idx le, Idx ri){ //return index 
   for (;;){
-    pos mi = (le+ri)/2;
-    //cout<<le<<" - "<<ri<<endl;
+    Idx mi = (le+ri)/2;
+    if (a[mi] == needle) return mi;
     if (le+1 == ri){
-      if (a[mi] == needle) return mi;
       if (a[ri] == needle) return ri; //int division rounds down
       return -1;
     }
@@ -103,23 +102,33 @@ int simplefind(vector<int> const & a, int const needle, pos le, pos ri){ //retur
       le=mi;
   }
 }
-int searchTgt(vector<int> const & a, int const needle){ //return index or -1
-  cout<<a;
-  auto peakPos = pivot(a);
-  cout<<a[peakPos]<<endl;
-  if (needle < a[peakPos+1]) return -2; //too low
-  if (needle > a[peakPos])   return -3; //too high
-  if (needle >= a[0]) return simplefind(a, needle, 0, peakPos);
-  return simplefind(a, needle, peakPos+1, a.size()-1);
+int sol2pass(vector<int> const & a, int const needle){
+  auto peakPos = pivotPoint(a);
+  //cout<<a[peakPos]<<endl;
+  if (needle < a[peakPos+1]) {
+    cout<<needle<<" is too low\n";
+    return -2; //too low
+  }
+  if (needle > a[peakPos]){
+    cout<<needle<<" is too high\n";
+    return -3; //too high
+  }
+  if (needle >= a[0]) return simpleBsearch(a, needle, 0, peakPos);
+  return simpleBsearch(a, needle, peakPos+1, a.size()-1);
 }
 int main(){
   vector<int> a={33,35,37,39,40,42,44,47,55,1,3,4,11,22};
-  pos found = searchTgt(a, 66);
-  cout<<found<<endl;
+  cout<<a;
+  assert(-3 == sol2pass(a, 56));
+  assert(-2 == sol2pass(a, 0));
+  assert(0  == sol2pass(a, 33));
+  assert(13 == sol2pass(a, 22));
+  assert(8  == sol2pass(a, 55));
+  assert(9  == sol2pass(a, 1));
+  assert(-1 == sol2pass(a, 43));
   return 0;
   auto ret = inst.search(a,42);
   cout<<ret<<" is the answer\n";
 }/*Req: https://bintanvictor.wordpress.com/2018/06/23/binary-search-in-rotated-sorted-array/
-too long. There must be shorter simpler solutions
 */
 
