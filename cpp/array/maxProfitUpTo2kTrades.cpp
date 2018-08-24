@@ -80,12 +80,14 @@ int main(){
   assert(18==sol1({2,3,5,0,10,15,11,4}));
 }
 /*Requirmenet: 
-We can keep track of all profitable pairs along with le/ri indices, and also a pointer to the best pair that's not overlapping with "me".
+We can keep track of all profitable pairs i.e. le/ri indices, and also a pointer to the current best pair that's not overlapping with "me".
 
 After creating 2nd pair, IFF no overlap, then we update the pointers in both instances.
 
-After creating 7th pair, if it doesn't overlap with the #3 pair, then try to update the pointer in #3.
+After creating 7th pair, if it doesn't overlap with the #3 highest pair, then check-update the pointer in #3.
 
-case: need to break the best pair into 2 pairs
+I think if we can efficiently keep track of these then this should work.
+
+case: need to break the highest pair into 2 pairs
 case: best pair + another pair outside
 */
