@@ -1,5 +1,7 @@
 << ______________end_of_comment_1________________
-last uploaded to blog in May 2017
+last uploaded to blog in May 2018
+showcase eval $cmd
+showcase "$@"
 ______________end_of_comment_1________________
 [ -z "$(echo $- | grep i)" ] && return # this same line should be on top of append.bashrc_citi.txt
 # # # # # # # # # # # # # # # # # #
@@ -46,16 +48,12 @@ alias hgi="history |grep -i"
 alias j1="fg %1"
 alias j2="fg %2"
 alias j3="fg %3"
-alias j4="fg %4"
-alias j5="fg %5"
-alias j6="fg %6"
-alias j7="fg %7"
 alias killthem="perl -pe 's/^\S+(\s+\d+).*/\1/ or s/.*//'|xargs -pt kill" # p str1 | killthem
-alias m=$PAGER
+# alias m=$PAGER
 alias mv='mv -i'  # defuse
 alias p=ps_grep
 alias path="  echo \$PATH |perl -pe 's/:/\n/g' |sort -u|$PAGERE  "
-alias rm=myrm
+alias rm=myrm     # defuse
 alias s-='  source  $HOME/.bashrc  '
 alias s+='       vi $HOME/append.bashrc_ms.txt  '
 alias t='l -t'
@@ -90,26 +88,23 @@ d(){
 diff1(){ # remove trailing #-comments
   diff $* |perl -pe 's/\s*#.*// and chomp'
 }
-egi(){
+egi(){ # proven since 2010
   needle=` echo $1 | perl -pe 's/-/_/g' ` # replace dash
   export |grep -i $needle
-}
-forcepush(){
-  br=$1
-  printf "\n\t$br    <-- branch to be deleted remotely? [ n / any_other_key_for_yes ] ";
-  unset REPLY
-  read $REPLY
-  [ "$REPLY" = "n" ] && return
-  set -x
-  git push origin :$br
-  git push -u origin $br
-  { set +x; } 2>/dev/null
 }
 ls1page(){
   /bin/ls -ahlF --color=always $*
 }
 l(){ # can't be completely replaced by 'cd_l' or ']', because "cd_l -tr dir1" is confusing and should be avoided
  ls1page $* |$PAGERE -r # -r will interpret the --color
+}
+m(){ # if there's +1234 then turn on -N
+  local add_opt   ## prevents previous assignment persisting :(
+  [[ `echo $1 |perl -ne 'print if /^\+\d+/'  ` ]] && add_opt="-N"
+  cmd="less $add_opt $@"
+  [[ -n "$add_opt" ]] && printf "$cmd # starting ..\n"
+  eval $cmd
+  [[ -n "$add_opt" ]] && printf "$cmd # .. done\n"
 }
 myrm(){
   cmd="mv -i $* /var/tmp/$sav/ "
@@ -145,6 +140,7 @@ sav(){ # proven since 2007, never had a problem. You can pass in a relative or a
 #
 # # # # # # # # # # # # # # # # # # # # # #
 exa(){ #testing: exa -t ss ~/.ssh
+# proven since 2010
   local ops
   while is_opt=`echo $1 |perl -ne 'print if /^-/'  ` && [ "$is_opt" ]; do
     ops="$ops $1"; shift
@@ -159,14 +155,12 @@ exa(){ #testing: exa -t ss ~/.ssh
   fi
 
   [ -x $fullpath ] || return
-  # set $shortname="$fullpath" # not working as of 2017 and also in MS
-  eval $shortname="$fullpath"
+  eval $shortname="$fullpath" # create a shell variable with a dynamic name!
   echo -e $shortname '\t' now set to $fullpath
   prj="$fullpath"
   alias  "$shortname"="cd $fullpath;l $ops"
   alias  prj=$shortname # USE MORE
 }
-exa /tmp/
 # # # # # # # # # # # # # # # # # # #
 #
 #   << path stuff, potentially dangerous >>
@@ -179,13 +173,8 @@ add_path(){
   #todo: check world write perm, esp for root
   PATH=$PATH:$dir
   ret=$(echo $PATH |perl -pe 's/:/\n/g' | wc -l)
-  echo adding $dir to PATH and returning $ret
+  #echo adding $dir to PATH and returning $ret
   return $ret
-}
-set_manpath(){ # very slow on some systems. Run this when u need it.
-  for d in `ls -d /[uo]*/*/man /[uo]*/*/*/man /[uo]*/*/*/*/man`; do
-    export MANPATH=$MANPATH:$d
-  done
 }
 set_path(){
   add_path /usr/sbin
