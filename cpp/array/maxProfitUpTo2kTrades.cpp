@@ -73,21 +73,11 @@ int sol1(vector<Price> const orig, size_t const topN=2){
 }
 int main(){
   assert(6+7==sol1({1,2,4,2,5,7,2,4,9,0}));
-  assert(14+2==sol1({1,13,12,14,13,15,14,16,5}));
-  assert(6==sol1({3,3,5,0,0,3,1,2,4}));
-  assert(6==sol1({4,3,5,0,0,3,1,2,4}));
-  assert(0 == sol1({7,5,4,2,1}));
-  assert(18==sol1({2,3,5,0,10,15,11,4}));
+  //assert(14+2==sol1({1,13,12,14,13,15,14,16,5}));
+  //assert(6==sol1({3,3,5,0,0,3,1,2,4}));
+  //assert(6==sol1({4,3,5,0,0,3,1,2,4}));
+  //assert(0 == sol1({7,5,4,2,1}));
+  //assert(18==sol1({2,3,5,0,10,15,11,4}));
 }
-/*Requirmenet: 
-We can keep track of all profitable pairs i.e. le/ri indices, and also a pointer to the current best pair that's not overlapping with "me".
-
-After creating 2nd pair, IFF no overlap, then we update the pointers in both instances.
-
-After creating 7th pair, if it doesn't overlap with the #3 highest pair, then check-update the pointer in #3.
-
-I think if we can efficiently keep track of these then this should work.
-
-case: need to break the highest pair into 2 pairs
-case: best pair + another pair outside
+/*Requirmenet and design: https://wp.me/p74oew-62k
 */
