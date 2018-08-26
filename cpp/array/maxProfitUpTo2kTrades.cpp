@@ -1,4 +1,6 @@
-/* showcase 
+/* 
+todo: create reusable maxp(idx le, idx ri)
+showcase 
 */
 #include <vector>
 #include <algorithm>
@@ -18,6 +20,7 @@ template<typename T,             int min_width=4> ostream & operator<<(ostream &
 }
 using Price=int;
 using Profit=int;
+using idx=int;
 struct Rec{
   Price val;
   bool hi;
@@ -32,14 +35,12 @@ struct Rec{
     return os;
   }
 };
-
-int sol1(vector<Price> const orig, size_t const topN=2){
+int cleanse(vector<Price> const orig, vector<Rec> & zigzag){
   vector<Price> v;
   v.push_back(orig[0]);
   for (int i=1; i<orig.size(); ++i){
     if (orig[i-1] != orig[i]) v.push_back(orig[i]);
   } //all flats removed
-  vector<Rec> zigzag;
   if (v[0]<v[1]) zigzag.push_back(Rec(v[0], false));
   for (int i=1; i<v.size()-1; ++i){
     if ( (v[i-1]-v[i]) * (v[i]-v[i+1]) >=0) continue;
@@ -56,28 +57,34 @@ int sol1(vector<Price> const orig, size_t const topN=2){
   else if(b4last.hi && b4last.val > last)
     zigzag.push_back(Rec(last, false));
   ss<<zigzag; //good so far.
+  return 1;
+}
+int sol2(vector<Price> const orig, size_t const topN=2){
+  vector<Rec> zigzag;
+  if (cleanse(orig, zigzag) == 0) return 0;
   
-  vector<Profit> profits;
-  for (int i=1; i<zigzag.size(); i +=2){
-    profits.push_back(zigzag[i].val - zigzag[i-1].val);
-  }
-  sort(profits.begin(), profits.end());
-  reverse(profits.begin(), profits.end());
-  ss<<"profits: "<<profits;
-  
-  Profit ret=0;
-  for (int i=0; i<topN && i<profits.size(); ++i){
-    ret += profits[i];
-  }
-  return ret;
+  return 13;
 }
 int main(){
-  assert(6+7==sol1({1,2,4,2,5,7,2,4,9,0}));
-  //assert(14+2==sol1({1,13,12,14,13,15,14,16,5}));
-  //assert(6==sol1({3,3,5,0,0,3,1,2,4}));
-  //assert(6==sol1({4,3,5,0,0,3,1,2,4}));
-  //assert(0 == sol1({7,5,4,2,1}));
-  //assert(18==sol1({2,3,5,0,10,15,11,4}));
+  assert(6+7==sol2({1,2,4,2,5,7,2,4,9,0}));
+  //return 0;
+  assert(sol2({1,13,12,14,13,15,14,16,5}));
+  assert(sol2({3,3,5,0,0,3,1,2,4}));
+  assert(sol2({4,3,5,0,0,3,1,2,4}));
+  assert(0 == sol2({5,5}));
+  assert(0 == sol2({7,5,4,2,1}));
+  assert(sol2({2,3,5,0,10,15,11,4}));
 }
 /*Requirmenet and design: https://wp.me/p74oew-62k
+
+Identify all the turning points so we end up with hlhlhl… We can eliminate or ignore the other points.
+* identify the best pair using the max-profit algo. denote them as l1/hj
+* In the subarray before l1, find the best pair
+* in the subarray after hj, find the best pair
+pick the best among the two an denote it as p2
+Now look into the subarray l1 to hj. If there’s no enclosed pairs within then we have a simple case — use l1/hj and p2. But let’s assume there are at least 2 nodes enclosed. I will denote entire subarray as l1 h1 l2 h2 … lj hj (where l1-hj is the max-profit)
+* use max-profit algo to find the worst loss from h1 to lj. Suppose it’s h3 to l5.
+If this loss exceeds p2, then the we will return l1/h3 and l5/hj. Otherwise, return l1/hj and p2
+This solution uses the max-profit algo 4 times (*).
+
 */
