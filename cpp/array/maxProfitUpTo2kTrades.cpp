@@ -105,9 +105,9 @@ int sol2(vector<Price> const orig, size_t const topN=2){
   if (cleanse(orig, zigzag) < 2) return 0; //fewer than 2 nodes
   int sz=zigzag.size();
   idx le1 = 0, ri1=sz-1;
-  maxp(zigzag, le1, ri1);
+  Profit maxp1=maxp(zigzag, le1, ri1);
   idx leIn=le1+1, riIn=ri1-1;
-  Profit maxpIn=maxp(zigzag, leIn, riIn, true);
+  Profit maxDrop=maxp(zigzag, leIn, riIn, true);
   
   //now fine 2nd best pair from left and right section
   idx leB4=0, riB4=le1-1;
@@ -115,12 +115,23 @@ int sol2(vector<Price> const orig, size_t const topN=2){
   idx leAf=ri1+1, riAf=sz-1;
   Profit maxpAf=maxp(zigzag, leAf, riAf);
   
-  return 13;
+  //now the 3 scenarios
+  Profit maxpAB=max(maxpB4, maxpAf);
+  if (-maxDrop > maxpAB){
+    ss<<"^^^ spliting MaxProfit section\n";
+    return maxp1-maxDrop;
+  }
+  if (maxpAf == maxpAB){
+    ss<<"^^^ #2 pair .. after #1\n";
+  }  else{
+    ss<<"^^^ #2 pair .. before #1\n";
+  }
+  return maxpAB + maxp1;
 }
 int main(){
-  assert(sol2({2,3,5,0,10,15,11,4,7}));
   assert(6+7==sol2({1,2,4,2,5,7,2,4,9,0}));
   //return 0;
+  assert(sol2({2,3,5,0,10,15,11,4,7}));
   assert(sol2({1,13,12,14,13,15,14,16,5}));
   assert(sol2({3,3,5,0,0,3,1,2,4}));
   assert(sol2({4,3,5,0,0,3,1,2,4}));
