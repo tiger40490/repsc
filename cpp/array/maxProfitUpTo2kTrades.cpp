@@ -14,8 +14,8 @@ template<typename T,             int min_width=4> ostream & operator<<(ostream &
    os<<" ";
    for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
    os<<endl;
-   //for(int i=0; i<c.size(); ++i){ os<<setw(min_width)<<i<<" "; }
-   //os<<endl;
+   for(int i=0; i<c.size(); ++i){ os<<setw(min_width)<<i<<" "; }
+   os<<endl;
    return os;
 }
 using Price=int;
@@ -59,9 +59,35 @@ int cleanse(vector<Price> const orig, vector<Rec> & zigzag){
   ss<<zigzag; //good so far.
   return 1;
 }
+Profit maxp(vector<Rec> const & zigzag, idx & le, idx ri, bool isloss=true){
+  Price wm=zigzag[le].val; idx wmIdx=le;
+  Profit best=0; idx bestLe=le, bestRi=le;
+  for (idx i=le; i <= ri; ++i){
+    Price tmp=zigzag[i].val;
+    if ((tmp < wm && !isloss) ||
+        (tmp > wm &&  isloss)    ){
+      wm=tmp;
+      wmIdx = i;
+    }else{
+      Profit tmp2=tmp-wm;
+      if ((tmp2 > best && !isloss) ||
+          (tmp2 < best &&  isloss)    ) {
+        best = tmp2;
+        bestLe=wmIdx;
+        bestRi=i;
+      }
+    }
+  }
+  le = bestLe;
+  ri = bestRi;
+  ss<<best <<" max p/l returned for "<<le<<'-'<<ri<<endl;
+  return best;
+}
 int sol2(vector<Price> const orig, size_t const topN=2){
   vector<Rec> zigzag;
   if (cleanse(orig, zigzag) == 0) return 0;
+  idx le = 0, ri=zigzag.size()-1;
+  maxp(zigzag, le, ri);
   
   return 13;
 }
@@ -77,7 +103,6 @@ int main(){
 }
 /*Requirmenet and design: https://wp.me/p74oew-62k
 
-Identify all the turning points so we end up with hlhlhl… We can eliminate or ignore the other points.
 * identify the best pair using the max-profit algo. denote them as l1/hj
 * In the subarray before l1, find the best pair
 * in the subarray after hj, find the best pair
