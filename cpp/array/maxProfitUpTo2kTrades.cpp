@@ -35,7 +35,7 @@ struct Rec{
     return os;
   }
 };
-int cleanse(vector<Price> const orig, vector<Rec> & zigzag){
+size_t cleanse(vector<Price> const orig, vector<Rec> & zigzag){
   vector<Price> v;
   v.push_back(orig[0]);
   for (int i=1; i<orig.size(); ++i){
@@ -57,9 +57,26 @@ int cleanse(vector<Price> const orig, vector<Rec> & zigzag){
   else if(b4last.hi && b4last.val > last)
     zigzag.push_back(Rec(last, false));
   ss<<zigzag; //good so far.
-  return 1;
+  return zigzag.size();
 }
-Profit maxp(vector<Rec> const & zigzag, idx & le, idx ri, bool isloss=true){
+Profit maxp(vector<Rec> const & zigzag, idx& le, idx& ri, bool isloss=false){
+  if (ri<=0){
+    le=ri=0;
+    ss<<" max p/l = 0 at right end "<<le<<'-'<<ri<<endl;
+    return 0;
+  }
+  idx sz=zigzag.size();
+  if (le>=sz-1){
+    le=ri=sz-1;
+    ss<<" max p/l = 0 at left end "<<le<<'-'<<ri<<endl;
+    return 0;
+  }
+  if (ri+1==le){
+    le=ri;
+    ss<<" max p/l = 0 cos Max Profit section must have size==2! "<<le<<'-'<<ri<<endl;
+    return 0;  
+  }
+  assert (le <= ri);
   Price wm=zigzag[le].val; idx wmIdx=le;
   Profit best=0; idx bestLe=le, bestRi=le;
   for (idx i=le; i <= ri; ++i){
@@ -80,18 +97,28 @@ Profit maxp(vector<Rec> const & zigzag, idx & le, idx ri, bool isloss=true){
   }
   le = bestLe;
   ri = bestRi;
-  ss<<best <<" max p/l returned for "<<le<<'-'<<ri<<endl;
+  ss<<best <<" = max p/l returned for "<<le<<'-'<<ri<<endl;
   return best;
 }
 int sol2(vector<Price> const orig, size_t const topN=2){
   vector<Rec> zigzag;
-  if (cleanse(orig, zigzag) == 0) return 0;
-  idx le = 0, ri=zigzag.size()-1;
-  maxp(zigzag, le, ri);
+  if (cleanse(orig, zigzag) < 2) return 0; //fewer than 2 nodes
+  int sz=zigzag.size();
+  idx le1 = 0, ri1=sz-1;
+  maxp(zigzag, le1, ri1);
+  idx leIn=le1+1, riIn=ri1-1;
+  Profit maxpIn=maxp(zigzag, leIn, riIn, true);
+  
+  //now fine 2nd best pair from left and right section
+  idx leB4=0, riB4=le1-1;
+  Profit maxpB4=maxp(zigzag, leB4, riB4);
+  idx leAf=ri1+1, riAf=sz-1;
+  Profit maxpAf=maxp(zigzag, leAf, riAf);
   
   return 13;
 }
 int main(){
+  assert(sol2({2,3,5,0,10,15,11,4,7}));
   assert(6+7==sol2({1,2,4,2,5,7,2,4,9,0}));
   //return 0;
   assert(sol2({1,13,12,14,13,15,14,16,5}));
@@ -99,7 +126,6 @@ int main(){
   assert(sol2({4,3,5,0,0,3,1,2,4}));
   assert(0 == sol2({5,5}));
   assert(0 == sol2({7,5,4,2,1}));
-  assert(sol2({2,3,5,0,10,15,11,4}));
 }
 /*Requirmenet and design: https://wp.me/p74oew-62k
 
