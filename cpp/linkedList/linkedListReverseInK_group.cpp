@@ -91,5 +91,7 @@ int main(int argc, char *argv[]) {
    iterative();
    dump("---Iterative Reverse Completed:");
 }/*Req: https://bintanvictor.wordpress.com/2018/07/14/reverse-link-list-in-k-groups/
+If the number of nodes is not a multiple of k then left-out nodes in the end should remain as it is.
+
 I won't bother to pass all leetcode tests. Real interview will focus on the key points, not those corner cases
 */
