@@ -1,3 +1,7 @@
+/*
+showcase multiple variable declaration after struct declaration
+showcase multiple increments within for-loop header
+*/
 #include <iostream>
 #include <cassert>
 using namespace std;
@@ -49,7 +53,7 @@ void tailRecursion(){
         head->next = NULL;
         reverse1(head, b);
 }
-//////////// Above is tail recursion; below is iterative
+//////////// Above is tail recursion without K-groups; below is iterative
 size_t size(){
   size_t ret=0;
   for (Node * i=head; ; ++ret, i = i->next){
@@ -66,7 +70,7 @@ void iterative(){
   Node * b=a->next;
   Node * c=b->next;
 
-  for (;;a=b, b=c, c = c->next){
+  for (;;a=b, b=c, c = c->next){ //3 pointers never reseated within the loop body
     b->next = a; cout<<++cnt<<": fixing "<<*b<<" \n";
     if (cnt % K ==0){
       cout<<"end of a group\n";
@@ -75,14 +79,14 @@ void iterative(){
       tailFar->next = b; 
       tailFar = tailNear;
       //cout<<(char)tailFar->data<<" === tailFar\n";
-      if (cnt == sz/K*K){
+      if (cnt == sz/K*K){ //all remaining nodes are kept as is
         tailNear->next = c;
         return;
       }
       tailNear = c; //pointer therein to be adjusted
       //cout<<(char)tailNear->data<<" = tailNear\n";
     }
-    assert(c != NULL);
+    assert(c != NULL && "last node should be handled by the if-block");
   }
 }
 int main(int argc, char *argv[]) {
@@ -91,7 +95,7 @@ int main(int argc, char *argv[]) {
    iterative();
    dump("---Iterative Reverse Completed:");
 }/*Req: https://bintanvictor.wordpress.com/2018/07/14/reverse-link-list-in-k-groups/
-If the number of nodes is not a multiple of k then left-out nodes in the end should remain as it is.
+If the number of nodes is not a multiple of k then left-out nodes in the end should remain as is.
 
 I won't bother to pass all leetcode tests. Real interview will focus on the key points, not those corner cases
 */
