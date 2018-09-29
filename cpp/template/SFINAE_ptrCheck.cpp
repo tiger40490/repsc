@@ -1,5 +1,7 @@
 //showcase std::is_pointer<T> is_member...<T> etc
+//showcase static_assert vs assert
 #include <assert.h>
+#include <vector>
 #include <iostream>
 using namespace std; 
 
@@ -36,20 +38,23 @@ int main(void){
   FooMemFunPtr funPtr = Foo::func1;
   typedef int (*FuncPtr)();
 
-  assert(1==isCustomPtr<IntPtr>::value); 
-  assert(isCustomPtr<IntPtr>::bool_value);
+  static_assert(1==isCustomPtr<IntPtr>::value); 
+  static_assert(isCustomPtr<IntPtr>::bool_value);
 
-  assert(2==isCustomPtr<FuncPtr>::value);
-  assert(isCustomPtr<FuncPtr>::bool_value);
+  static_assert(2==isCustomPtr<FuncPtr>::value);
+  static_assert(isCustomPtr<FuncPtr>::bool_value);
 
-  assert(4==isCustomPtr<FooMemberPtr>::value);
-  assert(is_member_pointer<FooMemberPtr>::value);
+  static_assert(4==isCustomPtr<FooMemberPtr>::value);
+  static_assert(is_member_pointer<FooMemberPtr>::value);
 
-  assert(8==isCustomPtr<FooMemFunPtr>::value);
-  assert(is_member_function_pointer<FooMemFunPtr>::value);
+  static_assert(8==isCustomPtr<FooMemFunPtr>::value);
+  static_assert(is_member_function_pointer<FooMemFunPtr>::value);
 
-  assert(9==isCustomPtr<float>::value); //not a ptr at all
-  assert( ! isCustomPtr<float>::bool_value); //not a ptr at all
+  static_assert(9==isCustomPtr<float>::value); //not a ptr at all
+  static_assert( ! isCustomPtr<float>::bool_value); 
+  
+  //static_assert(vector<int>().size() == 0); //won't compile
+  assert(vector<int>().size() == 0);
   cout<<"All tests passed";
 }//based on https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/SFINAE
 // https://github.com/tiger40490/repo1/blob/cpp1/cpp/88miscLang/arrayNewDtor.cpp (??) shows simpler ways to test if a type is a ptr type, but techniques here are valuable at least in job interviews.
