@@ -1,9 +1,10 @@
-// https://github.com/tiger40490/repo1/blob/cpp1/cpp/88miscLang/arrayNewDtor.cpp shows simpler ways to test if a type is a ptr type, but techniques here are valuable at least in job interviews.
+// https://github.com/tiger40490/repo1/blob/cpp1/cpp/88miscLang/arrayNewDtor.cpp (??) shows simpler ways to test if a type is a ptr type, but techniques here are valuable at least in job interviews.
 #include <assert.h>
 #include <iostream>
 using namespace std; 
 
-struct type9{ char dummy[9]; };
+struct type9{ char dummy[9]; }; //a 9-byte type
+
 template <class T> struct isCustomPtr{
   template <class U>
   static char f281(U *); //U can be int
@@ -24,7 +25,7 @@ template <class T> struct isCustomPtr{
 
 struct Foo {
   long bar; 
-  int f1(ostream);
+  int func1(ostream){return 0; }
   //float f2();
 };
 
@@ -32,6 +33,7 @@ int main(void){
   typedef int * IntPtr;
   typedef long Foo::* FooMemberPtr;
   typedef int (Foo::*FooMemFunPtr)(ostream) ;
+  FooMemFunPtr funPtr = Foo::func1;
   typedef int (*FuncPtr)();
 
   assert(1==isCustomPtr<IntPtr>::value); 
