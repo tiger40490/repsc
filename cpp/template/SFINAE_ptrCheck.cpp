@@ -1,4 +1,4 @@
-//showcase std::is_pointer<T> etc
+//showcase std::is_pointer<T> is_member...<T> etc
 #include <assert.h>
 #include <iostream>
 using namespace std; 
@@ -6,8 +6,8 @@ using namespace std;
 struct type9{ char dummy[9]; }; //a 9-byte type
 
 template <class T> struct isCustomPtr{
-  template <class U>
-  static char f281(U *); //U can be int
+  template <class U> //U gets set to T when compiler evaluates sizeof(f281(aFieldOfType_T))
+  static char f281(U *); //without U this func becomes non-template func..no SFINAE !
 
   template <class U>
   static short f281(U (*)());
@@ -19,8 +19,8 @@ template <class T> struct isCustomPtr{
   static double f281(Y (X::*)(ostream));
 
   static type9 f281(...); //default overload
-  static T t;
-  static size_t const value = sizeof(f281(t));
+  static T aFieldOfType_T;
+  static size_t const value = sizeof(f281(aFieldOfType_T));
   static bool const bool_value = std::is_pointer<T>::value;
 };
 
