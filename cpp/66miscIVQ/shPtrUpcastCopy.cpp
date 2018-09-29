@@ -1,4 +1,4 @@
-//
+//showcase: inside a template, print the static type of the type-argument
 #include <iostream>
 #include <memory>
 using namespace std;
