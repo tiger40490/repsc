@@ -6,7 +6,7 @@ using namespace std;
 struct C{
   virtual char type() const {return 'C' ;}
 };
-struct D : public C
+struct D : public C //private inheritance won't work
 {
   char type() const override {return 'D' ;}
 };
