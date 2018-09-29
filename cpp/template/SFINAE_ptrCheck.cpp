@@ -7,7 +7,7 @@ struct type9{ char dummy[9]; }; //a 9-byte type
 
 template <class T> struct isCustomPtr{
   template <class U> //U gets set to T when compiler evaluates sizeof(f281(aFieldOfType_T))
-  static char f281(U *); //without U this func becomes non-template func..no SFINAE !
+  static char f281(U *); //without U this becomes non-templ-func-in-class-templ..no SFINAE !
 
   template <class U>
   static short f281(U (*)());
