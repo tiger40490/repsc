@@ -26,7 +26,7 @@ template<typename T> struct smartPtr{
 };
 
 int main(){
-  shared_ptr<D> dd(new D);
+  shared_ptr<D> dd(new D); //EXPLICIT cvctor
   shared_ptr<C> cc(dd);
   
   smartPtr<D> d2(new D);
