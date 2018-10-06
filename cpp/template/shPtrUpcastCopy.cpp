@@ -1,3 +1,4 @@
+//showcase: additional dummy type U to support conversion ctor from smartPtr<U> -- the answer for the SCB-FM architect
 //showcase: inside a template, print the static type of the type-argument
 #include <iostream>
 #include <memory>
