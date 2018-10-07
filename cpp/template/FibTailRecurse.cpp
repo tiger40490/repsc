@@ -17,13 +17,15 @@ fnum recurFunc(size_t distance, fnum first=0, fnum second=1){
 	return recurFunc(distance-1, second, first+second);
 }
 
+// all 3 template params are non-type !
 template <int DISTANCE, fnum A=0, fnum B=1> struct FibCompileTime{
     enum : fnum { //recursive computation is done at compile time
       value = FibCompileTime<DISTANCE-1, B, A+B>::value 
     };
 };
 
-//template specialization as a recursion exit
+//template specialization as a recursion exit condition
+//Compiler would choose this specialized template when first template arg = 0
 template <fnum A, fnum B> struct FibCompileTime<0, A, B> {
     enum : fnum { value = A };
 };
