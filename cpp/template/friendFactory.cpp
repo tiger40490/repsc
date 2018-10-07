@@ -1,9 +1,10 @@
 //showcase: singleton enforced by private ctor and factory (instead of static method)
 //showcase: template factory function to support any number of target classes
 
-/*Showcasing two ways to keep cached instances:
-1) static local variable in each distinct instantiation of create(). 
+/*Showcasing two alternative ways to keep cached instances:
+1) static local variable in each distinct instantiation of the create() template. Note each instantiation is like a separately defined function.
 2) factory maintains a single instance of each type. The lookup map uses typeid as key, and void pointer as value.
+We only need one of them, but in this demo we check the lookup map before checking the static local
 */
 #include <typeindex>
 #include <typeinfo>
@@ -20,12 +21,16 @@ template<typename T> T* create(){
     = typeid(T);
   T* ret = static_cast<T*>(lookup[type]);
   if (ret) {
-    cout<<"returning cached instance... won't create another instance of this type.\n";
+    cout<<"returning map-cached instance... won't create another instance of this type.\n";
     assert(inst == ret);
     return ret; 
   }
+  if (inst){
+    cout<<"returning static-local-cached instance... won't create another instance of this type.\n";
+    return inst;
+  }
   ret= new T();
-  lookup[type] = ret;
+  lookup[type] = ret; //if commented out, then we rely on the inst cached in each template instantiation
   inst = ret;
   return ret;
 }
