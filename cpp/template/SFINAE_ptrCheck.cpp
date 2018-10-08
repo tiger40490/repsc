@@ -8,22 +8,22 @@ using namespace std;
 struct type9{ char dummy[9]; }; //a 9-byte type
 
 template <class T> struct isCustomPtr{
-  template <class U> //U gets set to T when compiler evaluates sizeof(f281(aFieldOfType_T))
+  template <class U=T> //with or without "=T"  U would get set to T when compiler evaluates sizeof(f281(aFieldOfType_T))
   static char f281(U *); //without U this becomes non-templ-func-in-class-templ..no SFINAE !
 
-  template <class U>
+  template <class U=T>
   static short f281(U (*)());
 
-  template <class X, class Y>
-  static float f281(Y  X::*);
+  template <class X, typename ARG=T> // =T is optional documentation, probably ignored by compiler
+  static float f281(ARG  X::*);
 
-  template <class X, class Y>
-  static double f281(Y (X::*)(ostream));
+  template <class X, typename ARG=T>
+  static double f281(ARG (X::*)(ostream));
 
   static type9 f281(...); //default overload
-  static T aFieldOfType_T;
-  static size_t const value = sizeof(f281(aFieldOfType_T));
-  static bool const bool_value = std::is_pointer<T>::value;
+  static T* aFieldOfType_T; //I prefer pointer because T may not be constructible
+  static size_t const value = sizeof(f281(*aFieldOfType_T));
+  static bool const isSimplePtr = std::is_pointer<T>::value;
 };
 
 struct Foo {
@@ -39,10 +39,10 @@ int main(void){
   typedef int (*FuncPtr)();
 
   static_assert(1==isCustomPtr<IntPtr>::value); 
-  static_assert(isCustomPtr<IntPtr>::bool_value);
+  static_assert(isCustomPtr<IntPtr>::isSimplePtr);
 
   static_assert(2==isCustomPtr<FuncPtr>::value);
-  static_assert(isCustomPtr<FuncPtr>::bool_value);
+  static_assert(isCustomPtr<FuncPtr>::isSimplePtr);
 
   static_assert(4==isCustomPtr<FooMemberPtr>::value);
   static_assert(is_member_pointer<FooMemberPtr>::value);
@@ -51,7 +51,7 @@ int main(void){
   static_assert(is_member_function_pointer<FooMemFunPtr>::value);
 
   static_assert(9==isCustomPtr<float>::value); //not a ptr at all
-  static_assert( ! isCustomPtr<float>::bool_value); 
+  static_assert( ! isCustomPtr<float>::isSimplePtr); 
   
   //static_assert(vector<int>().size() == 0); //won't compile
   assert(vector<int>().size() == 0);
