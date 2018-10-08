@@ -3,6 +3,8 @@
 1) programmer to specify an optional 2nd type arg like enable_if_t<... , AAA> so if type check passes, then enable_if_t is an alias of AAA
 
 2) use enable_if_t<...>* as a type, which evaluates to the void pointer type. This is because enable_if_t has its 2nd type arg default to void. You can't use void as a type, but void pointer is a proper type.
+
+I don't prefer to put enable_if_t as function param type because it requires a default arg. 
 */
 #include <iostream>
 #include <type_traits>
