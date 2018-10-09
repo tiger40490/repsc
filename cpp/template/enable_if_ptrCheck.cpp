@@ -1,3 +1,4 @@
+//showcase is_same and enable_if
 #include <assert.h>
 #include <iostream>
 #include <type_traits>
@@ -10,6 +11,7 @@ template <typename ANY> struct List{
   insert(T t){
     static_assert(is_pointer<ANY>::value);
     static_assert(is_pointer<T>::value);
+    static_assert(is_same<ANY,T>::value);
     cout << "insert pointer" << endl;
   }
 
@@ -18,6 +20,7 @@ template <typename ANY> struct List{
   insert(T t){
     static_assert( !is_pointer<ANY>::value);
     static_assert( !is_pointer<T>::value);
+    static_assert(is_same<ANY,T>::value);
     cout << "insert non-pointer" << endl;
   }
 };
