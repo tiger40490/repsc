@@ -1,23 +1,38 @@
 //showcase std::is_pointer<T> is_member...<T> etc
 //showcase static_assert vs assert
+//todo: pass ptr to member instead of nullptr
 #include <assert.h>
 #include <vector>
 #include <iostream>
 using namespace std; 
+struct Foo {
+  long bar; 
+  int func1(ostream){return 0; }
+} foo;
+using FooMemberPtr = long Foo::*;
 
 struct type9{ char dummy[9]; }; //a 9-byte type
 
 template <class T> struct isCustomPtr{
   template <class U> //U would get set to T when compiler evaluates sizeof(f281(aFieldOfType_T))
-  static char f281(U *); //without U this becomes non-templ-func-in-class-templ..no SFINAE !
-
+  static char f281(U *){ //without U this becomes non-templ-func-in-class-templ..no SFINAE !
+      static_assert(is_same<U*,T>::value);
+      return 0;
+  }  
   template <class U>
-  static short f281(U (*)());
+  static short f281(U (*)()){
+      static_assert(is_same<U(*)(), T>::value);
+      return 0;
+  }
+  template <class X, typename ARG=T> 
+  static float f281(ARG X::*){
+      static_assert(is_same<ARG, long>::value);
+      static_assert(is_same<X, Foo>::value);
+      static_assert(is_same<ARG X::*, T>::value);
+      return 0;
+  }
 
-  template <class X, typename ARG=T> // =T is optional documentation, probably ignored by compiler
-  static float f281(ARG  X::*);
-
-  template <class X, typename ARG=T>
+  template <class X, typename ARG>
   static double f281(ARG (X::*)(ostream));
 
   static type9 f281(...); //default overload
@@ -25,21 +40,9 @@ template <class T> struct isCustomPtr{
   static size_t const value = sizeof(f281(*aFieldOfType_T));
   static bool const isSimplePtr = std::is_pointer<T>::value;
 };
-template <class T> 
-template <class U> 
-char isCustomPtr<T>::f281(U *){
-      static_assert(is_same<U*,T>::value);
-      return 0;
-}
-
-struct Foo {
-  long bar; 
-  int func1(ostream){return 0; }
-};
-
+//template <class T> template <class U> char isCustomPtr<T>::f281(U *)//showcase the messy syntax
 int main(void){
   typedef int * IntPtr;
-  typedef long Foo::* FooMemberPtr;
   typedef int (Foo::*FooMemFunPtr)(ostream) ;
   FooMemFunPtr funPtr = Foo::func1;
   typedef int (*FuncPtr)();
@@ -50,9 +53,11 @@ int main(void){
 
   static_assert(2==isCustomPtr<FuncPtr>::value);
   static_assert(isCustomPtr<FuncPtr>::isSimplePtr);
+  isCustomPtr<FuncPtr>::f281(static_cast<FuncPtr>(nullptr));
 
   static_assert(4==isCustomPtr<FooMemberPtr>::value);
   static_assert(is_member_pointer<FooMemberPtr>::value);
+  isCustomPtr<FooMemberPtr>::f281((FooMemberPtr)nullptr);
 
   static_assert(8==isCustomPtr<FooMemFunPtr>::value);
   static_assert(is_member_function_pointer<FooMemFunPtr>::value);
