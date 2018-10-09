@@ -1,6 +1,5 @@
 //showcase std::is_pointer<T> is_member...<T> etc
 //showcase static_assert vs assert
-//todo: pass ptr to member instead of nullptr
 #include <assert.h>
 #include <vector>
 #include <iostream>
@@ -15,10 +14,9 @@ struct type9{ char dummy[9]; }; //a 9-byte type
 
 template <class T> struct isCustomPtr{
   template <class U> //U would get set to T when compiler evaluates sizeof(f281(aFieldOfType_T))
-  static char f281(U *){ //without U this becomes non-templ-func-in-class-templ..no SFINAE !
-      static_assert(is_same<U*,T>::value);
-      return 0;
-  }  
+  static char f281(U *); //without U this becomes non-templ-func-in-class-templ..no SFINAE !
+  /////// simple ptr is more useful than the other pointer types
+  
   template <class U>
   static short f281(U (*)()){
       static_assert(is_same<U(*)(), T>::value);
@@ -31,7 +29,6 @@ template <class T> struct isCustomPtr{
       static_assert(is_same<ARG X::*, T>::value);
       return 0;
   }
-
   template <class X, typename ARG>
   static double f281(ARG (X::*)(ostream));
 
@@ -40,7 +37,10 @@ template <class T> struct isCustomPtr{
   static size_t const value = sizeof(f281(*aFieldOfType_T));
   static bool const isSimplePtr = std::is_pointer<T>::value;
 };
-//template <class T> template <class U> char isCustomPtr<T>::f281(U *)//showcase the messy syntax
+template <class T> template <class U> char isCustomPtr<T>::f281(U *){//showcase the messy syntax
+      static_assert(is_same<U*,T>::value);
+      return 0;
+}
 int main(void){
   typedef int * IntPtr;
   typedef int (Foo::*FooMemFunPtr)(ostream) ;
@@ -54,10 +54,10 @@ int main(void){
   static_assert(2==isCustomPtr<FuncPtr>::value);
   static_assert(isCustomPtr<FuncPtr>::isSimplePtr);
   isCustomPtr<FuncPtr>::f281(static_cast<FuncPtr>(nullptr));
-
+  
   static_assert(4==isCustomPtr<FooMemberPtr>::value);
   static_assert(is_member_pointer<FooMemberPtr>::value);
-  isCustomPtr<FooMemberPtr>::f281((FooMemberPtr)nullptr);
+  isCustomPtr<FooMemberPtr>::f281((FooMemberPtr)nullptr); //least useful is memberPtr type
 
   static_assert(8==isCustomPtr<FooMemFunPtr>::value);
   static_assert(is_member_function_pointer<FooMemFunPtr>::value);
