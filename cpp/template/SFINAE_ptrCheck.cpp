@@ -8,10 +8,10 @@ using namespace std;
 struct type9{ char dummy[9]; }; //a 9-byte type
 
 template <class T> struct isCustomPtr{
-  template <class U=T> //with or without "=T"  U would get set to T when compiler evaluates sizeof(f281(aFieldOfType_T))
+  template <class U> //U would get set to T when compiler evaluates sizeof(f281(aFieldOfType_T))
   static char f281(U *); //without U this becomes non-templ-func-in-class-templ..no SFINAE !
 
-  template <class U=T>
+  template <class U>
   static short f281(U (*)());
 
   template <class X, typename ARG=T> // =T is optional documentation, probably ignored by compiler
@@ -25,6 +25,12 @@ template <class T> struct isCustomPtr{
   static size_t const value = sizeof(f281(*aFieldOfType_T));
   static bool const isSimplePtr = std::is_pointer<T>::value;
 };
+template <class T> 
+template <class U> 
+char isCustomPtr<T>::f281(U *){
+      static_assert(is_same<U*,T>::value);
+      return 0;
+}
 
 struct Foo {
   long bar; 
@@ -40,6 +46,7 @@ int main(void){
 
   static_assert(1==isCustomPtr<IntPtr>::value); 
   static_assert(isCustomPtr<IntPtr>::isSimplePtr);
+  isCustomPtr<IntPtr>::f281(new int);
 
   static_assert(2==isCustomPtr<FuncPtr>::value);
   static_assert(isCustomPtr<FuncPtr>::isSimplePtr);
