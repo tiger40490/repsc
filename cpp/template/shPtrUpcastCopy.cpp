@@ -22,6 +22,7 @@ template<typename T> struct smartPtr{
   }
   template <class U> //U can be a subtype of T
   smartPtr(smartPtr<U> const & arg) : raw(arg.raw){
+    static_assert(is_base_of<T,U>::value); //this cvctor should work only if arg type U is a subtype of host type T
     T* dummy = new T;
     cout<<"conversion ctor from smartPtr of "<<arg.raw->type()<<" into smartPtr of "<<dummy->type()<<endl;
   }
@@ -52,11 +53,11 @@ int main(){
   shared_ptr<B> stdBB(stdDD);
   
   smartPtr<D> d2(new D);
-  cout<<"---now constructing smartPtr<B> from smartPtr<D>..\n";
+  cout<<"\n---now constructing smartPtr<B> from smartPtr<D>..\n";
   smartPtr<B> b2(d2);
   smartPtr<B> b3 = smartPtr<D>::makeRval();
   //smartPtr<B> b3(smartPtr<int>(new int(55))); //won't compile
-  cout<<"---now testing implicit conversions..\n";
+  cout<<"\n---now testing implicit conversions..\n";
   takingNonRefStd(stdDD); //working
   takingNonRef(d2);  //working
   takingRef_rvr(d2); //working
