@@ -59,10 +59,10 @@ int main(){
   cout<<"\n---now testing implicit conversions..\n";
   takingNonRefStd(stdDD); //working
   takingNonRef(d2);  //working
-  takingRef_rvr(d2); //working
-  takingRef_rvr(new D); //working
+  takingRef_rvr(d2); //working -- by creating a rval temp
+  takingRef_rvr(new D); //working -- by creating a rval temp 
   //takingRef(d2); //won't compile -- takingRef() takes non-cosnt lvr but d2 converts to a rvr
-  takingRefStd(stdDD); //won't compile -- a sp<D> generates a temp sp<B> which is rval object
+  //takingRefStd(stdDD); //won't compile -- a shared_ptr<D> generates a temp sp<B> which is rval object
 }
 /* SCB-FM IV question: how is shared_ptr<Der> instance assignable to a shared_ptr<Base> variable when the two types are unrelated
 */
