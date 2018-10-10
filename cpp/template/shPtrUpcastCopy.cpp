@@ -1,6 +1,5 @@
 //showcase: additional dummy type U to support conversion ctor from smartPtr<U> -- the answer for the SCB-FM architect
 //showcase: inside a template, print the static type of the type-argument
-//todo: try static_assert(is_base_of<U,T>::value)
 #include <iostream>
 #include <memory>
 using namespace std;
@@ -20,7 +19,7 @@ template<typename T> struct smartPtr{
   smartPtr(smartPtr<T> && arg) : raw(arg.raw){
     cout<<"copy ctor\n";
   }
-  template <class U> //U can be a subtype of T
+  template <class U>
   smartPtr(smartPtr<U> const & arg) : raw(arg.raw){
     static_assert(is_base_of<T,U>::value); //this cvctor should work only if arg type U is a subtype of host type T
     T* dummy = new T;
@@ -63,7 +62,7 @@ int main(){
   takingRef_rvr(d2); //working
   takingRef_rvr(new D); //working
   //takingRef(d2); //won't compile -- takingRef() takes non-cosnt lvr but d2 converts to a rvr
-  //takingRefStd(stdDD); //won't compile
+  takingRefStd(stdDD); //won't compile -- a sp<D> generates a temp sp<B> which is rval object
 }
 /* SCB-FM IV question: how is shared_ptr<Der> instance assignable to a shared_ptr<Base> variable when the two types are unrelated
 */
