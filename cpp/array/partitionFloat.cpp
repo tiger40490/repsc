@@ -1,4 +1,4 @@
-//showcase: std::swap on 2 vector element2
+//showcase: std::swap on 2 vector elements
 //todo: more tests
 #include <iostream>
 #include <iomanip>
@@ -49,4 +49,5 @@ int wrapper(int const pivotVal, vector<int> v){
 int main(){
   assert(-1== wrapper(15.1, {7,1,9,9,5,4,9,5,7}));
   assert(4 == wrapper(5.1, {7,1,9,9,5,4,9,5,7}));
+  assert(4 == wrapper(5, {7,1,9,9,5,4,9,5,7}));
 }/*Req: partition an int array using a float pivot value*/
