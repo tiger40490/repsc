@@ -40,12 +40,13 @@ int partition(int const pivotVal, idx le, idx ri){
     --ri;
   }
 }
-void test1(int const pivotVal, vector<int> v){
+int wrapper(int const pivotVal, vector<int> v){
   arr=v;
   auto ret = partition(pivotVal, 0, v.size()-1);
-  cout<<"ret = "<<ret<<endl<<arr;
+  cout<<arr<<ret<<" = ret\n\n";
+  return ret;
 }
 int main(){
-  test1(15.1, {7,1,9,9,5,4,9,5,7});
-  //test1(5.1, {7,1,9,9,5,4,9,5,7});
+  assert(-1== wrapper(15.1, {7,1,9,9,5,4,9,5,7}));
+  assert(4 == wrapper(5.1, {7,1,9,9,5,4,9,5,7}));
 }/*Req: partition an int array using a float pivot value*/
