@@ -1,5 +1,7 @@
 //showcase: std::swap on 2 vector element2
 //todo: blog to reference this github file
+//todo: more tests
+//todo: return -1....
 #include <iostream>
 #include <iomanip>
 #include <cassert>
@@ -36,7 +38,6 @@ int partition(int const pivotVal, idx le, idx ri){
     ++le;
     --ri;
   }
-  return -1;
 }
 void test1(int const pivotVal, vector<int> v){
   arr=v;
