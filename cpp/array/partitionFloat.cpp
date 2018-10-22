@@ -1,7 +1,6 @@
 //showcase: std::swap on 2 vector element2
 //todo: blog to reference this github file
 //todo: more tests
-//todo: return -1....
 #include <iostream>
 #include <iomanip>
 #include <cassert>
@@ -22,7 +21,10 @@ int partition(int const pivotVal, idx le, idx ri){
   cout<<arr;
   while(1){ //invariant: arr[le-1] <= p and arr[ri+1] > p
     for (; arr[le] <= p; ++le){
-      if (le == ri) return ri;
+      if (le == ri) {
+        if (ri == arr.size()-1) return -1;
+        return ri;
+      }
     }assert(arr[le] > p);
     
     for (; arr[ri] >  p; --ri){
@@ -45,5 +47,6 @@ void test1(int const pivotVal, vector<int> v){
   cout<<"ret = "<<ret<<endl<<arr;
 }
 int main(){
-  test1(5.1, {7,1,9,9,5,4,9,5,7});
+  test1(15.1, {7,1,9,9,5,4,9,5,7});
+  //test1(5.1, {7,1,9,9,5,4,9,5,7});
 }/*Req: partition an int array using a float pivot value*/
