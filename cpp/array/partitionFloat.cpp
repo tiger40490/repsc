@@ -1,5 +1,4 @@
 //showcase: std::swap on 2 vector element2
-//todo: blog to reference this github file
 //todo: more tests
 //todo: return -1....
 #include <iostream>
