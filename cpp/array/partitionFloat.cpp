@@ -10,14 +10,14 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
    os<<endl;
    for(int i=0; i<c.size(); ++i){ os<<setw(min_width)<<i<<" "; }
-   os<<"----"<<endl;
+   os<<"---- ";
    return os;
 }
 vector<int> arr;
 //return index of first element that exceeds pivot, or -1 if pivot too high
-int partition(int const pivotVal, idx le, idx ri){
-  int const & p = pivotVal;
-  cout<<arr;
+int partition(float const pivotVal, idx le, idx ri){
+  float const & p = pivotVal;
+  cout<<arr<<"pivotVal = "<<p<<endl;
   while(1){ //invariant: arr[le-1] <= p and arr[ri+1] > p
     for (; arr[le] <= p; ++le){
       if (le == ri) {
@@ -40,7 +40,7 @@ int partition(int const pivotVal, idx le, idx ri){
     --ri;
   }
 }
-int wrapper(int const pivotVal, vector<int> v){
+int wrapper(float const pivotVal, vector<int> v){
   arr=v;
   auto ret = partition(pivotVal, 0, v.size()-1);
   cout<<arr<<ret<<" = ret\n\n";
@@ -50,4 +50,5 @@ int main(){
   assert(-1== wrapper(15.1, {7,1,9,9,5,4,9,5,7}));
   assert(4 == wrapper(5.1, {7,1,9,9,5,4,9,5,7}));
   assert(4 == wrapper(5, {7,1,9,9,5,4,9,5,7}));
-}/*Req: partition an int array using a float pivot value*/
+  assert(4 == wrapper(6, {7,1,9,9,5,4,9,5,7}));
+}/*Req: partition an int array using a float (can be an integer) pivot value*/
