@@ -16,6 +16,6 @@ def main():
     for _ in xrange(comboLen):
         add1charToEachCombo()
 main()
-'''Requirement: given 5 distinct chars, generate all combinations
+'''Requirement: given 5 distinct chars, generate all permutations
 of 3 chars by redrawing, ideally in ascending order
 '''
