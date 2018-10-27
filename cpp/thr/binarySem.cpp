@@ -55,5 +55,5 @@ int main()
 
     sem_destroy(&mutex);
     return 0;
-}/* This "binary" semaphore is not binary at all. See my blog post https://wp.me/p74oew-6tz
+}/* This "binary" semaphore is not really binary, unlike a mutex. See my blog post https://wp.me/p74oew-6tz
 */
