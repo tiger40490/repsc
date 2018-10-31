@@ -1,8 +1,8 @@
 alias s-='  source  $HOME/.bashrc  '
 alias s+='       vi $HOME/.bashrc  '
 alias py='winpty python.exe'
-
 alias ..='cd .. ; ls1page'
+alias
 
 ls1page(){
   ls -ahlF --color=always $*
