@@ -1,4 +1,5 @@
 //showcase: std::swap on 2 vector elements
+//todo: clean up and more tests
 #include <iostream>
 #include <iomanip>
 #include <cassert>
@@ -12,40 +13,39 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    os<<"---- ";
    return os;
 }
-vector<int> arr;
+vector<int> arr; //global var
 /* same return value.
 Only one swap for each wrong pair, for both partition algos
 */
-int partition(float const pivotVal, idx const le, idx const ri){
+int partitionFwd(float const pivotVal, idx le, idx const ri){
   float const & p = pivotVal;
-  cout<<arr<<"pivotVal = "<<p<<endl;
-  size_t back=le;
-  for (;;++back){
-    if (arr[back] > p) break; //back ptr initialized
-	if (back == ri) return -1;
+  for (;;++le){
+    if (le == ri) return -1; //pivotVal skyhigh
+    if (arr[le] > p) {
+      assert(arr[le] > p);
+      cout<<arr<<le <<" <-- back ptr initialized.. Now scan from there..."<<endl;
+	  break;
+	  }
   }
-  assert(arr[back] > p);
-  cout<<arr<<back <<" <-- back ptr initialized.. Now scan from there..."<<endl;
-  size_t front=back+1;
-  for (; front <= ri; ++front){
+  for (idx front=le+1; front <= ri; ++front){
     if (arr[front] > p) continue;
-    swap(arr[back], arr[front]);
-    ++back;
-	assert(arr[back] > p);
+    swap(arr[le], arr[front]);
+    ++le;
+    assert(arr[le] > p);
   }
-  return back; //index of first element exceeding p
+  return le; //index of first element exceeding p
 }
 /*different from familiar qsort partition algo.
 return index of first element that exceeds pivot, or -1 if pivot too high
 */
 int partition2oppScanner(float const pivotVal, idx le, idx ri){
   float const & p = pivotVal;
-  cout<<arr<<"pivotVal = "<<p<<endl;
   while(1){ //invariant: arr[le-1] <= p and arr[ri+1] > p
     for (; arr[le] <= p; ++le){
       if (le == ri) {
+		//cout<<arr<<le <<" == le == ri... exiting \n";
         if (ri == arr.size()-1) return -1;
-        return ri;
+        return le+1;
       }
     }assert(arr[le] > p);
     
@@ -63,13 +63,17 @@ int partition2oppScanner(float const pivotVal, idx le, idx ri){
     --ri;
   }
 }
-int wrapper(float const pivotVal, vector<int> v){
+int wrapper(float const pivotVal, vector<int> v, idx le=0, idx ri=0){
   arr=v;
-  auto ret = partition/*2oppScanner*/(pivotVal, 0, v.size()-1);
-  cout<<arr<<ret<<" = ret\n\n";
+  if (ri==0) ri = v.size()-1;
+  cout<<"  --- v -- v -- \n"<<arr<<"pivotVal = "<<pivotVal<<" , le = "<<le<<" , ri = "<<ri<<endl;
+  auto ret = partition2oppScanner(pivotVal, le, ri);
+  assert(ret == partitionFwd(pivotVal, le, ri));
+  cout<<arr<<ret<<" = ret from both algos\n\n";
   return ret;
 }
 int main(){
+  assert(6 == wrapper(5.2, {7,4,1,9,9,5,4,9,5,7,11}, 1,8));
   assert(-1== wrapper(15.1, {7,1,9,9,5,4,9,5,7}));
   assert(6 == wrapper(5.1, {4,3,7,1,9,9,5,4,9,5,7}));
   assert(4 == wrapper(5, {7,1,9,9,5,4,9,5,7}));
