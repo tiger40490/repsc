@@ -11,11 +11,12 @@ char play(string & s){
 	cout<<s<<"\t-> lvr function\n";
 	return 'l';
 }
+//char play(string s); //competes with the lvr overload and breaks compiler because of ambiguity
 int main(){
   assert('r' == play(string("naturally-occurring-temp")));
   
   string a="moved-unnamed";
-  assert('r' == play(move(a))); //calls the rvr version
+  assert('r' == play(move(a))); //calls the rvr version cos the move() output is unnamed
   
   string b="move-to-NAMED-rvr-var";
   string && namedRvrVar = move(b);
