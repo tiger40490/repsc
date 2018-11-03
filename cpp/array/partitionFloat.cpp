@@ -14,8 +14,10 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    return os;
 }
 vector<int> arr;
-//return index of first element that exceeds pivot, or -1 if pivot too high
-int partition(float const pivotVal, idx le, idx ri){
+/*different from std qsort partition algo
+return index of first element that exceeds pivot, or -1 if pivot too high
+*/
+int partition2oppScanner(float const pivotVal, idx le, idx ri){
   float const & p = pivotVal;
   cout<<arr<<"pivotVal = "<<p<<endl;
   while(1){ //invariant: arr[le-1] <= p and arr[ri+1] > p
@@ -28,9 +30,9 @@ int partition(float const pivotVal, idx le, idx ri){
     
     for (; arr[ri] >  p; --ri){
       if (le == ri) return le; //see arr[le] assert above
-    }assert(arr[le] > p);
+    }assert(arr[ri] <= p);
     
-    cout<<arr<<" <- before swapping "<<le<<" / "<<ri<<endl;
+    cout<<arr<<" <- before swapping two elements "<<le<<" / "<<ri<<endl;
     assert(le<ri);
     std::swap(arr[le], arr[ri]);
     cout<<arr<<" <- after swapping \n"<<endl;
@@ -42,7 +44,7 @@ int partition(float const pivotVal, idx le, idx ri){
 }
 int wrapper(float const pivotVal, vector<int> v){
   arr=v;
-  auto ret = partition(pivotVal, 0, v.size()-1);
+  auto ret = partition2oppScanner(pivotVal, 0, v.size()-1);
   cout<<arr<<ret<<" = ret\n\n";
   return ret;
 }
@@ -50,5 +52,6 @@ int main(){
   assert(-1== wrapper(15.1, {7,1,9,9,5,4,9,5,7}));
   assert(4 == wrapper(5.1, {7,1,9,9,5,4,9,5,7}));
   assert(4 == wrapper(5, {7,1,9,9,5,4,9,5,7}));
-  assert(4 == wrapper(6, {7,1,9,9,5,4,9,5,7}));
+  assert(-1 == wrapper(5, {5,5,5,5,5,5}));
+  assert(0 == wrapper(5, {6,6,6,6}));
 }/*Req: partition an int array using a float (can be an integer) pivot value*/
