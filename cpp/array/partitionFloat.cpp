@@ -1,5 +1,4 @@
 //showcase: std::swap on 2 vector elements
-//todo: more tests
 #include <iostream>
 #include <iomanip>
 #include <cassert>
@@ -14,7 +13,29 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    return os;
 }
 vector<int> arr;
-/*different from std qsort partition algo
+/* same return value.
+Only one swap for each wrong pair, for both partition algos
+*/
+int partition(float const pivotVal, idx const le, idx const ri){
+  float const & p = pivotVal;
+  cout<<arr<<"pivotVal = "<<p<<endl;
+  size_t back=le;
+  for (;;++back){
+    if (arr[back] > p) break; //back ptr initialized
+	if (back == ri) return -1;
+  }
+  assert(arr[back] > p);
+  cout<<arr<<back <<" <-- back ptr initialized.. Now scan from there..."<<endl;
+  size_t front=back+1;
+  for (; front <= ri; ++front){
+    if (arr[front] > p) continue;
+    swap(arr[back], arr[front]);
+    ++back;
+	assert(arr[back] > p);
+  }
+  return back; //index of first element exceeding p
+}
+/*different from familiar qsort partition algo.
 return index of first element that exceeds pivot, or -1 if pivot too high
 */
 int partition2oppScanner(float const pivotVal, idx le, idx ri){
@@ -44,13 +65,13 @@ int partition2oppScanner(float const pivotVal, idx le, idx ri){
 }
 int wrapper(float const pivotVal, vector<int> v){
   arr=v;
-  auto ret = partition2oppScanner(pivotVal, 0, v.size()-1);
+  auto ret = partition/*2oppScanner*/(pivotVal, 0, v.size()-1);
   cout<<arr<<ret<<" = ret\n\n";
   return ret;
 }
 int main(){
   assert(-1== wrapper(15.1, {7,1,9,9,5,4,9,5,7}));
-  assert(4 == wrapper(5.1, {7,1,9,9,5,4,9,5,7}));
+  assert(6 == wrapper(5.1, {4,3,7,1,9,9,5,4,9,5,7}));
   assert(4 == wrapper(5, {7,1,9,9,5,4,9,5,7}));
   assert(-1 == wrapper(5, {5,5,5,5,5,5}));
   assert(0 == wrapper(5, {6,6,6,6}));
