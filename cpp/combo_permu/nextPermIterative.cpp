@@ -32,9 +32,12 @@ template<typename T> bool next_perm(vector<T> & v){
       cout<<"no more higher permutation. This is the end"<<endl;
       return false;
     }
+    assert(v[p2u] < v[p2u+1]);
     //cout<<"identified position to upgrade as "<<p2u<< " ... Will rearrange the items and return"<<endl;
+    //Everything before p2u should stay unchanged
+    //We will swap p2u with something on the right....
 
-    //should upper_bound or lower_bound
+    //should use upper_bound or lower_bound
     for (int swp=v.size()-1; ; --swp){
       if ( v[p2u] >= v[swp]) continue;
       swap(v[swp], v[p2u]);
@@ -46,7 +49,11 @@ template<typename T> bool next_perm(vector<T> & v){
   }
 }
 int main() {
-  vector<char> v{'a', 'b', 'b', 'c' , 'd'};
+  vector<char> v;
+  v={'a', 'b', 'b', 'c' , 'd'};
+  v={'a', 'b', 'b', 'c'};
   while (next_perm(v)){ }
   cout<<changes<<" changes performed till the highest permutation; next_perm() call count = "<<calls<<endl;
-}
+}/*Req: return all perms of H items in sorted order. H may include duplicatees.
+O(1) space
+*/
