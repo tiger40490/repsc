@@ -4,9 +4,9 @@
 using namespace std;
 
 struct MoveOnlyStr{ //a string class that robs its sister instance
-#ifdef aaaa
+#ifdef commentedOut123
   MoveOnlyStr& operator=(MoveOnlyStr && sister){
-    _nonref = move(sister._nonref);
+    _nonref = move(sister._nonref); //std::string rvr-assignment i.e. mv-assign
     _ptr = sister._ptr; 
     sister._ptr=NULL;
     cout<<this<<" <-- "<<*_ptr<<" repopulated in MOVE-assignment\n";
@@ -15,7 +15,7 @@ struct MoveOnlyStr{ //a string class that robs its sister instance
 #endif
   MoveOnlyStr(MoveOnlyStr && sister){
     _nonref = move(sister._nonref); /*nonref variable needs std::move()
-so we can use the move-assignment of std::string*/
+so we can use the move-ctor of std::string*/
     _ptr = sister._ptr; // ptr field needs no std::move()
     sister._ptr=nullptr;
     cout<<this<<" <-- "<<*_ptr<<" populated in MOVE-ctor\n";
@@ -31,12 +31,12 @@ so we can use the move-assignment of std::string*/
     if (me._ptr){
       os<<*me._ptr<<"/"<<me._nonref;
     }else{
-      os<<"[ a MoveOnlyStr instance containing a null ptr and a nonref ="
+      os<<"[ a MoveOnlyStr instance containing a null ptr, and a nonref equal to "
 	  <<me._nonref<<"]";
     }
     return os;
   }
-private:  
+private:  //two unrelated data members
   string * _ptr;
   string _nonref;
 };
@@ -48,17 +48,20 @@ MoveOnlyStr factory(string s){ //RVO constructs the object on caller's stack fra
 }
 void testFactory(){
   MoveOnlyStr a = factory(string("arg"));
-  cout<<&a<<" <- address of factory output object\n";
+  cout<<&a<<" <- address of factory output object as seen in caller\n";
 }/////////////
 void receive(MoveOnlyStr clonedArg){
   cout<<&clonedArg<<" <- address of argument object passed in by value\n";
 }
 void testPassInByValue(){ //explicit move() needed
-  MoveOnlyStr uniquePtrimitator("input");
-  cout<<&uniquePtrimitator<<" <- address of original object before passing by value\n";
-  receive(move(uniquePtrimitator)); 
-//receive(uniquePtrimitator); //nonref needs copy-ctor. Won't compile
-  cout<<uniquePtrimitator<<endl;
+  MoveOnlyStr uniqPtrImitator("input");
+  cout<<&uniqPtrImitator<<" <- address of original object before passing by value\n";
+  receive(move(uniqPtrImitator)); 
+//receive(uniqPtrImitator); //nonref needs copy-ctor. Won't compile
+  cout<<uniqPtrImitator<<endl;
+  
+  //In the next test, RVO skips the move-ctor
+  receive(MoveOnlyStr("unnamedTemp")); 
 }
 void testContainer(){ //explicit move() needed
   MoveOnlyStr bb("bb");
@@ -68,8 +71,9 @@ void testContainer(){ //explicit move() needed
   cout<<bb<<endl;
 }
 int main(){
-  testFactory();
+  //testFactory();
+  testPassInByValue();
 //testContainer();
 }
-/*Goal is to test how a move-only type (like st::mutex or unique_ptr) is passed by value
+/*Goal is to test how a move-only type (like st::mutex or unique_ptr) is passed by Value
 */
