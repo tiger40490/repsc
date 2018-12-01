@@ -1,12 +1,12 @@
 //showcase: std::swap on 2 vector elements
-/*todo: impplement 2-pivot partition based on the fwd scanning. p1, p2 are the 2 pivot values. 
-invariant: left and right ptr both at "first" item strictly between p1 and p2.
-I hope to use fewer than 4 moving pointers. How about a 3rd ptr scanning forward, until it meets the right ptr?
+//showcase: c++11 typedef for pair<int,int> then calling its default ctor
+/*todo: implement 2-pivot partition based on the fwd scanning. p1, p2 are the 2 pivot values. 
 */
 #include <iostream>
 #include <iomanip>
 #include <cassert>
 #include <vector>
+#include <algorithm>
 using namespace std;
 typedef unsigned int idx;
 template<typename T,             int min_width=2> ostream & operator<<(ostream & os, vector<T> const & c){
@@ -17,6 +17,66 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    return os;
 }
 vector<int> arr; //global var
+/* partition a given array using 2 pivot values. 
+returns 2 indices 
+invariant: left and right ptr both at "first" item strictly between p1 and p2.
+I hope to use fewer than 4 moving pointers. How about a 3rd ptr scanning forward, until it meets the right ptr?
+*/
+using pii = pair<int,int>;
+pii partition2(float const pivotVal1, float const pivotVal2){
+  float const p1=pivotVal1, p2=pivotVal2;
+  assert(p1<=p2);
+  auto minItr = min_element(arr.begin(), arr.end());
+  auto maxItr = max_element(arr.begin(), arr.end());
+  cout<<arr<<p1<<" = p1; p2 = "<<p2<<" ... "<<*minItr<<" = min; max = "<<*maxItr<<endl;
+  assert(*minItr <= p1 && "1st pivot value too low");
+  assert(p2 <= *maxItr && "2nd pivot value too high");
+  idx le=0;
+  idx const ri=arr.size()-1;
+  for (;;++le){
+    assert(le != ri);
+    if (arr[le] > p1) 	  break;
+  }
+  cout<<arr<<le <<" <-- back ptr initialized.. Now scan fwd from there..."<<endl;
+  for (idx front=le+1; front <= ri; ++front){
+    if (arr[front] > p1) continue;
+    swap(arr[le], arr[front]);
+    ++le;
+    assert(arr[le] > p1);
+  }  
+  idx const ret1 = le;
+  cout<<arr<<ret1<<" <- first partition\n";
+  
+  for (;;++le){
+    assert(le != ri);
+    if (arr[le] > p2) 	  break;
+  }
+  cout<<arr<<le <<" <-- 2nd back ptr initialized.. Now scan fwd from there..."<<endl;
+  for (idx front=le+1; front <= ri; ++front){
+    if (arr[front] > p2) continue;
+    swap(arr[le], arr[front]);
+    ++le;
+    assert(arr[le] > p2);
+  }  
+  cout<<arr<<le<<" <- 2nd partition\n";
+  return pii(ret1, le);
+#ifdef asdfadf
+  idx le=0, ri=arr.size()-1;
+  for (;;){
+    assert(le != ri);
+    if (p1 < arr[le]) {
+      if (   arr[le] < p2)  	    break;
+      swap(arr[le], arr[ri]); //le item too high
+      --ri;
+	  }else{
+      ++le;
+    }
+  }
+  assert(p1 < arr[le]);
+  assert(arr[ri] > p2);
+  cout<<arr<<le<<" < - > "<<ri <<" <-- both ptr initialized.. Now scan fwd from le..."<<endl;
+#endif
+}
 /* for both partition algos:
 * return index of first element that exceeds pivot, or -1 if pivot too high
 * Only one swap for each wrong pair. (I used to think 2 swaps required on each "occasion"
@@ -72,10 +132,13 @@ int wrapper(float const pivotVal, vector<int> v, idx le=0, idx ri=0){
   auto ret = partition2oppScanner(pivotVal, le, ri);
   assert(ret == partitionFwd(pivotVal, le, ri));
   cout<<arr<<ret<<" = ret from both algos\n\n";
+  arr=v; //for subsequent test
   return ret;
 }
 int main(){
-  assert(8 == wrapper(3.3, {8,12,7,1,2,-7,5,-3,0,3,9,-6,4,9,2,6,9,5}));
+  assert(8 == wrapper(3.3, {4,-2,12,7,1,-7,5,-3,0,3,9,-6,4,8,2,6,9,5}));
+  partition2(2.2, 7.7);
+  return 0;
   assert(6 == wrapper(5.2, {7,4,1,9,9,5,4,9,5,7,11}, 1,8));
   assert(-1== wrapper(15.1, {7,1,9,9,5,4,9,5,7}));
   assert(6 == wrapper(5.1, {4,3,7,1,9,9,5,4,9,5,7}));
