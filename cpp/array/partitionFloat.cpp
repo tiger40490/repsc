@@ -19,16 +19,14 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
 vector<int> arr; //global var
 /* partition a given array using 2 pivot values. 
 returns 2 indices 
-invariant: left and right ptr both at "first" item strictly between p1 and p2.
-I hope to use fewer than 4 moving pointers. How about a 3rd ptr scanning forward, until it meets the right ptr?
 */
 using pii = pair<int,int>;
 pii partition2(float const pivotVal1, float const pivotVal2){
   float const p1=pivotVal1, p2=pivotVal2;
-  assert(p1<=p2);
   auto minItr = min_element(arr.begin(), arr.end());
   auto maxItr = max_element(arr.begin(), arr.end());
   cout<<arr<<p1<<" = p1; p2 = "<<p2<<" ... "<<*minItr<<" = min; max = "<<*maxItr<<endl;
+  assert(p1<=p2); // no point validating input..not a programming challenge
   assert(*minItr <= p1 && "1st pivot value too low");
   assert(p2 <= *maxItr && "2nd pivot value too high");
   idx le=0;
@@ -43,7 +41,7 @@ pii partition2(float const pivotVal1, float const pivotVal2){
     swap(arr[le], arr[front]);
     ++le;
     assert(arr[le] > p1);
-  }  
+  }
   idx const ret1 = le;
   cout<<arr<<ret1<<" <- first partition\n";
   
@@ -57,10 +55,12 @@ pii partition2(float const pivotVal1, float const pivotVal2){
     swap(arr[le], arr[front]);
     ++le;
     assert(arr[le] > p2);
-  }  
+  }
   cout<<arr<<le<<" <- 2nd partition\n";
   return pii(ret1, le);
-#ifdef asdfadf
+#ifdef oldAbandonedSol
+//invariant: left and right ptr both at "first" item strictly between p1 and p2. 
+//I hope to use fewer than 4 moving pointers. How about a 3rd ptr scanning forward, until it meets the right ptr?
   idx le=0, ri=arr.size()-1;
   for (;;){
     assert(le != ri);
@@ -137,8 +137,7 @@ int wrapper(float const pivotVal, vector<int> v, idx le=0, idx ri=0){
 }
 int main(){
   assert(8 == wrapper(3.3, {4,-2,12,7,1,-7,5,-3,0,3,9,-6,4,8,2,6,9,5}));
-  partition2(2.2, 7.7);
-  return 0;
+  assert(pii(7,14) == partition2(2.2, 7.7));
   assert(6 == wrapper(5.2, {7,4,1,9,9,5,4,9,5,7,11}, 1,8));
   assert(-1== wrapper(15.1, {7,1,9,9,5,4,9,5,7}));
   assert(6 == wrapper(5.1, {4,3,7,1,9,9,5,4,9,5,7}));
