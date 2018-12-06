@@ -102,9 +102,9 @@ template<typename T> bool next_combo(vector<T> & v){
   return false;
 }
 int main() {
-//  vector<float> v{111,222,333,444,555,666};
+  //vector<float> v{111,222,333,444,555,666};
   //string tmp = "abcdefg"; //generates 7-C-3 combos correctly
-  string tmp = "abbc"; //broken!
+  string tmp = "aaabbc";
   vector<char> v(tmp.begin(), tmp.end());
   assert(C <= v.size());
   for(; calls<9992; ){
