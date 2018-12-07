@@ -1,8 +1,6 @@
-//todo "abbc" is broken
-
-//Without loss of generality, each combination is internally represented
-//as a sorted vector (ascending).
-//There's one-to-one mapping between such a vector and a combination
+/* 
+Without loss of generality, each combination is internally represented as a sorted vector (ascending). There's one-to-one mapping between such a vector and a combination
+*/
 #include <iostream>
 #include <vector>
 #include <iomanip> //setw
