@@ -1,6 +1,4 @@
 /* 
-todo: assert is buggy
-
 showcase decltype on a container object to extract element type
 showcase vector::assign(itr, itr) instead of clear() then insert(itr, itr)
 
