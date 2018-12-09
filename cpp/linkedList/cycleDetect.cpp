@@ -36,7 +36,7 @@ size_t hasLoopBrent(size_t const N=2){
   assert(N>1);
   int powOfN = 1, loopLenGuess = 1 /*in case root points to itself*/;
   Node* tortoise = head;
-  for (Node* hare = head->next; tortoise != hare; /*loop exit implies Loop or End*/ hare = hare->next){
+  for (Node* hare = head->next; tortoise != hare; /*for-loop exit implies Detected or End-of-list*/ hare = hare->next){
     if (hare == NULL) return 0;
     cout<<hare->val<<" was checked against tortoise ("<<tortoise->val<<"); loopLenGuess = "<<loopLenGuess<<endl; 
     if (loopLenGuess == powOfN){ //Tricky! We should try to prove -- 
@@ -46,11 +46,11 @@ size_t hasLoopBrent(size_t const N=2){
       powOfN *= N;
       loopLenGuess = 0;
       cout<<"   "<<tortoise->val<<" set as (payload of) new tortoise ptr, with powOfN set to "<<powOfN<<endl;
-      }
-    loopLenGuess++;
     }
-    assert(loopLenGuess>0);
-    return loopLenGuess;
+    loopLenGuess++;
+  }
+  assert(loopLenGuess>0);
+  return loopLenGuess;
 }
 int main(){
 	_6.next = &_6; //creating a loop

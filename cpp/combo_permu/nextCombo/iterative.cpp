@@ -1,6 +1,6 @@
-//Without loss of generality, each combination is internally represented
-//as a sorted vector (ascending).
-//There's one-to-one mapping between such a vector and a combination
+/* 
+Without loss of generality, each combination is internally represented as a sorted vector (ascending). There's one-to-one mapping between such a vector and a combination
+*/
 #include <iostream>
 #include <vector>
 #include <iomanip> //setw
@@ -37,9 +37,9 @@ template<typename T> void dump(vector<T> & v,  bool isAssert = true){
 }
 
 template<typename T> bool reshuffle(vector<T> & v, int p2u){
-//      cout<<"after swap"<<endl; dump(v);
+//      cout<<"after swap"<<endl; dump(v, false);
         sort(v.begin()+p2u+1, v.end());
-//      cout<<"after sorting everyting to the right of p2u"<<endl; dump(v);
+//      cout<<"after sorting everyting to the right of p2u"<<endl; dump(v, false);
 
         if (p2u == C-1){
                 sort(v.begin()+C, v.end());
@@ -56,11 +56,14 @@ template<typename T> bool reshuffle(vector<T> & v, int p2u){
                 ++changes;
                 return true;
           }
-          if (v[p2u]<v[i]){
-                //cout<<"best man = "<<i<<endl;
+          if (v[p2u] <= v[i]){
+                //cout<<"best man's pos = "<<i<<endl;
+                //now ensure all "visible" items starting at best man are sorted
                 for(int j=0; p2u+1+j<=C-1; ++j){
                   swap(v[p2u+1+j], v[i+j]);
                 }
+                //cout<<"after fixing all visible items from bestman\n"; dump(v, false);
+                //now sort the unused items:
                 sort(v.begin()+C, v.end());
                 ++changes;
                 return true;
@@ -86,7 +89,8 @@ template<typename T> bool next_combo(vector<T> & v){
         if (v[p2u] < v[unusedItem]) {
           assert(p2u<unusedItem);
           swap(v[p2u], v[unusedItem]);  //p2u should not change further
-        //cout<<"identified "<<p2u<<" as position to upgrade... Will reset subsequent positions, and return"<<endl;
+          //cout<<unusedItem<<" = unusedItem for swap; ";
+          //cout<<"identified "<<p2u<<" as position to upgrade... Will reset right-substring, and return"<<endl;
           return reshuffle(v, p2u);
         }
     }
@@ -96,8 +100,9 @@ template<typename T> bool next_combo(vector<T> & v){
   return false;
 }
 int main() {
-//  vector<float> v{111,222,333,444,555,666};
-  string tmp = "abcdefg";
+  //vector<float> v{111,222,333,444,555,666};
+  //string tmp = "abcdefg"; //generates 7-C-3 combos correctly
+  string tmp = "aaabbc";
   vector<char> v(tmp.begin(), tmp.end());
   assert(C <= v.size());
   for(; calls<9992; ){

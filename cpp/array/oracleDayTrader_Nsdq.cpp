@@ -1,3 +1,6 @@
+//I now think the shrink() is buggy. We should not remove all non-turning points
+//because two such points can create a profitable trade.
+
 //showcasing vector erase while iterating
 #include <iostream>
 #include <vector>
@@ -73,7 +76,7 @@ int solve(vector<Px> a){ //return total profit
   return dump(trades, a, "final .......");
 }
 int main(){
-  assert (7 == solve({5,3,6,1,2}));
+  assert (8 == solve({5,3,6,1,2})); //buy 1,2 sell 5,6 => $8
   assert (7 == solve({4,5,3,6,1}));
   assert (9 == solve({4,5,3,6,1,2}));
   assert (9 == solve({4,4,5, 4.11, 3, 4.22, 6,6,2,1,2}));

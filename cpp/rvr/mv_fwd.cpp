@@ -5,6 +5,7 @@ using namespace std;
 
 struct Badstr{ //a string class that robs its sister instance
   Badstr& operator=(Badstr && sister){
+  //this function doesn't clean up the existing this->_nonref and this->ptr
     _nonref = move(sister._nonref);
     _ptr = sister._ptr; 
     sister._ptr=NULL;
@@ -41,14 +42,20 @@ so we can use the move-assignment of std::string*/
 private:  
   string * _ptr;
   string _nonref;
-};
+}; //class
+
 void pbvalFunc(Badstr clone){
-  cout<<&clone<<endl;
+  cout<<&clone<<" In pbvalFunc(), the arg object address would be same as the orig object in caller if the orig is an unnamed temporary!"<<endl;
 }
 void testPbValue(){
-  pbvalFunc(Badstr("temp")); //no move no copy. The "temp" object is created in the callee's stack! More efficient than Scott Meyers said
+  pbvalFunc(Badstr("temp3")); //no move no copy... Instead, the Badstr instance is created directly in the callee's stack, similar to RVO. 
+  // * Compiler optimizes away the temporary object completely. More efficient than Scott Meyers and Shanyou said.
+  
+  //Above was passing an UNNAMED temporary into pbvalFunc(). 
+  //Below we pass a named object into pbvalFunc().
+  
   Badstr nonref("nonref");
-  pbvalFunc(nonref);
+  pbvalFunc(nonref); //invokes regular copy-ctor. No optimizer magic :(
   cout<<"^^^^^    done with pbvalue test    ^^^^^\n\n";  
 }
 void testAssignment(){
@@ -96,12 +103,15 @@ We can modify but not rob it. */ {
   Badstr display;
 };
 template <typename A> shared_ptr<Trade> factory(A && s){
+  // A is a universal reference, not a rvr !
   return make_shared<Trade>(forward<A>(s));
-  //return make_shared<T>(s); //Trade ctor always gets Lvr even if s is temp
+
+  //The version below is broken  as Trade ctor would always get Lvr even if s is temp
+  //return make_shared<Trade>(s);
 }
 void test_fwd(){
   auto shp = factory(Badstr("temp-Badstr"));
-  cout<<shp->display<<" = in the shared_ptr from factory\n\n";
+  cout<<shp->display<<" = in the shared_ptr returned from factory\n\n";
   
   Badstr nonref1("nonref1-Badstr");
   shp = factory(move(nonref1)); 
