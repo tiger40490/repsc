@@ -1,3 +1,4 @@
+# For re-construction, see https://github.com/tiger40490/repo1/blob/cpp1/cpp/binTree/serialize_deser.cpp
 class Node(object):
     def __init__(self, data, left_node=None, right_node=None):
         self.data = data

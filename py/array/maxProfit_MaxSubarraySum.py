@@ -99,10 +99,10 @@ def gfg(a): # looks simpler than my watermark1pass but non-intuitive
             capped_level = 0
     ret = max_so_far, capped_level; print ret
 test()
-''' Requirement: given a list of price deltas, print
+''' Requirement: https://bintanvictor.wordpress.com/2017/02/14/7672/
+given a list of price deltas, print
 * max continuous subarray sum 
-* max possible profit (or smallest loss) from one buy one sell.
-Can't buy before first delta.
+* max possible profit (or smallest loss) from one buy one sell. Can't buy before first delta.
 * low lowWaterMark
 Subarray must have 0< length <= original_length.
 '''

@@ -1,6 +1,4 @@
-'''Requirement: given 5 distinct chars, generate all combinations
-of 3 chars by redrawing, ideally in ascending order
-'''
+#!/usr/bin/env python
 comboLen=3
 pool=tuple(sorted(['b', 'c', 'e', 'd', 'a']))
 combos=['']   
@@ -18,6 +16,6 @@ def main():
     for _ in xrange(comboLen):
         add1charToEachCombo()
 main()
-    
-    
-    
+'''Requirement: given 5 distinct chars, generate all permutations
+of 3 chars by redrawing, ideally in ascending order
+'''

@@ -21,8 +21,7 @@ def populate():
   m.append([9,10,11,12])
   m.append([13,14,15,16])
   m.append([17,18,19,20])
-  height = len(m)
-  width = len(m[0])
+  height, width = len(m), len(m[0])
   
 def main():
   populate()

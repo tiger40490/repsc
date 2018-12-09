@@ -1,5 +1,3 @@
-'''Requirement -- given x partially missing pairs socks of various colors, 
-generate all the permutations, in ascending order. Each color has an value.'''
 import bisect
 
 perm = list('kcedcb')
@@ -39,3 +37,5 @@ def main():
     perm = next_perm()
   print 'changes =', changes
 main()
+'''Requirement -- given x partially missing pairs socks of various colors, 
+generate all the permutations, in ascending order. Each color has an value.'''
