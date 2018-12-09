@@ -11,4 +11,29 @@ run(){
   g++ $1 && ./a.exe
 }
 
-printf "done sourcing .bashrc"
+exa(){ #testing: exa -t ss ~/.ssh
+# proven since 2010
+  local ops
+  while is_opt=`echo $1 |perl -ne 'print if /^-/'  ` && [ "$is_opt" ]; do
+    ops="$ops $1"; shift
+  done
+
+  if [ $# -eq 1 ]; then
+    fullpath=$1
+    shortname=`echo $1|perl -pe 's|/$||;s|^.*/||'   `
+  else
+    fullpath=$2
+    shortname=$1
+  fi
+
+  [ -x $fullpath ] || return
+  eval $shortname="$fullpath" # create a shell variable with a dynamic name!
+  echo -e $shortname '\t' now set to $fullpath
+  prj="$fullpath"
+  alias  "$shortname"="cd $fullpath;ls1page $ops"
+  alias  prj=$shortname # USE MORE
+}
+
+g++ --version |grep g++.exe
+python --version
+printf "done sourcing .bashrc\n"
