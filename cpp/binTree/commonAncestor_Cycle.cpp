@@ -1,11 +1,10 @@
 /*
-todo: simplify
-todo: what if cycle present?
+todo:
 showcase: default param value is address of tree root node
 */
 #include <iostream>
 #include <deque>
-//#include <list>
+#include <algorithm>
 #include <iomanip>
 #include <cassert>
 #define ss if(1>0)cout //to mass-disable cout before uploading to hacker rank
@@ -30,7 +29,7 @@ struct Node {
  1   3     7    9
 11 13    20 21 22 23
 */
-    Node  _20(20);
+    Node _20(20);
     Node _21(21);
     Node _22(22);
     Node _23(23);
@@ -55,8 +54,13 @@ pair<bool, int> samePath; //both nodes are on the same path, i.e. one is a child
 void recur(Node * n=&root){
   if (samePath.first) return;
   if (pathU.size() && pathV.size()) return;
+  if (path.end() != find(path.begin(), path.end(), n->data)){
+    cout<<"cycle\n";
+    return;
+  }
   path.push_back(n->data);
   ss<<path;
+  
   if (n->data == uu){
     //ss<<uu<<" found:)\n";
     samePathCheck.push_back(uu);
@@ -90,6 +94,7 @@ void reset(int u, int v){
     samePathCheck.clear();
     pathU.clear();
     pathV.clear();
+    path.clear();
     uu = u;
     vv = v;
 }
@@ -101,7 +106,7 @@ int test1(int u, int v){
       ss<<samePath.second<<" <-- discovered as an ancestor of the other target\n";
       return samePath.second;
     }
-    assert(pathV.size() && pathU.size() && "Leetcode said both present");
+    //assert(pathV.size() && pathU.size() && "Leetcode said both present");
     ss<<uu<<" in"<<pathU;
     ss<<vv<<" in"<<pathV;
     auto ret = pathU[0];
@@ -119,5 +124,9 @@ int main(){
    assert(test1(11,6)==5               && !samePath.first);
    assert(test1(13,9)==5               && !samePath.first);
    assert(test1(4,4)==4);
+   _20.right = &_8;    // introduce a cycle, not in leetcode scope
+   assert(test1(9,7)==8);
+   assert(test1(23,7)==8);
+   assert(test1(8,9)==samePath.second  &&  samePath.first);
 }/* Req: given 2 nodes (and root) of a binary tree, find the lowest common ancestor. A node can be a (direct/indirect) descendant of itself. All distinct values. No uplink. No cycle
 */
