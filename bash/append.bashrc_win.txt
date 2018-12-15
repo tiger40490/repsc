@@ -36,4 +36,4 @@ exa(){ #testing: exa -t ss ~/.ssh
 
 g++ --version |grep g++.exe
 python --version
-printf "done sourcing .bashrc\n"
+printf "done sourcing append.bashrc_win.txt\n"
