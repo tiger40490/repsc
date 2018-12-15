@@ -51,7 +51,7 @@ deque<int> path, pathU, pathV;
 //data structure below helps speed up the algo in the very common scenario where both nodes are on the same path.
 deque<int> samePathCheck;
 pair<bool, int> samePath; //both nodes are on the same path, i.e. one is a child
-void recur(Node * n=&root){
+void preorderDFT(Node * n=&root){
   if (samePath.first) return;
   if (pathU.size() && pathV.size()) return;
   if (path.end() != find(path.begin(), path.end(), n->data)){
@@ -80,8 +80,8 @@ void recur(Node * n=&root){
     }
     pathV = path;
   }
-  if (n->left) { recur(n->left); }
-  if (n->right){ recur(n->right); }
+  if (n->left) { preorderDFT(n->left); }
+  if (n->right){ preorderDFT(n->right); }
   auto popped = path.back();
   if (vv == popped || popped == uu) {
     assert(popped == samePathCheck.back());
@@ -101,7 +101,7 @@ void reset(int u, int v){
 int test1(int u, int v){
     if (u == v) return u; //Leetcode guarantees both present
     reset(u,v);
-    recur();
+    preorderDFT();
     if (samePath.first) {
       ss<<samePath.second<<" <-- discovered as an ancestor of the other target\n";
       return samePath.second;
