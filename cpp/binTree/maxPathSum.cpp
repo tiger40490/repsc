@@ -1,14 +1,12 @@
 /*
-todo: create some simple test cases 
-todo: implement my memoization
 todo: use external map to save node->meh
-todo: edge case -- if all nodes are negative, then need to find and return the highest node data
 */
 #include <iostream>
 #include <vector>
 #include <algorithm>
 #include <iomanip>
 #include <cassert>
+#define meh max_subarray_ending_here
 #define ss if(1>0)cout //to mass-disable cout before uploading to hacker rank
 using namespace std;
 
@@ -54,39 +52,33 @@ vector<Node*> Node::all;
 vector<Node*> path;
 int best=INT_MIN;
 /////// all global vars done
-int reset(){
+int reset(bool isAllPositive=true){
   for (auto n: Node::all){
     n->neg();
-    n->data *= -1;
+    if (isAllPositive) n->data *= -1;
   }
   auto ret = best;
   best=INT_MIN;
   path.clear();
+  ss<<"=============\n";
   return ret;
 }
-pair<int,int> kadane(){ //need to save meh for each node
-  int ret = INT_MIN, meh = 0;
-  //only last node could be uninitialized?
-  
-  for (int i = 0; i < path.size(); ++i) {
-    //assert(path[i]->meh > INT_MIN);
-    //if (path[i]->meh)
-    auto val = path[i]->data;  
-    meh = meh + val;    
-    if (ret < meh) ret = meh; //obvious
-    if (meh < 0) meh = 0;
-    //ss<<meh<<" = meh; ret = "<<ret<<endl;
-  }
-  cout << " -} "<<ret<<endl; //" = Maximum contiguous sum\n";
-  return {ret, meh};
-}
-
 void recur(Node * n=&root){
+  int prevMeh=0;
+  if (path.size()){ //before adding new node to path
+    prevMeh = path.back()->meh;
+    assert(prevMeh > INT_MIN);
+    if (prevMeh<0)  {
+      //ss<<prevMeh <<" is discarded .. starting afresh subarrayEndingHere\n";
+      prevMeh = 0;
+    }else{
+      //ss<<prevMeh <<" is usable.. growing currentSubarrayEndingHere to..\n";
+    }
+  }
   path.push_back(n);
-  ss<<path;
-  auto val = kadane();
-  n->meh = val.second;
-  best = max(best, val.first);
+  ss<<path<<endl; //we don't bother to compute max subarray sum on the current path!
+  n->meh = prevMeh + n->data;
+  best = max(best, n->meh);
   
   if (n->left) { recur(n->left); }
   if (n->right){ recur(n->right); }
@@ -96,18 +88,23 @@ void recur(Node * n=&root){
 
 int test(){
   recur();
-  ss<<best<<" = max path sum\n";
+  cout<<best<<" = max path sum\n";
   return reset();
 }
 int main(){
   assert(test() == 32);
   assert(test() == 51);
+  
   _9.neg();
   assert(test() == 47);
+  
   root.neg();
   _2.neg();
   _13.data=99;
   assert(test() == 104);
+
+  reset(false); //edge case -- all-negative tree
+  assert(test() == -1);
 }/* Req: https://wp.me/p74oew-64M   
 Note: a path is defined as any sequence of nodes from any starting node to any node in the tree along the parent->child connections. The path must contain at least one node and does not need to go through the root. non-unique nodes. No uplink. No cycle.
 */
