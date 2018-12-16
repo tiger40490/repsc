@@ -2,6 +2,7 @@
 showcase functor passed as arg
 showcase next() builtin function
 showcase how to get any element from a set
+showcase    oldBatch, newBatch = newBatch, set()
 '''
 def genLongestFirst(original, func=None, isStrict=False):
   ''' This longest-first algo is useful for identifying the longest abbreviation among 99 potential abbreviations 
@@ -18,23 +19,30 @@ def genLongestFirst(original, func=None, isStrict=False):
   oldBatch = set([original]) # this set will hold longer abbreviations
   newBatch = set() # this set will hold slightly shorter abbreviations
   cnt=0
-  while len(next(iter(oldBatch))) > 1:
-    for abbr in oldBatch:
-      chars=list(abbr)
+  sz=len(original)
+  while sz > 1:
+    print '... one with abbr of Length', sz, '.. Now generating Length', sz-1
+    
+    ## Section 1: Below for-loop is the actul algo, very brief:)
+    for oldabbr in oldBatch:
+      chars=list(oldabbr)
       for i in range(len(chars)): 
-        #allocating a new abbr
+        #allocating a new abbr that's one-char short of the oldabbr
         newBatch.add( ''.join(chars[:i] + chars[i+1:]) )
+        
+    ## Section 2: observer code:
     if func:    
       for ab in newBatch: func(ab)
     else:
       print len(newBatch), newBatch
     cnt += len(newBatch)
-    # prepare for next iteration in while-loop:
-    oldBatch=newBatch
-    newBatch=set()
-  #end of while  
+    
+    ## Section 3: prepare for next iteration of while-loop:
+    oldBatch, newBatch = newBatch, set()
+    sz=len(next(iter(oldBatch)))
+  #end of while-loop
   if len(original) == len(set(original)): # no duplicate char
-    assert cnt+2 == 2**len(original)
+    assert cnt+2 == 2**len(original), 'count of abbreviations incorrect'
   if func and not isStrict:
     func('')
 
