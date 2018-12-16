@@ -90,7 +90,7 @@ void preorderDFT(Node * n=&root){
   path.pop_back();
 }
 void reset(int u, int v){
-    samePath = pair<bool,int>();
+    samePath = {false, 0}; // pair<bool,int>();
     samePathCheck.clear();
     pathU.clear();
     pathV.clear();
