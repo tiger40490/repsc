@@ -1,7 +1,13 @@
+'''
+showcase functor passed as arg
+showcase next() builtin function
+showcase how to get any element from a set
+'''
 def genLongestFirst(original, func=None, isStrict=False):
   ''' This longest-first algo is useful for identifying the longest abbreviation among 99 potential abbreviations 
 
-  isStrict means strictly abbreviations-only, i.e. no empty string no original string
+  func -- is a processorOnEchAbbr
+  isStrict -- means strictly abbreviations-only, i.e. no empty string no original string
   
   Efficiency -- 
   * relies on hash table. 
