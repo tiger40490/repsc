@@ -48,7 +48,7 @@ template<typename T> int show(outer<std::deque<T> > const & p){
 }
 
 // Below is the actual algo .. rather short
-template<typename T> outer<std::deque<T> > const & //void return type is enough for this algo
+template<typename T> outer<std::deque<T> > const & //void return type is good enough for this algo
 recurs(std::deque<T> const & pool, bool isFresh=false){
   ++calls;
   static outer<std::deque<T> > global_coll;
@@ -60,7 +60,7 @@ recurs(std::deque<T> const & pool, bool isFresh=false){
     show(global_coll);
     return global_coll;
   }
-  recurs( std::deque<T>(pool.begin()+1,pool.end()) );  //the new pool passed in is shorter
+  recurs( std::deque<T>(pool.begin()+1,pool.end()) );  //the new pool passed on is one T shorter
 
   outer<std::deque<T> > tmpColl;
   for(auto abbr //clone an item from global_coll
@@ -85,5 +85,5 @@ auto const & generateAsc(std::string const & s){
   auto const & ret = recurs(v, true);
   return ret;
 }
-/* abbreviation or subsequence generator, to be included in ..
+/* abbreviation generator, or subsequence generator, to be included in a few *.cpp files.
 */
