@@ -1,3 +1,6 @@
+/*
+todo: test the downloaded solution
+*/
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -16,9 +19,9 @@ struct rec{
   
   list<pos> bbeh; /* bestBoxEndingHere i.e. largest rectangles having current pixel as the south-east corner. Box in this list must not be the westbar or northbar.
   
-  In some cases, two rectangles have the same area, larger than all other rectangles, but this list size will always be much smaller thn N.  
+  In some cases, two rectangles have the same area, larger than all other rectangles, but this list size will always be much smaller than N.
   
-  This list may contain the current pixel, in the trivial case.
+  This list may contain the current pixel alone as a tiny "box", in the trivial case.
   */
 };
 ostream & operator<<(ostream & os, rec const & n){
@@ -27,14 +30,47 @@ ostream & operator<<(ostream & os, rec const & n){
   return os;
 }
 
+/*https://leetcode.com/problems/maximal-rectangle/discuss/29064/A-O(n2)-solution-based-on-Largest-Rectangle-in-Histogram
+I need to test this.
+*/
+int histo(vector<vector<char> > &matrix) {
+    if (matrix.size() <= 0 || matrix[0].size() <= 0)
+        return 0;
+        
+    int m = matrix.size();
+    int n = matrix[0].size() + 1;
+    int h = 0, w = 0, ret = 0;
+    vector<int> height(n, 0);
+    
+    for (int i = 0; i < m; ++i) {
+        stack<int> s;
+        for (int j = 0; j < n; ++j) {
+            // set value
+            if (j < n - 1) {
+                if (matrix[i][j] == '1') height[j] += 1;
+                else height[j] = 0;
+            }
+            
+            // compute area
+            while (!s.empty() && height[s.top()] >= height[j]) {
+                h = height[s.top()];
+                s.pop();
+                w = s.empty() ? j : j - s.top() - 1;
+                if (h * w > ret) ret = h * w;
+            }
+            s.push(j);
+        }
+    //for
+    return ret;
+}
 int main() {
 }
-/* Req: given a N-by-N marix of black/white pixels, find the largest all-black rectangle. It might be a bar of width 1 length 22 (area 22), or a single dot (area 1). 
+/* Req: given a N-by-N marix of black/white pixels, find the largest all-black rectangle. It might be a bar of width 1 length 22 (area 22), or a single dot (area 1) or whatever rectangle. 
 
---Here's my O(NN) idea
+--Here's my hopefully O(NN) idea, but not a solution yet. In fact, it may not work at all.
 * One pass to count how many black pixels across entire matrix. Denote this number as K. Size a hash table to K buckets, so as to preempt rehashing. More memory efficient than a shadow matrix. Each record in the data structure is described in code. The hashmap is {position -> record}
 
-* In the same pass also build a linked list (blacklist) of all black pixels, first row to last row. Every list node holds a position of a black pixel. Blacklist has length K, starting at left-most black pixel on top row and ending at right-most black pixel on bottom row.
+* In the same pass also build a linked list (blacklist) of all black pixels, first row to last row. Every list node holds a position of a black pixel. Blacklist has length K, starting at left-most black pixel on top "useful" row and ending at right-most black pixel on bottom useful row.
 
 First pass is O(NN). Zero calculation.
 
