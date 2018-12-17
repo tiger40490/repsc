@@ -55,16 +55,17 @@ def watermark1pass(deltas): # watermark -- my intuitive algo on list of deltas
 def disposableCurSubarr(deltas): # Based on ideas in https://en.wikipedia.org/wiki/Maximum_subarray_problem#Kadane's_algorithm_(Algorithm_3:_Dynamic_Programming)
   #le is the starting index of the best sub-array so far
   le = bestLe = bestRi = 0; 
+  # currentSubum is the sum of a subarrayEndHere. Empty array? Never
   currentSubsum = bestSum = float('-inf')
   for i in xrange(len(deltas)):
     delta = deltas[i]
     #print "i=", i, "delta=", delta
     if currentSubsum > 0: # current subarray useful :)
       currentSubsum += delta
-      print 'updating currentSubsum to', currentSubsum
+      print 'updating currentSubsum to', currentSubsum # extending the subarrayEndingHere by a new item
     else: # start afresh
       le=i
-      currentSubsum=delta
+      currentSubsum=delta # if negative, then might be discard in next iteration
       print 'afresh: setting le to i and currentSubsum to delta'
       
     if bestSum < currentSubsum:
