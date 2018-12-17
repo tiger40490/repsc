@@ -4,6 +4,8 @@ todo: test the downloaded solution
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <list>
+#include <stack>
 #include <cassert>
 using namespace std;
 using bsz=size_t; //bar size
@@ -11,7 +13,7 @@ using idx=size_t; //index into matrix
 using pos=pair<idx, idx>;
 
 int const UNASSIGNED = -1;
-struct rec{
+struct rec{ //part of an early stage idea
   bsz westbar;// how many contiguous black pixels on left including myself
   bsz northbar; //how many contiguous black pixels above, including myself
   
@@ -33,7 +35,7 @@ ostream & operator<<(ostream & os, rec const & n){
 /*https://leetcode.com/problems/maximal-rectangle/discuss/29064/A-O(n2)-solution-based-on-Largest-Rectangle-in-Histogram
 I need to test this.
 */
-int histo(vector<vector<char> > &matrix) {
+int histo(vector<vector<char> > matrix) {
     if (matrix.size() <= 0 || matrix[0].size() <= 0)
         return 0;
         
@@ -45,9 +47,8 @@ int histo(vector<vector<char> > &matrix) {
     for (int i = 0; i < m; ++i) {
         stack<int> s;
         for (int j = 0; j < n; ++j) {
-            // set value
             if (j < n - 1) {
-                if (matrix[i][j] == '1') height[j] += 1;
+                if (matrix[i][j] == 1) height[j] += 1;
                 else height[j] = 0;
             }
             
@@ -60,10 +61,19 @@ int histo(vector<vector<char> > &matrix) {
             }
             s.push(j);
         }
-    //for
+    }//for
+    cout<<ret<<" = ret\n";
     return ret;
 }
+int test1(){
+  vector<vector<char> > tmp =
+  {{1,1,0,1},
+  {0,0,1,1},
+  {1,1,1,1}};
+  histo(tmp);
+}
 int main() {
+  test1();
 }
 /* Req: given a N-by-N marix of black/white pixels, find the largest all-black rectangle. It might be a bar of width 1 length 22 (area 22), or a single dot (area 1) or whatever rectangle. 
 
