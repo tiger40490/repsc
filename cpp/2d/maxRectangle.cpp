@@ -57,7 +57,7 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
         h = height[s.top()];
         s.pop();
         width = s.empty() ? j : j - s.top() - 1;
-        //update maxArea
+        //update maxArea .. observer code
         if (h * width > maxArea) maxArea = h * width;
       }
       s.push(j);
@@ -67,21 +67,36 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
   assert(exp==maxArea);
   return maxArea;
 }
-int test1(){
+int test11(){
   histo(4, {
   {1,1,0,1},
   {0,0,1,1},
   {1,1,1,1}});
 }
-int test2(){
+int test22(){
+  histo(5, {
+  {1,1,0,1,0},
+  {0,0,1,1,0},
+  {1,1,1,1,1}});
+}
+int test33(){
+  histo(6, {
+  {1,1,1,0,0},
+  {0,1,1,1,0},
+  {1,1,1,1,1}});
+}
+int test44(){
   histo(6, {
   {1,1,0,1},
+  {0,1,0,1},
   {0,1,1,1},
   {1,1,1,1}});
 }
 int main() {
-  test1();
-  test2();
+  test11();
+  test22();
+  test33();
+  test44();
 }
 /* Req: given a N-by-N marix of black/white pixels, find the largest all-black rectangle. It might be a bar of width 1 length 22 (area 22), or a single dot (area 1) or whatever rectangle. 
 
