@@ -7,6 +7,7 @@ todo: why the fake column?
 #include <list>
 #include <stack>
 #include <cassert>
+#define STACK_TOP height[s.top()]
 using namespace std;
 using bsz=size_t; //bar size
 using idx=size_t; //index into matrix
@@ -40,7 +41,7 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
   int const rcnt = matrix.size();
   int const n = matrix[0].size() + 1;
   int const lastColIdx = n-2;
-  int h = 0, width = 0, maxArea = 0;
+  int maxArea = 0;
   vector<int> height(n, 0);
   
   for (int i = 0; i < rcnt; ++i) {
@@ -53,8 +54,9 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
       // histo bars updated for this row, now compute area
     stack<int> s;
     for (int j = 0; j <= lastColIdx+1; ++j) {
-      while (!s.empty() && height[s.top()] >= height[j]) {
-        h = height[s.top()];
+      int h =0, width = 0;
+      while (!s.empty() && STACK_TOP >= height[j]) {
+        h = STACK_TOP;
         s.pop();
         width = s.empty() ? j : j - s.top() - 1;
         //update maxArea .. observer code
