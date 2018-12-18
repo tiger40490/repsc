@@ -1,5 +1,5 @@
 /*
-todo: why the fake column?
+why the fake column? For strictly rising stairs
 */
 #include <iostream>
 #include <vector>
@@ -62,6 +62,7 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
         //update maxArea .. observer code
         if (h * width > maxArea) maxArea = h * width;
       }
+      assert(s.empty() || STACK_TOP < height[j]);
       s.push(j);
     }
   }//outer for-loop
@@ -94,11 +95,19 @@ int test44(){
   {0,1,1,1},
   {1,1,1,1}});
 }
+int testStairs(){
+  histo(6, {
+  {0,0,0,1},
+  {0,0,1,1},
+  {0,1,1,1},
+  {1,1,1,1}});
+}
 int main() {
   test11();
   test22();
   test33();
   test44();
+  testStairs();
 }
 /* Req: given a N-by-N marix of black/white pixels, find the largest all-black rectangle. It might be a bar of width 1 length 22 (area 22), or a single dot (area 1) or whatever rectangle. 
 
