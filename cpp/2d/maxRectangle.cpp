@@ -1,5 +1,4 @@
 /*
-todo: test the downloaded solution
 todo: why the fake column?
 */
 #include <iostream>
@@ -34,7 +33,6 @@ ostream & operator<<(ostream & os, rec const & n){
 }
 
 /*https://leetcode.com/problems/maximal-rectangle/discuss/29064/A-O(n2)-solution-based-on-Largest-Rectangle-in-Histogram
-I need to test this.
 */
 int histo(vector<vector<char> > matrix) {
     if (matrix.size() <= 0 || matrix[0].size() <= 0) return 0;
