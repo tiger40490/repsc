@@ -44,13 +44,15 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
     vector<int> height(n, 0);
     
     for (int i = 0; i < rcnt; ++i) {
-        stack<int> s;
         for (int j = 0; j <= lastColIdx+1; ++j) {
-            if (j <= lastColIdx) { //up to last real column
+            if (j <= lastColIdx) { //up to last real column. Fake col untouched
                 if (matrix[i][j] == 1) height[j] += 1;
                 else height[j] = 0;
             }
-            // compute area
+        }
+            // histo bars updated for this row, now compute area
+        stack<int> s;
+        for (int j = 0; j <= lastColIdx+1; ++j) {
             while (!s.empty() && height[s.top()] >= height[j]) {
                 h = height[s.top()];
                 s.pop();
