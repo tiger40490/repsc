@@ -1,5 +1,6 @@
 /*
 todo: test the downloaded solution
+todo: why the fake column?
 */
 #include <iostream>
 #include <vector>
@@ -36,44 +37,49 @@ ostream & operator<<(ostream & os, rec const & n){
 I need to test this.
 */
 int histo(vector<vector<char> > matrix) {
-    if (matrix.size() <= 0 || matrix[0].size() <= 0)
-        return 0;
+    if (matrix.size() <= 0 || matrix[0].size() <= 0) return 0;
         
-    int m = matrix.size();
-    int n = matrix[0].size() + 1;
-    int h = 0, w = 0, ret = 0;
+    int const rcnt = matrix.size();
+    int const n = matrix[0].size() + 1;
+    int h = 0, width = 0, maxArea = 0;
     vector<int> height(n, 0);
     
-    for (int i = 0; i < m; ++i) {
+    for (int i = 0; i < rcnt; ++i) {
         stack<int> s;
         for (int j = 0; j < n; ++j) {
             if (j < n - 1) {
                 if (matrix[i][j] == 1) height[j] += 1;
                 else height[j] = 0;
             }
-            
             // compute area
             while (!s.empty() && height[s.top()] >= height[j]) {
                 h = height[s.top()];
                 s.pop();
-                w = s.empty() ? j : j - s.top() - 1;
-                if (h * w > ret) ret = h * w;
+                width = s.empty() ? j : j - s.top() - 1;
+                //update maxArea
+                if (h * width > maxArea) maxArea = h * width;
             }
             s.push(j);
         }
     }//for
-    cout<<ret<<" = ret\n";
-    return ret;
+    cout<<maxArea<<" = maxArea\n";
+    return maxArea;
 }
 int test1(){
-  vector<vector<char> > tmp =
-  {{1,1,0,1},
+  histo({
+  {1,1,0,1},
   {0,0,1,1},
-  {1,1,1,1}};
-  histo(tmp);
+  {1,1,1,1}});
+}
+int test2(){
+  histo({
+  {1,1,0,1},
+  {0,1,1,1},
+  {1,1,1,1}});
 }
 int main() {
   test1();
+  test2();
 }
 /* Req: given a N-by-N marix of black/white pixels, find the largest all-black rectangle. It might be a bar of width 1 length 22 (area 22), or a single dot (area 1) or whatever rectangle. 
 
