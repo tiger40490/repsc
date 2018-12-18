@@ -34,18 +34,19 @@ ostream & operator<<(ostream & os, rec const & n){
 
 /*https://leetcode.com/problems/maximal-rectangle/discuss/29064/A-O(n2)-solution-based-on-Largest-Rectangle-in-Histogram
 */
-int histo(vector<vector<char> > matrix) {
+int histo(size_t const exp, vector<vector<char> > const matrix) {
     if (matrix.size() <= 0 || matrix[0].size() <= 0) return 0;
         
     int const rcnt = matrix.size();
     int const n = matrix[0].size() + 1;
+    int const lastColIdx = n-2;
     int h = 0, width = 0, maxArea = 0;
     vector<int> height(n, 0);
     
     for (int i = 0; i < rcnt; ++i) {
         stack<int> s;
-        for (int j = 0; j < n; ++j) {
-            if (j < n - 1) {
+        for (int j = 0; j <= lastColIdx+1; ++j) {
+            if (j <= lastColIdx) { //up to last real column
                 if (matrix[i][j] == 1) height[j] += 1;
                 else height[j] = 0;
             }
@@ -61,16 +62,17 @@ int histo(vector<vector<char> > matrix) {
         }
     }//for
     cout<<maxArea<<" = maxArea\n";
+    assert(exp==maxArea);
     return maxArea;
 }
 int test1(){
-  histo({
+  histo(4, {
   {1,1,0,1},
   {0,0,1,1},
   {1,1,1,1}});
 }
 int test2(){
-  histo({
+  histo(6, {
   {1,1,0,1},
   {0,1,1,1},
   {1,1,1,1}});
