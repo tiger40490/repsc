@@ -41,8 +41,8 @@ ostream & operator<<(ostream & os, rec const & n){
 template<typename T,             int min_width=2> ostream & operator<<(ostream & os, vector<T> const & c){
    for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
    os<<endl;
-   //for(int i=0; i<c.size(); ++i){ os<<setw(min_width)<<i<<" "; }
-   //os<<endl;
+   for(int i=0; i<c.size(); ++i){ os<<setw(min_width)<<i<<" "; }
+   os<<endl;
    return os;
 }
 
@@ -64,25 +64,24 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
         else height[j] = 0;
       }
     }
-    //height = {0,0,11,22,0,0};
-    cout<<i<<" ==== row; bar heights ===="<<height;
+    height = {0,0,11}; height.push_back(0);
+    cout<<height;
       // histo bars updated for this row, now compute max rectangle
     stack<idx> s;
     for (idx j = 0; j <= height.size()-1; ++j) {
       int h =0, width = 0;
-      cout<<j<<" == j; height[j] = "<<height[j]<<endl;
+      cout<<"\n  == "<<j<<" == j; height[j] = "<<height[j]<<endl;
       while (!s.empty() && STACK_TOP >= height[j]) {//current bar is (equal or) shorter than top of stack
         auto idxOfH=s.top();
         h = STACK_TOP;
-        cout<<h<<" = height of stack.top() in while-loop\n";
+        cout<<h<<"/"<<idxOfH<<" = stack.top() in while-loop\n";
         s.pop();
         
         //somehow compute the width for the rectangle of height h
         width = s.empty() ? j : j - s.top() - 1;
         //update maxArea .. observer code
         if (s.empty()){
-          cout<<idxOfH<<" = idxOfH (stack empty) "; 
-          cout<<j<<" = j; height[j] ="<<height[j]<<endl;
+          cout<<j<<" = j = width (stack empty)\n";
         }
         if (h * width >= maxArea){ //todo 2
           maxArea = h * width;
@@ -92,16 +91,16 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
         }
       }
       if (!s.empty()){ //observer
-          assert(STACK_TOP < height[j] && "save only the bar if higher than top-of-stack");
+          assert(STACK_TOP < height[j] && "push only when current bar is higher than all remainders in stack");
       }
       s.push(j);
       
       for (auto tmp=s; !tmp.empty(); tmp.pop()){ //observer
-          cout<<" "<<height[tmp.top()];
+          cout<<" "<<height[tmp.top()]<<"/"<<tmp.top();
       }
-      cout<<"..is the stack after pushing current bar\n";
+      cout<<"..is the stack after popping all equal/shorter and pushing current bar\n";
     }
-    //exit(0); 
+    exit(0); 
   }//outer for-loop
   cout<<maxArea<<" = maxArea\n";
   assert(exp==maxArea);
