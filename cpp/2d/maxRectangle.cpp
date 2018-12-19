@@ -2,6 +2,7 @@
 why the fake column? For strictly rising stairs
 why do we pop() until the remaining bars (in stack) are strictly lower than current bar?
 why unconditionally save current bar?
+todo 2: should be > not >=
 */
 #include <iostream>
 #include <vector>
@@ -67,16 +68,22 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
     for (idx j = 0; j <= lastColIdx+1; ++j) {
       int h =0, width = 0;
       cout<<j<<" == j; height[j] = "<<height[j]<<endl;
-      while (!s.empty() && STACK_TOP >= height[j]) {//current bar is shorter than top of stack
+      while (!s.empty() && STACK_TOP >= height[j]) {//current bar is (equal or) shorter than top of stack
+        auto idxOfH=s.top();
         h = STACK_TOP;
         cout<<h<<" = height of stack.top() in while-loop\n";
         s.pop();
         width = s.empty() ? j : j - s.top() - 1;
         //update maxArea .. observer code
-        //if (s.empty()) assert(j==1);
-        if (h * width > maxArea){
+        if (s.empty()){
+          cout<<idxOfH<<" = idxOfH (stack empty) "; 
+          cout<<j<<" = j; height[j] ="<<height[j]<<endl;
+        }
+        if (h * width >= maxArea){ //todo 2
           maxArea = h * width;
           cout<<maxArea<<"sqm is the updated maxArea\n";
+        }else{
+          //cout<<maxArea<<"sqm is the updated maxArea\n";
         }
       }
       if (!s.empty()){ //observer
@@ -99,6 +106,12 @@ int test11(){
   {1,1,0,1},
   {1,0,1,1},
   {1,1,1,1}});
+}
+int test15(){
+  histo(6, {
+  {1,1,0,1,0},
+  {1,0,1,1,1},
+  {1,1,1,1,1}});
 }
 int test22(){
   histo(5, {
@@ -127,8 +140,9 @@ int testStairs(){
   {1,1,1,1}});
 }
 int main() {
+  test15();
+  //return 0;
   test11();
-  return 0;
   test22();
   test33();
   test44();
