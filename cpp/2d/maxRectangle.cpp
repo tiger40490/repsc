@@ -1,8 +1,10 @@
 /*
-why the fake column? For strictly rising stairs
-why do we pop() until the remaining bars (in stack) are strictly lower than current bar?
+sugg: work out the logic for a simple staircase first. Once clear, work out one more staircase on the right.
+
+why do we pop() until the remaining bars (in stack) are strictly lower than current bar? cos for such a small bar, the best rectangle could extend to the right beyond current column. Imagine the bar of height 1, which may cover the entire base
+
 why unconditionally save current bar?
-todo 2: should be > not >=
+todo 2: had better be > not >=
 */
 #include <iostream>
 #include <vector>
@@ -62,10 +64,11 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
         else height[j] = 0;
       }
     }
+    //height = {0,0,11,22,0,0};
     cout<<i<<" ==== row; bar heights ===="<<height;
       // histo bars updated for this row, now compute max rectangle
     stack<idx> s;
-    for (idx j = 0; j <= lastColIdx+1; ++j) {
+    for (idx j = 0; j <= height.size()-1; ++j) {
       int h =0, width = 0;
       cout<<j<<" == j; height[j] = "<<height[j]<<endl;
       while (!s.empty() && STACK_TOP >= height[j]) {//current bar is (equal or) shorter than top of stack
@@ -73,6 +76,8 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
         h = STACK_TOP;
         cout<<h<<" = height of stack.top() in while-loop\n";
         s.pop();
+        
+        //somehow compute the width for the rectangle of height h
         width = s.empty() ? j : j - s.top() - 1;
         //update maxArea .. observer code
         if (s.empty()){
@@ -96,6 +101,7 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
       }
       cout<<"..is the stack after pushing current bar\n";
     }
+    //exit(0); 
   }//outer for-loop
   cout<<maxArea<<" = maxArea\n";
   assert(exp==maxArea);
@@ -141,7 +147,6 @@ int testStairs(){
 }
 int main() {
   test15();
-  //return 0;
   test11();
   test22();
   test33();
