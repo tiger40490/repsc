@@ -1,16 +1,19 @@
 /*
 why the fake column? For strictly rising stairs
+why do we pop() until the remaining bars (in stack) are strictly lower than current bar?
+why unconditionally save current bar?
 */
 #include <iostream>
 #include <vector>
 #include <queue>
 #include <list>
 #include <stack>
+#include <iomanip>
 #include <cassert>
 #define STACK_TOP height[s.top()]
 using namespace std;
 using bsz=size_t; //bar size
-using idx=size_t; //index into matrix
+using idx=size_t; //index into array
 using pos=pair<idx, idx>;
 
 int const UNASSIGNED = -1;
@@ -32,6 +35,13 @@ ostream & operator<<(ostream & os, rec const & n){
   os<<" ]";
   return os;
 }
+template<typename T,             int min_width=2> ostream & operator<<(ostream & os, vector<T> const & c){
+   for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
+   os<<endl;
+   //for(int i=0; i<c.size(); ++i){ os<<setw(min_width)<<i<<" "; }
+   //os<<endl;
+   return os;
+}
 
 /*https://leetcode.com/problems/maximal-rectangle/discuss/29064/A-O(n2)-solution-based-on-Largest-Rectangle-in-Histogram
 */
@@ -45,25 +55,39 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
   vector<int> height(n, 0);
   
   for (int i = 0; i < rcnt; ++i) {
-    for (int j = 0; j <= lastColIdx+1; ++j) {
+    for (idx j = 0; j <= lastColIdx+1; ++j) {
       if (j <= lastColIdx) { //up to last real column. Fake col untouched
         if (matrix[i][j] == 1) height[j] += 1;
         else height[j] = 0;
       }
     }
-      // histo bars updated for this row, now compute area
-    stack<int> s;
-    for (int j = 0; j <= lastColIdx+1; ++j) {
+    cout<<i<<" ==== row; bar heights ===="<<height;
+      // histo bars updated for this row, now compute max rectangle
+    stack<idx> s;
+    for (idx j = 0; j <= lastColIdx+1; ++j) {
       int h =0, width = 0;
-      while (!s.empty() && STACK_TOP >= height[j]) {
+      cout<<j<<" == j; height[j] = "<<height[j]<<endl;
+      while (!s.empty() && STACK_TOP >= height[j]) {//current bar is shorter than top of stack
         h = STACK_TOP;
+        cout<<h<<" = height of stack.top() in while-loop\n";
         s.pop();
         width = s.empty() ? j : j - s.top() - 1;
         //update maxArea .. observer code
-        if (h * width > maxArea) maxArea = h * width;
+        //if (s.empty()) assert(j==1);
+        if (h * width > maxArea){
+          maxArea = h * width;
+          cout<<maxArea<<"sqm is the updated maxArea\n";
+        }
       }
-      assert(s.empty() || STACK_TOP < height[j]);
+      if (!s.empty()){ //observer
+          assert(STACK_TOP < height[j] && "save only the bar if higher than top-of-stack");
+      }
       s.push(j);
+      
+      for (auto tmp=s; !tmp.empty(); tmp.pop()){ //observer
+          cout<<" "<<height[tmp.top()];
+      }
+      cout<<"..is the stack after pushing current bar\n";
     }
   }//outer for-loop
   cout<<maxArea<<" = maxArea\n";
@@ -73,7 +97,7 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
 int test11(){
   histo(4, {
   {1,1,0,1},
-  {0,0,1,1},
+  {1,0,1,1},
   {1,1,1,1}});
 }
 int test22(){
@@ -104,6 +128,7 @@ int testStairs(){
 }
 int main() {
   test11();
+  return 0;
   test22();
   test33();
   test44();
