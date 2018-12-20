@@ -78,17 +78,15 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
     stack<idx> s;
     vector<bsz> vec;
     for (idx j = 0; j <= bar.size()-1; ++j) {
-      bsz h =0, width = 0;
       cout<<"\n  == "<<j<<" == j; bar[j] = "<<bar[j]<<endl;
       
-      while (s.size() && STACK_TOP >= bar[j]) {//current bar is (equal or) shorter than previous bar
-        auto idxOfH=s.top();
-        h = STACK_TOP;
-        cout<<h<<"/"<<idxOfH<<" = stack.top() in while-loop\n";
+      while (s.size() && STACK_TOP >= bar[j]) {//new bar is no higher than previous bar
+        bsz h = STACK_TOP;
+        cout<<h<<"/"<<s.top()<<" = stack.top() in while-loop\n";
         s.pop();
         
         //somehow compute the width for the rectangle of height h
-        width = s.empty() ? j : j - s.top() - 1;
+        int width = s.empty() ? j : j - s.top() - 1;
         //update maxArea .. observer code
         if (s.empty()){
           cout<<j<<" = j = width (stack empty)\n";
