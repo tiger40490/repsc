@@ -81,7 +81,7 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
       bsz h =0, width = 0;
       cout<<"\n  == "<<j<<" == j; bar[j] = "<<bar[j]<<endl;
       
-      while (!s.empty() && STACK_TOP >= bar[j]) {//current bar is (equal or) shorter than previous bar
+      while (s.size() && STACK_TOP >= bar[j]) {//current bar is (equal or) shorter than previous bar
         auto idxOfH=s.top();
         h = STACK_TOP;
         cout<<h<<"/"<<idxOfH<<" = stack.top() in while-loop\n";
@@ -106,7 +106,7 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
       }
       
       s.push(j);
-      for (auto tmp=s; !tmp.empty(); tmp.pop()){ //observer
+      for (auto tmp=s; tmp.size(); tmp.pop()){ //observer
           cout<<" "<<bar[tmp.top()]<<"/"<<tmp.top();
       }
       cout<<"..is the stack after popping all equal/shorter and pushing current bar\n";
