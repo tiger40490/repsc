@@ -68,10 +68,11 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
     }
     
     //// below is the central algo -- the rectangle-in-histogram. Too tricky so I set up special test fixture just to uncover the logic.
-    height = {0,0,11}; height.push_back(0);
+    //height = {33,11,22,33,22}; height.push_back(0);
     cout<<height;
       // histo bars updated for this row, now compute max rectangle
     stack<idx> s;
+    vector<int> vec;
     for (idx j = 0; j <= height.size()-1; ++j) {
       int h =0, width = 0;
       cout<<"\n  == "<<j<<" == j; height[j] = "<<height[j]<<endl;
@@ -86,7 +87,10 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
         //update maxArea .. observer code
         if (s.empty()){
           cout<<j<<" = j = width (stack empty)\n";
+          for (auto prevStackItem: vec)
+            assert(prevStackItem >= h); 
         }
+        vec.push_back(h);
         if (h * width >= maxArea){ //todo 2
           maxArea = h * width;
           cout<<maxArea<<"sqm is the updated maxArea\n";
@@ -104,7 +108,7 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
       }
       cout<<"..is the stack after popping all equal/shorter and pushing current bar\n";
     }// inner for-loop
-    exit(0); 
+    //exit(0); 
   }//outer for-loop
   cout<<maxArea<<" = maxArea\n";
   assert(exp==maxArea);
