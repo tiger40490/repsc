@@ -78,18 +78,18 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
     stack<idx> s;
     vector<bsz> vec;
     for (idx j = 0; j <= bar.size()-1; ++j) {
-      cout<<"\n  == "<<j<<" == j; bar[j] = "<<bar[j]<<endl;
+      //cout<<"\n  == "<<j<<" == j; bar[j] = "<<bar[j]<<endl;
       
       while (s.size() && STACK_TOP >= bar[j]) {//new bar is no higher than previous bar
-        bsz h = STACK_TOP;
-        cout<<h<<"/"<<s.top()<<" = stack.top() in while-loop\n";
+        bsz const h = STACK_TOP;
+        //cout<<h<<"/"<<s.top()<<" = stack.top() in while-loop\n";
         s.pop();
         
-        //somehow compute the width for the rectangle of height h
-        int width = s.empty() ? j : j - s.top() - 1;
+        //tricky: work out width for the rectangle of height h
+        int width = s.empty()?j  :  (j - s.top() - 1);
         //update maxArea .. observer code
         if (s.empty()){
-          cout<<j<<" = j = width (stack empty)\n";
+          //cout<<j<<" = j = width (stack empty)\n";
           for (auto prevStackItem: vec)
             assert(prevStackItem >= h); 
         }
