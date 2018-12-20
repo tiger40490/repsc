@@ -1,10 +1,12 @@
 /*
 sugg: work out the logic for a simple staircase first. Once clear, work out one more staircase on the right.
 
-why do we pop() until the remaining bars (in stack) are strictly lower than current bar? cos for such a small bar, the best rectangle could extend to the right beyond current column. Imagine the bar of height 1, which may cover the entire base
-
 why unconditionally save current bar?
+
+why do we pop() until the remaining bars (in stack) are strictly lower than current bar? cos for such a small bar, the best rectangle is not known yet and could extend to the right beyond current column. Imagine the bar of height 1 covering entire base
+
 todo 2: had better be > not >=
+showcase: clever tweaks to enable unit testing of the histogram algo
 */
 #include <iostream>
 #include <vector>
@@ -64,6 +66,8 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
         else height[j] = 0;
       }
     }
+    
+    //// below is the central algo -- the rectangle-in-histogram. Too tricky so I set up special test fixture just to uncover the logic.
     height = {0,0,11}; height.push_back(0);
     cout<<height;
       // histo bars updated for this row, now compute max rectangle
@@ -99,7 +103,7 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
           cout<<" "<<height[tmp.top()]<<"/"<<tmp.top();
       }
       cout<<"..is the stack after popping all equal/shorter and pushing current bar\n";
-    }
+    }// inner for-loop
     exit(0); 
   }//outer for-loop
   cout<<maxArea<<" = maxArea\n";
@@ -152,7 +156,7 @@ int main() {
   test44();
   testStairs();
 }
-/* Req: given a N-by-N marix of black/white pixels, find the largest all-black rectangle. It might be a bar of width 1 length 22 (area 22), or a single dot (area 1) or whatever rectangle. 
+/* Req: see blog. 
 
 --Here's my hopefully O(NN) idea, but not a solution yet. In fact, it may not work at all.
 * One pass to count how many black pixels across entire matrix. Denote this number as K. Size a hash table to K buckets, so as to preempt rehashing. More memory efficient than a shadow matrix. Each record in the data structure is described in code. The hashmap is {position -> record}
