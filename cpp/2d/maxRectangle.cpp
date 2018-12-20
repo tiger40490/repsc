@@ -5,7 +5,10 @@ why unconditionally save current bar? Cos it can be part of a growing rectangle
 
 why do we pop() until the remaining bars (in stack) are strictly lower than current bar? cos for such a small bar, the best rectangle is not known yet and could extend to the right beyond current column. Imagine the bar of height 1 covering entire base
 
+Why O(N) per-row? cos the stack only holds up to N items and each item is pushed and popped exactly once so all stack operations add up to O(N). 
+
 todo 2: had better be > not >=
+showcase: separate out first inner for-loop so as to focus on the core algo
 showcase: clever tweaks to enable unit testing of the histogram algo
 */
 #include <iostream>
@@ -15,7 +18,7 @@ showcase: clever tweaks to enable unit testing of the histogram algo
 #include <stack>
 #include <iomanip>
 #include <cassert>
-#define STACK_TOP height[s.top()]
+#define STACK_TOP bar[s.top()]
 using namespace std;
 using bsz=size_t; //bar size
 using idx=size_t; //index into array
@@ -57,26 +60,28 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
   int const n = matrix[0].size() + 1;
   int const lastColIdx = n-2;
   int maxArea = 0;
-  vector<int> height(n, 0);
+  vector<bsz> bar(n, 0);
   
   for (int i = 0; i < rcnt; ++i) {
     for (idx j = 0; j <= lastColIdx+1; ++j) {
       if (j <= lastColIdx) { //up to last real column. Fake col untouched
-        if (matrix[i][j] == 1) height[j] += 1;
-        else height[j] = 0;
+        if (matrix[i][j] == 1) bar[j] += 1;
+        else bar[j] = 0;
       }
     }
+    /* histo bars updated for this row, now compute max rectangle in histogram
     
-    //// below is the central algo -- the rectangle-in-histogram. Too tricky so I set up special test fixture just to uncover the logic.
-    //height = {33,11,22,33,22}; height.push_back(0);
-    cout<<height;
-      // histo bars updated for this row, now compute max rectangle
+    Below is the central algo -- the rectangle-in-histogram algo. Too tricky so I set up special test fixture just to uncover the logic.
+    */
+    //bar = {33,11,22,33,22}; bar.push_back(0);
+    cout<<bar;
     stack<idx> s;
-    vector<int> vec;
-    for (idx j = 0; j <= height.size()-1; ++j) {
-      int h =0, width = 0;
-      cout<<"\n  == "<<j<<" == j; height[j] = "<<height[j]<<endl;
-      while (!s.empty() && STACK_TOP >= height[j]) {//current bar is (equal or) shorter than top of stack
+    vector<bsz> vec;
+    for (idx j = 0; j <= bar.size()-1; ++j) {
+      bsz h =0, width = 0;
+      cout<<"\n  == "<<j<<" == j; bar[j] = "<<bar[j]<<endl;
+      
+      while (!s.empty() && STACK_TOP >= bar[j]) {//current bar is (equal or) shorter than previous bar
         auto idxOfH=s.top();
         h = STACK_TOP;
         cout<<h<<"/"<<idxOfH<<" = stack.top() in while-loop\n";
@@ -91,18 +96,18 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
             assert(prevStackItem >= h); 
         }
         vec.push_back(h);
-        if (h * width >= maxArea){ //todo 2
+        if (h * width > maxArea){
           maxArea = h * width;
           cout<<maxArea<<"sqm is the updated maxArea\n";
         }
       }
       if (!s.empty()){ //observer
-          assert(STACK_TOP < height[j] && "push only when current bar is higher than all remainders in stack");
+          assert(STACK_TOP < bar[j] && "push only when current bar is higher than all remainders in stack");
       }
-      s.push(j);
       
+      s.push(j);
       for (auto tmp=s; !tmp.empty(); tmp.pop()){ //observer
-          cout<<" "<<height[tmp.top()]<<"/"<<tmp.top();
+          cout<<" "<<bar[tmp.top()]<<"/"<<tmp.top();
       }
       cout<<"..is the stack after popping all equal/shorter and pushing current bar\n";
     }// inner for-loop
@@ -151,8 +156,8 @@ int testStairs(){
   {1,1,1,1}});
 }
 int main() {
-  test15();
   test11();
+  test15();
   test22();
   test33();
   test44();
