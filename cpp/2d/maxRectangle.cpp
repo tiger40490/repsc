@@ -1,7 +1,7 @@
 /*
 sugg: work out the logic for a simple staircase first. Once clear, work out one more staircase on the right.
 
-why unconditionally save current bar?
+why unconditionally save current bar? Cos it can be part of a growing rectangle
 
 why do we pop() until the remaining bars (in stack) are strictly lower than current bar? cos for such a small bar, the best rectangle is not known yet and could extend to the right beyond current column. Imagine the bar of height 1 covering entire base
 
@@ -94,8 +94,6 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
         if (h * width >= maxArea){ //todo 2
           maxArea = h * width;
           cout<<maxArea<<"sqm is the updated maxArea\n";
-        }else{
-          //cout<<maxArea<<"sqm is the updated maxArea\n";
         }
       }
       if (!s.empty()){ //observer
