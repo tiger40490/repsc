@@ -8,7 +8,8 @@ why do we pop() until the remaining bars (in stack) are strictly lower than curr
 Why O(N) per-row? cos the stack only holds up to N items and each item is pushed and popped exactly once so all stack operations add up to O(N). 
 
 todo 1: assert
-showcase: separate out first inner for-loop so as to focus on the core algo
+showcase: separate out first inner for-loop so as to increase clarify and focus on the core algo
+showcase: before main(), add func prototypes for the test functions, so as to minimize scrolling between algo and main()
 showcase: clever tweaks to enable unit testing of the histogram algo
 */
 #include <iostream>
@@ -121,6 +122,14 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
   assert(exp==maxArea);
   return maxArea;
 }
+int test11();int test15();int test22();int test33();int test44();int test55();int main() {
+  test11();
+  test15();
+  test22();
+  test33();
+  test44();
+  test55();
+}
 int test11(){
   histo(4, {
   {1,1,0,1},
@@ -152,20 +161,12 @@ int test44(){
   {0,1,1,1},
   {1,1,1,1}});
 }
-int testStairs(){
+int test55(){ ///staircase
   histo(6, {
   {0,0,0,1},
   {0,0,1,1},
   {0,1,1,1},
   {1,1,1,1}});
-}
-int main() {
-  test11();
-  test15();
-  test22();
-  test33();
-  test44();
-  testStairs();
 }
 /* Req: see blog. 
 
