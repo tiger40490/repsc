@@ -21,8 +21,8 @@ showcase: clever tweaks to enable unit testing of the histogram algo
 #include <cassert>
 #define STACK_TOP bar[s.top()]
 using namespace std;
-using bsz=size_t; //bar size
-using idx=size_t; //index into array
+using bsz=size_t; //histo bar height
+using idx=size_t; //index into bar array
 using pos=pair<idx, idx>;
 
 int const UNASSIGNED = -1;
@@ -93,8 +93,7 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
         //for the bar of height h, all bars before s.top() are shorter... todo 1
         if (s.empty()){
           //cout<<j<<" = j = width (stack empty)\n";
-          for (auto prevStackItem: vec) assert(prevStackItem >= h); 
-          //if first item was zero, then ....?
+          for (auto prevStackItem: vec) assert(prevStackItem >= h && " if there was any previous bar shorter than h, then empty stack impossible here");
           width = j;
         }else{
           width = j - s.top() - 1;
