@@ -7,7 +7,7 @@ why do we pop() until the remaining bars (in stack) are strictly lower than curr
 
 Why O(N) per-row? cos the stack only holds up to N items and each item is pushed and popped exactly once so all stack operations add up to O(N). 
 
-todo 2: had better be > not >=
+todo 1: assert
 showcase: separate out first inner for-loop so as to focus on the core algo
 showcase: clever tweaks to enable unit testing of the histogram algo
 */
@@ -83,16 +83,22 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
       while (s.size() && STACK_TOP >= bar[j]) {//new bar is no higher than previous bar
         bsz const h = STACK_TOP;
         //cout<<h<<"/"<<s.top()<<" = stack.top() in while-loop\n";
-        s.pop();
+        s.pop(); //only pop a bar at end of its extent
         
-        //tricky: work out width for the rectangle of height h
-        int width = s.empty()?j  :  (j - s.top() - 1);
-        //update maxArea .. observer code
+        ////update maxArea .. observer code
+
+        //very tricky: work out width for the rectangle of height h
+        int width = 0;
+        //for the bar of height h, all bars before s.top() are shorter... todo 1
         if (s.empty()){
           //cout<<j<<" = j = width (stack empty)\n";
-          for (auto prevStackItem: vec)
-            assert(prevStackItem >= h); 
+          for (auto prevStackItem: vec) assert(prevStackItem >= h); 
+          //if first item was zero, then ....?
+          width = j;
+        }else{
+          width = j - s.top() - 1;
         }
+        
         vec.push_back(h);
         if (h * width > maxArea){
           maxArea = h * width;
