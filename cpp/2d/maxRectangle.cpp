@@ -70,7 +70,7 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
         else bar[j] = 0;
       }
     }
-    /* histo bars updated for this row, now compute max rectangle in histogram
+    /* histo bars updated for this row, now compute max rectangle in this snapshot of histogram
     
     Below is the central algo -- the rectangle-in-histogram algo. Too tricky so I set up special test fixture just to uncover the logic.
     */
