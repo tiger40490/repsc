@@ -1,6 +1,6 @@
 /*
-todo: detect cycle in each path
-done: first milestone: print every path from root to leaf
+todo: set up tests
+todo: use hash map
 showcase: 
 */
 #include <iostream>
@@ -50,7 +50,7 @@ vector<int> path;
 
 void preorderDFT(Node * n=&root){
   if (path.end() != find(path.begin(), path.end(), n->data)){
-    cout<<"cycle\n";
+    cout<<n->data<<" <- this node triggered cycle detector\n";
     return;
   }
   path.push_back(n->data);
@@ -63,11 +63,17 @@ void preorderDFT(Node * n=&root){
 }
 void reset(int u, int v){
 }
-int test1(){
-    preorderDFT();
+int test1(Node & parent, Node & newChild, bool isLeft=true){
+#define WHICH_CHILD (isLeft? parent.left: parent.right)
+  Node * orig = WHICH_CHILD;  
+  WHICH_CHILD = &newChild;  
+  preorderDFT();
+  WHICH_CHILD = orig; //now restore  
+#undef WHICH_CHILD
 }
 int main(){
-  test1();
+  test1(_9, _6);
+  preorderDFT();
 }/* Req:  https://bintanvictor.wordpress.com/wp-admin/post.php?post=18950&action=edit
 
 */
