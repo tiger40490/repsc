@@ -1,9 +1,9 @@
 /*
-todo: use hash map
-showcase: 
+showcase: using a vector as stack, as stack is hard to print
 */
 #include <iostream>
 #include <vector>
+#include <set>
 #include <algorithm>
 #include <iomanip>
 #include <cassert>
@@ -46,14 +46,16 @@ struct Node {
     Node root(5, &_4, &_6);
 
 vector<int> path;
+set<int> pathNodes;
 
 pair<int, bool> preorderDFT(Node * n=&root){
   if (n == &root)cout<<"-------------\n";
-  if (path.end() != find(path.begin(), path.end(), n->data)){
+  if (pathNodes.count(n->data)){
     cout<<n->data<<" <- this node triggered cycle detector\n";
     return {n->data, true}; //true to indicate cycle detected
   }
   path.push_back(n->data);
+  pathNodes.insert(n->data);
   ss<<path;
   
   if (n->left) { 
@@ -66,10 +68,12 @@ pair<int, bool> preorderDFT(Node * n=&root){
   }
   auto popped = path.back();
   path.pop_back();
+  pathNodes.erase(popped);
   return {0, false};
 }
 int test1(int expected, Node & parent, Node & newChild, bool isLeft=true){
   path.clear();
+  pathNodes.clear();
 #define WHICH_CHILD (isLeft? parent.left: parent.right)
   Node * orig = WHICH_CHILD;  
   WHICH_CHILD = &newChild;  
