@@ -48,32 +48,44 @@ struct Node {
 
 vector<int> path;
 
-void preorderDFT(Node * n=&root){
+pair<int, bool> preorderDFT(Node * n=&root){
+  if (n == &root)cout<<"-------------\n";
   if (path.end() != find(path.begin(), path.end(), n->data)){
     cout<<n->data<<" <- this node triggered cycle detector\n";
-    return;
+    return {n->data, true}; //true to indicate cycle detected
   }
   path.push_back(n->data);
   ss<<path;
   
-  if (n->left) { preorderDFT(n->left); }
-  if (n->right){ preorderDFT(n->right); }
+  if (n->left) { 
+    auto ret = preorderDFT(n->left);
+    if (ret.second) return ret; 
+  }
+  if (n->right){ 
+    auto ret = preorderDFT(n->right);
+    if (ret.second) return ret; 
+  }
   auto popped = path.back();
   path.pop_back();
+  return {0, false};
 }
-void reset(int u, int v){
-}
-int test1(Node & parent, Node & newChild, bool isLeft=true){
+int test1(int expected, Node & parent, Node & newChild, bool isLeft=true){
+  path.clear();
 #define WHICH_CHILD (isLeft? parent.left: parent.right)
   Node * orig = WHICH_CHILD;  
   WHICH_CHILD = &newChild;  
-  preorderDFT();
+  auto result = preorderDFT();
   WHICH_CHILD = orig; //now restore  
 #undef WHICH_CHILD
+  assert (expected == result.first);
+  if (expected > 0)
+    assert (result.second && "detector flag should be turned on");
 }
 int main(){
-  test1(_9, _6);
-  preorderDFT();
+  assert (false == preorderDFT().second);  
+  test1(0, _3, _6, false); //set right child to _6
+  test1(3, _3, _3); //left child is self
+  test1(6, _9, _6);
 }/* Req:  https://bintanvictor.wordpress.com/wp-admin/post.php?post=18950&action=edit
 
 */
