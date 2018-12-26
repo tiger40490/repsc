@@ -3,11 +3,10 @@ sugg: work out the logic for a simple staircase first. Once clear, work out one 
 
 why unconditionally save current bar? Cos it can be part of a growing rectangle
 
-why do we pop() until the remaining bars (in stack) are strictly lower than current bar? cos for such a small bar, the best rectangle is not known yet and could extend to the right beyond current column. Imagine the bar of height 1 covering entire base
+why do we pop() until the remaining bars (in stack) are strictly lower than current bar? cos for such a small bar, the "run" is not over yet. 
 
 Why O(N) per-row? cos the stack only holds up to N items and each item is pushed and popped exactly once so all stack operations add up to O(N). 
 
-todo 1: assert
 showcase: separate out first inner for-loop so as to enhance clarify and focus on the core algo
 showcase: before main(), add func prototypes for the test functions, so as to minimize scrolling between algo and main()
 showcase: clever tweaks to enable unit testing of the histogram algo
