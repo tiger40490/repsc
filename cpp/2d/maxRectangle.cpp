@@ -19,7 +19,7 @@ showcase: clever tweaks to enable unit testing of the histogram algo
 #include <stack>
 #include <iomanip>
 #include <cassert>
-#define STACK_TOP bar[s.top()]
+#define STACK_TOP bar[s.back()]
 using namespace std;
 using bsz=size_t; //histo bar height
 using idx=size_t; //index into bar array
@@ -74,7 +74,7 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
     */
     //bar = {33,11,22,33,22}; bar.push_back(0);
     cout<<bar;
-    stack<idx> s;
+    list<idx> s;
     vector<bsz> vec;
     for (idx j = 0; j < bar.size(); ++j) {
       //cout<<"\n  == "<<j<<" == j; bar[j] = "<<bar[j]<<endl;
@@ -82,7 +82,7 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
       while (s.size() && STACK_TOP >= bar[j]) {//new bar is no higher than previous bar
         bsz const h = STACK_TOP;
         //cout<<h<<"/"<<s.top()<<" = stack.top() in while-loop\n";
-        s.pop(); //only pop a bar at end of its extent
+        s.pop_back(); //only pop a bar at end of its extent
         
         ////update maxArea .. observer code
 
@@ -94,7 +94,7 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
           for (auto prevStackItem: vec) assert(prevStackItem >= h && " if there was any previous bar shorter than h, then empty stack impossible here");
           width = j;
         }else{
-          width = j - s.top() - 1;
+          width = j - s.back() - 1;
         }
         
         vec.push_back(h);
@@ -107,9 +107,9 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
           assert(STACK_TOP < bar[j] && "push only when current bar is higher than all remainders in stack");
       }
       
-      s.push(j);
-      for (auto tmp=s; tmp.size(); tmp.pop()){ //observer
-          cout<<" "<<bar[tmp.top()]<<"/"<<tmp.top();
+      s.push_back(j);
+      for (auto tmp=s; tmp.size(); tmp.pop_back()){ //observer
+          cout<<" "<<bar[tmp.back()]<<"/"<<tmp.back();
       }
       cout<<"..is the stack after popping all equal/shorter and pushing current bar\n";
     }// inner for-loop
