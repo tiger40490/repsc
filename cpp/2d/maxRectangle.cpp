@@ -8,7 +8,7 @@ why do we pop() until the remaining bars (in stack) are strictly lower than curr
 Why O(N) per-row? cos the stack only holds up to N items and each item is pushed and popped exactly once so all stack operations add up to O(N). 
 
 todo 1: assert
-showcase: separate out first inner for-loop so as to increase clarify and focus on the core algo
+showcase: separate out first inner for-loop so as to enhance clarify and focus on the core algo
 showcase: before main(), add func prototypes for the test functions, so as to minimize scrolling between algo and main()
 showcase: clever tweaks to enable unit testing of the histogram algo
 */
@@ -64,11 +64,9 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
   vector<bsz> bar(n, 0);
   
   for (int i = 0; i < rcnt; ++i) {
-    for (idx j = 0; j <= lastColIdx+1; ++j) {
-      if (j <= lastColIdx) { //up to last real column. Fake col untouched
+    for (idx j = 0; j <= lastColIdx; ++j) {//up to last real column. Fake col untouched
         if (matrix[i][j] == 1) bar[j] += 1;
         else bar[j] = 0;
-      }
     }
     /* histo bars updated for this row, now compute max rectangle in this snapshot of histogram
     
@@ -78,7 +76,7 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
     cout<<bar;
     stack<idx> s;
     vector<bsz> vec;
-    for (idx j = 0; j <= bar.size()-1; ++j) {
+    for (idx j = 0; j < bar.size(); ++j) {
       //cout<<"\n  == "<<j<<" == j; bar[j] = "<<bar[j]<<endl;
       
       while (s.size() && STACK_TOP >= bar[j]) {//new bar is no higher than previous bar
