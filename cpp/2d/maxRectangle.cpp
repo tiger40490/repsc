@@ -108,8 +108,9 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
       }
       
       s.push_back(j);
-      for (auto tmp=s; tmp.size(); tmp.pop_back()){ //observer
-          cout<<" "<<bar[tmp.back()]<<"/"<<tmp.back();
+      //for (auto tmp=s; tmp.size(); tmp.pop_back()){ //observer
+      for (auto const & tmp: s){ //observer
+          cout<<" "<<bar[tmp]<<"/"<<tmp;
       }
       cout<<"..is the stack after popping all equal/shorter and pushing current bar\n";
     }// inner for-loop
