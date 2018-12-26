@@ -1,5 +1,4 @@
 /*
-todo: set up tests
 todo: use hash map
 showcase: 
 */
@@ -84,8 +83,9 @@ int test1(int expected, Node & parent, Node & newChild, bool isLeft=true){
 int main(){
   assert (false == preorderDFT().second);  
   test1(0, _3, _6, false); //set right child to _6
-  test1(3, _3, _3); //left child is self
+  test1(3, _3, _3); //set left child to self
   test1(6, _9, _6);
+  test1(5, _3, root, false); //set right child to root
 }/* Req:  https://bintanvictor.wordpress.com/wp-admin/post.php?post=18950&action=edit
 
 */
