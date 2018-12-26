@@ -1,9 +1,13 @@
 /*
-showcase: using a vector as stack, as stack is hard to print
+Note PRE-order DFT is the only choice for my design.
+
+O(N) time as every node is visited 3 times?
+
+showcase: using a vector as stack, since stack is hard to print
 */
 #include <iostream>
 #include <vector>
-#include <set>
+#include <unordered_set>
 #include <algorithm>
 #include <iomanip>
 #include <cassert>
@@ -46,7 +50,7 @@ struct Node {
     Node root(5, &_4, &_6);
 
 vector<int> path;
-set<int> pathNodes;
+unordered_set<int> pathNodes;
 
 pair<int, bool> preorderDFT(Node * n=&root){
   if (n == &root)cout<<"-------------\n";
