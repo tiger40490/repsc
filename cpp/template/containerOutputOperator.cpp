@@ -31,9 +31,14 @@ template<typename T,             int min_width=8> ostream & operator<<(ostream &
    os<<endl;
    return os;
 }
+template<typename T,             int min_width=2> ostream & operator<<(ostream & os, list<T> const & c){
+   for(auto const & it: c){ os<<setw(min_width)<<it<<" "; }
+   os<<endl;
+   return os;
+}
 int main(){
-  //vector<double> li={3.1, 5,2,9};
-  vector<string> li={"dabao", "meimei", "princess"};
+  list<double> li={3.1, 5,2,9};
+  vector<string> vec={"dabao", "meimei", "princess"};
   Map<int, int> tm={{1,11}, {2,22}};
-  ss<<li<<tm;
+  ss<<li<<vec<<tm;
 }
