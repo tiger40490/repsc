@@ -3,7 +3,15 @@ showcase functor passed as arg
 showcase next() builtin function
 showcase how to get any element from a set
 showcase    oldBatch, newBatch = newBatch, set()
+
+todo: assert on # abbr 
+todo: add test cases
+
+Q: Can we make do without a hashtable? I think it would be much longer than my 7-line solution
+
+But why is the longest-first not relying on a hashtable?
 '''
+retLF = set()
 def genLongestFirst(original, func=None, isStrict=False):
   ''' This longest-first algo is useful for identifying the longest abbreviation among 99 potential abbreviations 
 
@@ -15,6 +23,7 @@ def genLongestFirst(original, func=None, isStrict=False):
   * I try to minimize memory allocation in the innermost loop
   '''  
   print ' v ---  starting longestFirst --  v'
+  retLF.clear()
   if func and not isStrict:
     func(original)
   oldBatch = set([original]) # this set will hold longer abbreviations
@@ -46,6 +55,7 @@ def genLongestFirst(original, func=None, isStrict=False):
     assert cnt+2 == 2**len(original), 'count of abbreviations incorrect'
   if func and not isStrict:
     func('')
+  print 'longest-first algo found', len(retLF), 'unique abbreviations:', retLF
 
 def genShortestFirst(original):
   '''Supose we have scanned 3 chars in the original, and we have a collection of N abbreviations. 
@@ -54,20 +64,23 @@ def genShortestFirst(original):
   '''  
   growing=set(['']) # start with a single empty string
   for ch in original: # I would now avoid this in favor of the more common for i in range(len(original))
-      tmp = []
+      tmp = list()
       for abbr in growing:
         tmp.append(abbr+ch)
       growing.update(tmp)
       print str(len(growing))+'-element', growing
   if len(original) == len(set(original)):
     assert len(growing) == 2**len(original)
+  return growing
 
 def dummyFunc(abbr):
+  retLF.add(abbr)
   print ':', abbr
 def main():
-  orig = 'aab'
-  genShortestFirst(orig)
+  orig = 'aaab'
+  growing = genShortestFirst(orig)
   genLongestFirst(orig, dummyFunc)
+  assert( len(retLF) == len(growing))
 if __name__ == '__main__': main()
 '''Req: https://wp.me/p74oew-5V3 describes the longest-first
 
