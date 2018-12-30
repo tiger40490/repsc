@@ -1,6 +1,6 @@
 /*
 todo: simplify before creating the iterative solution
-showcase template type alias for a container
+showcase: template type alias for a container
 
 //As a Recursive solution , this one suffer from stack overflow
 //but it's able to print out all abbreviations in ascending order,

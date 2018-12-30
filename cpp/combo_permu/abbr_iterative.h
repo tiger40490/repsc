@@ -1,5 +1,5 @@
-/*Will implement in python first
-
+/*
+implemented in python already, but let's try using the abbr_ascendRecursive idea
 */
 
 std::list<std::deque<char> > const & recurs(std::deque<char> const & pool){
