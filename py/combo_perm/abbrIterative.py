@@ -56,6 +56,9 @@ def genLongestFirst(original, func=None, isStrict=False):
   if func and not isStrict:
     func('')
   print 'longest-first algo found', len(retLF), 'unique abbreviations:', retLF
+def dummyFunc(abbr):
+  retLF.add(abbr)
+  print ':', abbr
 
 def genShortestFirst(original):
   '''Supose we have scanned 3 chars in the original, and we have a collection of N abbreviations. 
@@ -73,9 +76,6 @@ def genShortestFirst(original):
     assert len(growing) == 2**len(original)
   return growing
 
-def dummyFunc(abbr):
-  retLF.add(abbr)
-  print ':', abbr
 def main():
   orig = 'aaab'
   growing = genShortestFirst(orig)
