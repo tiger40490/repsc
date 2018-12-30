@@ -39,8 +39,8 @@ template<typename T> int show(outer<std::deque<T> > const & p){
     if (v.size() ){
       for(int j=0; j<v.size(); ++j) ss<<v[j];
     }else ss<<"<empty>";
-    assert(last < ss.str());
     std::cout<<ss.str()<<std::endl; //one abbr
+    assert(last < ss.str());
     last = ss.str();
     ss.str("");
   }
