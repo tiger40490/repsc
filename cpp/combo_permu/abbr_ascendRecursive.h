@@ -1,4 +1,6 @@
 /*
+todo: fix bug with dupe chars. My python solutions all use hashtable. Let's put a hashtable into recurs()
+
 todo: simplify before creating the iterative solution
 showcase: template type alias for a container
 
