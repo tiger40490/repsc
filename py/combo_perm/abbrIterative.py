@@ -4,7 +4,6 @@ showcase next() builtin function
 showcase how to get any element from a set
 showcase    oldBatch, newBatch = newBatch, set()
 
-todo: assert on # abbr 
 todo: add test cases
 
 Q: Can we make do without a hashtable? I think it would be much longer than my 7-line solution
@@ -58,7 +57,7 @@ def genLongestFirst(original, func=None, isStrict=False):
   print 'longest-first algo found', len(retLF), 'unique abbreviations:', retLF
 def dummyFunc(abbr):
   retLF.add(abbr)
-  print ':', abbr
+  print len(retLF),':', abbr
 
 def genShortestFirst(original):
   '''Supose we have scanned 3 chars in the original, and we have a collection of N abbreviations. 
@@ -76,11 +75,12 @@ def genShortestFirst(original):
     assert len(growing) == 2**len(original)
   return growing
 
-def main():
-  orig = 'aaab'
+def test1(orig):
   growing = genShortestFirst(orig)
   genLongestFirst(orig, dummyFunc)
   assert( len(retLF) == len(growing))
+def main():
+  test1('aaab')
 if __name__ == '__main__': main()
 '''Req: https://wp.me/p74oew-5V3 describes the longest-first
 
