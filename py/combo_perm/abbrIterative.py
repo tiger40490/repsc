@@ -14,6 +14,7 @@ def genLongestFirst(original, func=None, isStrict=False):
   * relies on hash table. 
   * I try to minimize memory allocation in the innermost loop
   '''  
+  print ' v ---  starting longestFirst --  v'
   if func and not isStrict:
     func(original)
   oldBatch = set([original]) # this set will hold longer abbreviations
@@ -21,7 +22,7 @@ def genLongestFirst(original, func=None, isStrict=False):
   cnt=0
   sz=len(original)
   while sz > 1:
-    print '... one with abbr of Length', sz, '.. Now generating Length', sz-1
+    print '... done with abbr of Length', sz, '.. Now generating Length', sz-1
     
     ## Section 1: Below for-loop is the actul algo, very brief:)
     for oldabbr in oldBatch:
@@ -57,15 +58,16 @@ def genShortestFirst(original):
       for abbr in growing:
         tmp.append(abbr+ch)
       growing.update(tmp)
-      print len(growing), growing
+      print str(len(growing))+'-element', growing
   if len(original) == len(set(original)):
     assert len(growing) == 2**len(original)
 
 def dummyFunc(abbr):
   print ':', abbr
 def main():
-  genShortestFirst('abcde')
-  genLongestFirst('abcde', dummyFunc)
+  orig = 'aab'
+  genShortestFirst(orig)
+  genLongestFirst(orig, dummyFunc)
 if __name__ == '__main__': main()
 '''Req: https://wp.me/p74oew-5V3 describes the longest-first
 
