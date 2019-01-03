@@ -1,5 +1,6 @@
 /*
 showcase: 
+what if pivot == max element? Can we put all pivot-value items together, so as to count the occurence? Then we can return index of the first among them
 */
 #include <iostream>
 #include <iomanip>
@@ -16,7 +17,7 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    return os;
 }
 vector<int> arr; //global var
-/* return index of first element that exceeds pivot
+/* return index of first element that exceeds pivot, or -1 if pivot too high
 * Only one swap for each wrong pair. (I used to think 2 swaps required on each "occasion"
 */
 int partitionFwd(int const pivotVal, idx le, idx const ri){
@@ -25,7 +26,7 @@ int partitionFwd(int const pivotVal, idx le, idx const ri){
   for (;;++le){
     if (le == ri) {
       cout<<"pivot too high :( \n";
-      return -1; //pivotVal skyhigh
+      return -1; 
     }
     if (arr[le] > p) {
       //cout<<arr<<le <<" <-- back ptr initialized.. Now scan fwd from there..."<<endl;
@@ -34,6 +35,26 @@ int partitionFwd(int const pivotVal, idx le, idx const ri){
   }
   for (idx front=le+1; front <= ri; ++front){
     if (arr[front] > p) continue;
+    swap(arr[le], arr[front]);
+    ++le;
+    assert(arr[le] > p);
+  }
+  cout<<arr<<le<<" = ret from partitionFwd\n";
+  return le; //index of first element exceeding p
+}
+int partitionFwdNotInUse(int const pivotVal, idx const le, idx ri){
+/* return index of last element that's below pivot
+*/  
+  int const & p = pivotVal;
+  cout<<arr<<le<<" = le; ri = "<<ri<<endl;
+  for (;;--ri){
+    assert (le < ri && "");    
+    if (arr[ri] < p) {
+  	  break;//right ptr initialized at first item below pivot
+	  }
+  }
+  for (idx front=ri-1; le <= front; --front){
+    if (arr[front] < p) continue; //le remains the favorite candidate
     swap(arr[le], arr[front]);
     ++le;
     assert(arr[le] > p);
@@ -64,6 +85,6 @@ int wrapper(vector<int> v){
   return 1; //harded for now
 }
 int main(){
-  assert(1 == wrapper({4,2,2,4,2,4,7,7,7,5,5,5,3,3,3,8,8,8,6,6,6,1}));
+  assert(1 == wrapper({8,4,2,2,4,2,4,7,7,7,5,5,5,3,3,3,8,8,6,6,6,1}));
 }/*Req: Given array of integers, every element appears three times except for one, which appears exactly once. Find that single one in a linear runtime. Could you implement it without using extra memory?
 */
