@@ -136,6 +136,7 @@ int wrapper(float const pivotVal, vector<int> v, idx le=0, idx ri=0){
   return ret;
 }
 int main(){
+  assert(-1 == wrapper(19, {7,1,19,9,5,4}));
   assert(8 == wrapper(3.3, {4,-2,12,7,1,-7,5,-3,0,3,9,-6,4,8,2,6,9,5}));
   assert(pii(7,14) == partition2(2.2, 7.7));
   assert(6 == wrapper(5.2, {7,4,1,9,9,5,4,9,5,7,11}, 1,8));
