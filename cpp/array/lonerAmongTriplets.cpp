@@ -21,10 +21,14 @@ vector<int> arr; //global var
 */
 int partitionFwd(int const pivotVal, idx le, idx const ri){
   int const & p = pivotVal;
+  cout<<arr<<le<<" = le; ri = "<<ri<<endl;
   for (;;++le){
-    if (le == ri) return -1; //pivotVal skyhigh
+    if (le == ri) {
+      cout<<"pivot too high :( \n";
+      return -1; //pivotVal skyhigh
+    }
     if (arr[le] > p) {
-      cout<<arr<<le <<" <-- back ptr initialized.. Now scan fwd from there..."<<endl;
+      //cout<<arr<<le <<" <-- back ptr initialized.. Now scan fwd from there..."<<endl;
   	  break;
 	  }
   }
@@ -43,14 +47,18 @@ int wrapper(vector<int> v){
   auto sz = v.size();
   assert(sz > 3);
   assert(sz % 3 == 1);
-  int ret = 0;
-  for(int le=0, ri=sz-1; ri-le>1;){
-    ret = partitionFwd(v[0], le, ri);
-    break; //just for now
+  int ret = 0, le=0, ri=sz-1;
+  for(; ri-le>1;){
+    ret = partitionFwd(v[le], le, ri);
+    //break; //just for now
     if (ret % 3){ //discard right segment
-    }else{ //discard left segment
+      ri=ret-1;
+    }else{ //discard left segment eg: 0 1 2 ret=3
+      le=ret;
     }
   }
+  //assert(le==ri);
+  ret = arr[le];
   cout<<ret<<" = ret\n\n";
   arr=v; //for subsequent test
   return 1; //harded for now
