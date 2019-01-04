@@ -1,6 +1,8 @@
-//showcase: std::swap on 2 vector elements
-//showcase: c++11 typedef for pair<int,int> then calling its default ctor
-/*todo: implement 2-pivot partition based on the fwd scanning. p1, p2 are the 2 pivot values. 
+/*
+todo: fix wrapper to return a pair and assert on both
+showcase: std::swap on 2 vector elements
+showcase: c++11 typedef for pair<int,int> then calling its default ctor
+todo: implement 2-pivot partition based on the fwd scanning. p1, p2 are the 2 pivot values. 
 */
 #include <iostream>
 #include <iomanip>
@@ -77,26 +79,35 @@ pii partition2(float const pivotVal1, float const pivotVal2){
   cout<<arr<<le<<" < - > "<<ri <<" <-- both ptr initialized.. Now scan fwd from le..."<<endl;
 #endif
 }
-/* for both partition algos:
-* return index of first element that exceeds pivot, or -1 if pivot too high
+/* return index of first element that exceeds pivot, or -1 if pivot too high
+2nd returned value is number of elements equal to pivot
 * Only one swap for each wrong pair. (I used to think 2 swaps required on each "occasion"
 */
-int partitionFwd(float const pivotVal, idx le, idx const ri){
+pii partitionFwd(float const pivotVal, idx le, idx const ri){
   float const & p = pivotVal;
   for (;;++le){
-    if (le == ri) return -1; //pivotVal skyhigh
-    if (arr[le] > p) {
-      cout<<arr<<le <<" <-- back ptr initialized.. Now scan fwd from there..."<<endl;
+    if (le == ri) return {-1,0}; //pivotVal skyhigh
+    if (arr[le] >= p) {
+      cout<<arr<<le <<" <-- back ptr initialized to first equalOrHigher item.. Now scan fwd from there..."<<endl;
   	  break;
 	  }
   }
+  size_t frq = (ar[le]==p)?1:0;
   for (idx front=le+1; front <= ri; ++front){
-    if (arr[front] > p) continue;
-    swap(arr[le], arr[front]);
+    auto & cur = arr[front];
+    if (cur > p) continue;//ok
+    if (cur == p){
+      auto kk = arr[le+frq];
+      assert(kk > p);
+      assert(arr[le+frq-1] <= p;
+      swap(kk, cur);
+      ++frq;
+    }else{
+    swap(arr[le], cur);
     ++le;
     assert(arr[le] > p);
   }
-  return le; //index of first element exceeding p
+  return {le+frq,frq}; //index of first element exceeding p
 }
 /*different from familiar qsort partition algo. Too complicated in implementation. Not worth memorizing.
 */
@@ -125,26 +136,28 @@ int partition2oppScanner(float const pivotVal, idx le, idx ri){
     --ri;
   }
 }
-int wrapper(float const pivotVal, vector<int> v, idx le=0, idx ri=0){
+pii wrapper(float const pivotVal, vector<int> v, idx le=0, idx ri=0){
   arr=v;
   if (ri==0) ri = v.size()-1;
   cout<<"  --- v -- v -- \n"<<arr<<"pivotVal = "<<pivotVal<<" , le = "<<le<<" , ri = "<<ri<<endl;
-  auto ret = partition2oppScanner(pivotVal, le, ri);
-  assert(ret == partitionFwd(pivotVal, le, ri));
-  cout<<arr<<ret<<" = ret from both algos\n\n";
+  auto ret = partitionFwd(pivotVal, le, ri);
+  assert(ret.first == partition2oppScanner(pivotVal, le, ri));
+  cout<<arr<<ret.first<<" = ret from both algos\n\n";
   arr=v; //for subsequent test
   return ret;
 }
 int main(){
-  assert(-1 == wrapper(19, {7,1,19,9,5,4}));
-  assert(8 == wrapper(3.3, {4,-2,12,7,1,-7,5,-3,0,3,9,-6,4,8,2,6,9,5}));
+#ifdef aaa  
+  assert(pii({-1,0}) == wrapper(19, {7,1,19,9,5,4}));
+  assert(pii({8,0} == wrapper(3.3, {4,-2,12,7,1,-7,5,-3,0,3,9,-6,4,8,2,6,9,5}));
   assert(pii(7,14) == partition2(2.2, 7.7));
-  assert(6 == wrapper(5.2, {7,4,1,9,9,5,4,9,5,7,11}, 1,8));
-  assert(-1== wrapper(15.1, {7,1,9,9,5,4,9,5,7}));
-  assert(6 == wrapper(5.1, {4,3,7,1,9,9,5,4,9,5,7}));
-  assert(4 == wrapper(5, {7,1,9,9,5,4,9,5,7}));
-  assert(-1 == wrapper(5, {5,5,5,5,5,5}));
-  assert(0 == wrapper(5, {6,6,6,6}));
+  assert(pii({6,0} == wrapper(5.2, {7,4,1,9,9,5,4,9,5,7,11}, 1,8));
+  assert(pii({-1,0} == wrapper(15.1, {7,1,9,9,5,4,9,5,7}));
+  assert(pii({6,0} == wrapper(5.1, {4,3,7,1,9,9,5,4,9,5,7}));
+  assert(pii({4,2} == wrapper(5, {7,1,9,9,5,4,9,5,7}));
+  assert(pii({-1,6} == wrapper(5, {5,5,5,5,5,5}));
+  assert(pii({0,0} == wrapper(5, {6,6,6,6}));
+#endif 
 }/*Req: partition an int array using a float (can be an integer) pivot value
 
 i feel this challenge is more practical than most Leetcode problems.
