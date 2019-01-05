@@ -83,30 +83,30 @@ pii partition2(float const pivotVal1, float const pivotVal2){
 2nd returned value is number of elements equal to pivot
 * Only one swap for each wrong pair. (I used to think 2 swaps required on each "occasion"
 */
-pii partitionFwd(float const pivotVal, idx le, idx const ri){
-  float const & p = pivotVal;
+pii partitionFwd(float const & pivotVal, idx le, idx const & ri){
+  float const & p = pivotVal; //abbr alias
   
   for (;;++le){
-    if (le == ri) return {-1,0}; //pivotVal skyhigh
     if (arr[le] >= p) {
       cout<<arr <<" pivotVal = "<<p<<";"<<le <<" <-- back ptr initialized to first item >= pivot .. Now scan fwd from there..."<<endl;
   	  break;
 	  }
+    if (le == ri) return {-1,0}; //pivotVal skyhigh
   }
-  size_t frq = (arr[le]==p)?1:0;
+  size_t frq = (arr[le]==p);
   for (idx front=le+1; front <= ri; ++front){
     auto & cur = arr[front];
     if (cur > p) continue;//ok
     if (cur == p){
       cout<<arr<<le<<" = le; =b4=.. frq = "<<frq<<"; front = "<<front<<endl;
       auto & kk = arr[le+frq];
-      assert(kk > p);
+      assert(kk >= p);
       assert(arr[le+frq-1] <= p);
       swap(kk, cur);
       ++frq;
       cout<<arr<<le<<" = le; =af=.. frq = "<<frq<<endl;
       
-      assert(arr[front] > p); //post condition
+      assert(arr[front] >= p); //post condition
     }else{ //cur too small
       swap(arr[le+frq], cur);
       swap(arr[le+frq], arr[le]);
@@ -158,6 +158,8 @@ pii wrapper(float const pivotVal, vector<int> v, idx le=0, idx ri=0){
   return ret;
 }
 int main(){
+  assert(pii({-1,1}) == wrapper(5, {2,2,5}));
+  assert(pii({-1,6}) == wrapper(5, {5,5,5,5,5,5}));
   assert(pii({-1,1}) == wrapper(19, {7,1,19,9,5,4}));
   assert(pii({4,2}) == wrapper(5, {7,1,9,9,5,4,9,5,7}));
   assert(pii({8,0}) == wrapper(3.3, {4,-2,12,7,1,-7,5,-3,0,3,9,-6,4,8,2,6,9,5}));
@@ -166,7 +168,6 @@ int main(){
   assert(pii({6,0}) == wrapper(5.1, {4,3,7,1,9,9,5,4,9,5,7}));
   assert(pii({0,0}) == wrapper(5, {6,6,6,6}));
 #ifdef aaa  
-  assert(pii({-1,6}) == wrapper(5, {5,5,5,5,5,5}));
   assert(pii(7,14) == partition2(2.2, 7.7));
 #endif 
 }/*Req: partition an int array using a float (can be an integer) pivot value
