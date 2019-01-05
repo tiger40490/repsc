@@ -1,8 +1,9 @@
 /*
-showcase: const-ref-vector parameter can receive an init-list, but const-is needed. A temp object is created on the stack.
-showcase: std::swap on 2 vector elements by reference
+todo: simplify fwd algo
+todo: improve 2-pivot partition
+showcase: const-ref-vector parameter can receive an init-list, but const is needed. A temp object is probably created on the stack.
+showcase: std::swap, by-reference, 2 vector elements .. by reference!
 showcase: c++11 typedef for pair<int,int> then calling its default ctor
-todo: improve 2-pivot partition 
 */
 #include <iostream>
 #include <iomanip>
@@ -82,7 +83,7 @@ pii partition2(float const pivotVal1, float const pivotVal2){
 /* return index of first element exceeding pivot, or -1 if pivot too high
 2nd returned value is number of elements equal to pivot
 */
-pii partitionFwd(float const & pivotVal, idx le, idx const & ri){
+pii partitionFwdLinearTime(float const & pivotVal, idx le, idx const & ri){
   float const & p = pivotVal; //abbr alias
   
   for (;;++le){
@@ -155,7 +156,7 @@ pii wrapper(float const pivotVal, vector<int> const & v, idx le=0, idx ri=0){
   arr=v;
   if (ri==0) ri = v.size()-1;
   cout<<"  --- v -- v -- \n"<<arr<<"pivotVal = "<<pivotVal<<" , le = "<<le<<" , ri = "<<ri<<endl;
-  auto ret = partitionFwd(pivotVal, le, ri);
+  auto ret = partitionFwdLinearTime(pivotVal, le, ri);
   assert(ret.first == partition2oppScanner(pivotVal, le, ri));
   cout<<arr<<ret.first<<" = ret from both algos\n\n";
   arr=v; //for subsequent test
@@ -175,7 +176,7 @@ int main(){
   //testing 2-pivot partitioning
   assert(pii({8,0}) == wrapper(3.3, {4,-2,12,7,1,-7,5,-3,0,3,9,-6,4,8,2,6,9,5}));
   assert(pii(7,14) == partition2(2.2, 7.7));
-}/*Req: partition an int array using a float (can be an integer) pivot value
+}/*Req: partition an int array using a float pivot value, and return the count of items equal to pivot value
 
 i feel this challenge is more practical than most Leetcode problems.
 */
