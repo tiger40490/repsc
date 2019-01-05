@@ -1,5 +1,4 @@
 /*
-todo: simplify fwd algo
 todo: improve 2-pivot partition
 showcase: const-ref-vector parameter can receive an init-list, but const is needed. A temp object is probably created on the stack.
 showcase: std::swap, by-reference, 2 vector elements .. by reference!
@@ -80,6 +79,8 @@ pii partition2(float const pivotVal1, float const pivotVal2){
 }
 /* return index of first element exceeding pivot, or -1 if pivot too high
 2nd returned value is number of elements equal to pivot
+
+This algo is short (ignoring asserts) but intense and tiring on the mind due to large number (about 3) of stateful variables and many (about 5) corner cases
 */
 pii partitionFwdLinearTime(float const & pivotVal, idx const & le, idx const & ri){
   float const & p = pivotVal; //abbr alias
@@ -93,9 +94,9 @@ pii partitionFwdLinearTime(float const & pivotVal, idx const & le, idx const & r
   cout<<arr<<" pivotVal = "<<p<<"; frq = "<<frq<<"; "<<back <<" <-- back ptr initialized to first item >= pivot .. Now scan fwd from there..."<<endl;
   
   for (idx front=back+1; front <= ri; ++front){
-    auto & cur = arr[front];
-    if (cur > p) continue;//ok
-    auto & bey = arr[back+frq]; //beyond the items =< p
+    auto & cur = arr[front]; //reference needed for std::swap
+    if (cur > p) continue;
+    auto & bey = arr[back+frq]; //beyond all items =< p
     if (cur == p){
       if (back+frq == front) {
         ++frq;    
@@ -105,15 +106,15 @@ pii partitionFwdLinearTime(float const & pivotVal, idx const & le, idx const & r
       assert(back+frq < front);
       assert(bey >= p);
       assert(back+frq == 0 || arr[back+frq-1] <= p);
-      swap(bey, cur);
+      swap(bey, cur); //!
       ++frq;
       //cout<<arr<<back<<" = back; =af=.. frq = "<<frq<<endl;
-      
       assert(arr[front] >= p); //post condition
       continue;
-    }else{ //cur too small
-      swap(bey, cur);
-      swap(bey, arr[back]);      
+    }else{ //cur too low
+      if (bey != cur) swap(bey, cur); //might refer to the same item
+      assert(bey < p);
+      swap(bey, arr[back]);
       ++back;
       assert(arr[back] >= p);
       assert(arr[back-1] <p);
