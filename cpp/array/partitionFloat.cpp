@@ -1,8 +1,8 @@
 /*
-todo: receive a vector by const ref
+showcase: const-ref-vector parameter can receive an init-list, but const-is needed. A temp object is created on the stack.
 showcase: std::swap on 2 vector elements by reference
 showcase: c++11 typedef for pair<int,int> then calling its default ctor
-todo: implement 2-pivot partition based on the fwd scanning. p1, p2 are the 2 pivot values. 
+todo: improve 2-pivot partition 
 */
 #include <iostream>
 #include <iomanip>
@@ -151,7 +151,7 @@ int partition2oppScanner(float const pivotVal, idx le, idx ri){
     --ri;
   }
 }
-pii wrapper(float const pivotVal, vector<int> v, idx le=0, idx ri=0){
+pii wrapper(float const pivotVal, vector<int> const & v, idx le=0, idx ri=0){
   arr=v;
   if (ri==0) ri = v.size()-1;
   cout<<"  --- v -- v -- \n"<<arr<<"pivotVal = "<<pivotVal<<" , le = "<<le<<" , ri = "<<ri<<endl;
