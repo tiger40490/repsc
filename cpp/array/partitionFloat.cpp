@@ -83,47 +83,48 @@ pii partition2(float const pivotVal1, float const pivotVal2){
 /* return index of first element exceeding pivot, or -1 if pivot too high
 2nd returned value is number of elements equal to pivot
 */
-pii partitionFwdLinearTime(float const & pivotVal, idx le, idx const & ri){
+pii partitionFwdLinearTime(float const & pivotVal, idx const & le, idx const & ri){
   float const & p = pivotVal; //abbr alias
+  idx back = le;
   
-  for (;;++le){
-    if (arr[le] >= p) {
-      cout<<arr <<" pivotVal = "<<p<<";"<<le <<" <-- back ptr initialized to first item >= pivot .. Now scan fwd from there..."<<endl;
+  for (;;++back){
+    if (arr[back] >= p) {
+      cout<<arr <<" pivotVal = "<<p<<";"<<back <<" <-- back ptr initialized to first item >= pivot .. Now scan fwd from there..."<<endl;
   	  break;
 	  }
-    if (le == ri) return {-1,0}; //pivotVal skyhigh
+    if (back == ri) return {-1,0}; //pivotVal skyhigh
   }
-  size_t frq = (arr[le]==p); //frq of pivotVal occurence
-  for (idx front=le+1; front <= ri; ++front){
+  size_t frq = (arr[back]==p); //frq of pivotVal occurence
+  for (idx front=back+1; front <= ri; ++front){
     auto & cur = arr[front];
     if (cur > p) continue;//ok
-    auto & bey = arr[le+frq]; //beyond the items =< p
+    auto & bey = arr[back+frq]; //beyond the items =< p
     if (cur == p){
-      if (le+frq == front) {
+      if (back+frq == front) {
         ++frq;    
         continue;
       }
-      //cout<<arr<<le<<" = le; =b4=.. frq = "<<frq<<"; front = "<<front<<endl;
-      assert(le+frq < front);
+      //cout<<arr<<back<<" = back; =b4=.. frq = "<<frq<<"; front = "<<front<<endl;
+      assert(back+frq < front);
       assert(bey >= p);
-      assert(le+frq == 0 || arr[le+frq-1] <= p);
+      assert(back+frq == 0 || arr[back+frq-1] <= p);
       swap(bey, cur);
       ++frq;
-      //cout<<arr<<le<<" = le; =af=.. frq = "<<frq<<endl;
+      //cout<<arr<<back<<" = back; =af=.. frq = "<<frq<<endl;
       
       assert(arr[front] >= p); //post condition
       continue;
     }else{ //cur too small
       swap(bey, cur);
-      swap(bey, arr[le]);      
-      ++le;
-      assert(arr[le] >= p);
-      assert(arr[le-1] <p);
+      swap(bey, arr[back]);      
+      ++back;
+      assert(arr[back] >= p);
+      assert(arr[back-1] <p);
     }
   }
   if (arr[ri] <= p) return {-1, frq};
-  cout<<le<<" = le (returning); frq = "<<frq<<endl;
-  return {le+frq, frq}; //index of first element exceeding p
+  cout<<back<<" = back (returning); frq = "<<frq<<endl;
+  return {back+frq, frq}; //index of first element exceeding p
 }
 /*different from familiar qsort partition algo. Too complicated in implementation. Not worth memorizing.
 */
