@@ -11,7 +11,8 @@ showcase: c++11 typedef for pair<int,int> then calling its default ctor
 #include <vector>
 #include <algorithm>
 using namespace std;
-typedef unsigned int idx;
+using idx = unsigned int;
+using pii = pair<int,size_t>;
 template<typename T,             int min_width=2> ostream & operator<<(ostream & os, vector<T> const & c){
    for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
    os<<endl;
@@ -20,10 +21,7 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    return os;
 }
 vector<int> arr; //global var
-/* partition a given array using 2 pivot values. 
-returns 2 indices 
-*/
-using pii = pair<int,size_t>;
+// partition a given array using 2 pivot values. returns 2 indices 
 pii partition2(float const pivotVal1, float const pivotVal2){
   float const p1=pivotVal1, p2=pivotVal2;
   auto minItr = min_element(arr.begin(), arr.end());
@@ -88,13 +86,12 @@ pii partitionFwdLinearTime(float const & pivotVal, idx const & le, idx const & r
   idx back = le;
   
   for (;;++back){
-    if (arr[back] >= p) {
-      cout<<arr <<" pivotVal = "<<p<<";"<<back <<" <-- back ptr initialized to first item >= pivot .. Now scan fwd from there..."<<endl;
-  	  break;
-	  }
-    if (back == ri) return {-1,0}; //pivotVal skyhigh
+    if (arr[back] >= p) break;
+	if (back == ri) return {-1,0}; //pivotVal higher than any item
   }
   size_t frq = (arr[back]==p); //frq of pivotVal occurence
+  cout<<arr<<" pivotVal = "<<p<<"; frq = "<<frq<<"; "<<back <<" <-- back ptr initialized to first item >= pivot .. Now scan fwd from there..."<<endl;
+  
   for (idx front=back+1; front <= ri; ++front){
     auto & cur = arr[front];
     if (cur > p) continue;//ok
