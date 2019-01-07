@@ -11,7 +11,7 @@ showcase: c++11 typedef for pair<int,int> then calling its default ctor
 #include <algorithm>
 using namespace std;
 using idx = unsigned int;
-using pii = pair<int,size_t>;
+using pi2 = pair<idx,idx>;
 template<typename T,             int min_width=2> ostream & operator<<(ostream & os, vector<T> const & c){
    for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
    os<<endl;
@@ -20,9 +20,10 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    return os;
 }
 vector<int> arr; //global var
-// partition a given array using 2 pivot values. returns 2 indices 
-pii partition2(float const pivotVal1, float const pivotVal2){
-  float const p1=pivotVal1, p2=pivotVal2;
+/* partition a given array using 2 pivot values. returns 2 indices 
+*/
+pi2 partition2(float const & pivotVal1, float const & pivotVal2){
+  float const & p1=pivotVal1, & p2=pivotVal2;
   auto minItr = min_element(arr.begin(), arr.end());
   auto maxItr = max_element(arr.begin(), arr.end());
   cout<<arr<<p1<<" = p1; p2 = "<<p2<<" ... "<<*minItr<<" = min; max = "<<*maxItr<<endl;
@@ -57,7 +58,7 @@ pii partition2(float const pivotVal1, float const pivotVal2){
     assert(arr[le] > p2);
   }
   cout<<arr<<le<<" <- 2nd partition\n";
-  return pii(ret1, le);
+  return pi2(ret1, le);
 #ifdef oldAbandonedSol
 //invariant: left and right ptr both at "first" item strictly between p1 and p2. 
 //I hope to use fewer than 4 moving pointers. How about a 3rd ptr scanning forward, until it meets the right ptr?
@@ -77,6 +78,8 @@ pii partition2(float const pivotVal1, float const pivotVal2){
   cout<<arr<<le<<" < - > "<<ri <<" <-- both ptr initialized.. Now scan fwd from le..."<<endl;
 #endif
 }
+//////////////////
+using pii = pair<int,size_t>;
 /* return index of first element exceeding pivot, or -1 if pivot too high
 2nd returned value is number of elements equal to pivot
 
@@ -174,7 +177,7 @@ int main(){
   assert(pii({0,0}) == wrapper(5, {6,6,6,6}));
   //testing 2-pivot partitioning
   assert(pii({8,0}) == wrapper(3.3, {4,-2,12,7,1,-7,5,-3,0,3,9,-6,4,8,2,6,9,5}));
-  assert(pii(7,14) == partition2(2.2, 7.7));
+  assert(pi2(7,14) == partition2(2.2, 7.7));
 }/*Req: partition an int array using a float pivot value, and return the count of items equal to pivot value
 
 i feel this challenge is more practical than most Leetcode problems.
