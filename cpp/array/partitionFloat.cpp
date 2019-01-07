@@ -1,5 +1,5 @@
 /*
-todo: improve 2-pivot partition
+todo: improve 2-pivot partition -- if cur item too high, swap it with the right ptr
 todo: what if p1==p2?
 todo: what if p1 == min
 todo: what if p2 == max
@@ -33,13 +33,16 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
   assert(p1< p2); // no point validating input..not a programming challenge
   assert(*minItr <= p1 && "1st pivot value too low");
   assert(p2 <= *maxItr && "2nd pivot value too high");
-  idx le=0;
-  idx const ri=arr.size()-1;
+  idx le=0, ri=arr.size()-1;
   for (;;++le){
     if (arr[le] > p1) 	  break;
     assert(le != ri);
   }
-  cout<<arr<<le <<" <-- back ptr initialized.. Now scan fwd from there..."<<endl;
+  for (;;--ri){
+    if (arr[ri] <= p2) 	  break;
+    assert(le != ri);
+  }
+  cout<<arr<<le <<" <-- back ptr initialized.. right ptr initialized -> "<<ri<<endl;
   for (idx front=le+1; front <= ri; ++front){
     if (arr[front] > p1) continue;
     swap(arr[le], arr[front]);
@@ -180,6 +183,7 @@ int main(){
   assert(pii({0,0}) == wrapper(5, {6,6,6,6}));
   //testing 2-pivot partitioning
   assert(pii({8,0}) == wrapper(3.3, {4,-2,12,7,1,-7,5,-3,0,3,9,-6,4,8,2,6,9,5}));
+  assert(pi2(7,10) == partition2(2.2, 4.4));
   assert(pi2(7,14) == partition2(2.2, 7.7));
 }/*Req: partition an int array using a float pivot value, and return the count of items equal to pivot value
 
