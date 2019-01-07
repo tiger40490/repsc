@@ -1,5 +1,8 @@
 /*
 todo: improve 2-pivot partition
+todo: what if p1==p2?
+todo: what if p1 == min
+todo: what if p2 == max
 showcase: const-ref-vector parameter can receive an init-list, but const is needed. A temp object is probably created on the stack.
 showcase: std::swap, by-reference, 2 vector elements .. by reference!
 showcase: c++11 typedef for pair<int,int> then calling its default ctor
@@ -27,14 +30,14 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
   auto minItr = min_element(arr.begin(), arr.end());
   auto maxItr = max_element(arr.begin(), arr.end());
   cout<<arr<<p1<<" = p1; p2 = "<<p2<<" ... "<<*minItr<<" = min; max = "<<*maxItr<<endl;
-  assert(p1<=p2); // no point validating input..not a programming challenge
+  assert(p1< p2); // no point validating input..not a programming challenge
   assert(*minItr <= p1 && "1st pivot value too low");
   assert(p2 <= *maxItr && "2nd pivot value too high");
   idx le=0;
   idx const ri=arr.size()-1;
   for (;;++le){
-    assert(le != ri);
     if (arr[le] > p1) 	  break;
+    assert(le != ri);
   }
   cout<<arr<<le <<" <-- back ptr initialized.. Now scan fwd from there..."<<endl;
   for (idx front=le+1; front <= ri; ++front){
@@ -44,11 +47,11 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
     assert(arr[le] > p1);
   }
   idx const ret1 = le;
-  cout<<arr<<ret1<<" <- first partition\n";
+  cout<<arr<<ret1<<" <- first partition point\n";
   
   for (;;++le){
-    assert(le != ri);
     if (arr[le] > p2) 	  break;
+    assert(le != ri);
   }
   cout<<arr<<le <<" <-- 2nd back ptr initialized.. Now scan fwd from there..."<<endl;
   for (idx front=le+1; front <= ri; ++front){
@@ -57,7 +60,7 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
     ++le;
     assert(arr[le] > p2);
   }
-  cout<<arr<<le<<" <- 2nd partition\n";
+  cout<<arr<<le<<" <- 2nd partition point\n";
   return pi2(ret1, le);
 #ifdef oldAbandonedSol
 //invariant: left and right ptr both at "first" item strictly between p1 and p2. 
