@@ -22,7 +22,7 @@ sub begin(){
   print $LOG Dumper \@ARGV;
   my @header_ext=('H', 'h');
   my @src_ext=('C', 'c', 'cpp');
-  $extension=join('|', @header_ext, @src_ext); # 'C|h'; # rename to $extension?
+  $extension=join('|', @header_ext, @src_ext, 'xml');
   while(1){
     $needle=shift @ARGV;
     if ($needle !~ /^-/){ # not a command line option, so must be the actual search pattern
@@ -34,7 +34,7 @@ sub begin(){
       print $LOG "\n~~> the needle to grep (in haystack) is --> $needle <-- \n";
 
       die "You can select up to 1 of --no-header or --header-only or --any-ext" if $extension_filers>1;
-      print $LOG "\n==> file extensions: .$extension \n";
+      print $LOG "\n==> file extensions: $extension \n";
       return;
     }
     my $option = $needle;
@@ -79,6 +79,8 @@ sub begin(){
 
 ## LINE: while(<>){ # use this while loop if you omit "-n" on shebang line
 
+  chomp ($tmp2 = $_);
+  next LINE if -d $tmp2;
   next LINE unless /\.($extension)$/;
 
   # --color may require q(less) to use -R
