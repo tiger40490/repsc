@@ -44,7 +44,9 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
   }
   cout<<arr<<le <<" <-- back ptr initialized.. right ptr initialized -> "<<ri<<endl;
   for (idx front=le+1; front <= ri; ++front){
-    if (arr[front] > p1) continue;
+    if (arr[front] > p1){
+		continue;
+    }
     swap(arr[le], arr[front]);
     ++le;
     assert(arr[le] > p1);
