@@ -38,18 +38,33 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
     if (arr[le] > p1) 	  break;
     assert(le != ri);
   }
-  for (;;--ri){
+  for (;;--ri){ //must skip all > p2
     if (arr[ri] <= p2) 	  break;
     assert(le != ri);
   }
-  cout<<arr<<le <<" <-- back ptr initialized.. right ptr initialized -> "<<ri<<endl;
+  cout<<arr<<le <<" <-- back ptr initialized.. right ptr initialized to rightmost item =< p2 -> "<<ri<<endl;
   for (idx front=le+1; front <= ri; ++front){
     if (arr[front] > p1){
-		continue;
-    }
-    swap(arr[le], arr[front]);
-    ++le;
-    assert(arr[le] > p1);
+		if (arr[front] > p2){
+	      cout<<ri<<" swapping (right end) with "<<front<<endl;
+		  swap(arr[front], arr[ri]);
+          cerr<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
+		  --ri;
+		  assert(arr[ri+1]>p2); //invariant
+		  assert(front<=ri);
+		}else{
+		  continue; //still increment front
+        }
+	}
+	if (arr[front] <= p1){
+		assert(arr[le] > p1);
+		cout<<le<<" swapping (left end) with "<<front<<endl;
+		swap(arr[le], arr[front]);
+		++le; // still behind front
+		cerr<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
+		assert(le<=front);
+		assert(arr[le] > p1);
+	}
   }
   idx const ret1 = le;
   cout<<arr<<ret1<<" <- first partition point\n";
