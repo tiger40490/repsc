@@ -1,11 +1,14 @@
 /*
+todo: asserts in partition2
 todo: improve 2-pivot partition -- if cur item too high, swap it with the right ptr
 todo: what if p1==p2?
 todo: what if p1 == min
 todo: what if p2 == max
+
 showcase: const-ref-vector parameter can receive an init-list, but const is needed. A temp object is probably created on the stack.
 showcase: std::swap, by-reference, 2 vector elements .. by reference!
 showcase: c++11 typedef for pair<int,int> then calling its default ctor
+min/max_element() are O(N) but don't aggrivate the time complexity
 */
 #include <iostream>
 #include <iomanip>
@@ -26,10 +29,11 @@ vector<int> arr; //global var
 /* partition a given array using 2 pivot values. returns 2 indices 
 */
 pi2 partition2(float const & pivotVal1, float const & pivotVal2){
+  auto const origArr(arr);
   float const & p1=pivotVal1, & p2=pivotVal2;
   auto minItr = min_element(arr.begin(), arr.end());
   auto maxItr = max_element(arr.begin(), arr.end());
-  cout<<arr<<p1<<" = p1; p2 = "<<p2<<" ... "<<*minItr<<" = min; max = "<<*maxItr<<endl;
+  cout<<"    ~ ~ ~ ~\n"<<arr<<p1<<" = p1; p2 = "<<p2<<" ... "<<*minItr<<" = min; max = "<<*maxItr<<endl;
   assert(p1< p2); // no point validating input..not a programming challenge
   assert(*minItr <= p1 && "1st pivot value too low");
   assert(p2 <= *maxItr && "2nd pivot value too high");
@@ -46,22 +50,21 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
   for (idx front=le+1; front <= ri; ++front){
     if (arr[front] > p1){
 		if (arr[front] > p2){
-	      cout<<ri<<" swapping (right end) with "<<front<<endl;
-		  swap(arr[front], arr[ri]);
-          cerr<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
+	      //cout<<ri<<" swapping (right end) with "<<front<<endl;
+		  if (front<ri) swap(arr[front], arr[ri]);
+          //cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
 		  --ri;
-		  assert(arr[ri+1]>p2); //invariant
-		  assert(front<=ri);
+		  assert(arr[ri+1]>p2 && "invariant: ri+1 is the rightside first > p2");
 		}else{
 		  continue; //still increment front
         }
 	}
 	if (arr[front] <= p1){
 		assert(arr[le] > p1);
-		cout<<le<<" swapping (left end) with "<<front<<endl;
+		//cout<<le<<" swapping (left end) with "<<front<<endl;
 		swap(arr[le], arr[front]);
 		++le; // still behind front
-		cerr<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
+		///cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
 		assert(le<=front);
 		assert(arr[le] > p1);
 	}
@@ -80,6 +83,7 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
     ++le;
     assert(arr[le] > p2);
   }
+  arr = origArr;
   cout<<arr<<le<<" <- 2nd partition point\n";
   return pi2(ret1, le);
 #ifdef oldAbandonedSol
