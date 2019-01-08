@@ -1,5 +1,6 @@
 /*
 todo: asserts in partition2
+ret ri+1?
 todo: improve 2-pivot partition -- if cur item too high, swap it with the right ptr
 todo: what if p1==p2?
 todo: what if p1 == min
@@ -34,9 +35,8 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
   auto minItr = min_element(arr.begin(), arr.end());
   auto maxItr = max_element(arr.begin(), arr.end());
   cout<<"    ~ ~ ~ ~\n"<<arr<<p1<<" = p1; p2 = "<<p2<<" ... "<<*minItr<<" = min; max = "<<*maxItr<<endl;
-  assert(p1< p2); // no point validating input..not a programming challenge
-  assert(*minItr <= p1 && "1st pivot value too low");
-  assert(p2 <= *maxItr && "2nd pivot value too high");
+  assert(p1<= p2); // no point validating input..not a programming challenge
+  assert(p1 < *maxItr && "first pivot value too high");
   idx le=0, ri=arr.size()-1;
   for (;;++le){
     if (arr[le] > p1) 	  break;
@@ -49,43 +49,30 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
   cout<<arr<<le <<" <-- back ptr initialized.. right ptr initialized to rightmost item =< p2 -> "<<ri<<endl;
   for (idx front=le+1; front <= ri; ++front){
     if (arr[front] > p1){
-		if (arr[front] > p2){
-	      //cout<<ri<<" swapping (right end) with "<<front<<endl;
-		  if (front<ri) swap(arr[front], arr[ri]);
-          //cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
-		  --ri;
-		  assert(arr[ri+1]>p2 && "invariant: ri+1 is the rightside first > p2");
-		}else{
-		  continue; //still increment front
-        }
+		if (arr[front] <= p2) continue;
+	    cout<<ri<<" swapping (right end) with "<<front<<endl;
+		swap(arr[front], arr[ri]);
+        cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
+		--ri;
+		assert(arr[ri+1]>p2 && "invariant: ri+1 is the rightside first > p2; ri item is unknown");
+		// now front may be any value!
+		--front;
+		continue;
 	}
 	if (arr[front] <= p1){
 		assert(arr[le] > p1);
-		//cout<<le<<" swapping (left end) with "<<front<<endl;
+		cout<<le<<" swapping (left end) with "<<front<<endl;
 		swap(arr[le], arr[front]);
 		++le; // still behind front
-		///cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
+		cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
 		assert(le<=front);
 		assert(arr[le] > p1);
 	}
   }
-  idx const ret1 = le;
-  cout<<arr<<ret1<<" <- first partition point\n";
-  
-  for (;;++le){
-    if (arr[le] > p2) 	  break;
-    assert(le != ri);
-  }
-  cout<<arr<<le <<" <-- 2nd back ptr initialized.. Now scan fwd from there..."<<endl;
-  for (idx front=le+1; front <= ri; ++front){
-    if (arr[front] > p2) continue;
-    swap(arr[le], arr[front]);
-    ++le;
-    assert(arr[le] > p2);
-  }
+  assert(ri+1 <= arr.size()-1);
+  cout<<arr<<le<<" (=ret=) "<<ri+1<<endl;
   arr = origArr;
-  cout<<arr<<le<<" <- 2nd partition point\n";
-  return pi2(ret1, le);
+  return pi2(le, ri+1);
 #ifdef oldAbandonedSol
 //invariant: left and right ptr both at "first" item strictly between p1 and p2. 
 //I hope to use fewer than 4 moving pointers. How about a 3rd ptr scanning forward, until it meets the right ptr?
