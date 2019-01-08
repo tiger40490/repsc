@@ -1,7 +1,8 @@
 /*
-todo: asserts in partition2
-ret ri+1?
-todo: improve 2-pivot partition -- if cur item too high, swap it with the right ptr
+plaster on finger
+
+
+todo: more asserts in partition2
 todo: what if p1==p2?
 todo: what if p1 == min
 todo: what if p2 == max
