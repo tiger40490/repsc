@@ -1,5 +1,6 @@
 /*
 plaster on finger
+Many parts of NJ appreciation is too fast, but still other parts of NJ didn't. Most U.S. states have not been so fast.
 
 
 todo: more asserts in partition2
@@ -40,35 +41,38 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
   assert(p1 < *maxItr && "first pivot value too high");
   idx le=0, ri=arr.size()-1;
   for (;;++le){
-    if (arr[le] > p1) 	  break;
+    if (arr[le] > p1)       break;
     assert(le != ri);
   }
   for (;;--ri){ //must skip all > p2
-    if (arr[ri] <= p2) 	  break;
+    if (arr[ri] <= p2)       break;
     assert(le != ri);
   }
   cout<<arr<<le <<" <-- back ptr initialized.. right ptr initialized to rightmost item =< p2 -> "<<ri<<endl;
-  for (idx front=le+1; front <= ri; ++front){
+  for (idx front=le+1; front <= ri; ){
     if (arr[front] > p1){
-		if (arr[front] <= p2) continue;
-	    cout<<ri<<" swapping (right end) with "<<front<<endl;
-		swap(arr[front], arr[ri]);
+        if (arr[front] <= p2) {
+          ++front;
+          continue; 
+        }
+        cout<<ri<<" swapping (right end) with "<<front<<endl;
+        swap(arr[front], arr[ri]);
         cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
-		--ri;
-		assert(arr[ri+1]>p2 && "invariant: ri+1 is the rightside first > p2; ri item is unknown");
-		// now front may be any value!
-		--front;
-		continue;
-	}
-	if (arr[front] <= p1){
-		assert(arr[le] > p1);
-		cout<<le<<" swapping (left end) with "<<front<<endl;
-		swap(arr[le], arr[front]);
-		++le; // still behind front
-		cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
-		assert(le<=front);
-		assert(arr[le] > p1);
-	}
+        --ri;
+        assert(arr[ri+1]>p2 && "invariant: ri+1 is the leftward first > p2; ri item is unknown");
+        continue; // now front may be too high or too low!
+    }
+    assert (arr[front] <= p1);
+    if (1) {
+        assert(arr[le] > p1);
+        cout<<le<<" swapping (left end) with "<<front<<endl;
+        swap(arr[le], arr[front]);
+        ++le; // still behind front
+        cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
+        assert(le<=front);
+        assert(arr[le] > p1);
+        ++front;
+    }
   }
   assert(ri+1 <= arr.size()-1);
   cout<<arr<<le<<" (=ret=) "<<ri+1<<endl;
@@ -81,10 +85,10 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
   for (;;){
     assert(le != ri);
     if (p1 < arr[le]) {
-      if (   arr[le] < p2)  	    break;
+      if (   arr[le] < p2)          break;
       swap(arr[le], arr[ri]); //le item too high
       --ri;
-	  }else{
+      }else{
       ++le;
     }
   }
@@ -106,7 +110,7 @@ pii partitionFwdLinearTime(float const & pivotVal, idx const & le, idx const & r
   
   for (;;++back){
     if (arr[back] >= p) break;
-	if (back == ri) return {-1,0}; //pivotVal higher than any item
+    if (back == ri) return {-1,0}; //pivotVal higher than any item
   }
   size_t frq = (arr[back]==p); //frq of pivotVal occurence
   cout<<arr<<" pivotVal = "<<p<<"; frq = "<<frq<<"; "<<back <<" <-- back ptr initialized to first item >= pivot .. Now scan fwd from there..."<<endl;
@@ -149,7 +153,7 @@ int partition2oppScanner(float const pivotVal, idx le, idx ri){
   while(1){ //invariant: arr[le-1] <= p and arr[ri+1] > p
     for (; arr[le] <= p; ++le){
       if (le == ri) { //exit condition
-    		//cout<<arr<<le <<" == le == ri... exiting \n";
+            //cout<<arr<<le <<" == le == ri... exiting \n";
         if (ri == arr.size()-1) return -1;
         return le+1;
       }
