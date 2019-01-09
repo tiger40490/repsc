@@ -1,7 +1,10 @@
 /*
-todo: what if p1==p2?
+Zofia, Did waigong apply visa to visit Bali?
+
 todo: what if p1 == min
 todo: what if p2 == max
+
+all should be handled by the fwd function. Not advisible to complicate this current algo
 
 showcase: const-ref-vector parameter can receive an init-list, but const is needed. A temp object is probably created on the stack.
 showcase: std::swap, by-reference, 2 vector elements .. by reference!
@@ -24,6 +27,9 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    return os;
 }
 vector<int> arr; //global var
+using pii = pair<int,size_t>;
+pii partitionFwdLinearTime(float const & pivotVal, idx const & le, idx const & ri);
+
 /* partition a given array using 2 pivot values. return two subscripts -- first items exceeding P1/P2
 
 O(N): main loop iterates exactly N times because each iteration we increment either front or ri pointer
@@ -36,7 +42,19 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
   cout<<"    ~ ~ ~ ~\n"<<arr<<p1<<" = p1; p2 = "<<p2<<" ... "<<*minItr<<" = min; max = "<<*maxItr<<endl;
   assert(p1<= p2); // no point validating input..not a programming challenge
   assert(p1 < *maxItr && "first pivot value too high");
+  
   idx le=0, ri=arr.size()-1;
+  auto c3=(p1 == p2); 
+  auto c1a=(p1 == *minItr);
+  auto c1b=(p1 == *maxItr);
+  if (c3 || c1a){
+      int ret = 0;
+      if (c3) ret = partitionFwdLinearTime(p1, 0, ri).first;
+      assert(ret>=0);
+      arr = origArr;
+      return {ret, ret};
+  }
+  //////
   for (;;++le){
     if (arr[le] >  p1) break;
     assert(le != ri);
@@ -77,7 +95,6 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
   return pi2(le, ri+1);
 }
 //////////////////
-using pii = pair<int,size_t>;
 /* return index of first element exceeding pivot, or -1 if pivot too high
 2nd returned value is number of elements equal to pivot
 
@@ -175,6 +192,7 @@ int main(){
   assert(pii({0,0}) == wrapper(5, {6,6,6,6}));
   //testing 2-pivot partitioning
   assert(pii({8,0}) == wrapper(3.3, {4,-2,12,7,1,-7,5,-3,0,3,9,-6,4,8,2,6,9,5}));
+  assert(pi2(7,7) == partition2(2.2, 2.2));
   assert(pi2(7,10) == partition2(2.2, 4.4));
   assert(pi2(7,14) == partition2(2.2, 7.7));
 }/*Req: partition an int array using a float pivot value, and return the count of items equal to pivot value
