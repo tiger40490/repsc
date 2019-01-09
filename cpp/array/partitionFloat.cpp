@@ -1,8 +1,4 @@
 /*
-Many parts of NJ appreciation is fast, but still other parts of NJ isn't. Most U.S. states have not been so fast.
-
-
-todo: more asserts in partition2
 todo: what if p1==p2?
 todo: what if p1 == min
 todo: what if p2 == max
@@ -28,7 +24,9 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    return os;
 }
 vector<int> arr; //global var
-/* partition a given array using 2 pivot values. returns 2 indices 
+/* partition a given array using 2 pivot values. return two subscripts -- first items exceeding P1/P2
+
+O(N): main loop iterates exactly N times because each iteration we increment either front or ri pointer
 */
 pi2 partition2(float const & pivotVal1, float const & pivotVal2){
   auto const origArr(arr);
@@ -40,14 +38,14 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
   assert(p1 < *maxItr && "first pivot value too high");
   idx le=0, ri=arr.size()-1;
   for (;;++le){
-    if (arr[le] > p1)       break;
+    if (arr[le] >  p1) break;
     assert(le != ri);
   }
   for (;;--ri){ //must skip all > p2
-    if (arr[ri] <= p2)       break;
+    if (arr[ri] <= p2) break;
     assert(le != ri);
   }
-  cout<<arr<<le <<" <-- back ptr initialized.. right ptr initialized to rightmost item =< p2 -> "<<ri<<endl;
+  cout<<arr<<le <<" <- left/right ptr initialized -> "<<ri<<" #leftward first item =< p2"<<endl;
   for (idx front=le+1; front <= ri; ){
     if (arr[front] > p1){
         if (arr[front] <= p2) {
@@ -58,12 +56,12 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
         swap(arr[front], arr[ri]);
         ///cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
         --ri;
-        assert(arr[ri+1]>p2 && "invariant: ri+1 is the leftward first > p2; ri item is unknown");
-        // now front may be too high or too low, so we can't increment front pointer yet
+        assert(arr[ri+1]>p2 && "invariant: if valid, ri+1 is the leftward first > p2; ri item is unknown");
+        // now front (also ri) item may be too high or too low, so we can't increment front pointer yet
     }else{
         assert (arr[front] <= p1);
     //if (1) {
-        assert(arr[le] > p1);
+        assert (arr[le] > p1);
         cout<<le<<" swapping (left end) with "<<front<<endl;
         swap(arr[le], arr[front]);
         ++le; // still behind front
@@ -72,29 +70,11 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
         assert(arr[le] > p1);
         ++front;
     }
-  }
+  }// main loop 
   assert(ri+1 <= arr.size()-1);
   cout<<arr<<le<<" (=ret=) "<<ri+1<<endl;
   arr = origArr;
   return pi2(le, ri+1);
-#ifdef oldAbandonedSol
-//invariant: left and right ptr both at "first" item strictly between p1 and p2. 
-//I hope to use fewer than 4 moving pointers. How about a 3rd ptr scanning forward, until it meets the right ptr?
-  idx le=0, ri=arr.size()-1;
-  for (;;){
-    assert(le != ri);
-    if (p1 < arr[le]) {
-      if (   arr[le] < p2)          break;
-      swap(arr[le], arr[ri]); //le item too high
-      --ri;
-      }else{
-      ++le;
-    }
-  }
-  assert(p1 < arr[le]);
-  assert(arr[ri] > p2);
-  cout<<arr<<le<<" < - > "<<ri <<" <-- both ptr initialized.. Now scan fwd from le..."<<endl;
-#endif
 }
 //////////////////
 using pii = pair<int,size_t>;
