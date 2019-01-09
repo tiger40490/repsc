@@ -1,6 +1,5 @@
 /*
-plaster on finger
-Many parts of NJ appreciation is too fast, but still other parts of NJ didn't. Most U.S. states have not been so fast.
+Many parts of NJ appreciation is fast, but still other parts of NJ isn't. Most U.S. states have not been so fast.
 
 
 todo: more asserts in partition2
@@ -55,15 +54,15 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
           ++front;
           continue; 
         }
-        cout<<ri<<" swapping (right end) with "<<front<<endl;
+        //cout<<ri<<" swapping (right end) with "<<front<<endl;
         swap(arr[front], arr[ri]);
-        cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
+        ///cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
         --ri;
         assert(arr[ri+1]>p2 && "invariant: ri+1 is the leftward first > p2; ri item is unknown");
-        continue; // now front may be too high or too low!
-    }
-    assert (arr[front] <= p1);
-    if (1) {
+        // now front may be too high or too low, so we can't increment front pointer yet
+    }else{
+        assert (arr[front] <= p1);
+    //if (1) {
         assert(arr[le] > p1);
         cout<<le<<" swapping (left end) with "<<front<<endl;
         swap(arr[le], arr[front]);
