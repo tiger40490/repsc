@@ -3,6 +3,7 @@ Zofia, Did waigong apply visa to visit Bali?
 
 todo: what if p1 == min
 todo: what if p2 == max
+todo: //  assert(pi2(1,7) == partition2(-7, 2.2));
 
 all should be handled by the fwd function. Not advisible to complicate this current algo
 
@@ -17,7 +18,7 @@ min/max_element() are O(N) but don't aggrivate the time complexity
 #include <vector>
 #include <algorithm>
 using namespace std;
-using idx = unsigned int;
+using idx = int;
 using pi2 = pair<idx,idx>;
 template<typename T,             int min_width=2> ostream & operator<<(ostream & os, vector<T> const & c){
    for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
@@ -30,7 +31,7 @@ vector<int> arr; //global var
 using pii = pair<int,size_t>;
 pii partitionFwdLinearTime(float const & pivotVal, idx const & le, idx const & ri);
 
-/* partition a given array using 2 pivot values. return two subscripts -- first items exceeding P1/P2
+/* partition a given array using 2 pivot values. return two subscripts -- first items exceeding P1/P2 (-1 if failing)
 
 O(N): main loop iterates exactly N times because each iteration we increment either front or ri pointer
 */
@@ -45,14 +46,18 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
   
   idx le=0, ri=arr.size()-1;
   auto c3=(p1 == p2); 
-  auto c1a=(p1 == *minItr);
-  auto c1b=(p1 == *maxItr);
-  if (c3 || c1a){
-      int ret = 0;
-      if (c3) ret = partitionFwdLinearTime(p1, 0, ri).first;
-      assert(ret>=0);
+  auto c2b=(p2 >= *maxItr);
+  if (c3 || c2b){
+      int ret1 = 0, ret2 =0;
+      if      (c2b) {
+          ret1 = partitionFwdLinearTime(p1, 0, ri).first;
+          ret2 = -1;
+      }
+      else if (c3)  ret1 = ret2 = partitionFwdLinearTime(p1, 0, ri).first;
+      assert(ret1>=0);
       arr = origArr;
-      return {ret, ret};
+      cerr<<ret1<<" = ret1; ret2= "<<ret2<<endl;
+      return {ret1, ret2};
   }
   //////
   for (;;++le){
@@ -80,10 +85,10 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
         assert (arr[front] <= p1);
     //if (1) {
         assert (arr[le] > p1);
-        cout<<le<<" swapping (left end) with "<<front<<endl;
+        //cout<<le<<" swapping (left end) with "<<front<<endl;
         swap(arr[le], arr[front]);
         ++le; // still behind front
-        cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
+        //cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
         assert(le<=front);
         assert(arr[le] > p1);
         ++front;
@@ -192,9 +197,11 @@ int main(){
   assert(pii({0,0}) == wrapper(5, {6,6,6,6}));
   //testing 2-pivot partitioning
   assert(pii({8,0}) == wrapper(3.3, {4,-2,12,7,1,-7,5,-3,0,3,9,-6,4,8,2,6,9,5}));
-  assert(pi2(7,7) == partition2(2.2, 2.2));
   assert(pi2(7,10) == partition2(2.2, 4.4));
   assert(pi2(7,14) == partition2(2.2, 7.7));
+  assert(pi2(7,7) == partition2(2.2, 2.2));
+  assert(pi2(7,-1) == partition2(2.2, 12));
+ //  assert(pi2(1,7) == partition2(-7, 2.2));
 }/*Req: partition an int array using a float pivot value, and return the count of items equal to pivot value
 
 i feel this challenge is more practical than most Leetcode problems.
