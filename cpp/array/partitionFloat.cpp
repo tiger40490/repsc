@@ -1,11 +1,6 @@
 /*
 Zofia, Did waigong apply visa to visit Bali?
-
-todo: what if p1 == min
-todo: what if p2 == max
-todo: //  assert(pi2(1,7) == partition2(-7, 2.2));
-
-all should be handled by the fwd function. Not advisible to complicate this current algo
+call Jill
 
 showcase: const-ref-vector parameter can receive an init-list, but const is needed. A temp object is probably created on the stack.
 showcase: std::swap, by-reference, 2 vector elements .. by reference!
@@ -201,6 +196,7 @@ int main(){
   assert(pi2(7,14) == partition2(2.2, 7.7));
   assert(pi2(7,7) == partition2(2.2, 2.2));
   assert(pi2(7,-1) == partition2(2.2, 12));
+  assert(pi2(1,14) == partition2(-7, 7.7));
  //  assert(pi2(1,7) == partition2(-7, 2.2));
 }/*Req: partition an int array using a float pivot value, and return the count of items equal to pivot value
 
