@@ -70,9 +70,9 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
           ++front;
           continue; 
         }
-        //cout<<ri<<" swapping (right end) with "<<front<<endl;
+        cout<<ri<<" swapping (right end) with "<<front<<endl;
         swap(arr[front], arr[ri]);
-        ///cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
+        cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
         --ri;
         assert(arr[ri+1]>p2 && "invariant: if valid, ri+1 is the leftward first > p2; ri item is unknown");
         // now front (also ri) item may be too high or too low, so we can't increment front pointer yet
@@ -80,10 +80,10 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
         assert (arr[front] <= p1);
     //if (1) {
         assert (arr[le] > p1);
-        //cout<<le<<" swapping (left end) with "<<front<<endl;
+        cout<<le<<" swapping (left end) with "<<front<<endl;
         swap(arr[le], arr[front]);
         ++le; // still behind front
-        //cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
+        cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
         assert(le<=front);
         assert(arr[le] > p1);
         ++front;
@@ -197,7 +197,7 @@ int main(){
   assert(pi2(7,7) == partition2(2.2, 2.2));
   assert(pi2(7,-1) == partition2(2.2, 12));
   assert(pi2(1,14) == partition2(-7, 7.7));
- //  assert(pi2(1,7) == partition2(-7, 2.2));
+  assert(pi2(1,7) == partition2(-7, 2.2)); //buggy
 }/*Req: partition an int array using a float pivot value, and return the count of items equal to pivot value
 
 i feel this challenge is more practical than most Leetcode problems.
