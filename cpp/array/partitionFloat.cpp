@@ -3,6 +3,7 @@ Zofia, Did waigong apply visa to visit Bali?
 call Jill
 
 showcase: const-ref-vector parameter can receive an init-list, but const is needed. A temp object is probably created on the stack.
+
 showcase: std::swap, by-reference, 2 vector elements .. by reference!
 showcase: c++11 typedef for pair<int,int> then calling its default ctor
 min/max_element() are O(N) but don't aggrivate the time complexity
@@ -64,26 +65,25 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
     assert(le != ri);
   }
   cout<<arr<<le <<" <- left/right ptr initialized -> "<<ri<<" #leftward first item =< p2"<<endl;
-  for (idx front=le+1; front <= ri; ){
+  for (idx front=le; front <= ri; ){
     if (arr[front] > p1){
         if (arr[front] <= p2) {
           ++front;
           continue; 
         }
-        cout<<ri<<" swapping (right end) with "<<front<<endl;
+        //cout<<ri<<" swapping (right end) with "<<front<<endl;
         swap(arr[front], arr[ri]);
-        cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
+        ///cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
         --ri;
         assert(arr[ri+1]>p2 && "invariant: if valid, ri+1 is the leftward first > p2; ri item is unknown");
         // now front (also ri) item may be too high or too low, so we can't increment front pointer yet
     }else{
         assert (arr[front] <= p1);
-    //if (1) {
         assert (arr[le] > p1);
-        cout<<le<<" swapping (left end) with "<<front<<endl;
+        //cout<<le<<" swapping (left end) with "<<front<<endl;
         swap(arr[le], arr[front]);
         ++le; // still behind front
-        cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
+        //cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
         assert(le<=front);
         assert(arr[le] > p1);
         ++front;
