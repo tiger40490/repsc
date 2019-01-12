@@ -38,18 +38,15 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
   auto maxItr = max_element(arr.begin(), arr.end());
   cout<<"    ~ ~ ~ ~\n"<<arr<<p1<<" = p1; p2 = "<<p2<<" ... "<<*minItr<<" = min; max = "<<*maxItr<<endl;
   assert(p1<= p2); // no point validating input..not a programming challenge
-  assert(p1 < *maxItr && "first pivot value too high");
+  if (p1 >= *maxItr) return {-1,-1};
   
   idx le=0, ri=arr.size()-1;
   auto c3=(p1 == p2); 
   auto c2b=(p2 >= *maxItr);
   if (c3 || c2b){
-      int ret1 = 0, ret2 =0;
-      if      (c2b) {
-          ret1 = partitionFwdLinearTime(p1, 0, ri).first;
-          ret2 = -1;
-      }
-      else if (c3)  ret1 = ret2 = partitionFwdLinearTime(p1, 0, ri).first;
+      int ret2=-1,ret1=partitionFwdLinearTime(p1,0,ri).first;
+      if(c3) ret2=ret1;
+      
       assert(ret1>=0);
       arr = origArr;
       cerr<<ret1<<" = ret1; ret2= "<<ret2<<endl;
