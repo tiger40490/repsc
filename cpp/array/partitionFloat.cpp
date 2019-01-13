@@ -1,12 +1,4 @@
 /*
-TJoe: check frozen veg, nonfat ice cream,
-
-progress in my financial planning
-* college fund -- more convinced than ever to avoid the branded colleges ... insider knowledge
-* stay rented on lease spread -- lower cash flow burden than buying 700k
-* 43R model
-* MYS retirement -- viable
-
 showcase: const-ref-vector parameter can receive an init-list, but const is needed. A temp object is probably created on the stack.
 
 showcase: std::swap, by-reference, 2 vector elements .. by reference!
