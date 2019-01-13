@@ -30,9 +30,11 @@ vector<int> arr; //global var
 using pii = pair<int,size_t>;
 pii partitionFwdLinearTime(float const & pivotVal, idx const & le, idx const & ri);
 
-/* partition a given array using 2 pivot values. return two subscripts -- first items exceeding P1/P2 (-1 if failing)
+/* partition a given array using 2 pivot values. return two subscripts -- first items exceeding P1 and P2 respectively (-1 if failing)
 
-O(N): main loop iterates exactly N times because each iteration we increment either front or ri pointer
+O(N): main loop iterates exactly N times, in a single pass because within each iteration we increment either curr or ri pointer.
+
+Smarter than my earlier attempts using two-pass
 */
 pi2 partition2(float const & pivotVal1, float const & pivotVal2){
   auto const origArr(arr);
@@ -64,28 +66,28 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
     assert(le != ri);
   }
   cout<<arr<<le <<" <- left/right ptr initialized -> "<<ri<<" #leftward first item =< p2"<<endl;
-  for (idx front=le; front <= ri; ){
-    if (arr[front] > p1){
-        if (arr[front] <= p2) {
-          ++front;
+  for (idx curr=le; curr <= ri; ){
+    if (arr[curr] > p1){
+        if (arr[curr] <= p2) {
+          ++curr;
           continue; 
         }
-        //cout<<ri<<" swapping (right end) with "<<front<<endl;
-        swap(arr[front], arr[ri]);
-        ///cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
+        //cout<<ri<<" swapping (right end) with "<<curr<<endl;
+        swap(arr[curr], arr[ri]);
+        ///cout<<arr<<le<<'{'<<curr<<'}'<<ri<<endl;
         --ri;
         assert(arr[ri+1]>p2 && "invariant: if valid, ri+1 is the leftward first > p2; ri item is unknown");
-        // now front (also ri) item may be too high or too low, so we can't increment front pointer yet
+        // now curr (also ri) item may be too high or too low, so we can't increment curr pointer yet
     }else{
-        assert (arr[front] <= p1);
+        assert (arr[curr] <= p1);
         assert (arr[le] > p1);
-        //cout<<le<<" swapping (left end) with "<<front<<endl;
-        swap(arr[le], arr[front]);
-        ++le; // still behind front
-        //cout<<arr<<le<<'{'<<front<<'}'<<ri<<endl;
-        assert(le<=front);
+        //cout<<le<<" swapping (left end) with "<<curr<<endl;
+        swap(arr[le], arr[curr]);
+        ++le; // still behind curr
+        //cout<<arr<<le<<'{'<<curr<<'}'<<ri<<endl;
+        assert(le<=curr);
         assert(arr[le] > p1);
-        ++front;
+        ++curr;
     }
   }// main loop 
   assert(ri+1 <= arr.size()-1);
