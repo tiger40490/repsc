@@ -1,6 +1,9 @@
 /*
-Zofia, Did waigong apply visa to visit Bali?
-call Jill
+progress in my financial planning
+* college fund -- more convinced than ever to avoid the branded colleges ... insider knowledge
+* stay rented on lease spread -- lower cash flow burden than buying 700k
+* 43R model
+* MYS retirement -- viable
 
 showcase: const-ref-vector parameter can receive an init-list, but const is needed. A temp object is probably created on the stack.
 
@@ -51,8 +54,7 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
       arr = origArr;
       cerr<<ret1<<" = ret1; ret2= "<<ret2<<endl;
       return {ret1, ret2};
-  }
-  //////
+  }  ////// edge cases done
   for (;;++le){
     if (arr[le] >  p1) break;
     assert(le != ri);
