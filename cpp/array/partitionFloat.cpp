@@ -1,4 +1,6 @@
 /*
+TJoe: check frozen veg, nonfat ice cream,
+
 progress in my financial planning
 * college fund -- more convinced than ever to avoid the branded colleges ... insider knowledge
 * stay rented on lease spread -- lower cash flow burden than buying 700k
@@ -39,15 +41,14 @@ Smarter than my earlier attempts using two-pass
 pi2 partition2(float const & pivotVal1, float const & pivotVal2){
   auto const origArr(arr);
   float const & p1=pivotVal1, & p2=pivotVal2;
-  auto const minItr = *min_element(arr.begin(), arr.end());
-  auto const maxItr = *max_element(arr.begin(), arr.end());
-  cout<<"    ~ ~ ~ ~\n"<<arr<<p1<<" = p1; p2 = "<<p2<<" ... "<<minItr<<" = min; max = "<<maxItr<<endl;
+  auto const maxValue = *max_element(arr.begin(), arr.end());
+  cout<<"    ~ ~ ~ ~\n"<<arr<<p1<<" = p1; p2 = "<<p2<<" ... max = "<<maxValue<<endl;
   assert(p1<= p2); // no point validating input..not a programming challenge
-  if (p1 >= maxItr) return {-1,-1};
+  if (p1 >= maxValue) return {-1,-1};
   
   idx le=0, ri=arr.size()-1;
   auto c3=(p1 == p2); 
-  auto c2b=(p2 >= maxItr);
+  auto c2b=(p2 >= maxValue);
   if (c3 || c2b){
       int ret2=-1,ret1=partitionFwdLinearTime(p1,0,ri).first;
       if(c3) ret2=ret1;
