@@ -1,9 +1,9 @@
 /*
 Note PRE-order DFT is the only choice for my design.
 
-O(N) time as every node is visited 3 times?
+Quite a short solution, and presumably O(N) time (but XR said can be better) as every node is visited 3 times?
 
-showcase: using a vector as stack, since stack is hard to print
+ECT technique showcase: using a vector as stack, since stack is hard to print
 */
 #include <iostream>
 #include <vector>
@@ -48,19 +48,20 @@ struct Node {
     Node _8(8, &_7, &_9);
     Node _6(6, NULL, &_8);
     Node root(5, &_4, &_6);
-
-vector<int> path;
+vector<int> path; //the stack
 unordered_set<int> pathNodes;
-
+/* returns the (unique by design) payload value of one node in the cycle,
+2nd return value is an alert isCycleFound
+*/
 pair<int, bool> preorderDFT(Node * n=&root){
-  if (n == &root)cout<<"-------------\n";
+  //if (n == &root)cout<<"-------------\n";
   if (pathNodes.count(n->data)){
     cout<<n->data<<" <- this node triggered cycle detector\n";
     return {n->data, true}; //true to indicate cycle detected
   }
-  path.push_back(n->data);
-  pathNodes.insert(n->data);
-  ss<<path;
+  path.push_back(n->data);   //O(1)
+  pathNodes.insert(n->data); //O(1)
+  ss<<path; //std::stack would be hard to print !
   
   if (n->left) { 
     auto ret = preorderDFT(n->left);
@@ -71,28 +72,28 @@ pair<int, bool> preorderDFT(Node * n=&root){
     if (ret.second) return ret; 
   }
   auto popped = path.back();
-  path.pop_back();
-  pathNodes.erase(popped);
+  path.pop_back();         //O(1)
+  pathNodes.erase(popped); //O(1)
   return {0, false};
 }
 int test1(int expected, Node & parent, Node & newChild, bool isLeft=true){
   path.clear();
   pathNodes.clear();
 #define WHICH_CHILD (isLeft? parent.left: parent.right)
-  Node * orig = WHICH_CHILD;  
+  Node * const orig = WHICH_CHILD;  
   WHICH_CHILD = &newChild;  
   auto result = preorderDFT();
   WHICH_CHILD = orig; //now restore  
 #undef WHICH_CHILD
   assert (expected == result.first);
   if (expected > 0)
-    assert (result.second && "detector flag should be turned on");
+    assert (result.second && "isCycleFound alert should be turned on");
 }
 int main(){
-  assert (false == preorderDFT().second);  
+  assert (false == preorderDFT().second && "original tree is cycle-free");  
   test1(0, _3, _6, false); //set right child to _6
   test1(3, _3, _3); //set left child to self
-  test1(6, _9, _6);
+  test1(6, _9, _6); //set left child to _6
   test1(5, _3, root, false); //set right child to root
 }/* Req:  https://bintanvictor.wordpress.com/wp-admin/post.php?post=18950&action=edit
 
