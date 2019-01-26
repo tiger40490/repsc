@@ -1,7 +1,8 @@
-alias s-='  source  $HOME/.bashrc  '
-alias s+='       vi $HOME/.bashrc  '
+alias nn='git commit -a --amend --no-edit' #useful while standing in train
 alias py='winpty python.exe'
 alias python='echo python command breaks in git-bash.. Disable this alias if you must.'
+alias s-='  source  $HOME/.bashrc  '
+alias s+='       vi $HOME/.bashrc  '
 alias ..='cd .. ; ls1page'
 alias
 
