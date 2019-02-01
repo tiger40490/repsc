@@ -1,6 +1,6 @@
 /*
-showcase check file existence
-showcase check file size 
+showcase: check file existence
+showcase: check file size 
 */
 #include <iostream>
 #include <fstream>
@@ -16,6 +16,6 @@ int main(){
   outfile.close();
   
   ifstream tmp2(fullpath);
-  tmp2.seekg(0,ios_base::end); //will return size 0 without this
+  tmp2.seekg(0, ios_base::end); //will return size 0 without this
   cout<<fullpath<<" created with "<<tmp2.tellg()<<" bytes.\n";
 }
