@@ -4,7 +4,7 @@ using namespace std;
 template <typename Sub> struct NumericalFunctions {
     void square(){ //a reusable code to be "inherited" by any subclass
         Sub& underlying = static_cast<Sub&>(*this);
-        // cast to Sub* is probably more common and I tested too.
+        // cast to Sub* i.e. pointer is probably more common and I tested too.
 
         //Now we can Access subclass instance without using virtual function!
         underlying.setValue(underlying.getValue() * underlying.getValue());

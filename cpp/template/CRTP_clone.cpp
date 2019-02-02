@@ -1,3 +1,5 @@
+//A halo for a large number of high-end QQ interviews, even though this technique is not widely needed.
+
 //showcase unique_ptr returned from clone()
 //showcase override keyword
 #include <iostream>

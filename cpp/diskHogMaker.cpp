@@ -1,6 +1,8 @@
 /*
 showcase: check file existence
 showcase: check file size 
+
+tested for 20/100 MB
 */
 #include <iostream>
 #include <fstream>
@@ -15,7 +17,8 @@ int main(){
   for(auto i=0; i<mb*1024*1024; ++i) outfile<<'.';
   outfile.close();
   
+  //now get file size.. reusable technique
   ifstream tmp2(fullpath);
-  tmp2.seekg(0, ios_base::end); //will return size 0 without this
+  tmp2.seekg(0, ios_base::end); //will show size 0 without this
   cout<<fullpath<<" created with "<<tmp2.tellg()<<" bytes.\n";
 }
