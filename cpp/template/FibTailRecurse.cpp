@@ -11,12 +11,11 @@ typedef long long fnum; //a Fib number
 
 /* 0,1,1,2,3,5...
 */
-fnum recurFunc(size_t distance, fnum first=0, fnum second=1){
-	if (distance==0) return first;
-	//cout<<first<<","<<second<<","<<distance<<endl;
-	return recurFunc(distance-1, second, first+second);
+fnum recurFunc(size_t distance, fnum distantAncestor1=0, fnum distantAncestor2=1){
+	if (distance==0) return distantAncestor1;
+	//cout<<distantAncestor1<<","<<distantAncestor2<<","<<distance<<endl;
+	return recurFunc(distance-1, distantAncestor2, distantAncestor1+distantAncestor2);
 }
-
 // all 3 template params are non-type !
 template <int DISTANCE, fnum A=0, fnum B=1> struct FibCompileTime{
     enum : fnum { //recursive computation is done at compile time
@@ -25,7 +24,7 @@ template <int DISTANCE, fnum A=0, fnum B=1> struct FibCompileTime{
 };
 
 //template specialization as a recursion exit condition
-//Compiler would choose this specialized template when first template arg = 0
+//Compiler would choose this specialization when first template arg i.e. DISTANCE = 0
 template <fnum A, fnum B> struct FibCompileTime<0, A, B> {
     enum : fnum { value = A };
 };
