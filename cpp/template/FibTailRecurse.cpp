@@ -1,3 +1,4 @@
+//technique: enum nested in a class template
 //showcase compile time recursive template instantiation
 //showcase template specialization
 //showcase enum with a specific base type using a typedef
@@ -12,9 +13,15 @@ typedef long long fnum; //a Fib number
 /* 0,1,1,2,3,5...
 */
 fnum recurFunc(size_t distance, fnum distantAncestor1=0, fnum distantAncestor2=1){
-	if (distance==0) return distantAncestor1;
-	//cout<<distantAncestor1<<","<<distantAncestor2<<","<<distance<<endl;
-	return recurFunc(distance-1, distantAncestor2, distantAncestor1+distantAncestor2);
+    if (distantAncestor1==0){
+        cout<<distance<<" is original input to recurFunc\n";
+    }
+    if (distance==0) {
+        cout<<distantAncestor1<<" is result from recurFunc\n";
+        return distantAncestor1;
+    }
+    //cout<<distantAncestor1<<","<<distantAncestor2<<","<<distance<<endl;
+    return recurFunc(distance-1, distantAncestor2, distantAncestor1+distantAncestor2);
 }
 // all 3 template params are non-type !
 template <int DISTANCE, fnum A=0, fnum B=1> struct FibCompileTime{
