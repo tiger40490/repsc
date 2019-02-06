@@ -1,7 +1,9 @@
 //showcase: additional dummy type U to support conversion ctor from smartPtr<U> -- the answer for the SCB-FM architect
 //showcase: inside a template, print the static type of the type-argument
+//showcase: new T
+//type() function... where from?
 
-//todo: why the makeRVR version works?
+//todo: why the makeRval() output gets converted to a raw ptr?
 #include <iostream>
 #include <memory>
 using namespace std;
@@ -19,7 +21,7 @@ template<typename T> struct smartPtr{
     return smartPtr<T>(new T);
   }
   smartPtr(smartPtr<T> && arg) : raw(arg.raw){
-    cout<<"move ctor\n"; //not in use
+    cout<<"move ctor\n"; //not selected by compiler
   }
   template <class U>
   smartPtr(smartPtr<U> const & arg) : raw(arg.raw){
@@ -60,6 +62,7 @@ int main(){
   smartPtr<B> b3 = smartPtr<D>::makeRval();
   //smartPtr<B> b3(smartPtr<int>(new int(55))); //won't compile
   cout<<"\n---now testing implicit conversions..\n";
+  //return 0;
   takingNonRefStd(stdDD); //working
   takingNonRef(d2);  //working
   takingRef_rvr(d2); //working -- by creating a rval temp
