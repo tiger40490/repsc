@@ -1,9 +1,9 @@
+//todo: why the makeRval() output gets converted to a raw ptr? check blog
+
 //showcase: additional dummy type U to support conversion ctor from smartPtr<U> -- the answer for the SCB-FM architect
 //showcase: inside a template, print the static type of the type-argument
 //showcase: new T
-//type() function... where from?
-
-//todo: why the makeRval() output gets converted to a raw ptr?
+//showcase: type() function
 #include <iostream>
 #include <memory>
 using namespace std;
