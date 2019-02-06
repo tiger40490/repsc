@@ -1,5 +1,7 @@
 //showcase: additional dummy type U to support conversion ctor from smartPtr<U> -- the answer for the SCB-FM architect
 //showcase: inside a template, print the static type of the type-argument
+
+//todo: why the makeRVR version works?
 #include <iostream>
 #include <memory>
 using namespace std;
@@ -17,7 +19,7 @@ template<typename T> struct smartPtr{
     return smartPtr<T>(new T);
   }
   smartPtr(smartPtr<T> && arg) : raw(arg.raw){
-    cout<<"copy ctor\n";
+    cout<<"move ctor\n"; //not in use
   }
   template <class U>
   smartPtr(smartPtr<U> const & arg) : raw(arg.raw){
@@ -49,11 +51,12 @@ void takingRef_rvr(smartPtr<B> && arg){ cout<<"takingRef_rvr\n"; }
 void takingNonRef(smartPtr<B> arg){ cout<<"takingNonRef\n"; }
 int main(){
   shared_ptr<D> stdDD(new D); //EXPLICIT cvctor
-  shared_ptr<B> stdBB(stdDD);
+  //shared_ptr<B> stdBB(stdDD);
   
   smartPtr<D> d2(new D);
-  cout<<"\n---now constructing smartPtr<B> from smartPtr<D>..\n";
+  cout<<"\n---now constructing non-std smartPtr<B> from smartPtr<D>..\n";
   smartPtr<B> b2(d2);
+  cout<<"\n---now constructing non-std smartPtr<B> from tmp smartPtr<D>..\n";
   smartPtr<B> b3 = smartPtr<D>::makeRval();
   //smartPtr<B> b3(smartPtr<int>(new int(55))); //won't compile
   cout<<"\n---now testing implicit conversions..\n";
