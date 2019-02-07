@@ -1,6 +1,6 @@
 #include <iostream>
 #include <pthread.h>
-#include <semaphore.h>
+#include <semaphore.h> //was it designed as part of pthreads?
 #include <unistd.h>
 using namespace std;
 
@@ -44,7 +44,7 @@ int main()
     int const permitCnt=1;
     sem_init(&mutex, 0, permitCnt);
     pthread_t t1,t2;
-    pthread_create(&t1,NULL,thread, new char('a') ); //acquire first, but not used
+    pthread_create(&t1,NULL,thread, new char('a') ); //acquire first, but this 'a' value is not used
     usleep(1000);
     pthread_create(&t2,NULL,thread, new char('i') );  //increment first
     pthread_join(t1, NULL);
