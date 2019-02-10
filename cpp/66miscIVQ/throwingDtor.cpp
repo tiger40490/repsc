@@ -5,9 +5,9 @@ struct Trade{
 };
 
 int main(){
-    try {
-	    Trade b;
-		throw 0;
+  try {
+	  Trade b;
+		//throw 0; //crashing with or without this
 	}
 	catch ( int a ) {
 	    std::cout << "Caught : " << a << std::endl;
