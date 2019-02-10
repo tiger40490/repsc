@@ -15,8 +15,9 @@ unique_ptr<Obj> func(unique_ptr<Obj> ptr){
 	ptr->update('h');
 	return ptr;  
   //Deepak said .. This is automatically converted to Rvalue Reference.
-  //EffectiveModernC++ P176 says that in this situation, compiler can't use RVO so it must apply implicit std::move() and return a Rvalue Reference
-}
+  
+  //EffectiveModernC++ P176 says that in this situation, compiler can't use RVO so it must apply implicit std::move() and return a Rvalue Reference, even though declared return type is a non-ref !
+}, 
 
 int main(){
 	unique_ptr<Obj> ptr=make_unique<Obj>();
