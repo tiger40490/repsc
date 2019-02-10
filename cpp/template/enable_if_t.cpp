@@ -2,7 +2,9 @@
 
 1) programmer to specify an optional 2nd type arg like enable_if_t<... , AAA> so if type check passes, then enable_if_t is an alias of AAA
 
-2) use enable_if_t<...>* as a type, which evaluates to the void pointer type. This is because enable_if_t has its 2nd type arg default to void. You can't use void as a type, but void pointer is a proper type.
+2) use enable_if_t<...> *  as a type, which evaluates to the void pointer type. This is because enable_if_t has its 2nd type arg default to void. You can't use void as a type, but void pointer is a proper type. 
+
+Note that in both 1) and 2), if type check fails, enable_if_t is not a type at all. In contrast, void is a type.
 
 I don't prefer to put enable_if_t as function param type because it requires a default arg. 
 */
@@ -31,5 +33,5 @@ fvoidP(T t){
 int main(){
     fexp(new int(2));
     fvoidP(new int(10));
-    //fvoidP(333); //Won't compile. This overload is removed by enabled_if
+    //fvoidP(333); //Won't compile. The only overload of fvoidP() is removed by enabled_if
 }//My own experiment, not based on online code
