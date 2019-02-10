@@ -3,11 +3,17 @@
 #include <limits>
 #include <cmath>
 
-//For floating type's, the below function will be used to generate the functions
+/*At template instantiation time, if actual type is a float or double, then Equals() return type would be bool. 
+
+If not a float, then I would think this template instantiation fails since the Equals() return type is effectively missing.
+*/
 template <typename T>
 typename std::enable_if<std::is_floating_point<T>::value, bool>::type
 Equals( T lhs, T rhs ){
 	std::cout << "Floating type comparision" << std::endl;
+
+  //static_assert(std::is_pointer<T>::value); <-- this static_assert would break compiler and SFINAE engine would be powerless against it. This is a compilation error not a substitution failure.
+  
 	return std::abs( lhs - rhs )<0.01;
 }
 
@@ -18,12 +24,11 @@ template <typename T>
 typename std::enable_if<!std::is_floating_point<T>::value, bool>::type
 Equals( T lhs, T rhs ){
 	std::cout << "Non-float type comparision" << std::endl;
-  //static_assert(std::is_pointer<T>::value); <-- this static_assert would break compiler and SFINAE engine would be powerless agsint this error. This is a compilation error not a substitution failure.
 	return lhs == rhs;
 }
 
 int main(){
-	float a = 1.0, b = 1.0001;
+	double a = 1.0, b = 1.0001;
 	if ( Equals<float>(a , b ) ) 	{
 		std::cout << "Both float points are Equal " << std::endl;
 	}	else	{
