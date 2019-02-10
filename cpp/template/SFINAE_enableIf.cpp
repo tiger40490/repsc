@@ -18,6 +18,7 @@ template <typename T>
 typename std::enable_if<!std::is_floating_point<T>::value, bool>::type
 Equals( T lhs, T rhs ){
 	std::cout << "Non-float type comparision" << std::endl;
+  //static_assert(std::is_pointer<T>::value); <-- this static_assert would break compiler and SFINAE engine would be powerless agsint this error. This is a compilation error not a substitution failure.
 	return lhs == rhs;
 }
 
