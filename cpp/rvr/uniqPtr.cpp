@@ -23,5 +23,5 @@ int main(){
 	unique_ptr<Obj> ptr=make_unique<Obj>();
 	unique_ptr<Obj> nPtr =  func( move(ptr) );//std::move() needed to compile
 	nPtr->print();
-}/*Deepak's demo of mover semantics
+}/*Deepak's demo of unique_ptr move semantics
 */
