@@ -1,3 +1,4 @@
+#include "binTreeUtil.h"
 #include <iostream>
 using namespace std;
 
@@ -35,6 +36,7 @@ void recur(Node * n){
 int maxDepth(){
     recur(&root);
     cout<<maxD;
+    dumpTreeNode(&root, 5);
 }
 int main(){
    maxDepth();
