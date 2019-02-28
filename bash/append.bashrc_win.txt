@@ -36,6 +36,7 @@ exa(){ #testing: exa -t ss ~/.ssh
   alias  prj=$shortname # USE MORE
 }
 
+git config core.whitespace -trailing-space # complains if not in a git repo directory
 g++ --version |grep g++.exe
-python --version
+py --version
 printf "done sourcing append.bashrc_win.txt\n"
