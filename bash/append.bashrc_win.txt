@@ -1,4 +1,5 @@
 alias nn='git commit -a --amend --no-edit' #useful while standing in train
+alias pp='set -x; git pull;  git push --all; set +x'
 alias py='winpty python.exe'
 alias python='echo python command breaks in git-bash.. Disable this alias if you must.'
 alias s-='  source  $HOME/.bashrc  '
