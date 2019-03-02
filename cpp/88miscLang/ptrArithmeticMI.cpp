@@ -1,8 +1,8 @@
 /*
 showcase pointer arithmetic uses sizeof(declared type)
-showcase create a class with a target sizeof
-showcase pointer subtraction result can be negative
-showcase function declaration without return type defauls to int
+showcase create a dummy class with a target sizeof
+showcase function declaration without return type .. defauls to int
+showcase pointer subtraction result can be a correct negative value
 */
 #include <stdio.h>
 #include <stddef.h>
@@ -46,6 +46,7 @@ int main(void) {
   auto ptrSubtraction = (char*)pc - (char*)(B2*)pc; //won't compare without cast
   cout<< ptrSubtraction<<" = addr diff #negative because B2 sub-object has higher address than B1 i.e. C \n";
   assert(ptrSubtraction == -1 * (int)sizeof(B1));
-
-}/*demo of sizeof ^ ptr arithmetic
+}/*
+demo of pointer casting in Multiple Inheritance context.
+demo sizeof ^ ptr arithmetic
 */
