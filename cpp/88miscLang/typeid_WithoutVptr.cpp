@@ -8,12 +8,12 @@ using namespace std;
 
 class base{
 public: 
-    virtual
+    //virtual
     ~base(){}
 };
 struct derived: public base{};
 int main(){
     base* p = new derived();
     cout<<typeid(*p).name(); // prints DERIVED if "virtual"; prints BASE otherwise  
-}/*
+}/* demo use of typeid() without any vptr
 */
