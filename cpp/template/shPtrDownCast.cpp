@@ -1,3 +1,6 @@
+/* 
+Can use typeid(..).name but if no virtual function, then my home-grown solution "this->dynamic_type" is needed.
+*/
 #include <iostream>
 #include <memory>
 using namespace std;
