@@ -1,8 +1,7 @@
 // Popular C interview question but somehow this can bring the machine to its knees
-//
-// showcasing macro "ss"
+// Doesn't work in windows :(
+// showcase
 #include<iostream>
-//#include<sstream>
 #include<map>
 #include<vector>
 #include<assert.h>
