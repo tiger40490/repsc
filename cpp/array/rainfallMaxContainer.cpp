@@ -9,7 +9,7 @@ typedef unsigned int idx;
 template<typename T,             int min_width=2> ostream & operator<<(ostream & os, vector<T> const & c){
    for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
    os<<endl;
-   for(int i=0; i<c.size(); ++i){ os<<setw(min_width)<<i<<" "; }
+   for(size_t i=0; i<c.size(); ++i){ os<<setw(min_width)<<i<<" "; }
    os<<endl;
    return os;
 }
@@ -51,7 +51,8 @@ int maxAreaCSY(vector<int>& height) {
   for (int max=0, left=0, right=height.size()-1;;){    
     if (left == right) return max;
     int vol = (right-left)*min( height[left], height[right] );
-    if (vol > max){      max = vol;}      //left2=left; right2=right;
+    if (vol > max){      max = vol;}      //leftBest=left; rightBest=right;
+    
     if (height[left] <= height[right]) left++;
     else right--;
   }
@@ -65,5 +66,5 @@ int main(){
   test1(40, {5,9,5,3,4,0,8,5,2});
 }/*Req: Q: Given an array of size N (>=2) of non-negative numbers representing N walls, find a pair of walls that can hold the most water.
 
-This is a rewrite based on my recall of the rainfall_Boris idea. I decided to include my friend CSY's shorter solution because contrasting these 2 solutions might provide valuable insight and help me remember some useful implementation/ECT techniques.
+This is a rewrite adapted from my recall of the rainfall_Boris idea. I decided to include my friend CSY's shorter solution because contrasting these 2 solutions might provide valuable insight and help me remember some useful implementation/ECT techniques.
 */
