@@ -1,11 +1,13 @@
 //showcase: std::ref to produce a copyable wrapper object containing a given reference
 //showcase: stateful functor object to start a thread. Rather useful.
 #include <thread>
+#include <mutex>
 #include <iostream>
 #include <unistd.h> //usleep() and sleep()
 using namespace std;
 
 struct Worker{
+    static std::mutex mutex;
     Worker() : _value(0) {}
     void operator()(unsigned int input) {
       this->_value = input*input;
