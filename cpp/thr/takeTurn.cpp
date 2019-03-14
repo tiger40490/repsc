@@ -18,7 +18,7 @@ struct Worker{
       cout<<this_thread::get_id()<<"-Thr: updating initial value from "<<_value<<" to "<<start<<endl;
       this->_value = start;
       while(_value < 22){
-        if (this->_value % thCnt == Next){
+        if (this->_value % thCnt == Next){ //reading Next without using any lock
           lk.lock();
           cout<<this_thread::get_id()<<"-Thr: "<<_value<<endl;
           _value += thCnt;
@@ -50,7 +50,7 @@ int main(){
       thr[i].join();
       cout << "per-worker final value = "<<worker[i].get_value()<<" would be wrong without ref()\n";
     }
-    cout<<"Note get_id() can't return any meaningful thread id after join(). You need to save the id's in advance.\n";
+    cout<<"Note get_id() can't return any meaningful thread id after join(). You need to save the id in advance.\n";
 }/*Requirement: N threads taking turn to print integers
 https://bintanvictor.wordpress.com/2019/03/07/two-threads-taking-turn-csy-vanguard/
 */
