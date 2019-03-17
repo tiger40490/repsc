@@ -20,21 +20,21 @@ def add(cur, val):
       else: add(cur.ri, val)
 def in_order_print(node, depth=0): 
   if node is None: 
-    print ' ' *3*depth + ']'
+    print '   ' *depth + ']'
     return
   in_order_print(node.le, depth+1)
-  print ' ' *3*depth + str(node.data)
+  print '   ' *depth + str(node.data)
   in_order_print(node.ri, depth+1)
 
 def pre_order_print(node, depth=0):
   if node is None: 
-    print ' ' *3*depth + ']'
+    print '|  ' *depth + ']'
     return
-  print ' ' *3*depth + str(node.data)
+  print '|  ' *depth + str(node.data)
   pre_order_print(node.le, depth+1)
   pre_order_print(node.ri, depth+1)  
 def main():
-  cnt=20
+  cnt=16
   rt = Node(cnt/2)
   x = range(cnt)
   import random; random.shuffle(x)
