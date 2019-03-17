@@ -20,15 +20,16 @@ def in_order_print(node, depth=0):
   print ' ' *3*depth + str(node.data)
   in_order_print(node.r_child, depth+1)
 
-def pre_order_print(root):
-  if not root: return    
-  print root.data
-  pre_order_print(root.l_child)
-  pre_order_print(root.r_child)  
+def pre_order_print(node):
+  if not node: return    
+  print node.data
+  pre_order_print(node.l_child)
+  pre_order_print(node.r_child)  
 def main():
   rt = Node(3)
   add(rt, Node(7))
   add(rt, Node(1))
   add(rt, Node(5))
   in_order_print(rt)
+  pre_order_print(rt)
 main()
