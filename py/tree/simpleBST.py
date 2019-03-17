@@ -5,15 +5,16 @@ class Node:
     self.le = None
     self.ri = None
     self.data = val
-def add(root, node):
+def add(root, val):
+  node = Node(val)
   if root is None: root = node
   else:
     if root.data > node.data:
       if root.le is None: root.le = node
-      else: add(root.le, node)
+      else: add(root.le, val)
     else:
       if root.ri is None: root.ri = node
-      else: add(root.ri, node)
+      else: add(root.ri, val)
 def in_order_print(node, depth=0): 
   if node is None: 
     print ' ' *3*depth + ']'
@@ -29,9 +30,9 @@ def pre_order_print(node):
   pre_order_print(node.ri)  
 def main():
   rt = Node(3)
-  add(rt, Node(7))
-  add(rt, Node(1))
-  add(rt, Node(5))
+  add(rt, 7)
+  add(rt, 1)
+  add(rt, 5)
   in_order_print(rt)
   pre_order_print(rt)
 main()
