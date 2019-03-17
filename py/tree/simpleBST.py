@@ -1,4 +1,4 @@
-'''todo: use the horizontal print
+'''todo: 
 '''
 class Node:
   def __init__(self, val):
@@ -15,7 +15,9 @@ def add(root, node):
       if root.ri is None: root.ri = node
       else: add(root.ri, node)
 def in_order_print(node, depth=0): 
-  if node is None: return
+  if node is None: 
+    print ' ' *3*depth + ']'
+    return
   in_order_print(node.le, depth+1)
   print ' ' *3*depth + str(node.data)
   in_order_print(node.ri, depth+1)
