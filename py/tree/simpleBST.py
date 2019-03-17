@@ -10,7 +10,8 @@ def add(cur, val):
   new = Node(val)
   if cur is None: cur = new
   else:
-    if cur.data > new.data:
+    if cur.data == new.data: print new.data,'is dupe'; return
+    elif cur.data > new.data:
       if cur.le is None: cur.le = new
       else: add(cur.le, val)
     else:
