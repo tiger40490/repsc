@@ -1,5 +1,4 @@
 '''todo: delete
-todo: if equal, then reject
 '''
 class Node:
   def __init__(self, val):
@@ -25,11 +24,13 @@ def in_order_print(node, depth=0):
   print ' ' *3*depth + str(node.data)
   in_order_print(node.ri, depth+1)
 
-def pre_order_print(node):
-  if not node: return    
-  print node.data
-  pre_order_print(node.le)
-  pre_order_print(node.ri)  
+def pre_order_print(node, depth=0):
+  if node is None: 
+    print ' ' *3*depth + ']'
+    return
+  print ' ' *3*depth + str(node.data)
+  pre_order_print(node.le, depth+1)
+  pre_order_print(node.ri, depth+1)  
 def main():
   rt = Node(50)
   add(rt, 77)
