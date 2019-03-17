@@ -1,20 +1,21 @@
-'''todo: 
+'''todo: delete
+todo: if equal, then reject
 '''
 class Node:
   def __init__(self, val):
     self.le = None
     self.ri = None
     self.data = val
-def add(root, val):
-  node = Node(val)
-  if root is None: root = node
+def add(cur, val):
+  new = Node(val)
+  if cur is None: cur = new
   else:
-    if root.data > node.data:
-      if root.le is None: root.le = node
-      else: add(root.le, val)
+    if cur.data > new.data:
+      if cur.le is None: cur.le = new
+      else: add(cur.le, val)
     else:
-      if root.ri is None: root.ri = node
-      else: add(root.ri, val)
+      if cur.ri is None: cur.ri = new
+      else: add(cur.ri, val)
 def in_order_print(node, depth=0): 
   if node is None: 
     print ' ' *3*depth + ']'
@@ -29,10 +30,18 @@ def pre_order_print(node):
   pre_order_print(node.le)
   pre_order_print(node.ri)  
 def main():
-  rt = Node(3)
-  add(rt, 7)
-  add(rt, 1)
-  add(rt, 5)
+  rt = Node(50)
+  add(rt, 77)
+  add(rt, 33)
+  add(rt, 11)
+  add(rt, 66)
+  add(rt, 55)
+  add(rt, 88)
+  add(rt, 44)
+  add(rt, 22)
+  add(rt, 99)
+  add(rt, 33)
+  
   in_order_print(rt)
   pre_order_print(rt)
 main()
