@@ -14,25 +14,21 @@ def binary_insert(root, node):
     else:
       if root.r_child is None: root.r_child = node
       else: binary_insert(root.r_child, node)
-def in_order_print(root, depth=0): 
-  if root is None: return
-  in_order_print(root.l_child, depth+1)
-  print ' '*3*depth + str(root.data)
-  in_order_print(root.r_child, depth+1)
+def in_order_print(node, depth=0): 
+  if node is None: return
+  in_order_print(node.l_child, depth+1)
+  print ' ' *3*depth + str(node.data)
+  in_order_print(node.r_child, depth+1)
 
 def pre_order_print(root):
-  if not root:
-    return    
+  if not root: return    
   print root.data
   pre_order_print(root.l_child)
   pre_order_print(root.r_child)  
 def main():
-  r = Node(3)
-  binary_insert(r, Node(7))
-  binary_insert(r, Node(1))
-  binary_insert(r, Node(5))
-  print "in order:"
-  in_order_print(r)
-  print "pre order"
-  pre_order_print(r)
+  rt = Node(3)
+  binary_insert(rt, Node(7))
+  binary_insert(rt, Node(1))
+  binary_insert(rt, Node(5))
+  in_order_print(rt)
 main()
