@@ -1,4 +1,6 @@
-'''todo: delete
+'''
+showcase random.shuffle a list
+todo: delete is too much work. Need to find the max node in the left subtree to replace the deleted node
 '''
 class Node:
   def __init__(self, val):
@@ -32,17 +34,11 @@ def pre_order_print(node, depth=0):
   pre_order_print(node.le, depth+1)
   pre_order_print(node.ri, depth+1)  
 def main():
-  rt = Node(50)
-  add(rt, 77)
-  add(rt, 33)
-  add(rt, 11)
-  add(rt, 66)
-  add(rt, 55)
-  add(rt, 88)
-  add(rt, 44)
-  add(rt, 22)
-  add(rt, 99)
-  add(rt, 33)
+  cnt=20
+  rt = Node(cnt/2)
+  x = range(cnt)
+  import random; random.shuffle(x)
+  for i in x: add(rt, i)
   
   in_order_print(rt)
   pre_order_print(rt)
