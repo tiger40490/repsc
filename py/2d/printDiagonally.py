@@ -17,12 +17,12 @@ def work():
 def populate():
   global m, width, height
   #  "global m" needed for reseating the pointer. Tested.
-  m = ((1,2,3,4,),
-       (5,6,7,8,),
-       (9,10,11,12,),
-       (13,14,15,16,),
-       (17,18,19,20,),
-      )
+  m = [[1,2,3,4],
+       [5,6,7,8],
+       [9,10,11,12],
+       [13,14,15,16],
+       [17,18,19,20]
+      ]
   height, width = len(m), len(m[0])
   
 def main():
