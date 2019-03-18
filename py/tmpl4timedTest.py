@@ -6,6 +6,7 @@ print li.pop(), li
 li.insert(0,-55) #insert at 0th position
 li.remove(-55) #remove an item equal to 55, assuming it exists
 del li[0] #; print li # remove by index
+print sum(li)
 ## dict init:
 pprint({1:'j', 3+2:'a'}); sys.exit()
 
