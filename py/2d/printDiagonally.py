@@ -16,16 +16,19 @@ def work():
 
 def populate():
   global m, width, height
-  m.append([1,2,3,4])
-  m.append([5,6,7,8])
-  m.append([9,10,11,12])
-  m.append([13,14,15,16])
-  m.append([17,18,19,20])
+  #  "global m" needed for reseating the pointer. Tested.
+  m = ((1,2,3,4,),
+       (5,6,7,8,),
+       (9,10,11,12,),
+       (13,14,15,16,),
+       (17,18,19,20,),
+      )
   height, width = len(m), len(m[0])
   
 def main():
   populate()
   work()
+  print '\n.. now the original matrix:'
   for r in xrange(len(m)):
     for c in xrange(width):
       print m[r][c], '\t',
