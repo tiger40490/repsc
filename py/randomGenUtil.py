@@ -1,6 +1,7 @@
 import sys, os, random; from pprint import pprint
 
-''' simple utility for timed coding tests
+''' simple utility for timed coding tests.
+random.shuffle() is easier to remember than random.sample() !
 '''
 def randomGen(cnt, minOutputVal, min=0):
   assert cnt <= minOutputVal-min+1 #optional input validation
