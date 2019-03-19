@@ -21,15 +21,15 @@ def q2(inPairs, x, y):
     directParents[p] # explicitly triggers defaultdict default_factory
   #pprint(dict(directParents)) ## done with directParents
   
-  ## for each of x and y, find the list of all ancestors (lia)
-  ans=dict() #child -> lia
-  for ch, lip in directParents.items():
-    print ch, lip
-    lia = dft(directParents, ch, set())
-    #print ch, lia 
-    ans[ch] = lia
-    #if len(lip) == 1: l1.append(ch)
-    #if len(lip) == 0: l0.append(ch)
+  ## for each of x and y, find the list of all ancestors (myAncestors)
+  ans=dict() #child -> myAncestors
+  for ch, myParents in directParents.items():
+    #print ch, myParents
+    myAncestors = dft(directParents, ch, set())
+    #print ch, myAncestors 
+    ans[ch] = myAncestors
+    #if len(myParents) == 1: l1.append(ch)
+    #if len(myParents) == 0: l0.append(ch)
   pprint(ans)
 
   for i in ans[x]: #O(K) k == # of individuals
