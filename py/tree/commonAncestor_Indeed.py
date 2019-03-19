@@ -11,18 +11,18 @@ def dft(di, c, ac): #return all ancestors of c
 # graph having K nodes and P edges, q2 has O(P+K) time complexity?? up to O(K*P) space complexity??
 def q2(inPairs, x, y):
   # l0=list(); l1 = list() # for Q1
-  d = defaultdict(list) 
+  directParents = defaultdict(list) 
   for p, c  in inPairs:
-    d[c].append(p)
-    if p not in d:    d[p]=list()
-  pprint(d)
+    directParents[c].append(p)
+    if p not in directParents:    directParents[p]=list()
+  pprint(directParents)
 
 # for each of x and y, find the list ancestors (lia)
-  # ans and d can become global variables to be initialized once only and frozen
+  # ans and directParents can become global variables to be initialized once only and frozen
   ans=dict() #ch -> lia
-  for ch, lip in d.items():
+  for ch, lip in directParents.items():
     print ch, lip
-    lia = dft(d, ch, set())
+    lia = dft(directParents, ch, set())
     #print ch, lia 
     ans[ch] = lia
     #if len(lip) == 1: l1.append(ch)
