@@ -4,16 +4,15 @@ parent_child_pairs = [(11,2), (1, 3), (2, 3), (3, 6), (5, 6), (5, 7), (4, 5), (4
 def dft(di, c, ac): #return all ancestors of c
   if c not in di: return set()
   for p in di[c]:
-    ac.add(p)
+    ac.add(p) # accumulator
     dft(di, p, ac)
   return ac # only used from top-level
 
-# graph having K nodes and P edges, q2 has O(P+K) time complexity, up to O(K*P) space complexity
-def q2(inp, x, y):
-  l0=list()
-  l1 = list()
+# graph having K nodes and P edges, q2 has O(P+K) time complexity?? up to O(K*P) space complexity??
+def q2(inPairs, x, y):
+  # l0=list(); l1 = list() # for Q1
   d = defaultdict(list) 
-  for p, c  in inp:
+  for p, c  in inPairs:
     d[c].append(p)
     if p not in d:    d[p]=list()
   pprint(d)
