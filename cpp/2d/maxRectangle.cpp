@@ -60,8 +60,8 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
   int const n = matrix[0].size() + 1;
   int const lastColIdx = n-2;
   int maxArea = 0;
-  vector<bsz> bar(n, 0);
-  
+
+  vector<bsz> bar(n, 0); //initialize n histogram bars to 0 height, only once per matrix
   for (int i = 0; i < rcnt; ++i) {
     for (idx j = 0; j <= lastColIdx; ++j) {//up to last real column. Fake col untouched
         if (matrix[i][j] == 1) bar[j] += 1;
