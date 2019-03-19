@@ -12,7 +12,7 @@ def dft(di, c, ac): #return all ancestors of c
     dft(di, p, ac)
   return ac # only used from top-level
 
-# graph having K nodes and P edges, q2 has O(P+K) time complexity?? up to O(K*P) space complexity??
+# graph having K nodes and P edges, q2 has O(P+K) time complexity?? up to O(K*P) space complexity?? provided we build the global "ancestors" container only once
 def q2(inPairs, x, y):
   # l0=list(); l1 = list() # for Q1
   directParents = defaultdict(list) # list as a default_factory
@@ -29,7 +29,7 @@ def q2(inPairs, x, y):
     ancestors[ch] = myAncestors
   pprint(ancestors)
 
-  # Loop below is possibly faster than set.intersection() method
+  # shorot-circuit algo below is possibly faster than set.intersection() method
   for i in ancestors[x]:
     if i in ancestors[y]: return True # has common ancestor
   else: return False # else is part of for-loop
