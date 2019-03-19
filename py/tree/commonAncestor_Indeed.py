@@ -1,5 +1,5 @@
 '''
-todo:  ans and directParents should become global variables to be initialized once only and frozen
+todo:  ancestors and directParents should become global variables to be initialized once only and frozen
 todo: dft should not rebuild the set for a node multiple times
 '''
 from pprint import pprint
@@ -22,18 +22,15 @@ def q2(inPairs, x, y):
   #pprint(dict(directParents)) ## done with directParents
   
   ## for each of x and y, find the list of all ancestors (myAncestors)
-  ans=dict() #child -> myAncestors
+  ancestors=dict() #child -> myAncestors
   for ch, myParents in directParents.items():
-    #print ch, myParents
     myAncestors = dft(directParents, ch, set())
-    #print ch, myAncestors 
-    ans[ch] = myAncestors
-    #if len(myParents) == 1: l1.append(ch)
-    #if len(myParents) == 0: l0.append(ch)
-  pprint(ans)
+    #print ch, myParents, myAncestors 
+    ancestors[ch] = myAncestors
+  pprint(ancestors)
 
-  for i in ans[x]: #O(K) k == # of individuals
-        if i in ans[y]: return True
+  for i in ancestors[x]:
+    if i in ancestors[y]: return True
   else: return False
   
 assert not q2(parent_child_pairs, 3,8)
