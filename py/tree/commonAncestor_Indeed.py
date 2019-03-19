@@ -29,15 +29,16 @@ def q2(inPairs, x, y):
     ancestors[ch] = myAncestors
   pprint(ancestors)
 
+  # Loop below is possibly faster than set.intersection() method
   for i in ancestors[x]:
-    if i in ancestors[y]: return True
-  else: return False
+    if i in ancestors[y]: return True # has common ancestor
+  else: return False # else is part of for-loop
   
 assert not q2(parent_child_pairs, 3,8)
-assert q2(parent_child_pairs, 5,8)
-assert q2(parent_child_pairs, 6,8)
+assert     q2(parent_child_pairs, 5,8)
+assert     q2(parent_child_pairs, 6,8)
 assert not q2(parent_child_pairs, 1,3)
-assert q2(parent_child_pairs, 6,3)
+assert     q2(parent_child_pairs, 6,3)
 '''Req: Suppose we have some input data describing a graph of relationships between parents and children over multiple generations. The data is formatted as a list of (parent, child) pairs, where each individual is assigned a unique integer identifier.
 
 For example, in this diagram, 3 is a child of 1 and 2, and 5 is a child of 4:
