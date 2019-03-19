@@ -1,5 +1,5 @@
 alias nn='git commit -a --amend --no-edit; df -h --output=avail / ' #useful while standing in train
-alias pp='set -x; git pull;  git push --all; set +x'
+# alias pp='set -x; git pull;  git push --all; set +x'
 alias py='winpty python.exe'
 alias python='echo python command breaks in git-bash.. Disable this alias if you must.'
 alias s-='  source  $HOME/.bashrc  '
@@ -35,6 +35,15 @@ exa(){ #testing: exa -t ss ~/.ssh
   prj="$fullpath"
   alias  "$shortname"="cd $fullpath;ls1page $ops"
   alias  prj=$shortname # USE MORE
+}
+pp(){ #by default does a  traditiona pp
+ set -x
+ git pull;  git push --all
+ for arg; do
+   git checkout $arg
+   git pull;  git push --all
+ done
+ set +x
 }
 
 git config core.whitespace -trailing-space # complains if not in a git repo directory
