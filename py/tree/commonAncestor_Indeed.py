@@ -1,3 +1,7 @@
+'''
+todo:  ans and directParents should become global variables to be initialized once only and frozen
+todo: dft should not rebuild the set for a node multiple times
+'''
 from pprint import pprint
 from collections import defaultdict
 parent_child_pairs = [(11,2), (1, 3), (2, 3), (3, 6), (5, 6), (5, 7), (4, 5), (4, 8), (8, 10) ]
@@ -11,15 +15,14 @@ def dft(di, c, ac): #return all ancestors of c
 # graph having K nodes and P edges, q2 has O(P+K) time complexity?? up to O(K*P) space complexity??
 def q2(inPairs, x, y):
   # l0=list(); l1 = list() # for Q1
-  directParents = defaultdict(list) 
+  directParents = defaultdict(list) # list as a default_factory
   for p, c  in inPairs:
     directParents[c].append(p)
-    if p not in directParents:    directParents[p]=list()
-  pprint(directParents)
-
-# for each of x and y, find the list ancestors (lia)
-  # ans and directParents can become global variables to be initialized once only and frozen
-  ans=dict() #ch -> lia
+    directParents[p] # explicitly triggers defaultdict default_factory
+  #pprint(dict(directParents)) ## done with directParents
+  
+  ## for each of x and y, find the list of all ancestors (lia)
+  ans=dict() #child -> lia
   for ch, lip in directParents.items():
     print ch, lip
     lia = dft(directParents, ch, set())
@@ -27,7 +30,7 @@ def q2(inPairs, x, y):
     ans[ch] = lia
     #if len(lip) == 1: l1.append(ch)
     #if len(lip) == 0: l0.append(ch)
-  #pprint(ans)
+  pprint(ans)
 
   for i in ans[x]: #O(K) k == # of individuals
         if i in ans[y]: return True
