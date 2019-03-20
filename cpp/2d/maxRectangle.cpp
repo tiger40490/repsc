@@ -1,7 +1,8 @@
 /*
+todo: explain need for the right most artificial column
 sugg: work out the logic for a simple staircase first. Once clear, work out one more staircase on the right.
 
-why unconditionally push (to stackk) current bar? Cos it can be part of a growing rectangle
+why unconditionally push (to stack) current bar? Cos it can be part of a growing rectangle
 
 why do we pop() until the remaining bars (in stack) are strictly lower than current bar? cos for such a small bar, the "run" is not over yet. 
 
@@ -9,7 +10,7 @@ Why O(N) per-row? cos the stack only holds up to N items and each item is pushed
 
 showcase: separate out first inner for-loop so as to enhance clarify and focus on the core algo
 showcase: before main(), add func prototypes for the test functions, so as to minimize scrolling between algo and main()
-showcase: clever tweaks to enable unit testing of the histogram algo
+showcase: my clever tweaks to enable unit testing of the histogram algo
 */
 #include <iostream>
 #include <vector>
@@ -57,7 +58,7 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
   if (matrix.size() <= 0 || matrix[0].size() <= 0) return 0;
     
   int const rcnt = matrix.size();
-  int const n = matrix[0].size() + 1;
+  int const n = matrix[0].size() + 1; //rightmost column is additional
   int const lastColIdx = n-2;
   int maxArea = 0;
 
@@ -69,12 +70,12 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
     }
     /* histo bars updated for this row, now compute max rectangle in this snapshot of histogram
     
-    Below is the central algo -- the rectangle-in-histogram algo. Too tricky so I set up special test fixture just to uncover the logic.
+    Below is the central algo -- the rectangle-in-histogram algo. Short but too tricky so I set up special test fixture just to uncover the logic.
     */
     //bar = {33,11,22,33,22}; bar.push_back(0);
     cout<<bar;
-    list<idx> s;
-    vector<bsz> vec;
+    list<idx> s; //the all-important stack
+    vector<bsz> vec; //rename to vec4assert?
     for (idx j = 0; j < bar.size(); ++j) {
       //cout<<"\n  == "<<j<<" == j; bar[j] = "<<bar[j]<<endl;
       
