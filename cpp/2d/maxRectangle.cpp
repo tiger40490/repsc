@@ -96,12 +96,12 @@ int histo(size_t const exp, vector<vector<char> > const matrix) {
         }else{
           width = j - s.back() - 1;
         }
-        
-        vec.push_back(h);
         if (h * width > maxArea){
           maxArea = h * width;
           cout<<maxArea<<"sqm is the updated maxArea\n";
         }
+        
+        vec.push_back(h);
       }
       if (!s.empty()){ //observer
           assert(STACK_TOP < bar[j] && "push only when current bar is higher than all remainders in stack");
