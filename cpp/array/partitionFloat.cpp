@@ -29,6 +29,8 @@ pii partitionFwdLinearTime(float const & pivotVal, idx const & le, idx const & r
 O(N): main loop iterates exactly N times, in a single pass because within each iteration we increment either curr or ri pointer.
 
 Smarter than my earlier attempts using two-pass
+
+[[Programming pearls]] may have a qsort using 2 pivots.
 */
 pi2 partition2(float const & pivotVal1, float const & pivotVal2){
   auto const origArr(arr);

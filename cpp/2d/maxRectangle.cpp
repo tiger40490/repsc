@@ -1,4 +1,5 @@
 /*
+todo: rewrite by myself to internalize the core algo
 todo: explain need for the right most artificial column? I guess it ensures entire stack is popped
 todo: invariants on the stack? From bottom to top, is the indices of a strictly increasing sequence of bars?
 sugg: work out the logic for a simple staircase first. Once clear, work out one more staircase on the right.
