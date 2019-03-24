@@ -19,5 +19,5 @@ int main(){
   }
   cout<<x;
 }
-/* Requirement: compute sqrt 2 (or another integer) by converging trial-n-error
+/* Requirement (Pimco 2018): compute sqrt 2 (or another integer) by converging trial-n-error
 */
