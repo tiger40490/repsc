@@ -2,14 +2,15 @@
 #include <assert.h>
 using namespace std;
 
-struct B1{
+struct B1f{
   int f1; //without this field, all 3 object addresses are identical
 };
 struct B2{
   int f2; //without this field, all 3 object addresses are identical
 };
+#define B1 B1f
 struct D: public B1, B2{} der;
-int main(){
+int testWithFields(){
   auto pd = &der;
   auto pb1 = dynamic_cast<B1*>(pd);
   auto pb2 = dynamic_cast<B2*>(pd);
@@ -20,7 +21,9 @@ int main(){
   assert((void*)pb1==(void*)pd);
   assert((void*)pb2!=(void*)pd);
 }
-/* Q: dynamic_cast always(?) gives the same address?
+int main(){
+  testWithFields();
+}/* Q: dynamic_cast always(?) gives the same address?
    A: not always. Consider MI.
    A: if any one of the two base classes is a pure-interface (i.e. no instance field) then YES
 */
