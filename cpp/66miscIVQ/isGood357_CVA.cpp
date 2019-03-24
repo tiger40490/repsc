@@ -28,6 +28,6 @@ int main(){
     isGood(cand);
   }
 }
-/* return true if k has no other factors beside 3,5 or 7. 
+/* Requirement(CVA): return true if k has no other factors beside 3,5 or 7. 
 Full interview is described in https://bintanvictor.wordpress.com/2018/04/05/cva-c-iv-2/
 */
