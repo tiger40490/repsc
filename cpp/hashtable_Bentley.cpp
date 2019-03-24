@@ -1,6 +1,4 @@
 /* 
-todo: tighten the const arond char*
-
 showcase: allocate array of pointers then (must) initialize each to nullptr
 showcase: nested class
 showcase: duplicate a c-string on heap
