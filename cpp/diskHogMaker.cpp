@@ -2,7 +2,7 @@
 showcase: check file existence
 showcase: check file size 
 
-tested for 20/100 MB
+tested for 20/100/500/1024 MB
 */
 #include <iostream>
 #include <fstream>
