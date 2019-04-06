@@ -78,5 +78,5 @@ int main(){
   testPassInByValue();
 //testContainer();
 }
-/*Goal is to test how a move-only type (like st::mutex or unique_ptr) is passed by Value
+/*Goal is to test how a move-only type (like std::mutex or unique_ptr) is passed by Value
 */
