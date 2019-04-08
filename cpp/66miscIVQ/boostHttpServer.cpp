@@ -1,18 +1,14 @@
 #include <boost/network/protocol/http/server.hpp>
 #include <string>
 #include <iostream>
-
 namespace http = boost::network::http;
 
 struct hello_world; //fwd declaration to deal with the circular dependency -- typdev vs struct
 typedef http::server<hello_world> server;
-
 struct hello_world {
-    void operator() (server::request const &request,
-                     server::response &response) {
+    void operator() (server::request const &request, server::response &response) {
         std::string ip = source(request);
-        response = server::response::stock_reply(
-            server::response::ok, std::string("Hello, ") + ip + "!");
+        response = server::response::stock_reply(server::response::ok, std::string("Hello, ") + ip + "!");
     }
 };
 int main(int argc, char * argv[]) {
