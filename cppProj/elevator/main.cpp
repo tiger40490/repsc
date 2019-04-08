@@ -138,4 +138,4 @@ int main(){
   }
   cout<<"requested to termination\n";
 }
-//Requirement https://bintanvictor.wordpress.com/2018/03/16/elevator-design/
+//Requirement https://wp.me/p74oew-4T2
