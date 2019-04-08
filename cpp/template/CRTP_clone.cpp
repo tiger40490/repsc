@@ -1,4 +1,4 @@
-//A halo for a large number of high-end QQ interviews, even though this technique is not widely needed.
+//relevant for high-end QQ, even though this technique is not widely needed.
 
 //showcase unique_ptr returned from clone()
 //showcase override keyword
@@ -35,5 +35,6 @@ int main(){
   cout<<"after calling clone()\n";
 }/* demo of CRTP to implement a virtual clone(). 
 
-Note the subclass inherites a functional virtual clone() method without doing anything. I think without TMP, base class clone() can't return a subclass instance.
+Note the subclass inherites a functional virtual clone() method without doing anything. 
+I guess without TMP, base class clone() can't return a subclass instance.
 */
