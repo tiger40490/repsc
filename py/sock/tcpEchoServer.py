@@ -1,6 +1,8 @@
 #!/usr/bin/python -u
 '''
-TCP echo server based on https://docs.python.org/2.4/lib/socket-example.html
+TCP echo server based on https://docs.python.org/2.4/lib/socket-example.html, adapted and used for integration testing. 
+
+The IP doesn't belong to the any employer as I wrote it in my spare time, without any proprietary content.
 '''
 import socket, sys,os , getopt
 from datetime import datetime
