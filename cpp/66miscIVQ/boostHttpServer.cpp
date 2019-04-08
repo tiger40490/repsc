@@ -22,4 +22,5 @@ int main(int argc, char * argv[]) {
         std::cerr << e.what() << std::endl;        return 1;
     }
 }/*based on https://cpp-netlib.org/0.9.1/hello_world_server.html
+This library is not really part of boost so I didn't download and test the code.
 */
