@@ -1,10 +1,9 @@
 package com.wells;
-
 import java.util.concurrent.locks.*;
-
 /**
- * This basic queue is designed for single-threaded use. We will provide a thread-safe facade to
- * protect it
+ * The underlying queue was designed for single-threaded use. We now provide a thread-safe facade to
+ * protect it.
+ * My blogpost https://wp.me/p74oew-7mE provides more details.
  */
 interface PositiveIntQueueForSingleThread {
 	int elementCount();
