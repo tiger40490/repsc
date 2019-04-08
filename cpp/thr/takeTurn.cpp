@@ -52,5 +52,5 @@ int main(){
     }
     cout<<"Note get_id() can't return any meaningful thread id after join(). You need to save the id in advance.\n";
 }/*Requirement: N threads taking turn to print integers
-https://bintanvictor.wordpress.com/2019/03/07/two-threads-taking-turn-csy-vanguard/
+https://wp.me/p74oew-6Qn has more details
 */
