@@ -11,6 +11,6 @@ public class Intern {
         System.out.println(literal2 == literal1); //true 2 literals
         System.out.println(literal2 == internalized); //true interned object IS the s2 object
         System.out.println(s3 == literal2 ); //false by default, no intern
-        System.out.println(s3 == internalized); //false 
+        System.out.println(s3 == internalized); //false !!!!!!!
     }
 }
