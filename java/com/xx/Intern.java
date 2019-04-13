@@ -9,7 +9,7 @@ public class Intern {
         final String internalized = s3.intern(); // returns a reference of the literal
 		// results in Java 8:
         System.out.println(literal2 == literal1); //true 2 literals
-        System.out.println(literal2 == internalized); //true s4 object IS the s2 object
+        System.out.println(literal2 == internalized); //true interned object IS the s2 object
         System.out.println(s3 == literal2 ); //false by default, no intern
         System.out.println(s3 == internalized); //false 
     }
