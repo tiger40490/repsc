@@ -4,8 +4,10 @@ class Node(object):
     self.data = data
     self.next = next
   def print2(self):
+    print self
+  def __repr__(self):
     _nx = self.next
-    print '[' + str( self.data ) + '] => ', id(_nx) if _nx else 0
+    return '[' + str( self.data ) + '] => ' + str(id(_nx) if _nx else 0)
 _7 = Node(7)
 _6 = Node(6, _7)
 _5 = Node(5, _6)
