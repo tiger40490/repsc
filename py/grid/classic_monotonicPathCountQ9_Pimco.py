@@ -122,13 +122,11 @@ def startSpreadsheet(): #Based on Ashish Singh's tips, faster than BFT
   global finalCnt, score
   score=[[0 for _ in xrange(width)] for _ in xrange(height)] # init
   for r in xrange(height): # populate first column
-    if m[r][0] == 0: 
-      break
-    score[r][0] = m[r][0]
+    if m[r][0] == 0: break # all subsequent cells in first column have score=0
+    score[r][0] = 1
   for c in xrange(1,width): # populate top row
-    if m[0][c] == 0: 
-      break
-    score[0][c] = m[0][c]
+    if m[0][c] == 0: break
+    score[0][c] = 1
 
   for r in xrange(1,height):  
     for c in xrange(1,width): 
