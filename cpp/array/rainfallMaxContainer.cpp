@@ -46,7 +46,7 @@ int maxAreaMyAlgo(vector<int>& height) {
     if (ret < area) ret = area;
   }
 }
-int maxAreaCSY(vector<int>& height) {
+int maxAreaCSY(vector<int> const & height) {
   cout<<height;
   for (int max=0, left=0, right=height.size()-1;;){    
     if (left == right) return max;
@@ -58,7 +58,8 @@ int maxAreaCSY(vector<int>& height) {
   }
 }
 void test1(int expected, vector<int> v){
-  assert(expected == maxAreaMyAlgo(v));
+//  assert(expected == maxAreaMyAlgo(v));
+  assert(expected == maxAreaCSY(v));  
 }
 int main(){
   test1(7, {7,9});
