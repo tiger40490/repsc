@@ -8,7 +8,9 @@ def main():
     serversocket.listen(0)
 
     # Child Process
-    if os.fork() == 0:
+    if os.fork() == 0: # usually child process would use new worker 
+# socket only, but this child runs accept() on the same listening 
+# socket handle inherited from parent process !!
         accept_conn("child", serversocket)
 
     accept_conn("parent", serversocket)
