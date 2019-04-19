@@ -48,12 +48,14 @@ int maxAreaMyAlgo(vector<int>& height) {
 }
 int maxAreaCSY(vector<int> const & height) {
   cout<<height;
-  for (int max=0, left=0, right=height.size()-1;;){    
-    if (left == right) return max;
-    int vol = (right-left)*min( height[left], height[right] );
-    if (vol > max){      max = vol;}      //leftBest=left; rightBest=right;
+  for (int ret=0, left=0, right=height.size()-1;;){    
+    if (left == right) return ret; //must go all the way till here since between last two (adjacent) walls vol could be highest
+    ret = std::max(ret, (right-left)*min( height[left], height[right] ));
+    //if (vol > ret){      ret = vol;}      //leftBest=left; rightBest=right;
     
-    if (height[left] <= height[right]) left++;
+    //if we move the higher wall, we could miss a better "pair"
+    if (height[left] >= height[right]) 
+		       left++;
     else right--;
   }
 }
