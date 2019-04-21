@@ -18,6 +18,7 @@ def visit(node):
 def inOrderDftRecursive():
     visit(root)
     print '\n^ ^ ^ ^ ^ dump ^ ^ ^ ^ ^'
+### above are readonly functions
 def insertNewFailed(val):
     #print '---- inserting', val
     parent = root
@@ -38,7 +39,11 @@ def insertNewFailed(val):
         return 0
       parent = parent.ri
       #print 'parent set to', parent.data
-def _canBePreOrderBST(li):
+def insertFailed(x):
+'''if x exceeds any of the (would-be-ancestor) nodes visited, then proceed with the descend
+else, before moving left, verify the right-child is null
+'''       
+def sol1_canBePreOrderBST(li):
   global root
   root = Node(li[0], None)
   for i in xrange(1, len(li)):
@@ -46,7 +51,7 @@ def _canBePreOrderBST(li):
       print 'Failed to insert         ', li[i], '->',
       return False
   return True
-def geeksForGeeks(li):
+def sol8_geeksForGeeks(li):
     s = [] # all the nodes able to take a right child
     root = -2**32
     for value in li: 
@@ -61,8 +66,8 @@ def geeksForGeeks(li):
     return True
 def canBePreOrderBST(li):
   print 'input =', li
-  #return geeksForGeeks(li)
-  ret = _canBePreOrderBST(li)
+  #return sol8_geeksForGeeks(li)
+  ret = sol1_canBePreOrderBST(li)
   inOrderDftRecursive()
   return ret;  
 def main():
