@@ -1,4 +1,5 @@
 # showcase: global var not defined? Fine!
+# showcase: avoid hard-to-type None/False/True
 class Node(object):
     def __init__(self, data, up_node, left_node=None, right_node=None):
         self.data = data
@@ -40,14 +41,26 @@ def insertNewFailed(val):
       parent = parent.ri
       #print 'parent set to', parent.data
 def insertFailed(x):
-'''if x exceeds any of the (would-be-ancestor) nodes visited, then proceed with the descend
-else, before moving left, verify the right-child is null
-'''       
+  ''' reimplementation
+if x exceeds any of the (would-be-ancestor) nodes visited, then proceed with the right-descent
+else, before descending left, verify the right-child is null
+  '''
+  nu = None; ok = False; nok = True;
+  parent = root
+  while 1:
+    assert parent.data != x, 'values should be distinct'    
+    if parent.data < x: 
+      if parent.ri is nu: parent.ri = Node(x, parent); return ok
+      else: parent = parent.ri; continue
+    assert parent.data > x
+    if parent.ri is not nu: return nok
+    if parent.le is nu: parent.le = Node(x, parent); return ok
+    parent = parent.le
 def sol1_canBePreOrderBST(li):
   global root
   root = Node(li[0], None)
   for i in xrange(1, len(li)):
-    if insertNewFailed(li[i]): 
+    if insertFailed(li[i]): 
       print 'Failed to insert         ', li[i], '->',
       return False
   return True
