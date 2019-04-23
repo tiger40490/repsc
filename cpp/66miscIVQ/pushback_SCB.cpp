@@ -21,6 +21,27 @@ struct Wrapper1{
   Wrapper1(Wrapper1 const & rhs) 
   : sp(rhs.sp){ cout<<"Wrapper1 copy ctor\n"; }
 };
+template <typename W> test(){
+  //W tmp;
+  //W tmp2 = move(tmp);
+  vector<W> vec;
+//  vec.push_back(move(W()) );
+}
+void testMove(Wrapper1 && rhs){
+  cout<<"testMove\n";
+  Wrapper1 local=move(rhs);
+}
+int main(){
+  Wrapper1 w;
+  testMove(move(w));
+#ifdef aaaa
+  test<Wrapper1>();
+  test<Wrapper2>();
+  testFactory<Wrapper3>();
+  testFactory<Wrapper4>();
+#endif
+}
+
 struct Wrapper2{
   shared_ptr<Payload> sp=make_shared<Payload>();
   Wrapper2(){cout<<"Wrapper2 ctor\n"; }
@@ -50,26 +71,7 @@ public:
 	return inst; 
   }
 };
-template <typename W> test(){
-  //W tmp;
-  //W tmp2 = move(tmp);
-  vector<W> vec;
-//  vec.push_back(move(W()) );
-}
 template <typename W> testFactory(){
   vector<W> vec;
   vec.push_back(W::make() );
-}
-void testMove(Wrapper1 && rhs){
-  cout<<"testMove\n";
-  Wrapper1 local=move(rhs);
-}
-int main(){
-  Wrapper1 w;
-  testMove(move(w));
-  return 0;
-  test<Wrapper1>();
-  test<Wrapper2>();
-  testFactory<Wrapper3>();
-  testFactory<Wrapper4>();
 }
