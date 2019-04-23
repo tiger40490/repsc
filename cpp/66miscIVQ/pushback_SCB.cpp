@@ -14,9 +14,12 @@ struct Payload{
 struct Wrapper1{
   shared_ptr<Payload> sp=make_shared<Payload>();
   Wrapper1(){cout<<"Wrapper1 ctor\n"; }  
-  Wrapper1(Wrapper1 const & rhs): sp(rhs.sp){
-	cout<<"Wrapper1 copy ctor\n"; 
+  Wrapper1(Wrapper1 && rhs){
+	cout<<"Wrapper1 move ctor\n"; 
+	this->sp = rhs.sp;
   }
+  Wrapper1(Wrapper1 const & rhs) 
+  : sp(rhs.sp){ cout<<"Wrapper1 copy ctor\n"; }
 };
 struct Wrapper2{
   shared_ptr<Payload> sp=make_shared<Payload>();
@@ -48,14 +51,23 @@ public:
   }
 };
 template <typename W> test(){
+  //W tmp;
+  //W tmp2 = move(tmp);
   vector<W> vec;
-  vec.push_back(W() );
+//  vec.push_back(move(W()) );
 }
 template <typename W> testFactory(){
   vector<W> vec;
   vec.push_back(W::make() );
 }
+void testMove(Wrapper1 && rhs){
+  cout<<"testMove\n";
+  Wrapper1 local=move(rhs);
+}
 int main(){
+  Wrapper1 w;
+  testMove(move(w));
+  return 0;
   test<Wrapper1>();
   test<Wrapper2>();
   testFactory<Wrapper3>();
