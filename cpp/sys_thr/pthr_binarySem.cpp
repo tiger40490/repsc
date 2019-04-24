@@ -1,5 +1,5 @@
-#include <iostream>
 #include <pthread.h>
+#include <iostream>
 #include <semaphore.h> //was it designed as part of pthreads?
 #include <unistd.h>
 using namespace std;
