@@ -1,3 +1,7 @@
+The language + system knowledge pearls need refresh. The same content in my blog would be forgotten if not refreshed frequently and in time.
+
+That Refresh may need 50% to 120% of the time spent on coding drill.
+
 Q: leverage -- what content review has the highest (medium-term) leverage in terms of ... QQ, speed coding etc?
 * thread
 * rvr
