@@ -1,73 +1,69 @@
 /*a SCB onsite question shared by Ashish
 
-showcase field initializer on field declaration, outside the constructor ... Not possible before c++11
+Passing a temp object into push_back() invokes the rvr version of push_back. If the object supports mv-ctor then the mv-ctor get picked, otherwise the copy-ctor gets picked.
 
-Q: why is push_back() always calling the copy ctor?
+That's the conclusion from this lengthy experiment.
+
+showcase c++11 field initializer on field declaration, outside the constructor ... which probably gets executed before move-ctor !
 */
 #include <iostream>
 #include <memory>
 #include <vector>
 #include <cassert>
 using namespace std;
-long choice=0;
 struct Payload{
-  Payload(){cout<<"Payload ctor\n"; }
+  static size_t cnt;
+  Payload(){++cnt; cout<<"Payload ctor\n"; }
 };
 struct Wrapper1{
+  static size_t mvCnt, cpCnt;
   shared_ptr<Payload> sp;
-  Wrapper1(): sp(make_shared<Payload>()) {cout<<"Wrapper1 ctor\n"; }  
-  Wrapper1(Wrapper1 && rhs){
-	swap(this->sp, rhs.sp); //not sure
-	cout<<"Wrapper1 move ctor done "<<this->sp.get()<<"=this->sp , rhs.sp="<<rhs.sp<<endl; 
-    choice = 1000+'m';
+  double id;
+  Wrapper1(double i=11.1): sp(make_shared<Payload>() ) 
+  {id=i; cout<<i<<" Wrapper1 ctor\n"; }  
+  
+  Wrapper1(Wrapper1 && rhs): id(rhs.id) {
+    swap(this->sp, rhs.sp); //not sure
+    cout<<id<<" Wrapper1 move ctor done "<<this->sp.get()<<"=this->sp , rhs.sp="<<rhs.sp<<endl; 
+    ++mvCnt;
   }
-  Wrapper1(Wrapper1 const & rhs)
-  : sp(rhs.sp){ cout<<"Wrapper1 copy ctor\n"; }
-};
-struct Wrapper2{ //mv-ctor deleted
+  
+  Wrapper1(Wrapper1 const & rhs): id(rhs.id), sp(rhs.sp){ 
+    cout<<id<<" Wrapper1 copy ctor done\n"; 
+    ++cpCnt;
+  }
+  static Wrapper1 make(){return Wrapper1(11.777); } //RVO should kick in
+}; 
+struct Wrapper2{ 
+//mv-ctor deleted, so each mv-ctor call is now a cp-ctor call, even though push_back() receives a temp object
+  static size_t cpCnt;
   shared_ptr<Payload> sp;
-  Wrapper2(): sp(make_shared<Payload>()) {cout<<"Wrapper2 ctor\n"; }  
+  double id;
+  Wrapper2(double i=22.2): sp(make_shared<Payload>() ) 
+  {id=i; cout<<i<<" Wrapper2 ctor\n"; }  
   Wrappper2(Wrapper2 &&) = delete;
-  Wrapper2(Wrapper2 const & rhs)
-  : sp(rhs.sp){ cout<<"Wrapper2 copy ctor\n"; choice = 2000+'c';}
+  Wrapper2(Wrapper2 const & rhs): id(rhs.id), sp(rhs.sp){ 
+    cout<<id<<" Wrapper2 copy ctor done\n"; 
+    ++cpCnt;
+  }
+  static Wrapper2 make(){return Wrapper2(22.888); }
 };
+size_t Payload::cnt=0;
+size_t Wrapper1::mvCnt=0;
+size_t Wrapper1::cpCnt=0;
+size_t Wrapper2::cpCnt=0;
 template <typename W> test(){
   vector<W> vec;
-  vec.push_back( W() );//favors move ctor due to naturally-occurring rval object
+  vec.reserve(88); //without this, initial capacity is one
+  vec.push_back( W() );//favors move-ctor due to naturally-occurring rval object
+  cout<<"now calling make()..\n";
+  vec.push_back( W::make() ); //also favors move-ctor
 }
 int main(){
   test<Wrapper1>();
-  assert(choice==1000+'m');
+  assert(Wrapper1::mvCnt == 2 && Wrapper1::cpCnt == 0);
+  cout<<"---------- Wrapper2 tests ---------\n";
   test<Wrapper2>();
-  assert(choice==2000+'c');
-#ifdef aaaa
-  testFactory<Wrapper3>();
-  testFactory<Wrapper4>();
-#endif
-}
-
-class Wrapper3{
-  shared_ptr<Payload> sp=make_shared<Payload>();
-  Wrapper3(){cout<<"Wrapper--3 ctor\n"; }
-public:
-  Wrapper3(Wrapper3 const & rhs): sp(rhs.sp){
-	cout<<"Wrapper--3 copy ctor\n"; 
-  }
-  static Wrapper3 make(){return Wrapper3(); }
-};
-class Wrapper4{
-  shared_ptr<Payload> sp=make_shared<Payload>();
-  Wrapper4(){cout<<"Wrapper--4 ctor\n"; }
-public:
-  Wrapper4(Wrapper4 const & rhs): sp(rhs.sp){
-	cout<<"Wrapper--4 copy ctor\n"; 
-  }
-  static Wrapper4 make(){
-    static Wrapper4 inst;
-	return inst; 
-  }
-};
-template <typename W> testFactory(){
-  vector<W> vec;
-  vec.push_back(W::make() );
+  //cout<<to_string(Wrapper2::cpCnt) + " is the actual value\n";
+  assert(Wrapper2::cpCnt == 2); // 2 copies around the factory
 }
