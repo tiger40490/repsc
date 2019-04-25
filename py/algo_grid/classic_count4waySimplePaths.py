@@ -122,5 +122,5 @@ def main():
   test9()
 main()
 '''Req:my blog https://wp.me/p74oew-603
-given 2 nodes in a C by R matrix grid, where every node is connected to (up to) four neighbors, generate all cycle-free paths.tors as a vector)
+given 2 nodes in a C by R matrix grid, where every node is connected to (up to) four neighbors, generate all cycle-free paths)
 '''
