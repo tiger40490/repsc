@@ -28,7 +28,8 @@ def search(haystack):
     
 def main():
   assert '212112211212' == search('21211221121212')
+  assert 'babbaabaabbab' == search('babbabbaabaabbaba')
 
 main()
-'''https://bintanvictor.wordpress.com/2018/03/04/find-longest-palindrome-substring-unsolved/ has the my analysis
+'''https://bintanvictor.wordpress.com/2018/03/04/find-longest-palindrome-substring-unsolved/ has my analysis
 '''
