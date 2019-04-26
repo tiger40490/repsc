@@ -1,3 +1,7 @@
+'''
+todo: minor optimization on the core idea. each time identify a homogeneous core then call startfrom(). No need for 2 calls in one iteration.
+I think this solution is essentially O(NN)
+'''
 winner=''
 
 def startfrom(s, le,ri):
