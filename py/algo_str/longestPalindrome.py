@@ -1,6 +1,12 @@
 '''
 todo: minor optimization on the core idea. each time identify a homogeneous core then call startfrom(). No need for 2 calls in one iteration.
-I think this solution is essentially O(NN)
+todo: start the outer iteration from center
+todo: early exit from startfrom
+
+I think this solution is still O(NN). I think there exists O(N) solutions. I don't have to discover it. I can read it in a few years.
+
+idea: first scan to identify all the "continuum" ... useful?
+idea: represent any sequence of chars as a single int, to aid comparison
 '''
 winner=''
 
