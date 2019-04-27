@@ -32,6 +32,8 @@ Smarter than my earlier attempts using two-pass.
 
 It's critical to reduce the cognitive load -- get the edge cases dealt with early on; and initialize the 2 pointers. Even after these simplifications, the core algorithm is still fairly daunting.
 
+At the heart of this core algorithm, the moving pointer le and ri follow special invariants .
+
 [[Programming pearls]] may have a qsort using 2 pivots.
 */
 pi2 partition2(float const & pivotVal1, float const & pivotVal2){
@@ -42,11 +44,11 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
   assert(p1<= p2); // no point validating input..not a programming challenge
   if (p1 >= maxValue) return {-1,-1};
   
-  idx le=0, ri=arr.size()-1;
+  idx le=0, ri=arr.size();
   auto c3=(p1 == p2); 
   auto c2b=(p2 >= maxValue);
   if (c3 || c2b){
-      int ret2=-1,ret1=partitionFwdLinearTime(p1,0,ri).first;
+      int ret2=-1,ret1=partitionFwdLinearTime(p1,0,ri-1).first;
       if(c3) ret2=ret1;
       
       assert(ret1>=0);
@@ -56,27 +58,26 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
   }  ////// edge cases done
   for (;;++le){
     if (arr[le] >  p1) break;
-    assert(le != ri);
   }
   for (;;--ri){ //must skip all > p2
-    if (arr[ri] <= p2) break;
-    assert(le != ri);
+    if (arr[ri-1] <= p2) break;
   }
-  cout<<arr<<le <<" <- left/right ptr initialized -> "<<ri<<" #leftward first item =< p2"<<endl;
-  for (idx curr=le; curr <= ri; ){
+  assert(le != ri-1);
+  cout<<arr<<le <<" <- left/right ptr initialized -> "<<ri<<" #leftward last item > p2"<<endl;
+  for (idx curr=le; curr < ri; ){
     if (arr[curr] > p1){
         if (arr[curr] <= p2) {
           ++curr;
           continue; 
         }
-        //cout<<ri<<" swapping (right end) with "<<curr<<endl;
-        swap(arr[curr], arr[ri]);
+        //cout<<ri-1<<" swapping (right end) with "<<curr<<endl;
+        swap(arr[curr], arr[ri-1]);
         ///cout<<arr<<le<<'{'<<curr<<'}'<<ri<<endl;
         --ri;
-        assert(arr[ri+1]>p2 && "invariant: if valid, ri+1 is the leftward first > p2; ri item is unknown");
-        // now curr (also ri) item may be too high or too low, so we can't increment curr pointer yet
+        assert(arr[ri]>p2 && "invariant: if valid, all (ri till end) > p2");
+        // now curr (also ri-1) item may be too high or too low, so we can't increment curr pointer yet
     }else{
-        assert (arr[curr] <= p1);
+        assert (          p1 >= arr[curr]);
         assert (arr[le] > p1);
         //cout<<le<<" swapping (left end) with "<<curr<<endl;
         swap(arr[le], arr[curr]);
@@ -87,10 +88,10 @@ pi2 partition2(float const & pivotVal1, float const & pivotVal2){
         ++curr;
     }
   }// main loop 
-  assert(ri+1 <= arr.size()-1);
-  cout<<arr<<le<<" (=ret=) "<<ri+1<<endl;
+  assert(ri <= arr.size()-1);
+  cout<<arr<<le<<" (=ret=) "<<ri<<endl;
   arr = origArr;
-  return pi2(le, ri+1);
+  return pi2(le, ri);
 }
 //////////////////
 /* return index of first element exceeding pivot, or -1 if pivot too high
