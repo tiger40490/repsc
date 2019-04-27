@@ -193,7 +193,7 @@ int main(){
   assert(pi2(7,7) == partition2(2.2, 2.2));
   assert(pi2(7,-1) == partition2(2.2, 12));
   assert(pi2(1,14) == partition2(-7, 7.7));
-  assert(pi2(1,7) == partition2(-7, 2.2)); //buggy
+  assert(pi2(1,7) == partition2(-7, 2.2));
 }/*Req: partition an int array using a float pivot value, and return the count of items equal to pivot value
 
 i feel this challenge is more practical than most Leetcode problems.
