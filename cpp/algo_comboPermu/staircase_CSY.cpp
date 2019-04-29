@@ -18,7 +18,7 @@ template<typename T,             int min_width=8> ostream & operator<<(ostream &
 }
 using Length=int;
 using Path=vector<Length>;
-int solBFT(Length staircase){
+int solBFT(Length staircase){ //by myself, not CSY
   bool isVerbose = staircase < 8;
   queue<Path> q; q.push(Path());
   for (int cnt=0;;++cnt){
