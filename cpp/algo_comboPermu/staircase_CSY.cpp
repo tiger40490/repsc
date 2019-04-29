@@ -1,5 +1,6 @@
 /*
-todo: figure out why pow(2, staircase-1)
+todo: implement a bottom-up DP solution
+todo: implement a top-down recursive solution with memoization
 showcase: ctor call on vector , via a type alias Path
 */
 #include <vector>
