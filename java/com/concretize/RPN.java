@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.Set;
 
 /**
- * This class doesn't use cells or spredsheets. The precedents can be any
+ * This class doesn't use cells or spreadsheets. The precedents can be any
  * symbolic name that evaluates to a numeric value.
  */
 public class RPN {
