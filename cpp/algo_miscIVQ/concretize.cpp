@@ -60,7 +60,7 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
     os<<"Cell{ unresolved refs="<<c.uu<<"; downstream cells="<<c.downstream.size()<<"; val="<<c.concreteValue<<" }";
     return os;
   }
-  friend void testCtor();
+  friend void ctorTest();
   /*saves tknArray into a list of strings
     saves upstream references 
     no validation of formula
@@ -76,7 +76,7 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
         upstream->downstream.push_back(this);
       }
     }
-    ss1<<tknArray.size()<<" <-- tknArray parsed \n";
+    //ss1<<tknArray.size()<<" <-- tknArray parsed \n";
   }
 public:
   static Cell* makeCell(rcid const & cellName, string const & expr){
@@ -115,17 +115,20 @@ public:
     return 'c'; //concretized
   }
 };
-void testCtor(){
-  Cell<int>* ptr = Cell<int>::makeCell("A1", "3 1 5 + * 6 / 4 - 2 /"); //(3*(1+5)/6-4)/2
+void ctorTest(){
+  Cell<>* ptr = Cell<>::makeCell("A1", "3 1 5 + * 6 / 4 - 2 /"); //(3*(1+5)/6-4)/2
   ptr->evalRpn(); assert(ptr->concreteValue == -0.5);
   
-  Cell<int> cell( "3 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
-  cell.evalRpn(); assert(cell.concreteValue == 7);
+  ptr = Cell<>::makeCell("B4", "3 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
+  ptr->evalRpn(); assert(ptr->concreteValue == 7);
+
+  ptr = Cell<>::makeCell("C2", "A1 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
+  ptr->evalRpn();
   
-  Cell<int> cell2("3 1 A1 + * 6 / A4 - 2 /"); //(3*(1+5)/6-4)/2
+  Cell cell2("3 1 A1 + * 6 / B4 - 2 /"); //(3*(1+5)/6-4)/2
   cout<<cell2<<endl;
   cout<<*rclookup["A1"]<<endl;
 }	
 int main(){
-  testCtor();
+  ctorTest();
 }
