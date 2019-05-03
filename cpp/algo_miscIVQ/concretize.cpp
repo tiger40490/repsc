@@ -1,5 +1,6 @@
 /*showcase local alias via q[using]
-todo: have a global lookup 
+todo: 0 is not a good default value!
+todo: if an upstream is already resolved then put its value into my tknArray
 */
 #include <vector>
 #include <list>
@@ -10,6 +11,7 @@ todo: have a global lookup
 #include <iostream>
 #include <sstream> //getline
 #include <cassert>
+#include <math.h> //isnan
 #define Map std::map //can be either std::map or std::unordered_map
 #define ss1 if(1>0)cout //to mass-disable cout 
 using namespace std;
@@ -38,11 +40,12 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    return os;
 }
 
-struct unordered_map<rcid, Cell> rclookup; //global singleton holding the all the Cell instances. Unordered is faster than RedBlack tree for big maps
+template<typename I_TYPE, typename O_TYPE=double, size_t maxTokenCnt=22> class Cell; //fwd declaration required
+unordered_map<rcid, Cell<int>* > rclookup; //global singleton holding all the Cells (each Cell to be saved here upon construction). std::unordered_map is faster than RedBlack tree for big maps
 
-template<typename I_TYPE, typename O_TYPE=double, size_t maxTokenCnt=22> class Cell{
+template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
   vector<string> tknArray;
-  O_TYPE concreteValue=0;
+  O_TYPE concreteValue=NAN; //not-a-number
   list<rcid> uu; //unconcretized upstream references
   list<rcid> downstream;
   friend ostream & operator<<(ostream & os, Cell const & c){
@@ -89,7 +92,7 @@ public:
         st.push_back(num1 / num2);
       }
     }assert(st.size()==1);
-    assert(this->concreteValue==0 && "should be zero to initially");
+    assert(isnan(this->concreteValue) && "should be NAN initially");
     concreteValue = st[0];
     cout<<concreteValue;
     return 'c'; //concretized
