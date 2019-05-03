@@ -6,7 +6,7 @@ showcase template default type-arg and where explicit is needed
 minor todo: add more assertions to aid refactor
 minor todo: if an upstream is already resolved then put its Value into my tknArray
 minor todo: make Cell constructable on heap only
-todo: uu to be list<cell*>
+bug: when i get formula for X9, i should not construct new cell but should take exiting cell and update it
 todo: populate the graph
 todo: populate the top-level cells
 */
@@ -55,11 +55,11 @@ map<rcid, Cell<int>* > rclookup;
 template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
   vector<string> tknArray;
   rcid const & id;
-  O_TYPE concreteValue = NAN; //initialize to not-a-number
+  O_TYPE concreteValue = NAN; //initialize to not-a-number i.e. pending
   list<rcid> uu; //unconcretized upstream references
-  list<Cell<I_TYPE>*> downstream;
+  list<rcid> downstream;
   friend ostream & operator<<(ostream & os, Cell const & c){
-    os<<c.id<<" {unresolved refs="<<c.uu<<"; downstream cells="<<c.downstream.size()<<"; val="<<c.concreteValue<<" }";
+    os<<c.id<<" {unresolved refs="<<c.uu<<"; downstream cells="<<c.downstream<<"; val="<<c.concreteValue<<" }";
     return os;
   }
   friend void ctorTest();
@@ -79,7 +79,7 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
           upstream = Cell::makeCell(token, "");
         }
         if (isnan(upstream->concreteValue)){
-          upstream->downstream.push_back(this);
+          upstream->downstream.push_back(id);
           tknArray.push_back(token);
           uu.push_back(token);
         }else{
@@ -90,7 +90,7 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
          tknArray.push_back(token);		  
       }
     }
-    this->evalRpn();
+    if (uu.size()) this->evalRpn();
     ss1<<*this<<" constructed\n";
     //ss1<<tknArray.size()<<" <-- tknArray parsed \n";
   }
@@ -126,7 +126,9 @@ public:
       }else if(token[0]=='/'){
         st.push_back(num1 / num2);
       }
-    }assert(st.size()==1 && "one item left in stack after evalRpn");
+    }
+    //cerr<<id<<" stack: "<<st;
+    assert(st.size()==1 && "one item left in stack after evalRpn");
     assert(isnan(this->concreteValue) && "concreteValue is set once only");
     concreteValue = st[0];
     ss1<<concreteValue<<" = concreteValue\n";
@@ -143,7 +145,7 @@ void ctorTest(){
   ptr = Cell<>::makeCell("C2", "A1 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
   ptr->evalRpn();
   
-  Cell cell2("X9", "3 1 A1 + * 6 / B4 - 2 /"); //(3*(1+5)/6-4)/2
+  Cell cell2("X9", "D3 1 A1 + * E6 / B4 - 2 /"); //(3*(1+5)/6-4)/2
   cout<<cell2<<endl;
   cout<<*rclookup["A1"]<<endl;
 }	
