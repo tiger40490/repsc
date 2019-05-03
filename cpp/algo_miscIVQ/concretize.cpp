@@ -15,25 +15,29 @@ template<typename T,             int min_width=8> ostream & operator<<(ostream &
    return os;
 }
 
-template<typename IN, typename OUT=double> class Cell{
-  using stack=vector<IN>;
+template<typename I_TYPE, typename O_TYPE=double, size_t maxTokenCnt=22> class Cell{
   vector<string> tokens;
-  OUT concreteValue=0;
+  O_TYPE concreteValue=0;
   list<rcid> uu; //unconcretized upstream references
   list<Cell> downstream;
 public:
   Cell(string const & expr){
     stringstream ss(expr);
     string token;
+    this->tokens.reserve(maxTokenCnt); //preempt reallocation
     for(; getline(ss,token,' ');){
       tokens.push_back(token);
+      if ('A' <= token[0] && token[0] <= 'Z'){
+        uu.push_back(token);
+      }
     }
     cout<<tokens.size()<<" <-- tokens pushed\n";
   }
-  void evalRpn(){
-    assert(uu.empty());
+  char evalRpn(){
+    using stack=vector<O_TYPE>;  
+    if (! uu.empty()) return 0;
     stack st;
-    IN num;
+    I_TYPE num;
     for(string const & token: tokens){  
       //cout<<st;
       if (sscanf(token.c_str(), "%d", &num)){
@@ -42,8 +46,8 @@ public:
       }; 
       assert(token.size()==1); //cout<<token<<" found an operator\n";
       assert(st.size()>1);
-      IN num2=st.back(); st.pop_back();
-      IN num1=st.back(); st.pop_back();
+      O_TYPE num2=st.back(); st.pop_back();
+      O_TYPE num1=st.back(); st.pop_back();
       if      (token[0]=='+'){
         st.push_back(num1 + num2);
       }else if(token[0]=='-'){
@@ -57,9 +61,10 @@ public:
     assert(st.size()==1);
     this->concreteValue = st[0];
     cout<<concreteValue;
+    return 'c'; //concretized
   }
 };
 int main(){
-  Cell<int> cell("3 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
+  Cell<int> cell("3 1 5 + * 6 / 4 - 2 /"); //(3*(1+5)/6-4)/2
   cell.evalRpn();
 }
