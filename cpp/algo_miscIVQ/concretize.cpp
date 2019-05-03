@@ -1,8 +1,10 @@
 /*
 showcase local alias via q[using]
+showcase map::emplace()
 showcase fwd declare a class template
-minor todo: ctor should be private
-minor todo: if an upstream is already resolved then put its value into my tknArray
+showcase template default type-arg and where explicit is needed
+minor todo: add more assertions to aid refactor
+minor todo: if an upstream is already resolved then put its Value into my tknArray
 */
 #include <vector>
 #include <list>
@@ -42,21 +44,21 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    return os;
 }
 
-template<typename I_TYPE, typename O_TYPE=double, size_t maxTokenCnt=22> class Cell; //fwd declaration required by rclookup map
+template<typename I_TYPE=int, typename O_TYPE=double, size_t maxTokenCnt=22> class Cell; //fwd declaration required by rclookup map
 
 //Global singleton holding all Cells (each saved here upon construction). 
 map<rcid, Cell<int>* > rclookup; 
 
 template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
   vector<string> tknArray;
-  O_TYPE concreteValue=NAN; //not-a-number
+  O_TYPE concreteValue = NAN; //initialize to not-a-number
   list<rcid> uu; //unconcretized upstream references
   list<rcid> downstream;
   friend ostream & operator<<(ostream & os, Cell const & c){
     os<<"Cell{ unresolved refs="<<c.uu<<"; downstream cells="<<c.downstream.size()<<"; val="<<c.concreteValue<<" }";
     return os;
   }
-public:
+  friend void testCtor();
   /*saves tknArray into a list of strings
     saves upstream references 
     no validation of formula
@@ -66,21 +68,22 @@ public:
     this->tknArray.reserve(maxTokenCnt); //preempt reallocation
     for(string token; getline(ss,token,' ');){
       tknArray.push_back(token);
-      if ('A' <= token[0] && token[0] <= 'Z'){
+      if ('A' <= token[0] && token[0] <= 'Z')
         uu.push_back(token);
-      }
     }
-    cout<<tknArray.size()<<" <-- tknArray pushed\n";
+    ss1<<tknArray.size()<<" <-- tknArray parsed \n";
   }
-  static Cell<I_TYPE>* makeCell(rcid name, string const & expr){
-    //rclookup[name] = new Cell<I_TYPE>(expr);
-    auto itr = rclookup.insert(make_pair(name, new Cell<I_TYPE>(expr)));
-    assert(itr.second);
-    return itr.first->second;
+public:
+  static Cell* makeCell(rcid const & cellName, string const & expr){
+  //auto itr = rclookup.insert(make_pair(name, new Cell(expr)));
+    auto itr = rclookup.emplace(cellName, new Cell(expr));
+    assert(itr.second && "cellName should never repeat #tested");
+    return itr.first->second; //arcane 
   }
   char evalRpn(){
     using stack=vector<O_TYPE>;  
     if (! uu.empty()) return 0; //0 indicates "not ready"
+	
     stack st;
     for(string const & token: tknArray){  
       I_TYPE num;
@@ -89,7 +92,7 @@ public:
          continue; //cout<<num<<" found an int\n";
       }; 
       assert(token.size()==1); //cout<<token<<" found an operator\n";
-      assert(st.size()>1);
+      assert(st.size()>=2);
       O_TYPE num2=st.back(); st.pop_back();
       O_TYPE num1=st.back(); st.pop_back();
       if      (token[0]=='+'){
@@ -101,20 +104,23 @@ public:
       }else if(token[0]=='/'){
         st.push_back(num1 / num2);
       }
-    }assert(st.size()==1);
+    }assert(st.size()==1 && "one item left in stack after evalRpn");
     assert(isnan(this->concreteValue) && "should be NAN initially");
     concreteValue = st[0];
-    cout<<concreteValue;
+    ss1<<concreteValue<<" = concreteValue\n";
     return 'c'; //concretized
   }
 };
-int main(){
+void testCtor(){
   Cell<int>* ptr = Cell<int>::makeCell("A1", "3 1 5 + * 6 / 4 - 2 /"); //(3*(1+5)/6-4)/2
-  ptr->evalRpn();
-#if public_ctor
-  Cell<int> cell( "3 1 5 + * 6 / 4 - 2 /"); //(3*(1+5)/6-4)/2
-  cell.evalRpn();
-  cell = Cell<int>("3 1 A5 + * 6 / A4 - 2 /"); //(3*(1+5)/6-4)/2
-  cout<<cell;
-#endif
+  ptr->evalRpn(); assert(ptr->concreteValue == -0.5);
+  
+  Cell cell( "3 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
+  cell.evalRpn(); assert(cell.concreteValue == 7);
+  
+  Cell cell2("3 1 A5 + * 6 / A4 - 2 /"); //(3*(1+5)/6-4)/2
+  cout<<cell2;
+}	
+int main(){
+  testCtor();
 }
