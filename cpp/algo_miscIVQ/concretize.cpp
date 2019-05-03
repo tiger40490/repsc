@@ -69,25 +69,41 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
     stringstream ss(expr);
     this->tknArray.reserve(maxTokenCnt); //preempt reallocation
     for(string token; getline(ss,token,' ');){
-      tknArray.push_back(token);
       if ('A' <= token[0] && token[0] <= 'Z'){
         uu.push_back(token);
-        Cell* upstream = Cell::makeCell(token, "");
-        upstream->downstream.push_back(this);
+        Cell* upstream;
+        if (rclookup.count(token)){
+          upstream = rclookup[token];
+        }else{
+          upstream = Cell::makeCell(token, "");
+        }
+        if (isnan(upstream->concreteValue)){
+          upstream->downstream.push_back(this);
+          tknArray.push_back(token);
+        }else{
+          ss1<<token<<" is a concretized upstream\n";
+          tknArray.push_back(to_string(upstream->concreteValue));
+      }
+      }else{
+         tknArray.push_back(token);		  
       }
     }
+    this->evalRpn();
+    ss1<<*this<<" constructed\n";
     //ss1<<tknArray.size()<<" <-- tknArray parsed \n";
   }
 public:
   static Cell* makeCell(rcid const & cellName, string const & expr){
+    ss1<<"makeCell at "<<cellName<<" ...\n";    
   //auto itr = rclookup.insert(make_pair(name, new Cell(expr)));
     auto itr = rclookup.emplace(cellName, new Cell(expr));
     return itr.first->second; //arcane 
   }
   char evalRpn(){
-    using stack=vector<O_TYPE>;  
     if (! uu.empty()) return 0; //0 indicates "not ready"
+    if (!isnan(this->concreteValue)) return 'd'; 
 	
+    using stack=vector<O_TYPE>;  
     stack st;
     for(string const & token: tknArray){  
       I_TYPE num;
