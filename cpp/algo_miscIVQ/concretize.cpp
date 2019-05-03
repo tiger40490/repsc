@@ -1,7 +1,7 @@
 /*
 showcase local alias via q[using]
 showcase map::emplace()
-showcase fwd declare a class template
+showcase fwd declare a class template...necessary evil
 showcase template default type-arg and where explicit is needed
 minor todo: add more assertions to aid refactor
 minor todo: if an upstream is already resolved then put its Value into my tknArray
@@ -40,11 +40,10 @@ template<typename T,             int min_width=8> ostream & operator<<(ostream &
 }
 template<typename T,             int min_width=2> ostream & operator<<(ostream & os, list<T> const & c){
    for(auto const & it: c){ os<<setw(min_width)<<it<<" "; }
-   //os<<endl;
    return os;
 }
 
-template<typename I_TYPE=int, typename O_TYPE=double, size_t maxTokenCnt=22> class Cell; //fwd declaration required by rclookup map
+template<typename I_TYPE=int, typename O_TYPE=double, size_t maxTokenCnt=10> class Cell; //fwd declaration required by rclookup map
 
 //Global singleton holding all Cells (each saved here upon construction). 
 map<rcid, Cell<int>* > rclookup; 
@@ -105,7 +104,7 @@ public:
         st.push_back(num1 / num2);
       }
     }assert(st.size()==1 && "one item left in stack after evalRpn");
-    assert(isnan(this->concreteValue) && "should be NAN initially");
+    assert(isnan(this->concreteValue) && "concreteValue is set once only");
     concreteValue = st[0];
     ss1<<concreteValue<<" = concreteValue\n";
     return 'c'; //concretized
@@ -115,10 +114,10 @@ void testCtor(){
   Cell<int>* ptr = Cell<int>::makeCell("A1", "3 1 5 + * 6 / 4 - 2 /"); //(3*(1+5)/6-4)/2
   ptr->evalRpn(); assert(ptr->concreteValue == -0.5);
   
-  Cell cell( "3 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
+  Cell<int> cell( "3 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
   cell.evalRpn(); assert(cell.concreteValue == 7);
   
-  Cell cell2("3 1 A5 + * 6 / A4 - 2 /"); //(3*(1+5)/6-4)/2
+  Cell<int> cell2("3 1 A5 + * 6 / A4 - 2 /"); //(3*(1+5)/6-4)/2
   cout<<cell2;
 }	
 int main(){
