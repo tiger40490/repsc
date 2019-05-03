@@ -22,7 +22,7 @@ todo: populate the top-level cells
 #define Map std::map //can be either std::map or std::unordered_map
 #define ss1 if(1>0)cout //to mass-disable cout 
 using namespace std;
-using rcid=string;
+using rcid=string; //row/column identifier
 template<typename K, typename V> ostream & operator<<(ostream & os, pair<K,V> const & p){
    stringstream tmp2;
    tmp2<<p.first<<":"<<p.second;
@@ -52,7 +52,7 @@ template<typename I_TYPE=int, typename O_TYPE=double, size_t maxTokenCnt=10> cla
 map<rcid, Cell<int>* > rclookup; 
 
 template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
-  vector<string> tknArray;
+  vector<string> tokenArray;
   rcid const & id;
   O_TYPE concreteValue = NAN; //initialize to not-a-number i.e. pending
   list<rcid> uu; //unconcretized upstream references
@@ -62,13 +62,13 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
     return os;
   }
   friend void ctorTest();
-  /*saves tknArray into a list of strings
+  /*saves tokenArray into a list of strings
     saves upstream references 
     no validation of formula
   */
   Cell(string const & n, string const & expr): id(n){ 
     stringstream ss(expr);
-    this->tknArray.reserve(maxTokenCnt); //preempt reallocation
+    this->tokenArray.reserve(maxTokenCnt); //preempt reallocation
     for(string token; getline(ss,token,' ');){
       if ('A' <= token[0] && token[0] <= 'Z'){
         Cell* upstream;
@@ -79,35 +79,40 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
         }
         if (isnan(upstream->concreteValue)){
           upstream->downstream.push_back(id);
-          tknArray.push_back(token);
+          tokenArray.push_back(token);
           uu.push_back(token);
         }else{
           ss1<<token<<" is a concretized upstream\n";
-          tknArray.push_back(to_string(upstream->concreteValue));
+          tokenArray.push_back(to_string(upstream->concreteValue));
         }
       }else{
-         tknArray.push_back(token);		  
+         tokenArray.push_back(token);		  
       }
     }
     this->evalRpn();
     ss1<<*this<<" constructed\n";
-    //ss1<<tknArray.size()<<" <-- tknArray parsed \n";
+    //ss1<<tokenArray.size()<<" <-- tokenArray parsed \n";
   }
 public:
   static Cell* makeCell(rcid const & id, string const & expr){
-    ss1<<"makeCell at "<<id<<" ...\n";    
-  //auto itr = rclookup.insert(make_pair(name, new Cell(expr)));
-    auto itr = rclookup.emplace(id, new Cell(id, expr));
-    return itr.first->second; //arcane 
+    ss1<<"makeCell at "<<id<<" ...\n";
+    Cell* newCell = new Cell(id, expr);
+    if (rclookup.count(id)){
+      newCell->downstream = move(rclookup[id]->downstream);
+      delete rclookup[id];
+      ss1<<*newCell<<" updated\n";
+    }
+    rclookup[id] = newCell;    
+    return newCell;
   }
   char evalRpn(){
     if (uu.size()) return 0; //0 indicates "not ready"
-    if (tknArray.empty()) return 0; 
+    if (tokenArray.empty()) return 0; 
     if (! isnan(this->concreteValue)) return 'd'; 
     
     using stack=vector<O_TYPE>;  
     stack st;
-    for(string const & token: tknArray){  
+    for(string const & token: tokenArray){  
       I_TYPE num;
       if (sscanf(token.c_str(), "%d", &num)){
          st.push_back(num); 
@@ -136,14 +141,15 @@ public:
   }
 };
 void ctorTest(){
-  Cell<>* ptr = Cell<>::makeCell("A1", "3 1 5 + * 6 / 4 - 2 /"); //(3*(1+5)/6-4)/2
+  Cell<>* ptr = Cell<>::makeCell("C2", "A1 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
+  ptr->evalRpn();
+
+  ptr = Cell<>::makeCell("A1", "3 1 5 + * 6 / 4 - 2 /"); //(3*(1+5)/6-4)/2
   ptr->evalRpn(); assert(ptr->concreteValue == -0.5);
   
   ptr = Cell<>::makeCell("B4", "3 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
   ptr->evalRpn(); assert(ptr->concreteValue == 7);
 
-  ptr = Cell<>::makeCell("C2", "A1 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
-  ptr->evalRpn();
   
   Cell cell2("X9", "D3 1 A1 + * E6 / B4 - 2 /"); //(3*(1+5)/6-4)/2
   cout<<cell2<<endl;
