@@ -1,6 +1,8 @@
-/*showcase local alias via q[using]
-todo: 0 is not a good default value!
-todo: if an upstream is already resolved then put its value into my tknArray
+/*
+showcase local alias via q[using]
+showcase fwd declare a class template
+minor todo: ctor should be private
+minor todo: if an upstream is already resolved then put its value into my tknArray
 */
 #include <vector>
 #include <list>
@@ -40,8 +42,10 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    return os;
 }
 
-template<typename I_TYPE, typename O_TYPE=double, size_t maxTokenCnt=22> class Cell; //fwd declaration required
-unordered_map<rcid, Cell<int>* > rclookup; //global singleton holding all the Cells (each Cell to be saved here upon construction). std::unordered_map is faster than RedBlack tree for big maps
+template<typename I_TYPE, typename O_TYPE=double, size_t maxTokenCnt=22> class Cell; //fwd declaration required by rclookup map
+
+//Global singleton holding all Cells (each saved here upon construction). 
+map<rcid, Cell<int>* > rclookup; 
 
 template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
   vector<string> tknArray;
@@ -67,6 +71,11 @@ public:
       }
     }
     cout<<tknArray.size()<<" <-- tknArray pushed\n";
+  }
+  static void makeCell(rcid name, string const & expr){
+    rclookup[name] = new Cell<I_TYPE>(expr);
+    //auto itr = rclookup.insert(make_pair(name, new Cell<I_TYPE>(expr)));
+    //assert(itr.second);
   }
   char evalRpn(){
     using stack=vector<O_TYPE>;  
@@ -99,7 +108,9 @@ public:
   }
 };
 int main(){
-  Cell<int> cell("3 1 5 + * 6 / 4 - 2 /"); //(3*(1+5)/6-4)/2
+  //Cell<int>::makeCell("A1", "3 1 5 + * 6 / 4 - 2 /"); //(3*(1+5)/6-4)/2
+
+  Cell<int> cell( "3 1 5 + * 6 / 4 - 2 /"); //(3*(1+5)/6-4)/2
   cell.evalRpn();
   cell = Cell<int>("3 1 A5 + * 6 / A4 - 2 /"); //(3*(1+5)/6-4)/2
   cout<<cell;
