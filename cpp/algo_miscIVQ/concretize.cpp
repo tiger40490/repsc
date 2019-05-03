@@ -1,8 +1,10 @@
 /*showcase local alias via q[using]
+todo: have a global lookup 
 */
 #include <vector>
 #include <list>
 #include <map>
+#include <unordered_map>
 #include <string>
 #include <iomanip>
 #include <iostream>
@@ -35,6 +37,9 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    //os<<endl;
    return os;
 }
+
+struct unordered_map<rcid, Cell> rclookup; //global singleton holding the all the Cell instances. Unordered is faster than RedBlack tree for big maps
+
 template<typename I_TYPE, typename O_TYPE=double, size_t maxTokenCnt=22> class Cell{
   vector<string> tknArray;
   O_TYPE concreteValue=0;
