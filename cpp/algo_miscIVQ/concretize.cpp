@@ -4,7 +4,6 @@ showcase map::emplace()
 showcase fwd declare a class template...necessary evil
 showcase template default type-arg and where explicit is needed
 minor todo: add more assertions to aid refactor
-minor todo: if an upstream is already resolved then put its Value into my tknArray
 minor todo: make Cell constructable on heap only
 bug: when i get formula for X9, i should not construct new cell but should take exiting cell and update it
 todo: populate the graph
@@ -90,7 +89,7 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
          tknArray.push_back(token);		  
       }
     }
-    if (uu.size()) this->evalRpn();
+    this->evalRpn();
     ss1<<*this<<" constructed\n";
     //ss1<<tknArray.size()<<" <-- tknArray parsed \n";
   }
@@ -102,9 +101,10 @@ public:
     return itr.first->second; //arcane 
   }
   char evalRpn(){
-    if (! uu.empty()) return 0; //0 indicates "not ready"
-    if (!isnan(this->concreteValue)) return 'd'; 
-	
+    if (uu.size()) return 0; //0 indicates "not ready"
+    if (tknArray.empty()) return 0; 
+    if (! isnan(this->concreteValue)) return 'd'; 
+    
     using stack=vector<O_TYPE>;  
     stack st;
     for(string const & token: tknArray){  
