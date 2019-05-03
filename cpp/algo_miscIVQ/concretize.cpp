@@ -72,10 +72,11 @@ public:
     }
     cout<<tknArray.size()<<" <-- tknArray pushed\n";
   }
-  static void makeCell(rcid name, string const & expr){
-    rclookup[name] = new Cell<I_TYPE>(expr);
-    //auto itr = rclookup.insert(make_pair(name, new Cell<I_TYPE>(expr)));
-    //assert(itr.second);
+  static Cell<I_TYPE>* makeCell(rcid name, string const & expr){
+    //rclookup[name] = new Cell<I_TYPE>(expr);
+    auto itr = rclookup.insert(make_pair(name, new Cell<I_TYPE>(expr)));
+    assert(itr.second);
+    return itr.first->second;
   }
   char evalRpn(){
     using stack=vector<O_TYPE>;  
@@ -108,10 +109,12 @@ public:
   }
 };
 int main(){
-  //Cell<int>::makeCell("A1", "3 1 5 + * 6 / 4 - 2 /"); //(3*(1+5)/6-4)/2
-
+  Cell<int>* ptr = Cell<int>::makeCell("A1", "3 1 5 + * 6 / 4 - 2 /"); //(3*(1+5)/6-4)/2
+  ptr->evalRpn();
+#if public_ctor
   Cell<int> cell( "3 1 5 + * 6 / 4 - 2 /"); //(3*(1+5)/6-4)/2
   cell.evalRpn();
   cell = Cell<int>("3 1 A5 + * 6 / A4 - 2 /"); //(3*(1+5)/6-4)/2
   cout<<cell;
+#endif
 }
