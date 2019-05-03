@@ -5,6 +5,9 @@ showcase fwd declare a class template...necessary evil
 showcase template default type-arg and where explicit is needed
 minor todo: add more assertions to aid refactor
 minor todo: if an upstream is already resolved then put its Value into my tknArray
+minor todo: make Cell constructable on heap only
+todo: populate the graph
+todo: populate the top-level cells
 */
 #include <vector>
 #include <list>
@@ -52,7 +55,7 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
   vector<string> tknArray;
   O_TYPE concreteValue = NAN; //initialize to not-a-number
   list<rcid> uu; //unconcretized upstream references
-  list<rcid> downstream;
+  list<Cell<I_TYPE>*> downstream;
   friend ostream & operator<<(ostream & os, Cell const & c){
     os<<"Cell{ unresolved refs="<<c.uu<<"; downstream cells="<<c.downstream.size()<<"; val="<<c.concreteValue<<" }";
     return os;
@@ -67,8 +70,11 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
     this->tknArray.reserve(maxTokenCnt); //preempt reallocation
     for(string token; getline(ss,token,' ');){
       tknArray.push_back(token);
-      if ('A' <= token[0] && token[0] <= 'Z')
+      if ('A' <= token[0] && token[0] <= 'Z'){
         uu.push_back(token);
+        Cell* upstream = Cell::makeCell(token, "");
+        upstream->downstream.push_back(this);
+      }
     }
     ss1<<tknArray.size()<<" <-- tknArray parsed \n";
   }
@@ -76,7 +82,6 @@ public:
   static Cell* makeCell(rcid const & cellName, string const & expr){
   //auto itr = rclookup.insert(make_pair(name, new Cell(expr)));
     auto itr = rclookup.emplace(cellName, new Cell(expr));
-    assert(itr.second && "cellName should never repeat #tested");
     return itr.first->second; //arcane 
   }
   char evalRpn(){
@@ -117,8 +122,9 @@ void testCtor(){
   Cell<int> cell( "3 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
   cell.evalRpn(); assert(cell.concreteValue == 7);
   
-  Cell<int> cell2("3 1 A5 + * 6 / A4 - 2 /"); //(3*(1+5)/6-4)/2
-  cout<<cell2;
+  Cell<int> cell2("3 1 A1 + * 6 / A4 - 2 /"); //(3*(1+5)/6-4)/2
+  cout<<cell2<<endl;
+  cout<<*rclookup["A1"]<<endl;
 }	
 int main(){
   testCtor();
