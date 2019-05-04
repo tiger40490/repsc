@@ -1,4 +1,5 @@
 <pre>
+See also javadoc in each class
 <h3>Basic Algo</h3>
 In first step, load each cell and build two data structures
 
@@ -12,7 +13,7 @@ In the second step, we dequeue each concretized cell, look up in "p2d" to get it
 descendants. If any of the descendant can now be concretized, it is concretized 
 and enqueued.
 
-At end of the chain reaction, if the queue is reduced to empty, 
+At end of the chain reaction, if the queue gets cleared, 
 the entire spreadsheet is concretized. Otherwise, there exist cycles.
 
 <h3>QnA</h3>
@@ -24,12 +25,16 @@ value propagation vs resolving references
 Cell.rpn.precedents is populated in Cell constructor. 
 Subsequently, we read this field to update p2d.
 
-This field is a readonly view of the _symbolicToken field, which gets updated 
+This field is a readonly view of the _symbolicTokens field, which gets updated 
 during concretization.
 
 Q: is it possible to "absorb" p2d into each RPN instance?
 
-Possible but then it would be hard to dump entire p2d map.
+What if we get a p2d link before constructing the precedent cell? In my unsuccessful c++ 
+design, I created an empty cell just to hold the link. 
+
+In the cleaner java design, each Cell only holds information about formula. The p2d data is 
+hosted at the sheet level.
 
 <h3>class descriptions</h3>
 Cell.java and SymbolicToken.java are simple and clean abstractions. Each fits into one page :)
