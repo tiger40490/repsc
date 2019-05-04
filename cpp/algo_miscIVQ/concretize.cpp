@@ -1,7 +1,5 @@
 /*
-todo: collect root precedents:
-every time I add to p2d, I will check. If p is unconstructed or isConcretized, then add it to the roots.
-every time I construct a new cell, if it is unresolved then remove it from roots.
+todo: use the root objects
 
 showcase local alias via q[using]
 showcase fwd declare a class template...necessary evil
@@ -45,42 +43,34 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    return os;
 }
 template<typename T,             int min_width=2> ostream & operator<<(ostream & os, set<T> const & c){
+   os<<"{ ";
    for(auto const & it: c){ os<<setw(min_width)<<it<<" "; }
-   return os;
+   os<<"}  "; return os;
 }
 
-template<typename I_TYPE=int, typename O_TYPE=double, size_t maxTokenCnt=10> class Cell; //fwd declaration required by rclookup map
-
+template<typename I_TYPE=int, typename O_TYPE=double, size_t maxTokenCnt=20> class Cell; //fwd declaration required by rclookup map
+map<rcid, Cell<int>* > rclookup; //Global singleton holding all Cells
+inline char id_existing(rcid const & id){return rclookup.count(id);} //can rewrite using find()
 map<rcid, set<rcid>> p2d; //precedent -> all depdendents
-set<rcid> roots; //ALL isConcretized precedent cells
-
-//Global singleton holding all Cells (each saved here upon construction). 
-map<rcid, Cell<int>* > rclookup; 
-inline char idexist(rcid const & id){return rclookup.count(id);} //can rewrite using find()
+set<rcid> roots; //ALL concretized precedent cells
 
 template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
   vector<string> tokenArray;
   rcid const & id;
   O_TYPE concreteValue = NAN; //initialize to not-a-number i.e. pending
   set<rcid> uu; //unconcretized upstream references
-  //list<rcid> downstream;
   friend ostream & operator<<(ostream & os, Cell const & c){
-    os<<c.id<<" {refs="<<c.uu<<"; val="<<c.concreteValue<<" }";
-    return os;
+    os<<c.id<<" {refs="<<c.uu<<"; val="<<c.concreteValue<<" }"; return os;
   }
-  /*saves tokenArray into a list of strings
-    saves upstream references 
-    no validation of formula
-  */
   Cell(string const & name, string const & expr): id(name){ 
-    assert(!idexist(id));
+    assert(!id_existing(id));
     stringstream ss(expr);
     this->tokenArray.reserve(maxTokenCnt); //preempt reallocation
     for(string token; getline(ss,token,' ');){
       if ('A' <= token[0] && token[0] <= 'Z'){
         //Cell* upstream;
         p2d[token].insert(id);
-        if (idexist(token)){
+        if (id_existing(token)){
           Cell * upstream = rclookup[token];
           if (!upstream->isConcretized()){
             tokenArray.push_back(token);
@@ -109,7 +99,7 @@ public:
   static Cell* makeCell(rcid const & id, string const & expr){
     //ss1<<"makeCell at "<<id<<" ...\n";
     Cell* newCell = new Cell(id, expr);
-    assert (!idexist(id) );
+    assert (!id_existing(id) );
     rclookup[id] = newCell;    
     return newCell;
   }
@@ -172,5 +162,5 @@ int main(){
       string line; getline(cin, line); ss1<<id<<" --cin-> "<<line<<endl;
       Cell<>::makeCell(id, line);
   }
-  cout<<"debugging.. p2d/roots = "<<p2d<<roots;
+  cout<<"debugging..roots/p2d="<<roots<<"/ "<<p2d;
 }
