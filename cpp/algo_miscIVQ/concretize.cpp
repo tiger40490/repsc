@@ -152,10 +152,17 @@ void ctorTest(){
   ptr = Cell<>::makeCell("B4", "3 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
   assert(ptr->concreteValue == 7);
   
-  Cell<> cell2("X9", "D3 1 A1 + * E6 / B4 - 2 /"); //(3*(1+5)/6-4)/2
+  Cell cell2("X9", "D3 1 A1 + * E6 / B4 - 2 /"); //(3*(1+5)/6-4)/2
   cout<<*rclookup["A1"]<<endl;
   cout<<p2d;
 }	
 int main(){
+  size_t rCnt=2, cCnt=3;
+  for (char r = 'A'; r< 'A'+rCnt; ++r){
+    for (int c = 1; c<=cCnt; ++c){
+      rcid id = string(1,r)+to_string(c);
+      //cout<<c<<" -> "<<id<<endl;
+    }
+  }
   ctorTest();
 }
