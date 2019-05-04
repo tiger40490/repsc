@@ -65,9 +65,9 @@ public class RPN {
 	}
 
 	private boolean _isFullyConcretized = false;
-	private final Set<SymbolicToken> _symbolicTokens = new HashSet<SymbolicToken>();
+	private final Set<SymbolicToken> _d2p = new HashSet<SymbolicToken>();
 	public final Set<SymbolicToken> precedents = 
-			Collections.unmodifiableSet(_symbolicTokens);
+			Collections.unmodifiableSet(_d2p);
 	private double _result = Double.MIN_VALUE;
 	
 	/**the sequence of tokens in the original formula. May contain 
@@ -80,7 +80,7 @@ public class RPN {
 		for (String e : _tokens) {
 			e = e.trim().toUpperCase();
 			if (SymbolicToken. isRef(e)) {
-				_symbolicTokens.add(new SymbolicToken(e));
+				_d2p.add(new SymbolicToken(e));
 			}
 		}
 		tryConcretizeRPN();
@@ -95,8 +95,8 @@ public class RPN {
 
 	public void remove1precedent(SymbolicToken precedent) {
 		if (_isFullyConcretized) return;
-		_symbolicTokens.remove(precedent);
-		if (_symbolicTokens.isEmpty()) tryConcretizeRPN();
+		_d2p.remove(precedent);
+		if (_d2p.isEmpty()) tryConcretizeRPN();
 	}
 
 	public double numericResult() {
@@ -110,7 +110,7 @@ public class RPN {
 
 	private void tryConcretizeRPN() {
 		if (_isFullyConcretized) return;
-		if (_symbolicTokens.isEmpty()) {
+		if (_d2p.isEmpty()) {
 			StringBuilder sb = new StringBuilder();
 			for (String s : _tokens) {				
 				if (SymbolicToken.isRef(s)) {

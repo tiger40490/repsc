@@ -17,15 +17,24 @@ At end of the chain reaction, if the queue gets cleared,
 the entire spreadsheet is concretized. Otherwise, there exist cycles.
 
 <h3>QnA</h3>
+Key principle is to maintain uplinks (d2p) in each cell, and maintain the downlinks
+(p2d) in a container at the sheet level. This design idea invites several common
+questions:
+ 
+Q: is it possible to use only d2p (in each cell) without p2d? 
+
+Inefficiency. After concretizing a precedent cell, how do we know which cells 
+to concretize next? Scanning all unconcretized cells is likely to be horribly inefficient.
+
 Q: Cell.rpn.precedents duplicates p2d data?
 
-I feel this duplication is necessary as two-way lookup is needed -- 
-value propagation vs resolving references
+I feel this duplication is necessary as 
+two-way lookup is needed -- value propagation vs resolving precedent references.
 
 Cell.rpn.precedents is populated in Cell constructor. 
 Subsequently, we read this field to update p2d.
 
-This field is a readonly view of the _symbolicTokens field, which gets updated 
+This field is a readonly view of the _d2p field, which gets updated 
 during concretization.
 
 Q: is it possible to "absorb" p2d into each RPN instance?
