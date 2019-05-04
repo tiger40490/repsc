@@ -1,27 +1,46 @@
-<h3>basic algo</h3>
 <pre>
+<h3>Basic Algo</h3>
 In first step, load each cell and build two data structures
 
 * allCells -- lookup map from cell address to cell object
-* p2d -- lookup map of precedent to listOfDescendents
+* p2d -- lookup map of precedent -> setOfDescendents
 
-These two data structures don't really change structurally, but 
-there's a 3rd data structure, a dynamic queue that gets enqueued and dequeued.
+Once constructed, these two data structures don't change structurally, but 
+there's a 3rd data structure, a queue that's enqueued and dequeued dynamically.
 
-In the first step, we enqueue any concretized cell.
-
-In the second step, we dequeue a concretized cell, look up in "p2d" to get its 
+In the second step, we dequeue each concretized cell, look up in "p2d" to get its 
 descendants. If any of the descendant can now be concretized, it is concretized 
 and enqueued.
 
-If the queue is reduced to empty, the entire spreadsheet is concretized. Otherwise, 
-there exist cycles.
-</pre>
+At end of the chain reaction, if the queue is reduced to empty, 
+the entire spreadsheet is concretized. Otherwise, there exist cycles.
 
 <h3>QnA</h3>
-<pre>
 Q: Cell.rpn.precedents duplicates p2d data?
 
-Cell.rpn.precedents is populated in Cell constructor. Subsequently, we use it to update p2d.
+I feel this duplication is necessary as two-way lookup is needed -- 
+value propagation vs resolving references
 
-buy how is it needed?
+Cell.rpn.precedents is populated in Cell constructor. 
+Subsequently, we read this field to update p2d.
+
+This field is a readonly view of the _symbolicToken field, which gets updated 
+during concretization.
+
+Q: is it possible to "absorb" p2d into each RPN instance?
+
+Possible but then it would be hard to dump entire p2d map.
+
+<h3>class descriptions</h3>
+Cell.java and SymbolicToken.java are simple and clean abstractions. Each fits into one page :)
+
+Simple but effective... Coherent -- each class does one job only and does it well.
+
+Cell.java is a wrapper over a rowColId + a RPN instance.
+
+In contrast, SpreadSheet.java and RPN.java are more complex.
+
+SpreadSheet.java is the top-level component and the "driver". Its methods embody the 
+high-level algorithm described in BasicAlgo section above. Those methods have non-trivial
+hidden complexities when you look at the objects and data structures used. About half 
+the complexities are in the RPN.java class.

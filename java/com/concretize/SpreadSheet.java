@@ -19,7 +19,7 @@ public class SpreadSheet {
 	// Keep the relationship: VariableName(i.e. cell key) --> Id of the cells
 	// that depend on this variable
 
-	final Map<String, Cell> allCells = new LinkedHashMap<String, Cell>();
+	final public static Map<String, Cell> allCells = new LinkedHashMap<String, Cell>();
 	final Map<SymbolicToken, Set<SymbolicToken>> p2d = new LinkedHashMap<SymbolicToken, Set<SymbolicToken>>();
 	final Queue<Cell> queue = new ConcurrentLinkedQueue<Cell>();
 
@@ -39,15 +39,15 @@ public class SpreadSheet {
 
 	private void dequeueOnce() { 
 		Cell concretePreCell = queue.poll();
-		SymbolicToken key = new SymbolicToken(concretePreCell.key);
+		SymbolicToken key = new SymbolicToken(concretePreCell.rowColId);
 		Set<SymbolicToken> dependents = p2d.remove(key);
 		if (dependents == null) {
 			dependents = Collections.emptySet();
 		}
-		System.out.println(concretePreCell.key + " -p2d-> " + dependents);
+		System.out.println(concretePreCell.rowColId + " -p2d-> " + dependents);
 		for (SymbolicToken tmp : dependents) {
-			Cell depCell = allCells.get(tmp.key);
-			depCell.rpn.concretize1precedent(key, concretePreCell.rpn.numericResult());
+			Cell depCell = allCells.get(tmp.rowColId);
+			depCell.rpn.remove1precedent(key);
 			if (depCell.isConcrete()) {
 				enqueue(depCell);
 			}
@@ -97,7 +97,7 @@ public class SpreadSheet {
 			if (c.rpn.isConcrete()) {
 				enqueue(c);
 			}
-			allCells.put(c.key, c);
+			allCells.put(c.rowColId, c);
 
 			for (SymbolicToken precedent : c.rpn.precedents) {
 				Set<SymbolicToken> dependentS = p2d.get(precedent);
@@ -105,7 +105,7 @@ public class SpreadSheet {
 					dependentS = new LinkedHashSet<SymbolicToken>();
 					p2d.put(precedent, dependentS);
 				}
-				dependentS.add(new SymbolicToken(c.key));
+				dependentS.add(new SymbolicToken(c.rowColId));
 			}
 
 			if (colId == num_cols) {

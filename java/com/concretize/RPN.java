@@ -1,4 +1,3 @@
-//$Id$
 package com.concretize;
 
 import java.util.ArrayList;
@@ -59,10 +58,6 @@ public class RPN {
 		return ret;
 	}
 
-	public static double evalRPN(String... originalInput) {
-		return new RPN(originalInput).numericResult();
-	}
-
 	public static void main(String[] args) {
 		RPN inst = new RPN("5.1 3 4 - *");
 		System.out.println(inst.isConcrete());
@@ -71,63 +66,41 @@ public class RPN {
 
 	private boolean _isFullyConcretized = false;
 	private final Set<SymbolicToken> _symbolicTokens = new HashSet<SymbolicToken>();
-	public final Set<SymbolicToken> precedents = Collections.unmodifiableSet(_symbolicTokens);
+	public final Set<SymbolicToken> precedents = 
+			Collections.unmodifiableSet(_symbolicTokens);
 	private double _result = Double.MIN_VALUE;
-	private final List<String> _tokens;
+	
+	/**the sequence of tokens in the original formula. May contain 
+	 * the same precedent multiple times.
+	 */
+	private final String[] _tokens;
 
-	public RPN(Collection<String> originalInput) {
-		this._tokens = new ArrayList<String>(originalInput);
+	public RPN(String formula) {
+		this._tokens = formula.split("\\s+");
 		for (String e : _tokens) {
 			e = e.trim().toUpperCase();
-			try {
-				Double.parseDouble(e);
-			} catch (NumberFormatException ex) {
-				if (! "+-*/".contains(e))
-					_symbolicTokens.add(new SymbolicToken(e));
+			if (SymbolicToken. isRef(e)) {
+				_symbolicTokens.add(new SymbolicToken(e));
 			}
 		}
 		tryConcretizeRPN();
 	}
 
-	public RPN(String s) {
-		this(s.split("\\s+"));
-	}
-
-	public RPN(String... originalInput) {
-		this(Arrays.asList(originalInput));
-	}
-
 	@Override
 	public String toString() {
-		String ret = _tokens + "";
-		if (isConcrete())
-			ret += "===" + numericResult();
+		String ret = Arrays.toString(_tokens).intern(); //inefficient if called frequently
+		if (isConcrete()) ret += " = " + numericResult();
 		return ret;
 	}
 
-	/**
-	 * look for precedent in _symbolicTokens. If found, replace it with value.
-	 * 
-	 * If possible, calculate result and set this.isFullyConcretized.
-	 * 
-	 * @param precedent
-	 * @param value
-	 */
-	public void concretize1precedent(SymbolicToken precedent, double value) {
+	public void remove1precedent(SymbolicToken precedent) {
 		if (_isFullyConcretized) return;
-		if (this._symbolicTokens.contains(precedent)) {
-			for (int i = 0; i < _tokens.size(); ++i) {
-				if (_tokens.get(i).equals(precedent.key))
-					_tokens.set(i, value + "");
-			}
-			_symbolicTokens.remove(precedent);
-			tryConcretizeRPN();
-		}
+		_symbolicTokens.remove(precedent);
+		if (_symbolicTokens.isEmpty()) tryConcretizeRPN();
 	}
 
 	public double numericResult() {
-		if (!isConcrete())
-			throw new IllegalStateException();
+		if (!isConcrete()) throw new IllegalStateException();
 		return _result;
 	}
 
@@ -136,12 +109,15 @@ public class RPN {
 	}
 
 	private void tryConcretizeRPN() {
-		if (_isFullyConcretized)
-			return;
+		if (_isFullyConcretized) return;
 		if (_symbolicTokens.isEmpty()) {
 			StringBuilder sb = new StringBuilder();
-			for (String s : _tokens) {
-				sb.append(s);
+			for (String s : _tokens) {				
+				if (SymbolicToken.isRef(s)) {
+					sb.append("" + SpreadSheet.allCells.get(s).rpn.numericResult());
+				}else {
+				    sb.append(s);
+				}
 				sb.append(" ");
 			}
 			_result = evalRPN(sb.toString());
