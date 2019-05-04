@@ -8,6 +8,7 @@ minor todo: make Cell constructable on heap only
 bug: when i get formula for X9, i should not construct new cell but should take exiting cell and update it
 todo: populate the graph
 todo: populate the top-level cells
+
 */
 #include <vector>
 #include <list>
@@ -65,8 +66,10 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
   /*saves tokenArray into a list of strings
     saves upstream references 
     no validation of formula
+    This ctor is called only if the name is not already in the lookup map?
   */
-  Cell(string const & n, string const & expr): id(n){ 
+  Cell(string const & name, string const & expr): id(name){ 
+    //assert(rclookup.count(id) == 0);
     stringstream ss(expr);
     this->tokenArray.reserve(maxTokenCnt); //preempt reallocation
     for(string token; getline(ss,token,' ');){
@@ -149,7 +152,6 @@ void ctorTest(){
   
   ptr = Cell<>::makeCell("B4", "3 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
   ptr->evalRpn(); assert(ptr->concreteValue == 7);
-
   
   Cell cell2("X9", "D3 1 A1 + * E6 / B4 - 2 /"); //(3*(1+5)/6-4)/2
   cout<<cell2<<endl;
