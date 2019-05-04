@@ -1,4 +1,3 @@
-//$Id$
 package com.concretize;
 
 import static java.lang.System.err;
@@ -28,7 +27,7 @@ public class SpreadSheet {
 		SpreadSheet sheet = new SpreadSheet();
 		sheet.getSpreadsheetCells();
 		while (!sheet.queue.isEmpty()) {
-			sheet.dequeue();
+			sheet.dequeueOnce();
 			out.println("after dequeue: " + sheet.queue);
 		}
 		if (sheet.p2d.isEmpty()) {
@@ -38,7 +37,7 @@ public class SpreadSheet {
 		}
 	}
 
-	private void dequeue() {
+	private void dequeueOnce() { 
 		Cell concretePreCell = queue.poll();
 		SymbolicToken key = new SymbolicToken(concretePreCell.key);
 		Set<SymbolicToken> dependents = p2d.remove(key);
@@ -48,8 +47,7 @@ public class SpreadSheet {
 		System.out.println(concretePreCell.key + " -p2d-> " + dependents);
 		for (SymbolicToken tmp : dependents) {
 			Cell depCell = allCells.get(tmp.key);
-			depCell.rpn.concretize1precedent(key,
-				concretePreCell.rpn.numericResult());
+			depCell.rpn.concretize1precedent(key, concretePreCell.rpn.numericResult());
 			if (depCell.isConcrete()) {
 				enqueue(depCell);
 			}
@@ -119,9 +117,10 @@ public class SpreadSheet {
 			}
 		}
 
-		System.out.println("The spreadsheet you entered is as follows:");
+		System.out.println("v v v -- The spreadsheet you entered is as follows -- v v v");
 		// Print out to check if we have got the input correctly
 		System.out.println(allCells.values() + "");
-		System.out.println("Dependencies:\n" + p2d);
+		System.out.println("Precedent/Dependencies pairs: " + p2d);
+		System.out.println("^ ^  ^ ^ ^ ^ ^ ^");
 	}
 }

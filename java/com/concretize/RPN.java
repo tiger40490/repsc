@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -65,24 +66,23 @@ public class RPN {
 	public static void main(String[] args) {
 		RPN inst = new RPN("5.1 3 4 - *");
 		System.out.println(inst.isConcrete());
-		System.out.println(inst.result);
+		System.out.println(inst._result);
 	}
 
-	private boolean isFullyConcretized = false;
+	private boolean _isFullyConcretized = false;
 	private final Set<SymbolicToken> _symbolicTokens = new HashSet<SymbolicToken>();
-	public final Set<SymbolicToken> precedents = Collections
-			.unmodifiableSet(_symbolicTokens);
-	private double result = Double.MIN_VALUE;
-	private final ArrayList<String> tokens;
+	public final Set<SymbolicToken> precedents = Collections.unmodifiableSet(_symbolicTokens);
+	private double _result = Double.MIN_VALUE;
+	private final List<String> _tokens;
 
 	public RPN(Collection<String> originalInput) {
-		this.tokens = new ArrayList<String>(originalInput);
-		for (String e : tokens) {
+		this._tokens = new ArrayList<String>(originalInput);
+		for (String e : _tokens) {
 			e = e.trim().toUpperCase();
 			try {
 				Double.parseDouble(e);
 			} catch (NumberFormatException ex) {
-				if (!"+-*/".contains(e))
+				if (! "+-*/".contains(e))
 					_symbolicTokens.add(new SymbolicToken(e));
 			}
 		}
@@ -99,27 +99,26 @@ public class RPN {
 
 	@Override
 	public String toString() {
-		String ret = tokens + "";
+		String ret = _tokens + "";
 		if (isConcrete())
 			ret += "===" + numericResult();
 		return ret;
 	}
 
 	/**
-	 * look for precedent in tokens. If found, replace it with value.
+	 * look for precedent in _symbolicTokens. If found, replace it with value.
 	 * 
-	 * If possible, calculate result and set isFullyConcretized.
+	 * If possible, calculate result and set this.isFullyConcretized.
 	 * 
 	 * @param precedent
 	 * @param value
 	 */
 	public void concretize1precedent(SymbolicToken precedent, double value) {
-		if (isFullyConcretized)
-			return;
+		if (_isFullyConcretized) return;
 		if (this._symbolicTokens.contains(precedent)) {
-			for (int i = 0; i < tokens.size(); ++i) {
-				if (tokens.get(i).equals(precedent.key))
-					tokens.set(i, value + "");
+			for (int i = 0; i < _tokens.size(); ++i) {
+				if (_tokens.get(i).equals(precedent.key))
+					_tokens.set(i, value + "");
 			}
 			_symbolicTokens.remove(precedent);
 			tryConcretizeRPN();
@@ -129,24 +128,24 @@ public class RPN {
 	public double numericResult() {
 		if (!isConcrete())
 			throw new IllegalStateException();
-		return result;
+		return _result;
 	}
 
 	public boolean isConcrete() {
-		return this.isFullyConcretized;
+		return this._isFullyConcretized;
 	}
 
 	private void tryConcretizeRPN() {
-		if (isFullyConcretized)
+		if (_isFullyConcretized)
 			return;
 		if (_symbolicTokens.isEmpty()) {
 			StringBuilder sb = new StringBuilder();
-			for (String s : tokens) {
+			for (String s : _tokens) {
 				sb.append(s);
 				sb.append(" ");
 			}
-			result = evalRPN(sb.toString());
-			isFullyConcretized = true;
+			_result = evalRPN(sb.toString());
+			_isFullyConcretized = true;
 		}
 	}
 }
