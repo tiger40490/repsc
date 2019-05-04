@@ -62,10 +62,9 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
   set<rcid> uu; //unconcretized upstream references
   //list<rcid> downstream;
   friend ostream & operator<<(ostream & os, Cell const & c){
-    os<<c.id<<" {unresolved refs="<<c.uu<<"; val="<<c.concreteValue<<" }";
+    os<<c.id<<" {refs="<<c.uu<<"; val="<<c.concreteValue<<" }";
     return os;
   }
-  friend void ctorTest();
   /*saves tokenArray into a list of strings
     saves upstream references 
     no validation of formula
@@ -102,12 +101,13 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
   }
 public:
   static Cell* makeCell(rcid const & id, string const & expr){
-    ss1<<"makeCell at "<<id<<" ...\n";
+    //ss1<<"makeCell at "<<id<<" ...\n";
     Cell* newCell = new Cell(id, expr);
     assert (!idexist(id) );
     rclookup[id] = newCell;    
     return newCell;
   }
+  inline O_TYPE value(){ return concreteValue;}
   char evalRpn(){
     if (uu.size()) return 0; //0 indicates "not ready"
     assert (tokenArray.size()); // return 0; 
@@ -147,22 +147,27 @@ void ctorTest(){
   Cell<>* ptr = Cell<>::makeCell("C2", "A1 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
 
   ptr = Cell<>::makeCell("A1", "3 1 5 + * 6 / 4 - 2 /"); //(3*(1+5)/6-4)/2
-  assert(ptr->concreteValue == -0.5);
+  assert(ptr->value() == -0.5);
   
   ptr = Cell<>::makeCell("B4", "3 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
-  assert(ptr->concreteValue == 7);
+  assert(ptr->value() == 7);
   
-  Cell cell2("X9", "D3 1 A1 + * E6 / B4 - 2 /"); //(3*(1+5)/6-4)/2
+  ptr = Cell<>::makeCell("X9", "D3 1 A1 + * E6 / B4 - 2 /"); //(3*(1+5)/6-4)/2
   cout<<*rclookup["A1"]<<endl;
   cout<<p2d;
 }	
 int main(){
-  size_t rCnt=2, cCnt=3;
+  //ctorTest();  return 0;
+  size_t rCnt=0, cCnt=0;
+  cin>>cCnt>>rCnt>> std::ws;
   for (char r = 'A'; r< 'A'+rCnt; ++r){
     for (int c = 1; c<=cCnt; ++c){
       rcid id = string(1,r)+to_string(c);
-      //cout<<c<<" -> "<<id<<endl;
+      string line;
+      getline(cin, line);
+      ss1<<id<<" --cin-> "<<line<<endl;
+      Cell<>::makeCell(id, line);
     }
   }
-  ctorTest();
+  cout<<p2d;
 }
