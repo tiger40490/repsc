@@ -1,0 +1,27 @@
+<h3>basic algo</h3>
+<pre>
+In first step, load each cell and build two data structures
+
+* allCells -- lookup map from cell address to cell object
+* p2d -- lookup map of precedent to listOfDescendents
+
+These two data structures don't really change structurally, but 
+there's a 3rd data structure, a dynamic queue that gets enqueued and dequeued.
+
+In the first step, we enqueue any concretized cell.
+
+In the second step, we dequeue a concretized cell, look up in "p2d" to get its 
+descendants. If any of the descendant can now be concretized, it is concretized 
+and enqueued.
+
+If the queue is reduced to empty, the entire spreadsheet is concretized. Otherwise, 
+there exist cycles.
+</pre>
+
+<h3>QnA</h3>
+<pre>
+Q: Cell.rpn.precedents duplicates p2d data?
+
+Cell.rpn.precedents is populated in Cell constructor. Subsequently, we use it to update p2d.
+
+buy how is it needed?
