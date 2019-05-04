@@ -89,7 +89,7 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
           }else{
             tokenArray.push_back(to_string(upstream->value()));
             roots.insert(token);
-            ss1<<token<<" is a isConcretized precedent:)\n";
+            ss1<<token<<" is a concretized precedent:)\n";
           }
         }else{
           uu.insert(token);
@@ -117,8 +117,6 @@ public:
     bool ret = ! isnan(value());
     if (ret) { assert(uu.empty()); }
     return ret;
-    //assert( isnan(upstream->value()) || uu.empty() );
-    //assert(!isnan(upstream->value()) || uu.size() );
   }
   inline O_TYPE value(){ return concreteValue;}
   char evalRpn(){
@@ -130,8 +128,7 @@ public:
     for(string const & token: tokenArray){  
       I_TYPE num;
       if (sscanf(token.c_str(), "%d", &num)){
-         st.push_back(num); 
-         continue; //cout<<num<<" found an int\n";
+         st.push_back(num); continue; //cout<<num<<" found an int\n";
       }; 
       assert(token.size()==1); //cout<<token<<" found an operator\n";
       assert(st.size()>=2);
@@ -169,16 +166,11 @@ void ctorTest(){
 }	
 int main(){
   //ctorTest();  return 0;
-  size_t rCnt=0, cCnt=0;
-  cin>>cCnt>>rCnt>> std::ws;
-  for (char r = 'A'; r< 'A'+rCnt; ++r){
-    for (int c = 1; c<=cCnt; ++c){
-      rcid id = string(1,r)+to_string(c);
-      string line;
-      getline(cin, line);
-      ss1<<id<<" --cin-> "<<line<<endl;
+  size_t rCnt=0, cCnt=0; cin>>cCnt>>rCnt>> std::ws;
+  for (char r = 'A'; r< 'A'+rCnt; ++r) for (int c = 1; c<=cCnt; ++c){
+      rcid id = string(1,r) + to_string(c);
+      string line; getline(cin, line); ss1<<id<<" --cin-> "<<line<<endl;
       Cell<>::makeCell(id, line);
-    }
   }
-  cout<<p2d<<roots;
+  cout<<"debugging.. p2d/roots = "<<p2d<<roots;
 }
