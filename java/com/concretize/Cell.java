@@ -1,7 +1,7 @@
 package com.concretize;
 
 public class Cell {
-	public final String rowColId;
+	public final SymbolicToken rowColId;
 	public final RPN rpn;
 
 	public static void main(String[] asdfa) {
@@ -15,7 +15,7 @@ public class Cell {
 		rcid = rcid.trim().toUpperCase();
 		if (rcid.length() < 2)
 			throw new IllegalArgumentException();
-		this.rowColId = rcid;
+		this.rowColId = new SymbolicToken(rcid);
 		this.rpn = new RPN(expression);
 	}
 

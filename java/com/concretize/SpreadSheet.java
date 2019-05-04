@@ -16,16 +16,16 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class SpreadSheet {
 	int num_rows = 0;
 	int num_cols = 0;
-	// Keep the relationship: VariableName(i.e. cell key) --> Id of the cells
-	// that depend on this variable
 
 	final public static Map<String, Cell> allCells = new LinkedHashMap<String, Cell>();
-	final Map<SymbolicToken, Set<SymbolicToken>> p2d = new LinkedHashMap<SymbolicToken, Set<SymbolicToken>>();
-	final Queue<Cell> queue = new ConcurrentLinkedQueue<Cell>();
+	/** precedent-to-dependents
+	 */
+	final private Map<SymbolicToken, Set<SymbolicToken>> p2d = new LinkedHashMap<SymbolicToken, Set<SymbolicToken>>();
+	final private Queue<Cell> queue = new ConcurrentLinkedQueue<Cell>();
 
 	public static void main(String[] args) throws Exception {
 		SpreadSheet sheet = new SpreadSheet();
-		sheet.getSpreadsheetCells();
+		sheet.makeSpreadsheetCells();
 		while (!sheet.queue.isEmpty()) {
 			sheet.dequeueOnce();
 			out.println("after dequeue: " + sheet.queue);
@@ -39,7 +39,7 @@ public class SpreadSheet {
 
 	private void dequeueOnce() { 
 		Cell concretePreCell = queue.poll();
-		SymbolicToken key = new SymbolicToken(concretePreCell.rowColId);
+		SymbolicToken key = concretePreCell.rowColId;
 		Set<SymbolicToken> dependents = p2d.remove(key);
 		if (dependents == null) {
 			dependents = Collections.emptySet();
@@ -61,7 +61,7 @@ public class SpreadSheet {
 		out.println("enqueued concrete cell - " + queue);
 	}
 
-	private void getSpreadsheetCells() throws Exception {
+	private void makeSpreadsheetCells() throws Exception {
 		String tmp[] = null;
 		int total_SpreadsheetCells = 0;
 		char rowId;
@@ -97,7 +97,7 @@ public class SpreadSheet {
 			if (c.rpn.isConcrete()) {
 				enqueue(c);
 			}
-			allCells.put(c.rowColId, c);
+			allCells.put(c.rowColId.toString(), c);
 
 			for (SymbolicToken precedent : c.rpn.precedents) {
 				Set<SymbolicToken> dependentS = p2d.get(precedent);
@@ -105,7 +105,7 @@ public class SpreadSheet {
 					dependentS = new LinkedHashSet<SymbolicToken>();
 					p2d.put(precedent, dependentS);
 				}
-				dependentS.add(new SymbolicToken(c.rowColId));
+				dependentS.add(c.rowColId);
 			}
 
 			if (colId == num_cols) {
