@@ -1,7 +1,9 @@
 /*
-todo: parse input text same as in java
+todo: collect root precedents:
+every time I add to p2d, I will check. If p is unconstructed or isConcretized, then add it to the roots.
+every time I construct a new cell, if it is unresolved then remove it from roots.
+
 showcase local alias via q[using]
-showcase map::emplace()
 showcase fwd declare a class template...necessary evil
 showcase template default type-arg and where explicit is needed
 */
@@ -50,6 +52,7 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
 template<typename I_TYPE=int, typename O_TYPE=double, size_t maxTokenCnt=10> class Cell; //fwd declaration required by rclookup map
 
 map<rcid, set<rcid>> p2d; //precedent -> all depdendents
+set<rcid> roots; //ALL isConcretized precedent cells
 
 //Global singleton holding all Cells (each saved here upon construction). 
 map<rcid, Cell<int>* > rclookup; 
@@ -79,16 +82,18 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
         p2d[token].insert(id);
         if (idexist(token)){
           Cell * upstream = rclookup[token];
-          if (isnan(upstream->concreteValue)){
+          if (!upstream->isConcretized()){
             tokenArray.push_back(token);
             uu.insert(token);
             ss1<<token<<" is a unresolved precedent\n";
           }else{
-            ss1<<token<<" is a concretized precedent:)\n";
-            tokenArray.push_back(to_string(upstream->concreteValue));
+            tokenArray.push_back(to_string(upstream->value()));
+            roots.insert(token);
+            ss1<<token<<" is a isConcretized precedent:)\n";
           }
         }else{
           uu.insert(token);
+          roots.insert(token);
           ss1<<token<<" is a unconstructed precedent\n";
         }
       }else{ //not a reference
@@ -96,6 +101,7 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
       }
     }
     this->evalRpn();
+    if (uu.size() && roots.erase(id)) ss1<<id<<" erased from roots\n";
     ss1<<*this<<" constructed\n";
     //ss1<<tokenArray.size()<<" <-- tokenArray parsed \n";
   }
@@ -107,14 +113,20 @@ public:
     rclookup[id] = newCell;    
     return newCell;
   }
+  bool isConcretized(){
+    bool ret = ! isnan(value());
+    if (ret) { assert(uu.empty()); }
+    return ret;
+    //assert( isnan(upstream->value()) || uu.empty() );
+    //assert(!isnan(upstream->value()) || uu.size() );
+  }
   inline O_TYPE value(){ return concreteValue;}
   char evalRpn(){
     if (uu.size()) return 0; //0 indicates "not ready"
+    if (isConcretized()) return 'd'; //done
     assert (tokenArray.size()); // return 0; 
-    if (! isnan(this->concreteValue)) return 'd'; 
     
-    using stack=vector<O_TYPE>;  
-    stack st;
+    using stack=vector<O_TYPE>;  stack st;
     for(string const & token: tokenArray){  
       I_TYPE num;
       if (sscanf(token.c_str(), "%d", &num)){
@@ -137,9 +149,8 @@ public:
     }
     //cerr<<id<<" stack: "<<st;
     assert(st.size()==1 && "one item left in stack after evalRpn");
-    assert(isnan(this->concreteValue) && "concreteValue is set once only");
     concreteValue = st[0];
-    ss1<<concreteValue<<" = concreteValue\n";
+    //ss1<<concreteValue<<" = concreteValue\n";
     return 'c'; //concretized
   }
 };
@@ -169,5 +180,5 @@ int main(){
       Cell<>::makeCell(id, line);
     }
   }
-  cout<<p2d;
+  cout<<p2d<<roots;
 }

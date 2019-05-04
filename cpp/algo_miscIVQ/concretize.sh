@@ -1,0 +1,1 @@
+g++ -std=c++17 concretize.cpp && ./a.exe < concretize.dat
