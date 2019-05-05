@@ -7,12 +7,13 @@ feature: negative values supported
 */
 /*
 minor todo: simplify but add more asserts
-minor todo: turn off verbose logging
+todo: find more efficient methods
 
-showcase local alias via q[using]
 showcase fwd declare a class template...necessary evil
 showcase template default type-arg and where explicit is needed
 showcase template non-type parameter maxTokenCnt
+showcase local alias via q[using]
+showcase NaN
 */
 #include <vector>
 #include <list>
@@ -27,7 +28,7 @@ showcase template non-type parameter maxTokenCnt
 #include <math.h> //isnan
 #define Map std::map //can be either std::map or std::unordered_map
 #define Set std::set //can be either std::set or std::unordered_set
-#define LOG_LEVEL 3 //the more low-level logging is more verbose
+#define LOG_LEVEL 2 //the more low-level logging is more verbose
 #define ss1 if(1>=LOG_LEVEL)cout //to mass-disable cout 
 #define ss2 if(2>=LOG_LEVEL)cout //to mass-disable cout 
 #define ss3 if(3==LOG_LEVEL)cout //final output
@@ -65,12 +66,12 @@ template<typename I_TYPE=int, typename O_TYPE=double, size_t maxTokenCnt=20>
 class Cell; //fwd declaration required by rclookup map
 
 /* Four containers ranked by importance */
-Map<rcid, Cell<>* > rclookup; //#1 Global singleton holding all Cells
+Map<rcid, Cell<>* > rclookup; //#1 all known cells
 inline char id_preExisting(rcid const & id){return rclookup.count(id);} //can rewrite using find()
 
-Map<rcid, Set<rcid>> p2d; //#2 precedent->depdendentS.. a.k.a. data propagation graph
+Map<rcid, Set<rcid>> p2d; //#2 precedent->depdendentS mapping.. a.k.a. data propagation graph. Once constructed, never shrunk
 Set<rcid> roots; //#3 concretized precedent cells, the start of Breadth-first-traversal
-Set<rcid> pendingCells; //#4(least important) used to detect cycles
+Set<rcid> pendingCells; //#4(least important) used to reveal cells responsible for cycles
 size_t cCnt=0, rCnt=0; 
 
 template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
@@ -78,7 +79,6 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
   rcid const id;
   O_TYPE concreteValue = NAN; //initialize to not-a-number i.e. pending
   Set<rcid> uu; //unconcretized upstream references
-  friend char walk_tree();
   friend ostream & operator<<(ostream & os, Cell const & c){
     os<<c.id<<" {refs="<<c.uu<<"; val="<<c.concreteValue<<" }"; return os;
   }
@@ -92,39 +92,34 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
         if (id_preExisting(token)){
           Cell * precedent = rclookup.at(token);
           if (precedent->isConcretized()){
-            roots.insert(token);
             ss1<<token<<" is a concretized precedent:)\n";
+            roots.insert(token);
             token = to_string(precedent->value());//small, optional optimization
           }else{
+            ss1<<token<<" is an unresolved precedent\n";
             uu.insert(token);
-            ss1<<token<<" is a unresolved precedent\n";
           }            
         }else{
+          ss1<<token<<" is an unconstructed precedent\n";
           uu.insert(token);
           roots.insert(token);
-          ss1<<token<<" is a precedent to be constructed\n";
         }
       }
       tokenArray.push_back(token);          
     }
     assert(isPending());
-    this->evalRpn();
+    evalRpn();
     if (uu.size() && roots.erase(id)){
-      ss2<<id<<" erased from roots\n";
-      assert( isPending());
+      ss2<<id<<" erased from roots successfully :)\n";
+      assert( isPending() && "must remain unconcretized immediately after erase()");
     }
+    rclookup.emplace(id, this);    
     ss1<<*this<<" constructed\n";
     assert(tokenArray.size());
     ss1<<tokenArray.size()<<" <-- tokenArray parsed \n";
   }
 public:
-  static Cell* create(rcid const & id, string const & expr){
-    //ss1<<"create() at "<<id<<" ...\n";
-    assert (!id_preExisting(id) );
-    Cell* newCell = new Cell(id, expr);
-    rclookup.emplace(id, newCell);    
-    return newCell;
-  }
+  inline static Cell* create(rcid const & id, string const & expr){return new Cell(id, expr);  }
   bool isConcretized(){
     bool ret = ! isnan(value());
     if (ret) assert(uu.empty());
@@ -133,6 +128,8 @@ public:
   inline bool isPending(){return !isConcretized(); }
   inline Set<rcid> uuClone(){ return uu;   }
   inline O_TYPE value(){ return concreteValue; }
+  inline size_t uuCount(){return uu.size(); }
+  inline size_t erase1uu(rcid const & uuRef){return uu.erase(uuRef);  }
   char evalRpn(){
     if (uu.size()) return 0; //0 indicates "not ready"
     if (isConcretized()) return 'd'; //done
@@ -198,24 +195,27 @@ char walk_tree(){//BFT
   while(Q.size()){
     rcid const id = Q.front(); Q.pop_front();
     Cell<> * cell = rclookup.at(id);
-    if (cell->isConcretized() && p2d.count(id)==0) continue;
+    if (cell->isConcretized() && p2d.count(id)==0) continue; //no subtree below me
+    
     ss1<<id<<" ...updating...\n";
-    if ( cell->isPending()){
-      for (rcid const & cellRef: cell->uuClone()){
-        if (rclookup.at(cellRef)->isConcretized()){ 
-          cell->uu.erase(cellRef); 
-          ss2<<cellRef<<" (just concretized) removed from uu-list of "<<*cell<<endl;
+    if ( cell->isPending() ){
+      for (rcid const & upstream: cell->uuClone()){
+        if ( rclookup.at(upstream)->isConcretized()
+          && cell->erase1uu(upstream)){
+            ss2<<upstream<<" (recently concretized) removed from uu-list of "<<*cell<<endl;
         }
       }
-      if (cell->uu.size()) continue; //dequeued and not enqueued!
+      if (cell->uuCount()) continue; //dequeued and not enqueued again! Basicaly, current cell has unresolved precedents, so we give up on this cell. BFT from another root cell will eventually revisit this cell.
+      
       auto status = cell->evalRpn();
       ss2<<*cell<<" has no more unresolved refs, and evalRpn() just returned "<<status<<"\n";
-      if(p2d.count(id)==0)continue; //this id has no downstream
+      if(p2d.count(id)==0)continue; //current cell has no subtree, so follow BFT algo
     }else{
       assert(p2d.count(id));
     }      
+    //now enqueue all my direct dependent cells:
     for (auto const & dep: p2d.at(id)){ Q.push_back(dep);  }
-    ss1<<Q<<"<< is the queue after appending dependends of "<<id<<endl;
+    ss1<<Q<<"<< is the queue after appending direct dependends of "<<id<<endl;
   }return 0;
 }
 void resolve1sheet(){
