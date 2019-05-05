@@ -5,6 +5,17 @@ If too much output, please set macro LOG_LEVEL to 3
 
 feature: negative values supported
 */
+/*Design principle:
+I keep the Cell object state dynamically updatable, because Cell::concreteValue has to be updated anyway. When this happens, the Cell::uu must stay consistent with it, otherwise state invariants are lost. Clarity and consistency are my top prioriies in this type of design. (Numerous asserts.)
+
+Global data structures are not updated once constructed. No consistency between them and the Cell objects.
+
+In fact, only p2d needs any dynamic update. I decided not to update it to support a valuable future feature -- change propagation. When any root cell has a new value, entire sheet can be udpated follwing the p2d graph (Cell::uu would be empty).
+
+pendingCells, by definition, is dynamically updated... trivial.
+
+In conclusion, Consistency and invariants are maintained within each Cell object only.
+*/
 /*
 todo: find more efficient algorithms
 todo: simplify but also add more asserts
