@@ -1,4 +1,5 @@
 /*
+todo: evalRpn need to resolve at least one uu
 todo: use the root objects: BFT
 
 showcase local alias via q[using]
@@ -56,9 +57,10 @@ set<rcid> roots; //ALL concretized precedent cells
 
 template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
   vector<string> tokenArray;
-  rcid const & id;
+  rcid const id; //can't be a reference as the original string could be on stack!
   O_TYPE concreteValue = NAN; //initialize to not-a-number i.e. pending
   set<rcid> uu; //unconcretized upstream references
+  friend char walk_tree();
   friend ostream & operator<<(ostream & os, Cell const & c){
     os<<c.id<<" {refs="<<c.uu<<"; val="<<c.concreteValue<<" }"; return os;
   }
@@ -72,11 +74,10 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
         if (id_existing(token)){
           Cell * precedent = rclookup[token];
           if (precedent->isConcretized()){
-            tokenArray.push_back(to_string(precedent->value()));
             roots.insert(token);
             ss1<<token<<" is a concretized precedent:)\n";
+            token = to_string(precedent->value());
           }else{
-            tokenArray.push_back(token);
             uu.insert(token);
             ss1<<token<<" is a unresolved precedent\n";
           }            
@@ -85,7 +86,8 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
           roots.insert(token);
           ss1<<token<<" is a precedent to be constructed\n";
         }
-      }else{ /*not a cell reference*/ tokenArray.push_back(token); }
+      }else{ /*not a cell reference*/}
+      tokenArray.push_back(token);          
     }
     this->evalRpn();
     if (uu.size() && roots.erase(id)){
@@ -93,7 +95,8 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
       ss1<<id<<" erased from roots\n";
     }
     ss1<<*this<<" constructed\n";
-    //ss1<<tokenArray.size()<<" <-- tokenArray parsed \n";
+    assert(tokenArray.size());
+    ss1<<tokenArray.size()<<" <-- tokenArray parsed \n";
   }
 public:
   static Cell* create(rcid const & id, string const & expr){
@@ -108,10 +111,14 @@ public:
     if (ret) assert(uu.empty());
     return ret;
   }
+  inline set<rcid> uuClone(){
+    return uu; 
+  }
   inline O_TYPE value(){ return concreteValue;}
   char evalRpn(){
     if (uu.size()) return 0; //0 indicates "not ready"
     if (isConcretized()) return 'd'; //done
+    //ss1<<tokenArray<<" = tokenArray in evalRpn\n";
     assert (tokenArray.size());
     
     using stack=vector<O_TYPE>;  stack st;
@@ -120,6 +127,13 @@ public:
       if (sscanf(token.c_str(), "%d", &num)){
          st.push_back(num); continue; //cout<<num<<" found an int\n";
       }; 
+      if ('A' <= token[0] && token[0] <= 'Z'){
+        assert(id_existing(token));
+        Cell * cell = rclookup[token];
+        assert(cell->isConcretized());
+        st.push_back(cell->value());
+        continue;
+      }
       assert(token.size()==1); //cout<<token<<" found an operator\n";
       assert(st.size()>=2);
       O_TYPE num2=st.back(); st.pop_back();
@@ -141,19 +155,7 @@ public:
     return 'c'; //concretized
   }
 };
-void ctorTest(){
-  Cell<>* ptr = Cell<>::create("C2", "A1 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
 
-  ptr = Cell<>::create("A1", "3 1 5 + * 6 / 4 - 2 /"); //(3*(1+5)/6-4)/2
-  assert(ptr->value() == -0.5);
-  
-  ptr = Cell<>::create("B4", "3 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
-  assert(ptr->value() == 7);
-  
-  ptr = Cell<>::create("X9", "D3 1 A1 + * E6 / B4 - 2 /"); //(3*(1+5)/6-4)/2
-  cout<<*rclookup["A1"]<<endl;
-  cout<<p2d;
-}	
 char make_tree(){
   //ctorTest();  return 0;
   size_t rCnt=0, cCnt=0; cin>>cCnt>>rCnt>> std::ws;
@@ -171,11 +173,48 @@ void dumpTree(string heading=""){
 }
 char walk_tree(){//BFT
   dumpTree("before walk_tree");
-  using queue=list<rcid>; queue Q;
-  
+  list<rcid> Q(roots.begin(), roots.end());
+  while(Q.size()){
+    rcid const id = Q.front(); Q.pop_front();
+    assert(id_existing(id));
+    Cell<> * cell = rclookup[id];
+    if (cell->isConcretized()) continue;
+    ss1<<id<<" updating ..\n";
+    //check all precedents
+    for (rcid const & cellRef: cell->uuClone()){
+      if (rclookup.at(cellRef)->isConcretized()){ 
+        cell->uu.erase(cellRef); 
+        ss1<<cellRef<<" (concretized) removed from uu set of "<<*cell<<endl;
+      }
+    }
+    if (cell->uu.size()) continue; //id popped !
+    ss1<<id<<" has no more unresolved refs..\n";
+    cell->evalRpn();
+    ss1<<*cell<<" after evalRpn\n";
+    if ( p2d.count(id) == 0 ) continue;
+
+    auto const & dep = p2d.at(id);
+    Q.insert(Q.end(), dep.begin(), dep.end());
+    ss1<<Q<<" is the queue after appending dependends of "<<id<<endl;
+  }
   return 0;
 }
 int main(){
   make_tree();
   walk_tree();
 }
+#ifdef TEST_CTOR
+void ctorTest(){
+  Cell<>* ptr = Cell<>::create("C2", "A1 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
+
+  ptr = Cell<>::create("A1", "3 1 5 + * 6 / 4 - 2 /"); //(3*(1+5)/6-4)/2
+  assert(ptr->value() == -0.5);
+  
+  ptr = Cell<>::create("B4", "3 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
+  assert(ptr->value() == 7);
+  
+  ptr = Cell<>::create("X9", "D3 1 A1 + * E6 / B4 - 2 /"); //(3*(1+5)/6-4)/2
+  cout<<*rclookup["A1"]<<endl;
+  cout<<p2d;
+}	
+#endif
