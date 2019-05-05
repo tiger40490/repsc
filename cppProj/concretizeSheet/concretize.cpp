@@ -20,8 +20,9 @@ showcase template default type-arg and where explicit is needed
 #include <math.h> //isnan
 #define Map std::map //can be either std::map or std::unordered_map
 #define Set std::set //can be either std::set or std::unordered_set
-#define ss1 if(1>30)cout //to mass-disable cout 
-#define ss2 if(2>0)cout //to mass-disable cout 
+#define LOG_LEVEL 2 //the lower, the more verbose
+#define ss1 if(1>=LOG_LEVEL)cout //to mass-disable cout 
+#define ss2 if(2>=LOG_LEVEL)cout //to mass-disable cout 
 using namespace std;
 using rcid=string; //row/column identifier
 template<typename K, typename V> ostream & operator<<(ostream & os, pair<K,V> const & p){
@@ -222,7 +223,7 @@ void myTestC(){
     resolve1sheet();
   }catch(string & str){
     assert(str=="cycle");
-    ss2<<"Cycle detected as expected :) \n";
+    ss2<<"Cycle detected as expected :) ";
   }
 }
 void myTest1(){
@@ -234,7 +235,7 @@ void myTest1(){
   assert(abs(rclookup["B1"]->value()-8.6666)<eps);
   assert(abs(rclookup["B2"]->value()-3)<eps);
   assert(abs(rclookup["B3"]->value()-1.5)<eps);
-  ss2<<"Final cell numbers checked :) \n";
+  ss2<<"Final cell numbers checked :) ";
 }
 void myTest2(){
   resolve1sheet();
@@ -245,7 +246,7 @@ void myTest2(){
   assert(abs(rclookup["B1"]->value()-0)<eps);
   assert(abs(rclookup["B2"]->value()+1)<eps);  
   assert(abs(rclookup["B3"]->value()+3)<eps);
-  ss2<<"Final cell numbers checked :) \n";
+  ss2<<"Final cell numbers checked :) ";
 }
 void myTest3(){
   resolve1sheet();
@@ -256,14 +257,14 @@ void myTest3(){
   assert(abs(rclookup["B1"]->value()-16)<eps);
   assert(abs(rclookup["B2"]->value()-18)<eps);  
   assert(abs(rclookup["B3"]->value()-21)<eps);
-  ss2<<"Final cell numbers checked :) \n";
+  ss2<<"Final cell numbers checked :) ";
 }
 
 int main(int argc, char** argv){
-  cout<<"\n----- Use stdin to enter data after sheet width and height -----:\n";
+  cout<<"----- Use stdin to enter data after sheet width and height -----:\n";
   if (argc > 1) { //my tests
     string arg1(argv[1]);
-    cout<<arg1<<endl;
+    cout<<arg1<<"\n";
     if     (arg1 == "myTest1") myTest1();  
     else if(arg1 == "myTest2") myTest2();  
     else if(arg1 == "myTest3") myTest3();  
