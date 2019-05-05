@@ -1,23 +1,26 @@
 /* Compile : 
-g++ -std=c++17 concretize.cpp && ./a.exe
+g++ -std=c++17 concretize.cpp && ./a.exe < input.txt
 
-If too much output, please set macro LOG_LEVEL to 3
+If too much logging output, please set macro LOG_LEVEL to 3 and recompile.
 
-feature: negative values supported
+* feature: negative values supported.
+* feature: once a sheet is fully "concretized", you can update value (not formula) in one of the "root" cells and get entire sheet refreshed to show your edit propagated throughout. Discussed below.
+
 */
-/*Design principle:
-I keep the Cell object state dynamically updatable, because Cell::concreteValue has to be updated anyway. When this happens, the Cell::uu must stay consistent with it, otherwise state invariants are lost. Clarity and consistency are my top prioriies in this type of design. (Numerous asserts.)
+/* Design principles:
+1) I keep the Cell object state dynamically updatable, because Cell::concreteValue has to be updated anyway. When this happens, the Cell::uu field must stay consistent with it, otherwise state invariants are lost. 
 
-Global data structures are not updated once constructed. No consistency between them and the Cell objects.
+(Clarity and consistency are my top prioriies in this type of design. Numerous asserts to confirm the invariants.)
 
-In fact, only p2d needs any dynamic update. I decided not to update it to support a valuable future feature -- change propagation. When any root cell has a new value, entire sheet can be udpated follwing the p2d graph (Cell::uu would be empty). This experimental feature is briefly tested in Cell::updateValue().
+In contrast, Global data structures are not updated once constructed. By design, consistency is still maintained.
 
-pendingCells, by definition, is dynamically updated... trivial.
+In particular, p2d represents a static graph and needs no dynamic update. This p2d graph can support a valuable future feature -- change propagation: When any root cell has a new value, entire sheet can be udpated follwing the p2d graph (Cell::uu would be empty and unused). This experimental feature is briefly tested in Cell::updateValue().
 
-In conclusion, Consistency and invariants are maintained within each Cell object only.
+The global "pendingCells", by definition, is dynamically updated... trivial.
+
+2) eliminate full table scan. Only the final print-loop iterates every cell as required by original question. All cell updates rely on the p2d graph.
 */
 /*
-todo: find more efficient algorithms
 todo: simplify but also add more asserts
 
 showcase fwd declare a class template...necessary evil
@@ -39,7 +42,7 @@ showcase NaN
 #include <math.h> //isnan
 #define Map std::map //can be either std::map or std::unordered_map
 #define Set std::set //can be either std::set or std::unordered_set
-#define LOG_LEVEL 2 //the more low-level logging is more verbose
+#define LOG_LEVEL 3 //the more low-level logging is more verbose
 #define ss1 if(1>=LOG_LEVEL)cout //to mass-disable cout 
 #define ss2 if(2>=LOG_LEVEL)cout //to mass-disable cout 
 #define ss3 if(3==LOG_LEVEL)cout //final output
@@ -80,9 +83,9 @@ class Cell; //fwd declaration required by rclookup map
 Map<rcid, Cell<>* > rclookup; //#1 all known cells
 inline char id_preExisting(rcid const & id){return rclookup.count(id);} //can rewrite using find()
 
-Map<rcid, Set<rcid>> p2d; //#2 precedent->depdendentS mapping.. a.k.a. data propagation graph. Once constructed, never shrunk
+Map<rcid, Set<rcid>> p2d; //#2 precedent->depdendentS mapping.. a.k.a. data propagation graph. Immutable once constructed. 
 Set<rcid> roots; //#3 concretized precedent cells, the start of Breadth-first-traversal
-Set<rcid> pendingCells; //#4(least important) used to reveal cells responsible for cycles
+Set<rcid> pendingCells; //#4(least important) used to discover cells responsible for cycles
 size_t cCnt=0, rCnt=0; 
 
 template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
@@ -121,7 +124,7 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
     assert(isPending());
     evalRpn();
     if (uu.size() && roots.erase(id)){
-      ss2<<id<<" erased from roots successfully :)\n";
+      ss2<<id<<" erased from roots successfully (earlier inserted by a downstream's ctor) \n";
       assert( isPending() && "must remain unconcretized immediately after erase()");
     }
     rclookup.emplace(id, this);    
@@ -141,7 +144,7 @@ public:
   inline O_TYPE value(){ return concreteValue; }
   inline size_t uuCount(){return uu.size(); }
   inline size_t erase1uu(rcid const & uuRef){return uu.erase(uuRef);  }
-  void updateValue(O_TYPE newval){
+  void updateValue(O_TYPE newval){ //experimental
     assert(uu.empty() && "Programmer error..Illegal to update concreteValue with pending refs");
     concreteValue = newval;
     ss2<<*this<<" after updateValue using --> "<<newval<<endl;
@@ -257,7 +260,7 @@ void resolve1sheet(){
   auto dim = make_tree();
   walk_tree();
   if (pendingCells.size()){
-    cerr<<"Cyclic dependencies found... "<<pendingCells<<"are the unresolved cells forming one or more cycles\n";
+    cerr<<"Cyclic dependencies found... "<<pendingCells<<"are the unresolved cells creating one or more cycles\n";
     throw string("cycle");
   }
   ss3<<cCnt<<" "<<rCnt<<endl;
