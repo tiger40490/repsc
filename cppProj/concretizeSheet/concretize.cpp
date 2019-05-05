@@ -10,7 +10,7 @@ I keep the Cell object state dynamically updatable, because Cell::concreteValue 
 
 Global data structures are not updated once constructed. No consistency between them and the Cell objects.
 
-In fact, only p2d needs any dynamic update. I decided not to update it to support a valuable future feature -- change propagation. When any root cell has a new value, entire sheet can be udpated follwing the p2d graph (Cell::uu would be empty).
+In fact, only p2d needs any dynamic update. I decided not to update it to support a valuable future feature -- change propagation. When any root cell has a new value, entire sheet can be udpated follwing the p2d graph (Cell::uu would be empty). This experimental feature is briefly tested in Cell::updateValue().
 
 pendingCells, by definition, is dynamically updated... trivial.
 
@@ -39,7 +39,7 @@ showcase NaN
 #include <math.h> //isnan
 #define Map std::map //can be either std::map or std::unordered_map
 #define Set std::set //can be either std::set or std::unordered_set
-#define LOG_LEVEL 1 //the more low-level logging is more verbose
+#define LOG_LEVEL 2 //the more low-level logging is more verbose
 #define ss1 if(1>=LOG_LEVEL)cout //to mass-disable cout 
 #define ss2 if(2>=LOG_LEVEL)cout //to mass-disable cout 
 #define ss3 if(3==LOG_LEVEL)cout //final output
@@ -141,9 +141,28 @@ public:
   inline O_TYPE value(){ return concreteValue; }
   inline size_t uuCount(){return uu.size(); }
   inline size_t erase1uu(rcid const & uuRef){return uu.erase(uuRef);  }
-  char evalRpn(){
+  void updateValue(O_TYPE newval){
+    assert(uu.empty() && "Programmer error..Illegal to update concreteValue with pending refs");
+    concreteValue = newval;
+    ss2<<*this<<" after updateValue using --> "<<newval<<endl;
+  }
+  char evalRpn(bool isForceUpdating=false){
     if (uu.size()) return 0; //0 indicates "not ready"
-    if (isConcretized()) return 'd'; //done
+    if ( !isForceUpdating){
+      if (isConcretized()) return 'd'; //done
+    }else{
+      ss1<<"isForceUpdating set by user\n"; 
+      bool hasRef=false;
+      for (auto const & token: tokenArray){
+        if ( isalpha(token[0]) ){
+          hasRef=true; break;
+      }}
+      if ( ! hasRef){
+        ss2<<"Ignoring the (no-ref)formula in tokeyArray \n";
+        return 'f';
+      }else{ //ss1<<tokenArray<<" contains cell references\n";
+      }
+    }
     //ss1<<tokenArray<<" = tokenArray in evalRpn\n";
     assert (tokenArray.size());
     
@@ -192,7 +211,7 @@ pair<size_t, size_t> make_tree(){
   }
   return make_pair(cCnt, rCnt);
 }
-void dumpTree(string heading=""){
+void dump_tree(string heading=""){
   if (heading.size()) ss2<<"-- "<<heading<<" --\n";
   for (auto pair: rclookup){
     ss1<<*(pair.second)<<endl;
@@ -200,16 +219,19 @@ void dumpTree(string heading=""){
   ss2<<"graph roots = "<<roots<<endl;
   ss2<<"data propagation graph = "<<p2d;
 }
-char walk_tree(){//BFT
-  dumpTree("before walk_tree");
+char walk_tree(bool isForceUpdating=false){//BFT
+  dump_tree("before walk_tree");
   list<rcid> Q(roots.begin(), roots.end());
   while(Q.size()){
     rcid const id = Q.front(); Q.pop_front();
     Cell<> * cell = rclookup.at(id);
-    if (cell->isConcretized() && p2d.count(id)==0) continue; //no subtree below me
-    
+    if ( ! isForceUpdating){
+      if (cell->isConcretized() && p2d.count(id)==0) continue; //no subtree below me
+    }else{
+      ss1<<"isForceUpdating set by user\n";
+    }
     ss1<<id<<" ...updating...\n";
-    if ( cell->isPending() ){
+    if ( cell->isPending() || isForceUpdating ){
       for (rcid const & upstream: cell->uuClone()){
         if ( rclookup.at(upstream)->isConcretized()
           && cell->erase1uu(upstream)){
@@ -218,14 +240,16 @@ char walk_tree(){//BFT
       }
       if (cell->uuCount()) continue; //dequeued and not enqueued again! Basicaly, current cell has unresolved precedents, so we give up on this cell. BFT from another root cell will eventually revisit this cell.
       
-      auto status = cell->evalRpn();
+      auto status = cell->evalRpn(isForceUpdating);
       ss2<<*cell<<" has no more unresolved refs, and evalRpn() just returned "<<status<<"\n";
       if(p2d.count(id)==0)continue; //current cell has no subtree, so follow BFT algo
     }else{
-      assert(p2d.count(id));
+      if ( ! isForceUpdating) 
+        assert(p2d.count(id));
     }      
     //now enqueue all my direct dependent cells:
-    for (auto const & dep: p2d.at(id)){ Q.push_back(dep);  }
+    if (p2d.count(id))
+      for (auto const & dep: p2d.at(id)){ Q.push_back(dep);  }
     ss1<<Q<<"<< is the queue after appending direct dependends of "<<id<<endl;
   }return 0;
 }
@@ -259,7 +283,17 @@ void myTest1(){
   assert(abs(rclookup["B1"]->value()-8.6666)<eps);
   assert(abs(rclookup["B2"]->value()-3)<eps);
   assert(abs(rclookup["B3"]->value()-1.5)<eps);
-  ss2<<"Final cell numbers checked :) ";
+  ss2<<"Final cell numbers checked :) Now propagating a root cell edit ...";
+  rclookup["A2"]->updateValue(120);
+  walk_tree(true);
+  dump_tree();
+  assert(abs(rclookup["A1"]->value()-120)<eps);
+  assert(abs(rclookup["A2"]->value()-120)<eps);
+  assert(abs(rclookup["A3"]->value()-120)<eps);
+  assert(abs(rclookup["B1"]->value()-42)<eps);
+  assert(abs(rclookup["B2"]->value()-3)<eps);
+  assert(abs(rclookup["B3"]->value()-39.0/(42*3))<eps);
+  ss2<<"ForceUpdate numbers checked :)\n";
 }
 void myTest2(){
   resolve1sheet();
