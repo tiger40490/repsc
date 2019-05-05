@@ -1,11 +1,18 @@
+/* Compile : 
+g++ -std=c++17 concretize.cpp && ./a.exe
+
+If too much output, please set macro LOG_LEVEL to 3
+
+feature: negative values supported
+*/
 /*
 minor todo: simplify but add more asserts
-minor todo: output format
 minor todo: turn off verbose logging
 
 showcase local alias via q[using]
 showcase fwd declare a class template...necessary evil
 showcase template default type-arg and where explicit is needed
+showcase template non-type parameter maxTokenCnt
 */
 #include <vector>
 #include <list>
@@ -20,9 +27,10 @@ showcase template default type-arg and where explicit is needed
 #include <math.h> //isnan
 #define Map std::map //can be either std::map or std::unordered_map
 #define Set std::set //can be either std::set or std::unordered_set
-#define LOG_LEVEL 2 //the lower, the more verbose
+#define LOG_LEVEL 3 //the more low-level logging is more verbose
 #define ss1 if(1>=LOG_LEVEL)cout //to mass-disable cout 
 #define ss2 if(2>=LOG_LEVEL)cout //to mass-disable cout 
+#define ss3 if(3==LOG_LEVEL)cout //final output
 using namespace std;
 using rcid=string; //row/column identifier
 template<typename K, typename V> ostream & operator<<(ostream & os, pair<K,V> const & p){
@@ -63,6 +71,7 @@ inline char id_preExisting(rcid const & id){return rclookup.count(id);} //can re
 Map<rcid, Set<rcid>> p2d; //#2 precedent->depdendentS.. a.k.a. data propagation graph
 Set<rcid> roots; //#3 concretized precedent cells, the start of Breadth-first-traversal
 Set<rcid> pendingCells; //#4(least important) used to detect cycles
+size_t cCnt=0, rCnt=0; 
 
 template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
   vector<string> tokenArray;
@@ -167,7 +176,7 @@ public:
   }
 };
 pair<size_t, size_t> make_tree(){
-  size_t cCnt=0, rCnt=0; cin>>cCnt>>rCnt>> std::ws;
+  cin>>cCnt>>rCnt>> std::ws;
   for (char r = 'A'; r< 'A'+rCnt; ++r) for (int c = 1; c<=cCnt; ++c){
       rcid id = string(1,r) + to_string(c);
       string line; getline(cin, line); ss1<<id<<" --cin-> "<<line<<endl;
@@ -180,8 +189,8 @@ void dumpTree(string heading=""){
   for (auto pair: rclookup){
     ss1<<*(pair.second)<<endl;
   }
-  ss2<<"Tree roots = "<<roots<<endl;
-  ss2<<"propagation Tree = "<<p2d;
+  ss2<<"graph roots = "<<roots<<endl;
+  ss2<<"propagation graph = "<<p2d;
 }
 char walk_tree(){//BFT
   dumpTree("before walk_tree");
@@ -216,7 +225,13 @@ void resolve1sheet(){
   if (pendingCells.size()){
     cerr<<"Cyclic dependencies found... "<<pendingCells<<"are the unresolved cells forming one or more cycles\n";
     throw string("cycle");
-  } 
+  }
+  //output
+  ss3<<cCnt<<" "<<rCnt<<endl;
+  for (char r = 'A'; r< 'A'+rCnt; ++r) for (int c = 1; c<=cCnt; ++c){
+      rcid id = string(1,r) + to_string(c);  
+      ss3<<setprecision(5)<<fixed<<rclookup.at(id)->value()<<endl;
+  }
 }
 void myTestC(){
   try{
@@ -261,15 +276,15 @@ void myTest3(){
 }
 
 int main(int argc, char** argv){
-  cout<<"----- Use stdin to enter data after sheet width and height -----:\n";
+  ss2<<"----- Use stdin to enter data after sheet width and height -----:\n";
   if (argc > 1) { //my tests
     string arg1(argv[1]);
-    cout<<arg1<<"\n";
+    ss2<<arg1<<"\n";
     if     (arg1 == "myTest1") myTest1();  
     else if(arg1 == "myTest2") myTest2();  
     else if(arg1 == "myTest3") myTest3();  
     else if(arg1 == "myTestC") myTestC();  
-    cout<<arg1<<" completed\n";    
+    ss2<<arg1<<" completed\n";    
   }
 }
 #ifdef TEST_CTOR
