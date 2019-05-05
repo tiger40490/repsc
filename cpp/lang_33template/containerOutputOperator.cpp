@@ -1,6 +1,8 @@
 //todo: use enable_if or something else to disallow std::string
 #include <map>
 #include <unordered_map>
+#include <set>
+#include <unordered_set>
 #include <list>
 #include <vector>
 //
@@ -10,6 +12,7 @@
 #include <iostream>
 #include <iomanip>
 #define Map unordered_map
+#define Set set
 #define ss if(1>0)cout //to mass-disable cout before uploading to hacker rank
 using namespace std;
 
@@ -36,9 +39,17 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    os<<endl;
    return os;
 }
+template<typename T,             int min_width=2> ostream & operator<<(ostream & os, Set<T> const & c){
+   for(auto const & it: c){ os<<setw(min_width)<<it<<" "; }
+   os<<endl;
+   return os;
+}
+
 int main(){
   list<double> li={3.1, 5,2,9};
+  Set<string> myset={"s1", "s2", "s2", "s1"};
   vector<string> vec={"dabao", "meimei", "princess"};
   Map<int, int> tm={{1,11}, {2,22}};
-  ss<<li<<vec<<tm;
+  ss<<vec<<tm;
+  ss<<li<<myset;
 }
