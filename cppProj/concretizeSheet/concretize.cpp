@@ -25,6 +25,7 @@ The global "pendingCells", by definition, is dynamically updated... trivial.
 In my design, only the final print-loop iterates every cell, only becasue it's required by original question. All cell updates rely on the p2d graph, which is fairly efficient and scalabe -- If only 30,000 out of 900,000 cells have any precedent, then p2d only hold those 30,000 nodes. This p2d is based on a standard "adjacency-set" representation of graphs, and more scalable than adjacency-matrix for sparse graph.
 */
 /*
+todo: cells with only resolved upstreams ... shuld not be roots
 todo: simplify but also add more asserts
 
 showcase fwd declare a class template...necessary evil
@@ -46,7 +47,7 @@ showcase NaN
 #include <math.h> //isnan
 #define Map std::map //can be either std::map or std::unordered_map
 #define Set std::set //can be either std::set or std::unordered_set
-#define LOG_LEVEL 3 //the more low-level logging is more verbose
+#define LOG_LEVEL 1 //the more low-level logging is more verbose
 #define ss1 if(1>=LOG_LEVEL)cout //to mass-disable cout 
 #define ss2 if(2>=LOG_LEVEL)cout //to mass-disable cout 
 #define ss3 if(3==LOG_LEVEL)cout //final output
@@ -94,24 +95,27 @@ size_t cCnt=0, rCnt=0;
 
 template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
   vector<string> tokenArray;
+  bool const hasUpstream;
   rcid const id;
   O_TYPE concreteValue = NAN; //initialize to not-a-number i.e. pending
   Set<rcid> uu; //unconcretized upstream references
   friend ostream & operator<<(ostream & os, Cell const & c){
     os<<c.id<<" {refs="<<c.uu<<"; val="<<c.concreteValue<<" }"; return os;
   }
-  Cell(string const & name, string const & expr): id(name){ 
+  Cell(string const & name, string const & expr): id(name), hasUpstream(false){ 
     assert(!id_preExisting(id));
     stringstream ss(expr);
     this->tokenArray.reserve(maxTokenCnt); //preempt reallocation
+    bool tmp_hasUpstream = false;
     for(string token; getline(ss,token,' ');){
       if ('A' <= token[0] && token[0] <= 'Z'){
+        tmp_hasUpstream = true;
         p2d[token].insert(id);
         if (id_preExisting(token)){
           Cell * precedent = rclookup.at(token);
           if (precedent->isConcretized()){
             ss1<<token<<" is a concretized precedent:)\n";
-            roots.insert(token);
+            addRoot(token);
             token = to_string(precedent->value());//small, optional optimization
           }else{
             ss1<<token<<" is an unresolved precedent\n";
@@ -120,11 +124,12 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
         }else{
           ss1<<token<<" is an unconstructed precedent\n";
           uu.insert(token);
-          roots.insert(token);
+          addRoot(token);
         }
       }
       tokenArray.push_back(token);          
     }
+    *const_cast<bool*>(&hasUpstream) = tmp_hasUpstream;
     assert(isPending());
     evalRpn();
     if (uu.size() && roots.erase(id)){
@@ -135,6 +140,11 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
     ss1<<*this<<" constructed\n";
     assert(tokenArray.size());
     ss1<<tokenArray.size()<<" <-- tokenArray parsed \n";
+  }
+  static bool addRoot(rcid const & id){
+    if ( ! id_preExisting(id)){ roots.insert(id); return false; }
+    if (rclookup.at(id)->hasUpstream) return false;
+    return roots.insert(id).second;
   }
 public:
   inline static Cell* create(rcid const & id, string const & expr){return new Cell(id, expr);  }
