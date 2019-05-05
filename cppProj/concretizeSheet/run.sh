@@ -5,4 +5,4 @@ g++ -std=c++17 concretize.cpp || exit
 ./a.exe myTestC < concretizeCycle.dat || exit
 ./a.exe myTest1 < concretize1.dat || exit # original data
 } > log.txt 2>&1
-less log.txt
+less -F log.txt

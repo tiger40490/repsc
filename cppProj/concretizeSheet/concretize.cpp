@@ -46,7 +46,7 @@ showcase NaN
 #include <math.h> //isnan
 #define Map std::map //can be either std::map or std::unordered_map
 #define Set std::set //can be either std::set or std::unordered_set
-#define LOG_LEVEL 1 //the more low-level logging is more verbose
+#define LOG_LEVEL 3 //the more low-level logging is more verbose
 #define ss1 if(1>=LOG_LEVEL)cout //to mass-disable cout 
 #define ss2 if(2>=LOG_LEVEL)cout //to mass-disable cout 
 #define ss3 if(3==LOG_LEVEL)cout //final output
@@ -335,7 +335,7 @@ void myTest3(){
 }
 
 int main(int argc, char** argv){
-  ss2<<"----- Use stdin to enter data after sheet width and height -----:\n";
+  cout<<"----- Use stdin to enter data ----- :\n";
   if (argc > 1) { //my tests
     string arg1(argv[1]);
     ss2<<arg1<<"\n";
