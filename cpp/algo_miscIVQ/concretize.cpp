@@ -1,7 +1,10 @@
 /*
+todo: move to cProj
+todo: test a long chain reaction
 todo: more asserts
-minor todo: output format
 minor todo: simplify
+minor todo: output format
+minor todo: turn off verbose logging
 
 showcase local alias via q[using]
 showcase fwd declare a class template...necessary evil
@@ -62,7 +65,7 @@ set<rcid> pendingCells; //#4(least important) used to detect cycles
 
 template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
   vector<string> tokenArray;
-  rcid const id; //can't be a reference as the original string could be on stack!
+  rcid const id;
   O_TYPE concreteValue = NAN; //initialize to not-a-number i.e. pending
   set<rcid> uu; //unconcretized upstream references
   friend char walk_tree();
@@ -232,11 +235,24 @@ void myTest1(){
   assert(abs(rclookup["B3"]->value()-1.5)<eps);
   ss2<<"Final cell numbers check :) \n";
 }
+void myTest2(){
+  resolve1sheet();
+  double eps=0.0001;
+  assert(abs(rclookup["A1"]->value()-6)<eps);
+  assert(abs(rclookup["A2"]->value()-5)<eps);
+  assert(abs(rclookup["A3"]->value()-3)<eps);
+  assert(abs(rclookup["B1"]->value()-0)<eps);
+  assert(abs(rclookup["B2"]->value()+1)<eps);  
+  assert(abs(rclookup["B3"]->value()+3)<eps);
+  ss2<<"Final cell numbers check :) \n";
+}
 int main(int argc, char** argv){
   cout<<"\n----- Use stdin to enter data after sheet width and height -----:\n";
   if (argc > 1) { //my tests
     string arg1(argv[1]);
+    cout<<arg1<<endl;
     if     (arg1 == "myTest1") myTest1();  
+    if     (arg1 == "myTest2") myTest2();  
     else if(arg1 == "myTestC") myTestC();  
   }
 }
