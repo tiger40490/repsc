@@ -25,7 +25,6 @@ The global "pendingCells", by definition, is dynamically updated... trivial.
 In my design, only the final print-loop iterates every cell, only becasue it's required by original question. All cell updates rely on the p2d graph, which is fairly efficient and scalabe -- If only 30,000 out of 900,000 cells have any precedent, then p2d only hold those 30,000 nodes. This p2d is based on a standard "adjacency-set" representation of graphs, and more scalable than adjacency-matrix for sparse graph.
 */
 /*
-todo: cells with only resolved upstreams ... shuld not be roots
 todo: simplify but also add more asserts
 
 showcase fwd declare a class template...necessary evil
