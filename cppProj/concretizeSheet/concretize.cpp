@@ -264,9 +264,10 @@ int main(int argc, char** argv){
     string arg1(argv[1]);
     cout<<arg1<<endl;
     if     (arg1 == "myTest1") myTest1();  
-    if     (arg1 == "myTest2") myTest2();  
-    if     (arg1 == "myTest3") myTest3();  
+    else if(arg1 == "myTest2") myTest2();  
+    else if(arg1 == "myTest3") myTest3();  
     else if(arg1 == "myTestC") myTestC();  
+    cout<<arg1<<" completed\n";    
   }
 }
 #ifdef TEST_CTOR
