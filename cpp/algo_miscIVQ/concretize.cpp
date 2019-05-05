@@ -1,6 +1,6 @@
 /*
 todo: more asserts
-minor todo: meaningful reporting of cycle like an updated p2d dump?
+minor todo: use ss2 more 
 still not sure if it works
 
 showcase local alias via q[using]
@@ -18,7 +18,7 @@ showcase template default type-arg and where explicit is needed
 #include <cassert>
 #include <math.h> //isnan
 #define Map std::map //can be either std::map or std::unordered_map
-#define ss1 if(1>0)cout //to mass-disable cout 
+#define ss1 if(1>30)cout //to mass-disable cout 
 #define ss2 if(2>0)cout //to mass-disable cout 
 using namespace std;
 using rcid=string; //row/column identifier
@@ -54,9 +54,10 @@ template<typename I_TYPE=int, typename O_TYPE=double, size_t maxTokenCnt=20>
 class Cell; //fwd declaration required by rclookup map
 Map<rcid, Cell<int>* > rclookup; //Global singleton holding all Cells
 inline char id_existing(rcid const & id){return rclookup.count(id);} //can rewrite using find()
+set<rcid> unresolved;
 Map<rcid, set<rcid>> p2d; //precedent -> all depdendents. a.k.a. data progation-graph
 set<rcid> roots; //ALL concretized precedent cells
-unsigned long long concreteCellCnt = 0;
+//unsigned long long concreteCellCnt = 0;
 
 template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
   vector<string> tokenArray;
@@ -92,10 +93,10 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
       }else{ /*not a cell reference*/}
       tokenArray.push_back(token);          
     }
-    assert(!isConcretized());
+    assert(isUnresolved());
     this->evalRpn();
     if (uu.size() && roots.erase(id)){
-      assert( ! isConcretized());
+      assert( isUnresolved());
       ss1<<id<<" erased from roots\n";
     }
     ss1<<*this<<" constructed\n";
@@ -115,6 +116,7 @@ public:
     if (ret) assert(uu.empty());
     return ret;
   }
+  inline bool isUnresolved(){return !isConcretized(); }
   inline set<rcid> uuClone(){ return uu;   }
   inline O_TYPE value(){ return concreteValue; }
   char evalRpn(){
@@ -152,8 +154,9 @@ public:
     //cerr<<id<<" stack: "<<st;
     assert(st.size()==1 && "one item left in stack after evalRpn");
     concreteValue = st[0];
-    //ss1<<concreteValue<<" = concreteValue\n";
-    ++concreteCellCnt;
+    //++concreteCellCnt;
+    ss1<<*this<<" concretized\n";
+    unresolved.erase(this->id);
     return 'c'; //concretized
   }
 };
@@ -162,7 +165,7 @@ pair<size_t, size_t> make_tree(){
   for (char r = 'A'; r< 'A'+rCnt; ++r) for (int c = 1; c<=cCnt; ++c){
       rcid id = string(1,r) + to_string(c);
       string line; getline(cin, line); ss1<<id<<" --cin-> "<<line<<endl;
-      Cell<>::create(id, line);
+      if (Cell<>::create(id, line)->isUnresolved() ) unresolved.insert(id);
   }
   return make_pair(cCnt, rCnt);
 }
@@ -180,20 +183,18 @@ char walk_tree(){//BFT
   while(Q.size()){
     rcid const id = Q.front(); Q.pop_front();
     Cell<> * cell = rclookup.at(id);
-    //ss1<<id<<" checking\n";
     if (cell->isConcretized() && p2d.count(id)==0) continue;
     ss1<<id<<" ...updating...\n";
-    if ( !cell->isConcretized()){
+    if ( cell->isUnresolved()){
       for (rcid const & cellRef: cell->uuClone()){
         if (rclookup.at(cellRef)->isConcretized()){ 
           cell->uu.erase(cellRef); 
-          ss1<<cellRef<<" (concretized) removed from uu set of "<<*cell<<endl;
+          ss2<<cellRef<<" (concretized) removed from uu set of "<<*cell<<endl;
         }
       }
       if (cell->uu.size()) continue; //dequeued and not enqueued!
-      ss1<<id<<" has no more unresolved refs..\n";
       auto status = cell->evalRpn();
-      ss1<<*cell<<" after evalRpn() returned "<<status<<"\n";
+      ss2<<*cell<<" has no more unresolved refs, and evalRpn() just returned "<<status<<"\n";
       if(p2d.count(id)==0)continue; //this id has no downstream
     }else{
       assert(p2d.count(id));
@@ -206,8 +207,8 @@ void resolve1sheet(){
   auto dim = make_tree();
   auto const cellCnt = dim.first * dim.second;
   walk_tree();
-  if (concreteCellCnt < cellCnt){
-    cerr<<"cyclic dependencies found... "<<concreteCellCnt<<" = concreteCellCnt; cellCnt = "<<cellCnt<<endl;
+  if (unresolved.size()){
+    cerr<<"Cyclic dependencies found... "<<unresolved<<"are the unresolved cells forming one or more cycles\n";
     throw string("cycle");
   } 
 }
@@ -234,7 +235,6 @@ int main(int argc, char** argv){
   cout<<"\n----- Use stdin to enter data after sheet width and height -----:\n";
   if (argc > 1) { //my tests
     string arg1(argv[1]);
-    cout<<arg1; 
     if     (arg1 == "myTest1") myTest1();  
     else if(arg1 == "myTestC") myTestC();  
   }
