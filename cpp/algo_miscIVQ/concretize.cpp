@@ -1,7 +1,7 @@
 /*
 todo: more asserts
-minor todo: use ss2 more 
-still not sure if it works
+minor todo: output format
+minor todo: simplify
 
 showcase local alias via q[using]
 showcase fwd declare a class template...necessary evil
@@ -52,12 +52,13 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
 
 template<typename I_TYPE=int, typename O_TYPE=double, size_t maxTokenCnt=20> 
 class Cell; //fwd declaration required by rclookup map
-Map<rcid, Cell<int>* > rclookup; //Global singleton holding all Cells
-inline char id_existing(rcid const & id){return rclookup.count(id);} //can rewrite using find()
-set<rcid> unresolved;
-Map<rcid, set<rcid>> p2d; //precedent -> all depdendents. a.k.a. data progation-graph
-set<rcid> roots; //ALL concretized precedent cells
-//unsigned long long concreteCellCnt = 0;
+/* Four containers ranked by importance */
+Map<rcid, Cell<>* > rclookup; //#1 Global singleton holding all Cells
+inline char id_preExisting(rcid const & id){return rclookup.count(id);} //can rewrite using find()
+
+Map<rcid, set<rcid>> p2d; //#2 precedent->depdendentS.. a.k.a. data propagation graph
+set<rcid> roots; //#3 concretized precedent cells, the start of Breadth-first-traversal
+set<rcid> pendingCells; //#4(least important) used to detect cycles
 
 template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
   vector<string> tokenArray;
@@ -69,13 +70,13 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
     os<<c.id<<" {refs="<<c.uu<<"; val="<<c.concreteValue<<" }"; return os;
   }
   Cell(string const & name, string const & expr): id(name){ 
-    assert(!id_existing(id));
+    assert(!id_preExisting(id));
     stringstream ss(expr);
     this->tokenArray.reserve(maxTokenCnt); //preempt reallocation
     for(string token; getline(ss,token,' ');){
       if ('A' <= token[0] && token[0] <= 'Z'){
         p2d[token].insert(id);
-        if (id_existing(token)){
+        if (id_preExisting(token)){
           Cell * precedent = rclookup.at(token);
           if (precedent->isConcretized()){
             roots.insert(token);
@@ -90,14 +91,14 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
           roots.insert(token);
           ss1<<token<<" is a precedent to be constructed\n";
         }
-      }else{ /*not a cell reference*/}
+      }
       tokenArray.push_back(token);          
     }
-    assert(isUnresolved());
+    assert(isPending());
     this->evalRpn();
     if (uu.size() && roots.erase(id)){
-      assert( isUnresolved());
-      ss1<<id<<" erased from roots\n";
+      ss2<<id<<" erased from roots\n";
+      assert( isPending());
     }
     ss1<<*this<<" constructed\n";
     assert(tokenArray.size());
@@ -106,7 +107,7 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
 public:
   static Cell* create(rcid const & id, string const & expr){
     //ss1<<"create() at "<<id<<" ...\n";
-    assert (!id_existing(id) );
+    assert (!id_preExisting(id) );
     Cell* newCell = new Cell(id, expr);
     rclookup.emplace(id, newCell);    
     return newCell;
@@ -116,7 +117,7 @@ public:
     if (ret) assert(uu.empty());
     return ret;
   }
-  inline bool isUnresolved(){return !isConcretized(); }
+  inline bool isPending(){return !isConcretized(); }
   inline set<rcid> uuClone(){ return uu;   }
   inline O_TYPE value(){ return concreteValue; }
   char evalRpn(){
@@ -156,7 +157,7 @@ public:
     concreteValue = st[0];
     //++concreteCellCnt;
     ss1<<*this<<" concretized\n";
-    unresolved.erase(this->id);
+    pendingCells.erase(this->id);
     return 'c'; //concretized
   }
 };
@@ -165,14 +166,14 @@ pair<size_t, size_t> make_tree(){
   for (char r = 'A'; r< 'A'+rCnt; ++r) for (int c = 1; c<=cCnt; ++c){
       rcid id = string(1,r) + to_string(c);
       string line; getline(cin, line); ss1<<id<<" --cin-> "<<line<<endl;
-      if (Cell<>::create(id, line)->isUnresolved() ) unresolved.insert(id);
+      if (Cell<>::create(id, line)->isPending() ) pendingCells.insert(id);
   }
   return make_pair(cCnt, rCnt);
 }
 void dumpTree(string heading=""){
   if (heading.size()) ss2<<"-- "<<heading<<" --\n";
   for (auto pair: rclookup){
-    ss2<<*(pair.second)<<endl;
+    ss1<<*(pair.second)<<endl;
   }
   ss2<<"Tree roots = "<<roots<<endl;
   ss2<<"propogation Tree = "<<p2d;
@@ -185,7 +186,7 @@ char walk_tree(){//BFT
     Cell<> * cell = rclookup.at(id);
     if (cell->isConcretized() && p2d.count(id)==0) continue;
     ss1<<id<<" ...updating...\n";
-    if ( cell->isUnresolved()){
+    if ( cell->isPending()){
       for (rcid const & cellRef: cell->uuClone()){
         if (rclookup.at(cellRef)->isConcretized()){ 
           cell->uu.erase(cellRef); 
@@ -207,8 +208,8 @@ void resolve1sheet(){
   auto dim = make_tree();
   auto const cellCnt = dim.first * dim.second;
   walk_tree();
-  if (unresolved.size()){
-    cerr<<"Cyclic dependencies found... "<<unresolved<<"are the unresolved cells forming one or more cycles\n";
+  if (pendingCells.size()){
+    cerr<<"Cyclic dependencies found... "<<pendingCells<<"are the unresolved cells forming one or more cycles\n";
     throw string("cycle");
   } 
 }
@@ -229,7 +230,7 @@ void myTest1(){
   assert(abs(rclookup["B1"]->value()-8.6666)<eps);
   assert(abs(rclookup["B2"]->value()-3)<eps);
   assert(abs(rclookup["B3"]->value()-1.5)<eps);
-  ss2<<"All cell numbers check :) \n";
+  ss2<<"Final cell numbers check :) \n";
 }
 int main(int argc, char** argv){
   cout<<"\n----- Use stdin to enter data after sheet width and height -----:\n";
