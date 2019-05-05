@@ -1,7 +1,5 @@
 /*
-todo: move to cProj
-todo: more asserts
-minor todo: simplify
+minor todo: simplify but add more asserts
 minor todo: output format
 minor todo: turn off verbose logging
 
@@ -179,7 +177,7 @@ void dumpTree(string heading=""){
     ss1<<*(pair.second)<<endl;
   }
   ss2<<"Tree roots = "<<roots<<endl;
-  ss2<<"propogation Tree = "<<p2d;
+  ss2<<"propagation Tree = "<<p2d;
 }
 char walk_tree(){//BFT
   dumpTree("before walk_tree");
@@ -193,7 +191,7 @@ char walk_tree(){//BFT
       for (rcid const & cellRef: cell->uuClone()){
         if (rclookup.at(cellRef)->isConcretized()){ 
           cell->uu.erase(cellRef); 
-          ss2<<cellRef<<" (concretized) removed from uu set of "<<*cell<<endl;
+          ss2<<cellRef<<" (just concretized) removed from uu-list of "<<*cell<<endl;
         }
       }
       if (cell->uu.size()) continue; //dequeued and not enqueued!
@@ -233,7 +231,7 @@ void myTest1(){
   assert(abs(rclookup["B1"]->value()-8.6666)<eps);
   assert(abs(rclookup["B2"]->value()-3)<eps);
   assert(abs(rclookup["B3"]->value()-1.5)<eps);
-  ss2<<"Final cell numbers check :) \n";
+  ss2<<"Final cell numbers checked :) \n";
 }
 void myTest2(){
   resolve1sheet();
@@ -244,7 +242,7 @@ void myTest2(){
   assert(abs(rclookup["B1"]->value()-0)<eps);
   assert(abs(rclookup["B2"]->value()+1)<eps);  
   assert(abs(rclookup["B3"]->value()+3)<eps);
-  ss2<<"Final cell numbers check :) \n";
+  ss2<<"Final cell numbers checked :) \n";
 }
 void myTest3(){
   resolve1sheet();
@@ -255,7 +253,7 @@ void myTest3(){
   assert(abs(rclookup["B1"]->value()-16)<eps);
   assert(abs(rclookup["B2"]->value()-18)<eps);  
   assert(abs(rclookup["B3"]->value()-21)<eps);
-  ss2<<"Final cell numbers check :) \n";
+  ss2<<"Final cell numbers checked :) \n";
 }
 
 int main(int argc, char** argv){
