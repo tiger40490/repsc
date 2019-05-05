@@ -1,7 +1,8 @@
 /*
 todo: add cycle
 todo: more asserts
-todo: by default with no command line arg, program should wait for stdin
+minor todo: automate two test sheets with different command line args like 'test1' vs 'testC'
+minor todo: by default with no command line arg, program should wait for stdin
 still not sure if it works
 
 showcase local alias via q[using]
@@ -19,7 +20,8 @@ showcase template default type-arg and where explicit is needed
 #include <cassert>
 #include <math.h> //isnan
 #define Map std::map //can be either std::map or std::unordered_map
-#define ss1 if(1>0)cout //to mass-disable cout 
+#define ss1 if(1>30)cout //to mass-disable cout 
+#define ss2 if(2>0)cout //to mass-disable cout 
 using namespace std;
 using rcid=string; //row/column identifier
 template<typename K, typename V> ostream & operator<<(ostream & os, pair<K,V> const & p){
@@ -45,9 +47,9 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    return os;
 }
 template<typename T,             int min_width=2> ostream & operator<<(ostream & os, set<T> const & c){
-   os<<"{ ";
+   os<<"[ ";
    for(auto const & it: c){ os<<setw(min_width)<<it<<" "; }
-   os<<"}  "; return os;
+   os<<"]  "; return os;
 }
 
 template<typename I_TYPE=int, typename O_TYPE=double, size_t maxTokenCnt=20> 
@@ -168,12 +170,12 @@ char make_tree(){
   return 0;
 }
 void dumpTree(string heading=""){
-  if (heading.size()) ss1<<"-- "<<heading<<" --\n";
+  if (heading.size()) ss2<<"-- "<<heading<<" --\n";
   for (auto pair: rclookup){
-    ss1<<*(pair.second)<<endl;
+    ss2<<*(pair.second)<<endl;
   }
-  ss1<<"Tree roots = "<<roots<<endl;
-  ss1<<"propogation Tree = "<<p2d;
+  ss2<<"Tree roots = "<<roots<<endl;
+  ss2<<"propogation Tree = "<<p2d;
 }
 char walk_tree(){//BFT
   dumpTree("before walk_tree");
@@ -217,6 +219,7 @@ int test1sheet(){
   sheetCheck();
 }
 int main(){
+  cout<<"\n----- Use stdin to enter data after sheet width and height -----:\n";
   test1sheet();  
 }
 #ifdef TEST_CTOR
