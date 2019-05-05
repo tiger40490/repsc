@@ -1,5 +1,5 @@
 /*
-todo: use the root objects
+todo: use the root objects: BFT
 
 showcase local alias via q[using]
 showcase fwd declare a class template...necessary evil
@@ -51,7 +51,7 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
 template<typename I_TYPE=int, typename O_TYPE=double, size_t maxTokenCnt=20> class Cell; //fwd declaration required by rclookup map
 map<rcid, Cell<int>* > rclookup; //Global singleton holding all Cells
 inline char id_existing(rcid const & id){return rclookup.count(id);} //can rewrite using find()
-map<rcid, set<rcid>> p2d; //precedent -> all depdendents
+map<rcid, set<rcid>> p2d; //precedent -> all depdendents. a.k.a. data progation-graph
 set<rcid> roots; //ALL concretized precedent cells
 
 template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
@@ -68,51 +68,51 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
     this->tokenArray.reserve(maxTokenCnt); //preempt reallocation
     for(string token; getline(ss,token,' ');){
       if ('A' <= token[0] && token[0] <= 'Z'){
-        //Cell* upstream;
         p2d[token].insert(id);
         if (id_existing(token)){
-          Cell * upstream = rclookup[token];
-          if (!upstream->isConcretized()){
+          Cell * precedent = rclookup[token];
+          if (precedent->isConcretized()){
+            tokenArray.push_back(to_string(precedent->value()));
+            roots.insert(token);
+            ss1<<token<<" is a concretized precedent:)\n";
+          }else{
             tokenArray.push_back(token);
             uu.insert(token);
             ss1<<token<<" is a unresolved precedent\n";
-          }else{
-            tokenArray.push_back(to_string(upstream->value()));
-            roots.insert(token);
-            ss1<<token<<" is a concretized precedent:)\n";
-          }
+          }            
         }else{
           uu.insert(token);
           roots.insert(token);
-          ss1<<token<<" is a unconstructed precedent\n";
+          ss1<<token<<" is a precedent to be constructed\n";
         }
-      }else{ //not a reference
-         tokenArray.push_back(token);
-      }
+      }else{ /*not a cell reference*/ tokenArray.push_back(token); }
     }
     this->evalRpn();
-    if (uu.size() && roots.erase(id)) ss1<<id<<" erased from roots\n";
+    if (uu.size() && roots.erase(id)){
+      assert( ! isConcretized());
+      ss1<<id<<" erased from roots\n";
+    }
     ss1<<*this<<" constructed\n";
     //ss1<<tokenArray.size()<<" <-- tokenArray parsed \n";
   }
 public:
-  static Cell* makeCell(rcid const & id, string const & expr){
-    //ss1<<"makeCell at "<<id<<" ...\n";
-    Cell* newCell = new Cell(id, expr);
+  static Cell* create(rcid const & id, string const & expr){
+    //ss1<<"create() at "<<id<<" ...\n";
     assert (!id_existing(id) );
+    Cell* newCell = new Cell(id, expr);
     rclookup[id] = newCell;    
     return newCell;
   }
   bool isConcretized(){
     bool ret = ! isnan(value());
-    if (ret) { assert(uu.empty()); }
+    if (ret) assert(uu.empty());
     return ret;
   }
   inline O_TYPE value(){ return concreteValue;}
   char evalRpn(){
     if (uu.size()) return 0; //0 indicates "not ready"
     if (isConcretized()) return 'd'; //done
-    assert (tokenArray.size()); // return 0; 
+    assert (tokenArray.size());
     
     using stack=vector<O_TYPE>;  stack st;
     for(string const & token: tokenArray){  
@@ -142,25 +142,40 @@ public:
   }
 };
 void ctorTest(){
-  Cell<>* ptr = Cell<>::makeCell("C2", "A1 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
+  Cell<>* ptr = Cell<>::create("C2", "A1 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
 
-  ptr = Cell<>::makeCell("A1", "3 1 5 + * 6 / 4 - 2 /"); //(3*(1+5)/6-4)/2
+  ptr = Cell<>::create("A1", "3 1 5 + * 6 / 4 - 2 /"); //(3*(1+5)/6-4)/2
   assert(ptr->value() == -0.5);
   
-  ptr = Cell<>::makeCell("B4", "3 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
+  ptr = Cell<>::create("B4", "3 1 5 + * 4 - 2 /"); //(3*(1+5)-4)/2
   assert(ptr->value() == 7);
   
-  ptr = Cell<>::makeCell("X9", "D3 1 A1 + * E6 / B4 - 2 /"); //(3*(1+5)/6-4)/2
+  ptr = Cell<>::create("X9", "D3 1 A1 + * E6 / B4 - 2 /"); //(3*(1+5)/6-4)/2
   cout<<*rclookup["A1"]<<endl;
   cout<<p2d;
 }	
-int main(){
+char make_tree(){
   //ctorTest();  return 0;
   size_t rCnt=0, cCnt=0; cin>>cCnt>>rCnt>> std::ws;
   for (char r = 'A'; r< 'A'+rCnt; ++r) for (int c = 1; c<=cCnt; ++c){
       rcid id = string(1,r) + to_string(c);
       string line; getline(cin, line); ss1<<id<<" --cin-> "<<line<<endl;
-      Cell<>::makeCell(id, line);
+      Cell<>::create(id, line);
   }
-  cout<<"debugging..roots/p2d="<<roots<<"/ "<<p2d;
+  return 0;
+}
+void dumpTree(string heading=""){
+  if (heading.size()) ss1<<"-- "<<heading<<" --\n";
+  ss1<<"Tree roots = "<<roots<<endl;
+  ss1<<"propogation Tree = "<<p2d;
+}
+char walk_tree(){//BFT
+  dumpTree("before walk_tree");
+  using queue=list<rcid>; queue Q;
+  
+  return 0;
+}
+int main(){
+  make_tree();
+  walk_tree();
 }
