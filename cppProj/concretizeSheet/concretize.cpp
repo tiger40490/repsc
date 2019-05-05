@@ -18,7 +18,11 @@ In particular, p2d represents a static graph and needs no dynamic update. This p
 
 The global "pendingCells", by definition, is dynamically updated... trivial.
 
-2) eliminate full table scan. Only the final print-loop iterates every cell as required by original question. All cell updates rely on the p2d graph.
+2) eliminate matrix (i.e. 2D rectangular array). In a realistic sheet, out of 26 * 400,000 = about 10 million cells, we may have data in A1 and Z400000 only. A matrix would be memory inefficient. In contrast my rclookup map stores nothing but the cells actually constructed.
+
+3) eliminate full table scan. The rclookup map can grow to millions. Any full scan is unscalable. 
+
+In my design, only the final print-loop iterates every cell, only becasue it's required by original question. All cell updates rely on the p2d graph, which is fairly efficient and scalabe -- If only 30,000 out of 900,000 cells have any precedent, then p2d only hold those 30,000 nodes. This p2d is based on a standard "adjacency-set" representation of graphs, and more scalable than adjacency-matrix for sparse graph.
 */
 /*
 todo: simplify but also add more asserts
