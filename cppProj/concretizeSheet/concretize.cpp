@@ -10,6 +10,7 @@ showcase template default type-arg and where explicit is needed
 #include <vector>
 #include <list>
 #include <set>
+#include <unordered_set>
 #include <map>
 #include <unordered_map>
 #include <iomanip>
@@ -18,6 +19,7 @@ showcase template default type-arg and where explicit is needed
 #include <cassert>
 #include <math.h> //isnan
 #define Map std::map //can be either std::map or std::unordered_map
+#define Set std::set //can be either std::set or std::unordered_set
 #define ss1 if(1>30)cout //to mass-disable cout 
 #define ss2 if(2>0)cout //to mass-disable cout 
 using namespace std;
@@ -44,7 +46,7 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    for(auto const & it: c){ os<<setw(min_width)<<it<<" "; }
    return os;
 }
-template<typename T,             int min_width=2> ostream & operator<<(ostream & os, set<T> const & c){
+template<typename T,             int min_width=2> ostream & operator<<(ostream & os, Set<T> const & c){
    os<<"[ ";
    for(auto const & it: c){ os<<setw(min_width)<<it<<" "; }
    os<<"]  "; return os;
@@ -52,19 +54,20 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
 
 template<typename I_TYPE=int, typename O_TYPE=double, size_t maxTokenCnt=20> 
 class Cell; //fwd declaration required by rclookup map
+
 /* Four containers ranked by importance */
 Map<rcid, Cell<>* > rclookup; //#1 Global singleton holding all Cells
 inline char id_preExisting(rcid const & id){return rclookup.count(id);} //can rewrite using find()
 
-Map<rcid, set<rcid>> p2d; //#2 precedent->depdendentS.. a.k.a. data propagation graph
-set<rcid> roots; //#3 concretized precedent cells, the start of Breadth-first-traversal
-set<rcid> pendingCells; //#4(least important) used to detect cycles
+Map<rcid, Set<rcid>> p2d; //#2 precedent->depdendentS.. a.k.a. data propagation graph
+Set<rcid> roots; //#3 concretized precedent cells, the start of Breadth-first-traversal
+Set<rcid> pendingCells; //#4(least important) used to detect cycles
 
 template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
   vector<string> tokenArray;
   rcid const id;
   O_TYPE concreteValue = NAN; //initialize to not-a-number i.e. pending
-  set<rcid> uu; //unconcretized upstream references
+  Set<rcid> uu; //unconcretized upstream references
   friend char walk_tree();
   friend ostream & operator<<(ostream & os, Cell const & c){
     os<<c.id<<" {refs="<<c.uu<<"; val="<<c.concreteValue<<" }"; return os;
@@ -118,7 +121,7 @@ public:
     return ret;
   }
   inline bool isPending(){return !isConcretized(); }
-  inline set<rcid> uuClone(){ return uu;   }
+  inline Set<rcid> uuClone(){ return uu;   }
   inline O_TYPE value(){ return concreteValue; }
   char evalRpn(){
     if (uu.size()) return 0; //0 indicates "not ready"
