@@ -72,7 +72,7 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
       if ('A' <= token[0] && token[0] <= 'Z'){
         p2d[token].insert(id);
         if (id_existing(token)){
-          Cell * precedent = rclookup[token];
+          Cell * precedent = rclookup.at(token);
           if (precedent->isConcretized()){
             roots.insert(token);
             ss1<<token<<" is a concretized precedent:)\n";
@@ -103,7 +103,7 @@ public:
     //ss1<<"create() at "<<id<<" ...\n";
     assert (!id_existing(id) );
     Cell* newCell = new Cell(id, expr);
-    rclookup[id] = newCell;    
+    rclookup.emplace(id, newCell);    
     return newCell;
   }
   bool isConcretized(){
@@ -128,8 +128,7 @@ public:
          st.push_back(num); continue; //cout<<num<<" found an int\n";
       }; 
       if ('A' <= token[0] && token[0] <= 'Z'){
-        assert(id_existing(token));
-        Cell * cell = rclookup[token];
+        Cell * cell = rclookup.at(token);
         assert(cell->isConcretized());
         st.push_back(cell->value());
         continue;
@@ -176,9 +175,8 @@ char walk_tree(){//BFT
   list<rcid> Q(roots.begin(), roots.end());
   while(Q.size()){
     rcid const id = Q.front(); Q.pop_front();
-    assert(id_existing(id));
-    Cell<> * cell = rclookup[id];
-    if (cell->isConcretized()) continue;
+    Cell<> * cell = rclookup.at(id);
+    //if (cell->isConcretized()) continue;
     ss1<<id<<" updating ..\n";
     //check all precedents
     for (rcid const & cellRef: cell->uuClone()){
@@ -214,7 +212,7 @@ void ctorTest(){
   assert(ptr->value() == 7);
   
   ptr = Cell<>::create("X9", "D3 1 A1 + * E6 / B4 - 2 /"); //(3*(1+5)/6-4)/2
-  cout<<*rclookup["A1"]<<endl;
+  cout<<*rclookup.at("A1")<<endl;
   cout<<p2d;
 }	
 #endif
