@@ -1,6 +1,5 @@
 /*
 todo: move to cProj
-todo: test a long chain reaction
 todo: more asserts
 minor todo: simplify
 minor todo: output format
@@ -130,12 +129,13 @@ public:
     assert (tokenArray.size());
     
     using stack=vector<O_TYPE>;  stack st;
+    //ss1<<tokenArray<<" before building RPN stack\n";
     for(string const & token: tokenArray){  
       I_TYPE num;
+      //ss1<<token<<" found in tokenArray\n";
       if (sscanf(token.c_str(), "%d", &num)){
          st.push_back(num); continue; //cout<<num<<" found an int\n";
-      }; 
-      if ('A' <= token[0] && token[0] <= 'Z'){
+      }else if ('A' <= token[0] && token[0] <= 'Z'){
         Cell * cell = rclookup.at(token);
         assert(cell->isConcretized());
         st.push_back(cell->value());
@@ -246,6 +246,18 @@ void myTest2(){
   assert(abs(rclookup["B3"]->value()+3)<eps);
   ss2<<"Final cell numbers check :) \n";
 }
+void myTest3(){
+  resolve1sheet();
+  double eps=0.0001;
+  assert(abs(rclookup["A1"]->value()-10)<eps);
+  assert(abs(rclookup["A2"]->value()-12)<eps);
+  assert(abs(rclookup["A3"]->value()-15)<eps);
+  assert(abs(rclookup["B1"]->value()-16)<eps);
+  assert(abs(rclookup["B2"]->value()-18)<eps);  
+  assert(abs(rclookup["B3"]->value()-21)<eps);
+  ss2<<"Final cell numbers check :) \n";
+}
+
 int main(int argc, char** argv){
   cout<<"\n----- Use stdin to enter data after sheet width and height -----:\n";
   if (argc > 1) { //my tests
@@ -253,6 +265,7 @@ int main(int argc, char** argv){
     cout<<arg1<<endl;
     if     (arg1 == "myTest1") myTest1();  
     if     (arg1 == "myTest2") myTest2();  
+    if     (arg1 == "myTest3") myTest3();  
     else if(arg1 == "myTestC") myTestC();  
   }
 }
