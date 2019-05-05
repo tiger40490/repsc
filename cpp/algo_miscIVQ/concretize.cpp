@@ -1,6 +1,8 @@
 /*
-todo: evalRpn need to resolve at least one uu
-todo: use the root objects: BFT
+todo: add cycle
+todo: more asserts
+todo: by default with no command line arg, program should wait for stdin
+still not sure if it works
 
 showcase local alias via q[using]
 showcase fwd declare a class template...necessary evil
@@ -11,7 +13,6 @@ showcase template default type-arg and where explicit is needed
 #include <set>
 #include <map>
 #include <unordered_map>
-#include <string>
 #include <iomanip>
 #include <iostream>
 #include <sstream> //getline
@@ -49,10 +50,11 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    os<<"}  "; return os;
 }
 
-template<typename I_TYPE=int, typename O_TYPE=double, size_t maxTokenCnt=20> class Cell; //fwd declaration required by rclookup map
-map<rcid, Cell<int>* > rclookup; //Global singleton holding all Cells
+template<typename I_TYPE=int, typename O_TYPE=double, size_t maxTokenCnt=20> 
+class Cell; //fwd declaration required by rclookup map
+Map<rcid, Cell<int>* > rclookup; //Global singleton holding all Cells
 inline char id_existing(rcid const & id){return rclookup.count(id);} //can rewrite using find()
-map<rcid, set<rcid>> p2d; //precedent -> all depdendents. a.k.a. data progation-graph
+Map<rcid, set<rcid>> p2d; //precedent -> all depdendents. a.k.a. data progation-graph
 set<rcid> roots; //ALL concretized precedent cells
 
 template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
@@ -76,7 +78,7 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
           if (precedent->isConcretized()){
             roots.insert(token);
             ss1<<token<<" is a concretized precedent:)\n";
-            token = to_string(precedent->value());
+            token = to_string(precedent->value());//small, optional optimization
           }else{
             uu.insert(token);
             ss1<<token<<" is a unresolved precedent\n";
@@ -167,6 +169,9 @@ char make_tree(){
 }
 void dumpTree(string heading=""){
   if (heading.size()) ss1<<"-- "<<heading<<" --\n";
+  for (auto pair: rclookup){
+    ss1<<*(pair.second)<<endl;
+  }
   ss1<<"Tree roots = "<<roots<<endl;
   ss1<<"propogation Tree = "<<p2d;
 }
@@ -176,30 +181,43 @@ char walk_tree(){//BFT
   while(Q.size()){
     rcid const id = Q.front(); Q.pop_front();
     Cell<> * cell = rclookup.at(id);
-    //if (cell->isConcretized()) continue;
-    ss1<<id<<" updating ..\n";
-    //check all precedents
+    if (cell->isConcretized() && p2d.count(id)==0) continue;
+    ss1<<id<<" ...updating...cleaning up this->uu...\n";
     for (rcid const & cellRef: cell->uuClone()){
       if (rclookup.at(cellRef)->isConcretized()){ 
         cell->uu.erase(cellRef); 
         ss1<<cellRef<<" (concretized) removed from uu set of "<<*cell<<endl;
       }
     }
-    if (cell->uu.size()) continue; //id popped !
-    ss1<<id<<" has no more unresolved refs..\n";
-    cell->evalRpn();
-    ss1<<*cell<<" after evalRpn\n";
-    if ( p2d.count(id) == 0 ) continue;
+    if (cell->uu.size()) continue; //dequeued and not enqueued!
+    //ss1<<id<<" has no more unresolved refs..\n";
+    auto status = cell->evalRpn();
+    ss1<<*cell<<" after evalRpn() returned "<<status<<"\n";
+    if(p2d.count(id)==0)continue; //this id has no downstream
 
-    auto const & dep = p2d.at(id);
-    Q.insert(Q.end(), dep.begin(), dep.end());
+    for (auto const & dep: p2d.at(id)){
+      Q.push_back(dep);
+    }
     ss1<<Q<<" is the queue after appending dependends of "<<id<<endl;
   }
   return 0;
 }
-int main(){
+void sheetCheck(){
+  double eps=0.0001;
+  assert(abs(rclookup["A1"]->value()-20)<eps);
+  assert(abs(rclookup["A2"]->value()-20)<eps);
+  assert(abs(rclookup["A3"]->value()-20)<eps);
+  assert(abs(rclookup["B1"]->value()-8.6666)<eps);
+  assert(abs(rclookup["B2"]->value()-3)<eps);
+  assert(abs(rclookup["B3"]->value()-1.5)<eps);
+}
+int test1sheet(){
   make_tree();
   walk_tree();
+  sheetCheck();
+}
+int main(){
+  test1sheet();  
 }
 #ifdef TEST_CTOR
 void ctorTest(){
