@@ -1,32 +1,36 @@
 '''todo: if n is 0 length?
-todo: more tests
 todo: simplify
+todo: more tests
 todo: bottom up solution
+
+showcase one-liner to assign two vars
 showcase one-liner to remove spaces
 showcase one-liner to clear a dict
+
+Note for empty string e, e[:-1] is itself
 '''
-di = dict()
-def td(needle, haystack): #top-down DP with memoization
-  sz1, sz2 = len(needle), len(haystack)
-  tu = (sz1,sz2)
-  if tu in di: return di[tu]
+SEP = ' ^^^ '
+memo = dict()
+def td(NN, HH): #top-down DP with memoization
+  sz1,sz2 = len(NN),len(HH);  tu=(sz1,sz2)
+  if tu in memo: return memo[tu]
   
-  print needle + '>' + haystack
-  #if sz1 == 0: return 1??
-  if   sz1 >  sz2: ret = 0
-  elif sz1 == sz2: ret = (1 if needle == haystack else 0)
+  print NN + '>' + HH
+  if   sz1 == 0:   ret = 1 # minor optimization
+  elif sz1 >  sz2: ret = 0
+  elif sz1 == sz2: ret = (1 if NN==HH else 0)
   else:
-    ret = td(needle, haystack[:-1]) 
-    if needle[-1:] == haystack[-1:]:
-      ret += td(needle[:-1], haystack[:-1])
-  di[(sz1,sz2)] = ret
+    ret = td(NN, HH[:-1]) 
+    if NN[-1:] == HH[-1:] :
+      ret += td(NN[:-1], HH[:-1])
+  memo[(sz1,sz2)] = ret
   return ret
 
 def packed(haystack):
   return ''.join(haystack.split())
 def solve(needle, haystack):
-  di.clear()
-  ret = td(needle, packed(haystack)); print ret; return ret
+  memo.clear()
+  ret = td(needle, packed(haystack)); print SEP,ret,SEP; return ret
 assert 6+5+3==solve('as', 'as ass asss')
 assert 6==solve('11', '1111')
 assert 4==solve('Gks', 'Geeks For Geeks')
