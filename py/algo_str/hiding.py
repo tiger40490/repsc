@@ -27,6 +27,7 @@ def packed(haystack):
 def solve(needle, haystack):
   di.clear()
   ret = td(needle, packed(haystack)); print ret; return ret
+assert 6+5+3==solve('as', 'as ass asss')
 assert 6==solve('11', '1111')
 assert 4==solve('Gks', 'Geeks For Geeks')
 '''Req:
