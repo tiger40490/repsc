@@ -276,6 +276,7 @@ void resolve1sheet(){
     cerr<<"Cyclic dependencies found... "<<pendingCells<<"are the unresolved cells creating one or more cycles\n";
     throw string("cycle");
   }
+  //Output in the required format:
   ss3<<cCnt<<" "<<rCnt<<endl;
   for (char r='A'; r<'A'+rCnt; ++r) for (int c=1; c<=cCnt; ++c){
       rcid id = string(1,r) + to_string(c);  
@@ -302,7 +303,7 @@ void myTest1(){
   ss2<<"Final cell numbers checked :) Now propagating a root cell edit ...";
   rclookup["A2"]->updateValue(120);
   walk_tree(true);
-  dump_tree();
+  dump_tree("after updateValue and walk_tree");
   assert(abs(rclookup["A1"]->value()-120)<eps);
   assert(abs(rclookup["A2"]->value()-120)<eps);
   assert(abs(rclookup["A3"]->value()-120)<eps);
