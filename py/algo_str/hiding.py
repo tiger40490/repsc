@@ -1,36 +1,34 @@
-'''todo: if n is 0 length?
-todo: simplify
+'''
 todo: more tests
 todo: bottom up solution
 
-showcase one-liner to assign two vars
+showcase one-liner function
 showcase one-liner to remove spaces
 showcase one-liner to clear a dict
+showcase one-liner to assign two vars
 
 Note for empty string e, e[:-1] is itself
 '''
-SEP = ' ^^^ '
-memo = dict()
+memo = dict(); SEP = ' ^^^ '
 def td(NN, HH): #top-down DP with memoization
   sz1,sz2 = len(NN),len(HH);  tu=(sz1,sz2)
   if tu in memo: return memo[tu]
   
   print NN + '>' + HH
-  if   sz1 == 0:   ret = 1 # minor optimization
-  elif sz1 >  sz2: ret = 0
-  elif sz1 == sz2: ret = (1 if NN==HH else 0)
+  if   sz1 == sz2: ret = (1 if NN==HH else 0) #most likely scenario first 
+  elif sz1 == 0:   ret = 1 # minor optimization
+ #elif sz1 >  sz2: ret = 0 # this check was moved into solve().. should not stay in this "hot" function
   else:
+    assert sz1 < sz2
     ret = td(NN, HH[:-1]) 
-    if NN[-1:] == HH[-1:] :
-      ret += td(NN[:-1], HH[:-1])
+    if NN[-1:] == HH[-1:] :  ret += td(NN[:-1], HH[:-1])
   memo[(sz1,sz2)] = ret
   return ret
-
-def packed(haystack):
-  return ''.join(haystack.split())
+def packed(haystack):  return ''.join(haystack.split()) # can inline if used only once 
 def solve(needle, haystack):
+  haystack = packed(haystack); assert len(needle) <= len(haystack), "invalid input"
   memo.clear()
-  ret = td(needle, packed(haystack)); print SEP,ret,SEP; return ret
+  ret = td(needle, haystack); print SEP,ret,SEP; return ret
 assert 6+5+3==solve('as', 'as ass asss')
 assert 6==solve('11', '1111')
 assert 4==solve('Gks', 'Geeks For Geeks')
