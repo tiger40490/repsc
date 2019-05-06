@@ -2,7 +2,8 @@
 todo: more tests
 todo: simplify
 todo: bottom up solution
-showcase removing spaces from a string
+showcase one-liner to remove spaces
+showcase one-liner to clear a dict
 '''
 di = dict()
 def td(needle, haystack): #top-down DP with memoization
@@ -23,10 +24,10 @@ def td(needle, haystack): #top-down DP with memoization
 
 def packed(haystack):
   return ''.join(haystack.split())
-  
 def solve(needle, haystack):
-  return td(needle, packed(haystack))
-
+  di.clear()
+  ret = td(needle, packed(haystack)); print ret; return ret
+assert 6==solve('11', '1111')
 assert 4==solve('Gks', 'Geeks For Geeks')
 '''Req:
 Given longer and short strings Haystack vs Needle, can string-N match a sub-sequence (not necessarily substring) of string-H? You can say we are checking if string-N is hiding in string-H. If yes how many hiding places (or sub-sequences) can you find? 
