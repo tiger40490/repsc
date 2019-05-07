@@ -28,6 +28,7 @@ In my design, only the final print-loop iterates every cell, only becasue it's r
 todo: simplify but also add more asserts
 
 showcase fwd declare a class template...necessary evil
+showcase container of raw ptr, without any issue. No smart ptr needed for "delete", even in Tetris (hind sight).
 showcase template default type-arg and where explicit is needed
 showcase template non-type parameter maxTokenCnt
 showcase local alias via q[using]
