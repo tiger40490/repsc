@@ -1,5 +1,4 @@
 '''
-todo: memoization
 todo: add tests and simplify
 showcase 
 '''
@@ -24,25 +23,28 @@ def bottomUp(aa, bb): # find distance between aa and bb
       #print 'comparing', aa[r], bb[c], '.. set to', mat[r][c]
   pprint(mat)
   return mat[-1][-1]
+####### end of bottomUp; now topDown: 
 memo=dict()
 def topDown(aa,bb):
-  sz1=len(aa); sz2=len(bb); 
+  sz1    , sz2 = len(aa),len(bb) 
   if sz1 > sz2: return 0
-  print aa+' > '+bb
-  assert sz1 <= sz2  
   if sz1 == 0: return sz2
+  tu=(sz1,sz2) # (aa,bb) not needed because aa/bb never swapped 
+  if tu in memo: return memo[tu]
+  print aa+' > '+bb  
   a=aa[:-1]; b=bb[:-1]
+  if aa[-1] == bb[-1]: ret = topDown(a,b)
+  else: ret=1+min(topDown(a,b), topDown(a,bb),  
+                  topDown(aa,b), topDown(b,aa))
+  memo[tu]=ret
+  return ret
   
-  if aa[-1] == bb[-1]: return topDown(a,b)
-  return 1+min(topDown(a,b), topDown(a,bb),  
-    topDown(aa,b), topDown(b,aa))
-def solve(aa,bb): #non-recursive
+def compare(aa,bb): #non-recursive
   if len(aa) > len(bb): tmp=aa;aa=bb;bb=tmp
   memo.clear(); td=topDown(aa,bb)
   assert     td == bottomUp(aa,bb)
   return td
-  
-assert 2==solve('yixin', 'yiting')
+assert 2==compare('yixin', 'yiting')
 '''
 Req: given strings (shorter) aa and bb (longer), how many transformations from aa to bb? Return the minimum steps or "edits"?
 '''
