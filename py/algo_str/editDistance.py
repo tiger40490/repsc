@@ -27,7 +27,7 @@ def bottomUp(aa, bb): # find distance between aa and bb
 memo=dict()
 def topDown(aa,bb):
   sz1    , sz2 = len(aa),len(bb) 
-  if sz1 > sz2: return 0
+  if sz1 > sz2: return 9999999999999 #infinity
   if sz1 == 0: return sz2
   tu=(sz1,sz2) # (aa,bb) not needed because aa/bb never swapped 
   if tu in memo: return memo[tu]
@@ -35,7 +35,7 @@ def topDown(aa,bb):
   a=aa[:-1]; b=bb[:-1]
   if aa[-1] == bb[-1]: ret = topDown(a,b)
   else: ret=1+min(topDown(a,b), topDown(a,bb),  
-                  topDown(aa,b), topDown(b,aa))
+                  topDown(aa,b), topDown(b,aa)) #aa/b relative lengths..either way
   memo[tu]=ret
   return ret
   
