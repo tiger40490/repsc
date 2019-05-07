@@ -31,6 +31,7 @@ showcase fwd declare a class template...necessary evil
 showcase container of raw ptr, without any issue. No smart ptr needed for "delete", even in Tetris (hind sight).
 showcase template default type-arg and where explicit is needed
 showcase template non-type parameter maxTokenCnt
+showcase dtor=delete to prohibit non-heap instantiation
 showcase local alias via q[using]
 showcase NaN
 */
@@ -47,7 +48,7 @@ showcase NaN
 #include <math.h> //isnan
 #define Map std::map //can be either std::map or std::unordered_map
 #define Set std::set //can be either std::set or std::unordered_set
-#define LOG_LEVEL 3 //the more low-level logging is more verbose
+#define LOG_LEVEL 1 //the more low-level logging is more verbose
 #define ss1 if(1>=LOG_LEVEL)cout //to mass-disable cout 
 #define ss2 if(2>=LOG_LEVEL)cout //to mass-disable cout 
 #define ss3 if(3==LOG_LEVEL)cout //final output
@@ -102,6 +103,7 @@ template<typename I_TYPE, typename O_TYPE, size_t maxTokenCnt> class Cell{
   friend ostream & operator<<(ostream & os, Cell const & c){
     os<<c.id<<" {refs="<<c.uu<<"; val="<<c.concreteValue<<" }"; return os;
   }
+  ~Cell() = delete; //only heap instantiation permitted
   Cell(string const & name, string const & expr): id(name), hasUpstream(false){ 
     assert(!id_preExisting(id));
     stringstream ss(expr);
