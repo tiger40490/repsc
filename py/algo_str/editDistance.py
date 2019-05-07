@@ -1,4 +1,5 @@
 '''
+todo: is the sz1 < sz2 necessary in each algo?
 todo: add tests and simplify
 showcase 
 '''
