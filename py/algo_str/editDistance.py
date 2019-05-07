@@ -1,14 +1,12 @@
 '''
-todo: Is this a bottom up DP? Can we write it a top-down?
-todo: add tests
+todo: memoization
+todo: add tests and simplify
 showcase 
 '''
 from pprint import pprint
-
 def read(mat, r, c):
   if r<0 or c<0: return 999999999999999
   return mat[r][c]
-
 def bottomUp(aa, bb): # find distance between aa and bb
   sz1=len(aa); sz2=len(bb); assert sz1 <= sz2  
   mat=[ [0 for _ in range(sz2)] for _ in range(sz1) ]
@@ -24,13 +22,26 @@ def bottomUp(aa, bb): # find distance between aa and bb
       else: 
         mat[r][c] = diag
       #print 'comparing', aa[r], bb[c], '.. set to', mat[r][c]
-  # end of loop
   pprint(mat)
   return mat[-1][-1]
+memo=dict()
+def topDown(aa,bb):
+  sz1=len(aa); sz2=len(bb); 
+  if sz1 > sz2: return 0
+  print aa+' > '+bb
+  assert sz1 <= sz2  
+  if sz1 == 0: return sz2
+  a=aa[:-1]; b=bb[:-1]
   
-def solve(aa, bb): # find distance between aa and bb
+  if aa[-1] == bb[-1]: return topDown(a,b)
+  return 1+min(topDown(a,b), topDown(a,bb),  
+    topDown(aa,b), topDown(b,aa))
+def solve(aa,bb): #non-recursive
   if len(aa) > len(bb): tmp=aa;aa=bb;bb=tmp
-  return bottomUp(aa,bb)
+  memo.clear(); td=topDown(aa,bb)
+  assert     td == bottomUp(aa,bb)
+  return td
+  
 assert 2==solve('yixin', 'yiting')
 '''
 Req: given strings (shorter) aa and bb (longer), how many transformations from aa to bb? Return the minimum steps or "edits"?
