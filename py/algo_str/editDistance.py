@@ -1,11 +1,16 @@
 '''
+todo: topDown(aa,b) and topDown(b,aa) looks like a bug
+ret = topDown(a,b) ?? should compare with the other options
 todo: is the sz1 < sz2 necessary in each algo?
+
 todo: add tests and simplify
-showcase 
+
+I always designate the shorter string as aa and longer as bb. Is it necessary? Not sure, but it simplifies my thinking
 '''
+import sys
 from pprint import pprint
 def read(mat, r, c):
-  if r<0 or c<0: return 999999999999999
+  if r<0 or c<0: return 88
   return mat[r][c]
 def bottomUp(aa, bb): # find distance between aa and bb
   sz1=len(aa); sz2=len(bb); assert sz1 <= sz2  
@@ -13,8 +18,7 @@ def bottomUp(aa, bb): # find distance between aa and bb
   for r in xrange(sz1):
     for c in xrange(sz2):
       if r==0 and c==0: 
-        mat[r][c]= 0 if aa[r] == bb[c] else 1
-        continue
+        mat[0][0]= 0 if aa[0] == bb[0] else 1; continue
       diag=read(mat, r-1, c-1)
       if aa[r] != bb[c]: #exactly 3 ways: 
 #1)replace aa[r] with bb[c] 2)delete aa[r] 3)append bb[c] i.e. 1+mat[r,c-1] 
@@ -34,7 +38,7 @@ def topDown(aa,bb):
   if tu in memo: return memo[tu]
   print aa+' > '+bb  
   a=aa[:-1]; b=bb[:-1]
-  if aa[-1] == bb[-1]: ret = topDown(a,b)
+  if aa[-1] == bb[-1]: ret = topDown(a,b) #? why no need to compare?
   else: ret=1+min(topDown(a,b), topDown(a,bb),  
                   topDown(aa,b), topDown(b,aa)) #aa/b relative lengths..either way
   memo[tu]=ret
@@ -42,10 +46,22 @@ def topDown(aa,bb):
   
 def compare(aa,bb): #non-recursive
   if len(aa) > len(bb): tmp=aa;aa=bb;bb=tmp
-  memo.clear(); td=topDown(aa,bb)
-  assert     td == bottomUp(aa,bb)
-  return td
+  #memo.clear(); td=topDown(aa,bb)
+  #assert     td == bottomUp(aa,bb)
+  #return td
+  return bottomUp(aa,bb)
+assert 1==compare('i', 'ai')
+assert 1==compare('islander', 'slander')
 assert 2==compare('yixin', 'yiting')
+assert 1==compare('geek', 'gesek')
+assert 3==compare('Sunday', 'Saturday')
+assert 1==compare('cat', 'cut')
+assert 3==compare('tape', 'hat')
+assert 6==compare("abcdefg", "xabxcdxxefxgx")
+assert 3==compare("example", "samples") 
+assert 6==compare("sturgeon", "urgently")
+assert 6==compare("levenshtein", "frankenstein")
+assert 5==compare("distance", "difference")
 '''
 Req: given strings (shorter) aa and bb (longer), how many transformations from aa to bb? Return the minimum steps or "edits"?
 '''
