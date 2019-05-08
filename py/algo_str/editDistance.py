@@ -58,4 +58,6 @@ assert 3==compare("example", "samples")
 assert 3==compare('tape', 'hat')
 '''
 Req: given strings (shorter) aa and bb (longer), how many transformations from aa to bb? Return the minimum steps or "edits"?
+
+classic DP problem, with relatively simple bottom-up solution
 '''
