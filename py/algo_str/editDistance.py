@@ -1,5 +1,5 @@
 '''
-todo: compare the 2 solutions
+Between the 2 solutions, topDown is easier to remember. From topDown, I can write bottomUp
 '''
 import sys
 from pprint import pprint
