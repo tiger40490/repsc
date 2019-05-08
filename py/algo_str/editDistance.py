@@ -8,15 +8,16 @@ def bottomUp(aa, bb):
   mat=[ [999999999 for _ in range(1+sz2)] for _ in range(1+sz1) ]
   
   for r in xrange(1+sz1):  #r is aa's left substring length, and 
-    for c in xrange(1+sz2):#.. aa[r-1] is the substring's last char
+    for c in xrange(1+sz2):#.. aa[r-1] = the substring's last char
       if r*c==0: mat[r][c]=max(r,c); continue
       diag=mat[r-1][c-1]
-      if aa[r-1] != bb[c-1]: #exactly 3 ways: 
+      if aa[r-1] == bb[c-1]: 
+        mat[r][c] = diag 
+        assert diag - mat[r-1][c] < 2, 'adjacent values in matrix never differ by 2 or more'
+        assert diag - mat[r][c-1] < 2, 'adjacent values in matrix never differ by 2 or more'
+      else : # aa[r-1] != bb[c-1]: #exactly 3 ways: 
 #1)replace aa[r-1] with bb[c-1] 2)delete aa[r-1] 3)append bb[c-1] i.e. 1+mat[r,c-1] 
         mat[r][c] = 1+min(diag, mat[r-1][c], mat[r][c-1])
-      else: # when last chars of both strings match, always better to use diag
-        mat[r][c] = diag 
-        assert diag - min(mat[r-1][c],mat[r][c-1]) < 2, 'adjacent values in matrix never differ by 2 or more'
   print '     '+'  '.join(list(bb))
   pprint(mat)
   return mat[-1][-1]
