@@ -1,4 +1,6 @@
 '''
+todo: get rid of the if r==0
+todo: init matrix to 1?
 todo: more tests
 todo: add a bottom up, non-recursive solution
 
@@ -7,6 +9,7 @@ showcase one-liner to assign two vars
 
 Note for empty string e, e[:-1] is itself
 '''
+from pprint import pprint
 memo = dict(); SEP = ' ^^^ '
 def td(NN, HH): #top-down DP with memoization
   sz1,sz2 = len(NN),len(HH);  tu=(sz1,sz2)
@@ -22,10 +25,25 @@ def td(NN, HH): #top-down DP with memoization
     if NN[-1:]==HH[-1:] : ret += td(NN[:-1] , HH[:-1]) 
   memo[(sz1,sz2)] = ret
   return ret
+def bottomUp(NN,HH):
+  sz1,sz2 = len(NN),len(HH);
+  mat = [[ 1 for _ in xrange(1+sz2) ] for _ in xrange(1+sz1) ]
+  for r in xrange(1+sz1):
+    mat[r][r] = (1 if NN[:r]==HH[:r] else 0)
+    for c in xrange(r+1, 1+sz2):
+      if r==0: mat[r][c] = 1; continue
+      print r,c
+      cnt = mat[r][c-1]
+      if NN[r-1]==HH[c-1]:
+        cnt += mat[r-1][c-1]
+      mat[r][c]=cnt
+  pprint(mat)
+  return mat[-1][-1]
 def solve(needle, haystack):
   haystack = haystack.replace(' ',''); assert len(needle) <= len(haystack), "invalid input"
-  memo.clear()
-  ret = td(needle, haystack); print SEP,ret,SEP; return ret
+  retB = bottomUp(needle, haystack)
+  retT = td(needle, haystack); memo.clear(); 
+  assert retB==retT; print SEP,retT,SEP; return retT
 assert 6+5+3==solve('as', 'as ass asss')
 assert 6==solve('11', '1111')
 assert 4==solve('Gks', 'Geeks For Geeks')
