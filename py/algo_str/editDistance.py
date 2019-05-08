@@ -28,10 +28,10 @@ memo=dict()
 def topDown(aa,bb):
   sz1,sz2 = len(aa),len(bb) 
   if sz1*sz2 == 0: return max(sz1,sz2)
-  tu=(sz1,sz2) # (aa,bb) not needed because aa/bb never swapped 
+  tu=(sz1,sz2) # a tuple of (aa,bb) not needed because aa/bb never swapped, so (sz1,sz2) encodes the same info
   if tu in memo: return memo[tu]
   #print aa+' > '+bb  
-  a,b = aa[:-1],bb[:-1]
+  a,b = aa[:-1],bb[:-1] # truncated strings
   min2 = min(topDown(a,bb), topDown(aa,b))
   
   if aa[-1] == bb[-1]: 
