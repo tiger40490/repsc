@@ -1,6 +1,5 @@
-'''todo: add more comments
+'''
 todo: compare the 2 solutions
-todo: check td count
 '''
 import sys
 from pprint import pprint
@@ -46,7 +45,7 @@ def topDown(aa,bb):
 def compare(aa,bb): #non-recursive
   if len(aa) > len(bb): tmp=aa;aa=bb;bb=tmp #for printing convenience only
   td=topDown(aa,bb); assert len(memo)==len(aa)*len(bb); memo.clear()
-  assert     td == bottomUp(aa,bb)
+  assert td == bottomUp(aa,bb)
   return td
 assert 6==compare("sturgeon", "urgently")
 assert 1==compare('islander', 'slander')
