@@ -1,27 +1,22 @@
 '''
-todo: don't use -1. Shift up to get 0 to len as matrix subscript
-Q: is the min() in "==" scenario needed?
-todo: fix the bottomUp algo
 '''
 import sys
 from pprint import pprint
-def read(mat, r, c):
-  if r==-1 or c==-1: return 1+max(r,c)
-  return mat[r][c]
 def bottomUp(aa, bb):
-  sz1=len(aa); sz2=len(bb); assert sz1 <= sz2  
-  mat=[ [0 for _ in range(sz2)] for _ in range(sz1) ]
+  sz1,sz2=len(aa),len(bb); assert sz1<=sz2 #easier for matrix printing
+  mat=[ [0 for _ in range(1+sz2)] for _ in range(1+sz1) ]
   
-  for r in xrange(sz1):
-    for c in xrange(sz2):
-      if r==0 and c==0: #distance from aa[0] to bb[0]
-        mat[0][0]= 0 if aa[0] == bb[0] else 1; continue
-      diag=read(mat, r-1, c-1)
-      if aa[r] != bb[c]: #exactly 3 ways: 
-#1)replace aa[r] with bb[c] 2)delete aa[r] 3)append bb[c] i.e. 1+mat[r,c-1] 
-        mat[r][c] = 1+min(diag, read(mat,r-1,c), read(mat,r,c-1))
-      else: 
-        mat[r][c] = diag
+  for r in xrange(1+sz1):  #r is aa's left substring length, and 
+    for c in xrange(1+sz2):#.. aa[r-1] is the substring's last char
+      if r*c==0: mat[r][c]=max(r,c); continue
+      diag=mat[r-1][c-1]
+      if aa[r-1] != bb[c-1]: #exactly 3 ways: 
+#1)replace aa[r-1] with bb[c-1] 2)delete aa[r-1] 3)append bb[c-1] i.e. 1+mat[r,c-1] 
+        mat[r][c] = 1+min(diag, mat[r-1][c], mat[r][c-1])
+      else: # when last chars of both strings match, always better to use diag
+        mat[r][c] = diag 
+        assert diag - min(mat[r-1][c],mat[r][c-1]) < 2, 'adjacent values in matrix never differ by 2 or more'
+  print '     '+'  '.join(list(bb))
   pprint(mat)
   return mat[-1][-1]
 ####### end of bottomUp; now topDown: 
@@ -35,7 +30,11 @@ def topDown(aa,bb):
   a,b = aa[:-1],bb[:-1]
   min2 = min(topDown(a,bb), topDown(aa,b))
   
-  if aa[-1] == bb[-1]: ret = min(topDown(a,b), 1+min2)    
+  if aa[-1] == bb[-1]: 
+    ret = topDown(a,b) #3 identical asserts
+    assert ret == min(topDown(a,b), 1+min2)
+    assert ret <= 1+min2
+    assert ret-min2 <= 1 
   else: ret = 1 + min(topDown(a,b), min2) 
   
   memo[tu]=ret
