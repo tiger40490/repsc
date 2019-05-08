@@ -1,8 +1,6 @@
 '''
-todo: topDown(aa,b) and topDown(b,aa) looks like a bug
-ret = topDown(a,b) ?? should compare with the other options
-todo: is the sz1 < sz2 necessary in each algo?
-
+Q: is thee min() in "==" scenario needed?
+todo: fix the bottomUp algo
 todo: add tests and simplify
 
 I always designate the shorter string as aa and longer as bb. Is it necessary? Not sure, but it simplifies my thinking
@@ -20,9 +18,11 @@ def bottomUp(aa, bb): # find distance between aa and bb
       if r==0 and c==0: 
         mat[0][0]= 0 if aa[0] == bb[0] else 1; continue
       diag=read(mat, r-1, c-1)
+      print r,c,diag,"=diag; "
       if aa[r] != bb[c]: #exactly 3 ways: 
 #1)replace aa[r] with bb[c] 2)delete aa[r] 3)append bb[c] i.e. 1+mat[r,c-1] 
         mat[r][c] = 1+min(diag, read(mat,r-1,c), read(mat,r,c-1))
+        print '!= block set to', mat[r][c] 
       else: 
         mat[r][c] = diag
       #print 'comparing', aa[r], bb[c], '.. set to', mat[r][c]
@@ -31,25 +31,28 @@ def bottomUp(aa, bb): # find distance between aa and bb
 ####### end of bottomUp; now topDown: 
 memo=dict()
 def topDown(aa,bb):
-  sz1    , sz2 = len(aa),len(bb) 
-  if sz1 > sz2: return 9999999999999 #infinity
-  if sz1 == 0: return sz2
+  sz1,sz2 = len(aa),len(bb) 
+  if sz1*sz2 == 0: return max(sz1,sz2)
   tu=(sz1,sz2) # (aa,bb) not needed because aa/bb never swapped 
   if tu in memo: return memo[tu]
-  print aa+' > '+bb  
-  a=aa[:-1]; b=bb[:-1]
-  if aa[-1] == bb[-1]: ret = topDown(a,b) #? why no need to compare?
-  else: ret=1+min(topDown(a,b), topDown(a,bb),  
-                  topDown(aa,b), topDown(b,aa)) #aa/b relative lengths..either way
-  memo[tu]=ret
-  return ret
+  #print aa+' > '+bb  
+  a,b = aa[:-1],bb[:-1]
+  min2 = min(topDown(a,bb), topDown(aa,b))
   
+  if aa[-1] == bb[-1]: ret = min(topDown(a,b), 1+min2)    
+  else: ret = 1 + min(topDown(a,b), min2) 
+  
+  memo[tu]=ret
+  print aa+' > '+bb, ret
+  return ret
 def compare(aa,bb): #non-recursive
   if len(aa) > len(bb): tmp=aa;aa=bb;bb=tmp
-  #memo.clear(); td=topDown(aa,bb)
+  memo.clear(); td=topDown(aa,bb)
   #assert     td == bottomUp(aa,bb)
-  #return td
-  return bottomUp(aa,bb)
+  return td
+  #return bottomUp(aa,bb)
+assert 3==compare("example", "samples") 
+assert 6==compare("sturgeon", "urgently")
 assert 1==compare('i', 'ai')
 assert 1==compare('islander', 'slander')
 assert 2==compare('yixin', 'yiting')
@@ -58,8 +61,6 @@ assert 3==compare('Sunday', 'Saturday')
 assert 1==compare('cat', 'cut')
 assert 3==compare('tape', 'hat')
 assert 6==compare("abcdefg", "xabxcdxxefxgx")
-assert 3==compare("example", "samples") 
-assert 6==compare("sturgeon", "urgently")
 assert 6==compare("levenshtein", "frankenstein")
 assert 5==compare("distance", "difference")
 '''
