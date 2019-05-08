@@ -1,29 +1,27 @@
 '''
-Q: is thee min() in "==" scenario needed?
+todo: don't use -1. Shift up to get 0 to len as matrix subscript
+Q: is the min() in "==" scenario needed?
 todo: fix the bottomUp algo
-todo: add tests and simplify
 '''
 import sys
 from pprint import pprint
 def read(mat, r, c):
-  if r<0 or c<0: return 88
+  if r==-1 or c==-1: return 1+max(r,c)
   return mat[r][c]
-def bottomUp(aa, bb): # find distance between aa and bb
+def bottomUp(aa, bb):
   sz1=len(aa); sz2=len(bb); assert sz1 <= sz2  
   mat=[ [0 for _ in range(sz2)] for _ in range(sz1) ]
+  
   for r in xrange(sz1):
     for c in xrange(sz2):
-      if r==0 and c==0: 
+      if r==0 and c==0: #distance from aa[0] to bb[0]
         mat[0][0]= 0 if aa[0] == bb[0] else 1; continue
       diag=read(mat, r-1, c-1)
-      print r,c,diag,"=diag; "
       if aa[r] != bb[c]: #exactly 3 ways: 
 #1)replace aa[r] with bb[c] 2)delete aa[r] 3)append bb[c] i.e. 1+mat[r,c-1] 
         mat[r][c] = 1+min(diag, read(mat,r-1,c), read(mat,r,c-1))
-        print '!= block set to', mat[r][c] 
       else: 
         mat[r][c] = diag
-      #print 'comparing', aa[r], bb[c], '.. set to', mat[r][c]
   pprint(mat)
   return mat[-1][-1]
 ####### end of bottomUp; now topDown: 
@@ -46,9 +44,8 @@ def topDown(aa,bb):
 def compare(aa,bb): #non-recursive
   if len(aa) > len(bb): tmp=aa;aa=bb;bb=tmp #for printing convenience only
   td=topDown(aa,bb); print len(memo), 'mem'; memo.clear()
-  #assert     td == bottomUp(aa,bb)
+  assert     td == bottomUp(aa,bb)
   return td
-  #return bottomUp(aa,bb)
 assert 6==compare("sturgeon", "urgently")
 assert 1==compare('islander', 'slander')
 assert 2==compare('yixin', 'yiting')
