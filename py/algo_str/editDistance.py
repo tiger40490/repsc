@@ -1,10 +1,11 @@
-'''
+'''todo: add more comments
+todo: compare the 2 solutions
 '''
 import sys
 from pprint import pprint
 def bottomUp(aa, bb):
   sz1,sz2=len(aa),len(bb); assert sz1<=sz2 #easier for matrix printing
-  mat=[ [0 for _ in range(1+sz2)] for _ in range(1+sz1) ]
+  mat=[ [999999999 for _ in range(1+sz2)] for _ in range(1+sz1) ]
   
   for r in xrange(1+sz1):  #r is aa's left substring length, and 
     for c in xrange(1+sz2):#.. aa[r-1] is the substring's last char
