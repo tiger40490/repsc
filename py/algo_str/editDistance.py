@@ -35,10 +35,9 @@ def topDown(aa,bb):
   min2 = min(topDown(a,bb), topDown(aa,b))
   
   if aa[-1] == bb[-1]: 
-    ret = topDown(a,b) #3 identical asserts
+    ret = topDown(a,b) #2 identical asserts:
+    assert ret-min2 < 2
     assert ret == min(topDown(a,b), 1+min2)
-    assert ret <= 1+min2
-    assert ret-min2 <= 1 
   else: ret = 1 + min(topDown(a,b), min2) 
   
   memo[tu]=ret
