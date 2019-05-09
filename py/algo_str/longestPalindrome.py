@@ -17,9 +17,7 @@ def startfrom(s, le,ri):
   if maxPossible <= len(winner): return
   
   for i in range(1,cnt+1):
-    if s[le-i]!= s[ri+i]: 
-      i-=1
-      break
+    if s[le-i]!= s[ri+i]: i-=1; break
       
   # i is still in scope!    
   newLen=2*i+ri-le+1
@@ -28,8 +26,7 @@ def startfrom(s, le,ri):
         print 'found a longer palindrome :', winner
 
 def search(haystack): 
-  global winner
-  winner=''
+  global winner; winner=''
   for i in range(1, len(haystack)-1):
     startfrom(haystack, i,i)
     if haystack[i]==haystack[i+1]:
