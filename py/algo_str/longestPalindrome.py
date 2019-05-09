@@ -9,11 +9,10 @@ idea: first scan to identify all the "continuum" ... useful?
 idea: represent any sequence of chars as a single int, to aid comparison
 '''
 winner=''
-
 def startfrom(s, le,ri):
   global winner  
   cnt=min(le, len(s)-1-ri) #how many chars to check on both sides
-  maxPossible=cnt*2+ri-le+1
+  maxPossible=cnt*2 + (ri-le+1)
   if maxPossible <= len(winner): return #reigning winner is unbeatable
   
   for i in xrange(cnt+1):
@@ -23,9 +22,13 @@ def startfrom(s, le,ri):
   newLen=2*i+ri-le+1
   if newLen > len(winner):
         winner = s[le-i : ri+i+1]
-        print 'found a longer palindrome :', winner
+        print 'found a longer palindrome :'+ winner, le-i, ri+i
 
 def search(haystack): 
+  haystack = haystack.replace(' ','')
+  print ' '+('  '.join(list(haystack)))
+  for i in range(len(haystack)): print '%2s' % i,
+  
   global winner; winner=''
   for i in range(1, len(haystack)-1):
     startfrom(haystack, i,i)
@@ -34,6 +37,7 @@ def search(haystack):
   return winner
     
 def main():
+  assert 'aababbaabbabaa' == search('ababaabaababb aab abb aa bba baa aab')
   assert '212112211212' == search('21211221121212')
   assert 'babbaabaabbab' == search('babbabbaabaabbaba')
 
