@@ -1,5 +1,7 @@
 '''
 Between the 2 solutions, topDown is easier to remember. From topDown, I can write bottomUp
+
+Note when aa[-1]==bb[-1], it's harmless to also look at 1+topDown(a,bb) and (aa,b) and get the minimum. The extra cost has no O() impact. It took me a lot of thinking to convince myself there's no need to compute minimum. The thinking time is a killer in speed coding.
 '''
 import sys
 from pprint import pprint
