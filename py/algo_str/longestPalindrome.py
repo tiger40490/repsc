@@ -1,7 +1,7 @@
 '''
+todo: more tests
 todo: minor optimization on the core idea. each time identify a homogeneous core then call startfrom(). No need for 2 calls in one iteration.
 todo: start the outer iteration from center
-todo: early exit from startfrom
 
 I think this solution is still O(NN). I think there exists O(N) solutions. I don't have to discover it. I can read it in a few years.
 
@@ -14,15 +14,15 @@ def startfrom(s, le,ri):
   global winner  
   cnt=min(le, len(s)-1-ri) #how many chars to check on both sides
   maxPossible=cnt*2+ri-le+1
-  if maxPossible <= len(winner): return
+  if maxPossible <= len(winner): return #reigning winner is unbeatable
   
-  for i in range(1,cnt+1):
+  for i in xrange(cnt+1):
     if s[le-i]!= s[ri+i]: i-=1; break
       
   # i is still in scope!    
   newLen=2*i+ri-le+1
   if newLen > len(winner):
-        winner = s[le-i:ri+i+1]
+        winner = s[le-i : ri+i+1]
         print 'found a longer palindrome :', winner
 
 def search(haystack): 
