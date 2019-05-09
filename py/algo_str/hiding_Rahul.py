@@ -1,6 +1,7 @@
 '''
 todo: more tests
 
+showcase using read() to implement conditional logic. Alternative is if/continue within the loop.. confusing
 showcase using an invalid value (0 is valid) to mark the unused region of matrix. See blogpost
 showcase one-liner to clear a dict
 showcase one-liner to assign two vars
