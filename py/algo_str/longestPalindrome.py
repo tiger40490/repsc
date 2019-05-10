@@ -1,9 +1,10 @@
 '''
 todo: more tests
+idea: first scan to identify all the "runs" ... useful?
+
+showcase a for-loop with custom control on looping variable
 
 I think this solution is still O(NN). I think there exists O(N) solutions. I don't have to discover it. I can read it in a few years.
-
-idea: first scan to identify all the "runs" ... useful?
 '''
 winner=''
 s=''
