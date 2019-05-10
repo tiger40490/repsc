@@ -1,6 +1,5 @@
 '''
 todo: more tests
-todo: minor optimization on the core idea. each time identify a homogeneous core then call startfrom(). No need for 2 calls in one iteration.
 todo: start the outer iteration from center
 
 I think this solution is still O(NN). I think there exists O(N) solutions. I don't have to discover it. I can read it in a few years.
@@ -23,16 +22,15 @@ def startfrom(le,ri):
   newLen=2*i+ri-le+1
   if newLen > len(winner):
         winner = s[le-i : ri+i+1]
-        print 'found a longer palindrome :'+ winner, le-i, ri+i
+        print (le,ri),'found a longer palindrome@', (le-i,ri+i), winner
 
 def endOfRun(i):
-  for j in xrange(i+1, len(s)-1):
-    print 'j=',j
+  for j in xrange(i+1, len(s)):
+    #print 'j=',j
     if s[i] != s[j]: 
       assert s[i]==s[j-1]
       return j-1 # could be i itself
-  assert s[i] != s[len(s)-1]
-  return           len(s)-1
+  return   len(s)-1
 def search(haystack): 
   haystack = haystack.replace(' ','')
   print ' '+('  '.join(list(haystack)))
@@ -42,20 +40,22 @@ def search(haystack):
   #print endOfRun(29); return
   ## end of initial set-up
   
-  i=1
+  i=0
   while i<len(s):
-    h=i; i = endOfRun(i)
-    
-    print h,i, '<- from endOfRun()'
-    startfrom(h,i)
-    i+=1
-  print 'returning', winner
+    j = endOfRun(i)
+    #print i,j, '<- from endOfRun()'
+    startfrom(i,j)
+    i=j+1
+  #print 'returning', winner
+  if winner == s: return -1
   return winner
     
 def main():
-  assert 'b' == search('ab da c ba d ba cba')
+  assert -1 == search('bbbb')
+  assert 'a' == search('ab da cba dba cba')
+  assert -1 == search('ab da cba dba cba abcabdabcadba')
   assert 'aababbaabbabaa' == search('ababaabaababb aab abb aa bba baa aab')
-  assert '212112211212' == search('21211221121212')
+  assert 'qwqwwqqwwqwq' == search('qwqwwqqwwqwqwq')
   assert 'babbaabaabbab' == search('babbabbaabaabbaba')
 
 main()
