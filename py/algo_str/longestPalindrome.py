@@ -1,11 +1,9 @@
 '''
 todo: more tests
-todo: start the outer iteration from center
 
 I think this solution is still O(NN). I think there exists O(N) solutions. I don't have to discover it. I can read it in a few years.
 
-idea: first scan to identify all the "continuum" ... useful?
-idea: represent any sequence of chars as a single int, to aid comparison
+idea: first scan to identify all the "runs" ... useful?
 '''
 winner=''
 s=''
@@ -21,8 +19,8 @@ def startfrom(le,ri):
   # i is still in scope!    
   newLen=2*i+ri-le+1
   if newLen > len(winner):
-        winner = s[le-i : ri+i+1]
-        print (le,ri),'found a longer palindrome @', (le-i,ri+i), winner
+     winner = s[le-i : ri+i+1]
+     #print (le,ri),'found a longer palindrome @', (le-i,ri+i), winner
 
 def endOfRun(i):
   for j in xrange(i+1, len(s)):
