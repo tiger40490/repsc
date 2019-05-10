@@ -22,7 +22,7 @@ def startfrom(le,ri):
   newLen=2*i+ri-le+1
   if newLen > len(winner):
         winner = s[le-i : ri+i+1]
-        print (le,ri),'found a longer palindrome@', (le-i,ri+i), winner
+        print (le,ri),'found a longer palindrome @', (le-i,ri+i), winner
 
 def endOfRun(i):
   for j in xrange(i+1, len(s)):
@@ -31,6 +31,12 @@ def endOfRun(i):
       assert s[i]==s[j-1]
       return j-1 # could be i itself
   return   len(s)-1
+def verifyWinner():
+  sz=len(winner)
+  for le in xrange(sz/2+1):
+    ri=sz-1-le
+    if le >  ri: return
+    assert winner[le]==winner[ri]
 def search(haystack): 
   haystack = haystack.replace(' ','')
   print ' '+('  '.join(list(haystack)))
@@ -47,6 +53,7 @@ def search(haystack):
     startfrom(i,j)
     i=j+1
   #print 'returning', winner
+  verifyWinner()
   if winner == s: return -1
   return winner
     
