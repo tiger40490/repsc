@@ -25,35 +25,25 @@ def startfrom(le,ri):
         winner = s[le-i : ri+i+1]
         print 'found a longer palindrome :'+ winner, le-i, ri+i
 
-def endOfRun(i):
-  for j in xrange(i+1, len(s)-1):
-    print 'j=',j
-    if s[i] != s[j]: 
-      assert s[i]==s[j-1]
-      return j-1 # could be i itself
-  assert s[i] != s[len(s)-1]
-  return           len(s)-1
 def search(haystack): 
   haystack = haystack.replace(' ','')
   print ' '+('  '.join(list(haystack)))
   for i in range(len(haystack)): print '%2s' % i,
-  print
-  global s, winner; winner=''; s=haystack
-  #print endOfRun(29); return
-  ## end of initial set-up
   
-  i=1
-  while i<len(s):
-    h=i; i = endOfRun(i)
-    
-    print h,i, '<- from endOfRun()'
-    startfrom(h,i)
-    i+=1
-  print 'returning', winner
+  global s, winner; winner=''; s=haystack
+  for i in range(1, len(haystack)-1):
+    if haystack[i]!=haystack[i+1]:
+      startfrom(i,i+1)
+      startfrom(i,i)
+      continue
+    #now scan forward
+    h=i;
+    assert haystack[i]==haystack[i+1]
+    startfrom(h,h+1)
   return winner
     
 def main():
-  assert 'b' == search('ab da c ba d ba cba')
+  #assert 'a' == search('aba c ba d ba cba')
   assert 'aababbaabbabaa' == search('ababaabaababb aab abb aa bba baa aab')
   assert '212112211212' == search('21211221121212')
   assert 'babbaabaabbab' == search('babbabbaabaabbaba')
