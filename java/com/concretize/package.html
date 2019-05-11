@@ -10,13 +10,20 @@ Once constructed, these two data structures don't change structurally, but
 there's a 3rd data structure, a queue that's enqueued and dequeued dynamically.
 
 In the second step, we dequeue each concretized cell, look up in "p2d" to get its 
-descendants. If any of the descendant can now be concretized, it is concretized 
+dependents. If any of the descendant can now be concretized, it is concretized 
 and enqueued.
 
 At end of the chain reaction, if the queue gets cleared, 
 the entire spreadsheet is concretized. Otherwise, there exist cycles.
 
 <h3>QnA</h3>
+Q: after we concretize cell AA, this solution enqueues it immediately. Only 
+when AA is dequeued, are the dependents evaluated. Why not check the dependents 
+before the enqueue?
+
+Such eager attempt is likely to hit many failed concretizations, as most dependents 
+are likely not ready, based on my guesstimate. I could be wrong.
+
 Key principle is to maintain uplinks (d2p) in each cell, and maintain the downlinks
 (p2d) in a container at the sheet level. This design idea invites several common
 questions:
