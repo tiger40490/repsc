@@ -18,11 +18,17 @@ the entire spreadsheet is concretized. Otherwise, there exist cycles.
 
 <h3>QnA</h3>
 Q: after we concretize cell AA, this solution enqueues it immediately. Only 
-when AA is dequeued, are the dependents evaluated. Why not check the dependents 
-before the enqueue?
+when AA is dequeued, are the dependents evaluated. Why not evaluate the dependents 
+before the enqueue of AA?
 
-Such eager attempt is likely to hit many failed concretizations, as most dependents 
-are likely not ready, based on my guesstimate. I could be wrong.
+Such eager attempt is likely to hit many failed concretizations of AA's dependents, 
+as most dependents are likely not ready, based on my guesstimate.
+If we enqueue AA's dependents blindly, we increase our luck that by the time we 
+evaluate one of AA's dependent (AB), AB has becomes ready.  
+
+Here's an illustration of my guesstimate -- Suppose the very first node in queue is AA
+and AA's first dependent is AB. If we evaluate AB immediate after we dequeue AA, then 
+AB will have all other precedents unconcretized.
 
 Key principle is to maintain uplinks (d2p) in each cell, and maintain the downlinks
 (p2d) in a container at the sheet level. This design idea invites several common
