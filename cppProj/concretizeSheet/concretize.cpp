@@ -252,6 +252,7 @@ char walk_tree(bool isForceUpdating=false){//BFT
     ss1<<id<<" ...updating...\n";
     if ( cell->isPending() || isForceUpdating ){
       for (rcid const & upstream: cell->uuClone()){
+      //at least 1 uu node will be erased i.e. the precedent who enqueued "me"
         if ( rclookup.at(upstream)->isConcretized()
           && cell->erase1uu(upstream)){
             ss2<<upstream<<" (recently concretized) removed from uu-list of "<<*cell<<endl;
