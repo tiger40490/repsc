@@ -268,8 +268,13 @@ char walk_tree(bool isForceUpdating=false){//BFT
         assert(p2d.count(id));
     }      
     //now enqueue all my direct dependent cells:
-    if (p2d.count(id))
-      for (auto const & dep: p2d.at(id)){ Q.push_back(dep);  }
+    static Set<rcid> exploded;
+    if (exploded.count(id) == 0 || isForceUpdating){
+      assert(cell->isConcretized());
+      if (p2d.count(id))
+        for (auto const & dep: p2d.at(id)){ Q.push_back(dep);  }
+      exploded.insert(id);
+    }
     ss1<<Q<<"<< is the queue after appending direct dependends of "<<id<<endl;
   }return 0;
 }
