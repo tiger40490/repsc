@@ -9,23 +9,21 @@ I implemented a modified BFT that enqueues child nodes IFF current cell is concr
 
 The walk_tree() function starts and completes the algorithm. When walk_tree() returns, entire spreadsheet is concretized, unless cycles exist. 
 
-Bulk of the logic is in walk_tree(). 
-
-Cell::evalRpn() is lenghthy but actually a minor part of the algorihm -- it mostly handles RPN evlauation and forceUpdate (experimental, optional feauture).
-
-Below I describe the logic in walk_tree(). 
-
 Tree nodes are spreadsheet cells, connected by directed edges. 
 * from current node, we can visit a precedent node K if K is found in the tokenArray field.
 * from current node, we can visit a dependent node B if p2d says B is a dependent.
 
+Cell::evalRpn() is lenghthy but actually a minor part of the algorihm -- it mostly handles RPN evlauation and forceUpdate (experimental, optional feauture). Bulk of the logic is in walk_tree(). 
+
 The tree has a number of roots (i.e. "roots" global variable). The walk_tree() function starts by enqueuing all root nodes. Rest of the algorithm is driven entirely by this queue.
 
-Whenever we dequeue a node AA, we first check if AA has any unconcretized precedent. If yes, then we give up on AA (and AA's subtree) and don't enqueue AA again. We are sure to visit AA again after we concretize AA's precedents.
+Whenever we dequeue a node AA, we first validate if AA has any unconcretized precedent (by following AA->uu). If yes, then we give up on AA (and AA's subtree) and don't enqueue AA again. We are sure to visit AA again after we concretize AA's precedents.
 
-If we do commit on AA, it means all of AA's precedents are concretized. We simply call AA->evalRpn(). Once AA is concretized, we consult p2d to look up AA's dependents. We enqueue all these nodes. Then we move on to the next item in queue.
+This "validation" has an efficiency feature. Whenever we find one node in this->uu that's now concretized, we remove it from this->uu, to reduce future workload. By design, this validation is guaranteed to remove some node from this->uu. Therefore, the validation on any node is never "as bad as the last validation" i.e. no progress and waste of CPU. 
+
+If AA passes validation, i.e. AA's precedents are all concretized. We call AA->evalRpn() with confidence. Once AA is concretized, we consult p2d to look up AA's dependents. We unconditionally enqueue all these nodes. Then we move on to the next item in queue.
 
 Assuming no cycle, then evantually, every formula cell would be enqueued at least once and the last time it is dequeued it would have all its precedents already concretized.
 
-Q: Before we enqueue a node X , why don't we check X has no unconcretized precendents (early validation)?
-A: becasue at enqueue time, X may have unconcretized precedents, but at dequeue-time, X may have none. Early validation is premature validation.
+Q: Before we enqueue a node X , why don't we validate X has no unconcretized precendents (early validation)?
+A: becasue at enqueue time, X may have unconcretized precedents, but at dequeue-time, X may have none. Early validation is premature validation. Therefore, late validation is chosen.
