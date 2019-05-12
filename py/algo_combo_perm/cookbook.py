@@ -1,4 +1,5 @@
 '''
+todo: test combo with non-stirngs
 Q: what if the pool has dupes? 
 A: I think simplest solution uses a dictionary. I feel there's no need to fight this battle
 '''
@@ -12,7 +13,7 @@ def _com(func, items, howManyMore, logLevel=0):
     listLedByVal = [val]
     if logLevel: print indent, 'listLedByVal =',val
       
-    # func is a func that returns a subset
+    # func is a two-arg callable that returns a subset
     for newList in _com(func, func(items,pos), howManyMore-1, logLevel): #recurse down
       if logLevel: print indent, listLedByVal + newList
       yield listLedByVal + newList #concat 2 lists
@@ -31,7 +32,7 @@ def redraw(pool, n): # redraw n times from same pool. If pool size=55, then 55^n
 def combo(pool, n): #preserves original order
   def after_i_th_item(pool,pos):
     return pool[pos+1:]
-  return _com(after_i_th_item, pool,n)#,True)
+  return _com(after_i_th_item, pool,n) #,True)
 def subsetPerm(pool, n): #accepts distinct items
   def skip_i_th_Item(pool, pos):
     return pool[:pos] + pool[pos+1:]
@@ -63,15 +64,15 @@ def testAbbr():
 def testCombo():
   print '  v v  --  combo  --  v v'
   fmt1, fmt2='', ''; cnt=0; unique=dict()
-  nonRepeat='abcd'
-  for out in combo(nonRepeat, 2):
-    word = ''.join(out)
+  nonRepeat=[1,2,3,4,5,6,7]
+  for out in combo(nonRepeat, 3):
+    word = ''.join(str(i) for i in out)
     fmt2 += word + ' '
     fmt1 += str(out)
     cnt += 1
     unique[word]=1
-  print fmt2, fmt1
-  assert len(unique)==6==cnt
+  print fmt2
+  assert len(unique)==7*6*5/3/2==cnt
 def testPerm():
   print '  v v  --  subsetPerm  --  v v'
   fmt1, fmt2='', ''; cnt=0; unique=dict()
