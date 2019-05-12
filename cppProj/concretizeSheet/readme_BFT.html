@@ -5,7 +5,7 @@ Source code explains the four global data structures + the data fields of each C
 <p/>
 As explained in source code, the global data structures are structurally immutable (ignore the pendingCells -- outside core algorithm) In contrast, the Cell data fields are dynamically updated by the BFT algorithm.
 <p/>
-I implemented a modified BFT that enqueues child nodes IFF current cell is concretized. It may not be obvious to everyone that this algorithm is actually correct, so I will attempt to prove it.
+I implemented a modified BFT that appends child nodes IFF current cell is concretized. It may not be obvious to everyone that this algorithm is actually correct, so I will attempt to prove it.
 <p/>
 The walk_tree() function starts and completes the algorithm. When walk_tree() returns, entire spreadsheet is concretized, unless cycles exist. 
 <p/>
@@ -15,16 +15,16 @@ Tree nodes are spreadsheet cells, connected by directed edges.<ul>
 <p/>
 Cell::evalRpn() is lenghthy but actually a minor part of the algorihm -- it mostly handles RPN evlauation and forceUpdate (experimental, optional feauture). Bulk of the logic is in walk_tree(). 
 <p/>
-The tree has a number of roots (i.e. "roots" global variable). The walk_tree() function starts by enqueuing all root nodes. Rest of the algorithm is driven entirely by this queue.
+The tree has a number of roots (i.e. "roots" global variable). The walk_tree() function starts by appending all root nodes. Rest of the algorithm is driven entirely by this queue.
 <p/>
-Whenever we dequeue a node AA, we first validate if AA has any unconcretized precedent (by following AA->uu). If yes, then we give up on AA (and AA's subtree) and don't enqueue AA again. We are sure to visit AA again after we concretize AA's precedents.
+Whenever we pop a node AA, we first validate if AA has any unconcretized precedent (by following AA->uu). If yes, then we give up on AA (and AA's subtree) and don't append AA again. We are sure to visit AA again after we concretize AA's precedents.
 <p/>
 This "validation" has an efficiency feature. Whenever we find any node in this->uu that's now concretized, we remove it permanently from this->uu, reducing future workload. By design, this validation is guaranteed to remove some node from this->uu. Therefore, the validation on any node is never "as bad as the last validation" i.e. no progress and waste of CPU. 
 <p/>
-If AA passes validation, i.e. AA's precedents are all concretized. We call AA->evalRpn() with confidence. Once AA is concretized, we consult p2d to look up AA's dependents. We unconditionally enqueue all these nodes. Then we move on to the next item in queue.
+If AA passes validation, i.e. AA's precedents are all concretized. We call AA->evalRpn() with confidence. Once AA is concretized, we consult p2d to look up AA's dependents. We unconditionally append all these nodes. Then we move on to the next item in queue.
 <p/>
-Assuming no cycle, then evantually, every formula cell would be enqueued at least once and the last time it is dequeued it would have all its precedents already concretized.
+Assuming no cycle, then evantually, every formula cell would be appended at least once and the last time it is popped it would have all its precedents already concretized.
 <p/>
-Q: Before we enqueue a node X , why don't we validate X has no unconcretized precendents (early validation)?
+Q: Before we append a node X , why don't we validate X has no unconcretized precendents (early validation)?
 <br/>
-A: becasue at enqueue time, X may have unconcretized precedents, but at dequeue-time, X may have none. Early validation is premature validation. Therefore, late validation is chosen.
+A: becasue at append time, X may have unconcretized precedents, but at pop-time, X may have none. Early validation is premature validation. Therefore, late validation is chosen.
