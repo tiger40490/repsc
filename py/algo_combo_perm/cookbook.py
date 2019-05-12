@@ -1,19 +1,25 @@
 '''
 todo: understand why
+todo: add abbreviation
 todo: what if the pool has dupes?
-
 '''
-def _com(func, items, n): #internal recursive generator function
+def _com(func, items, n, logLevel=0): #internal recursive generator function
+  # n == how many additional items wanted
   if n==0: yield [] # recursion end
   else:
+    indent = (3-n)*'  '
     for i,val in enumerate(items):
       listLedByVal = [val]
-      for newList in _com(func, func(items,i), n-1): #recurse down
+      if logLevel: print indent, 'listLedByVal =',val
+      
+      # func is a func that returns a subset
+      for newList in _com(func, func(items,i), n-1, logLevel): #recurse down
+        if logLevel: print indent, listLedByVal + newList
         yield listLedByVal + newList #concat 2 lists
 def combo(pool, n):
   def after_i_th_item(pool,i):
     return pool[i+1:]
-  return _com(after_i_th_item, pool,n)
+  return _com(after_i_th_item, pool,n)#,True)
 def subsetPerm(pool, n): #accepts distinct items
   def skip_i_th_Item(pool, i):
     return pool[:i] + pool[i+1:]
@@ -46,7 +52,7 @@ def testPerm():
   unique=dict(enumerate(li))
   assert len(unique)==24==len(li)
 def main():
-  testPerm()
+  #testPerm()
   testCombo()
 main()
 '''based on P725 [[python cookbook]]
