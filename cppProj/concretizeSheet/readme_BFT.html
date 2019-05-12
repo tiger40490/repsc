@@ -13,7 +13,9 @@ Tree nodes are spreadsheet cells, connected by directed edges.<ul>
 <li>from current node, we can visit a precedent node K if K is found in the tokenArray field.
 <li>from current node, we can visit a dependent node B if p2d says B is a dependent.</ul>
 <p/>
-Cell::evalRpn() is lenghthy but actually a minor part of the algorihm -- it mostly handles RPN evlauation and forceUpdate (experimental, optional feauture). Bulk of the logic is in walk_tree(). 
+Cell::evalRpn() is lenghthy but actually a minor part of the algorihm -- it mostly handles RPN evaluation and forceUpdate (experimental, optional feauture). 
+
+Instead, bulk of the BFT logic is in walk_tree(). 
 <p/>
 The tree has a number of roots (i.e. "roots" global variable). The walk_tree() function starts by appending all root nodes. Rest of the algorithm is driven entirely by this queue.
 <p/>
