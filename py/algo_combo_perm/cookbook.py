@@ -3,7 +3,8 @@ Q: what if the pool has dupes?
 A: I think simplest solution uses a dictionary. I feel there's no need to fight this battle
 '''
 import sys,itertools
-def _com(func, items, howManyMore, logLevel=0): #internal recursive generator function
+def _com(func, items, howManyMore, logLevel=0): 
+#internal recursive generator function to generate all subsets of items, each in a list of length = howManyMore
   if howManyMore==0: yield []; return #recursion exit condition
   assert howManyMore > 0
   indent = (3-howManyMore)*'  '
