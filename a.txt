@@ -1,5 +1,0 @@
---the bottom up algo:
-f(n,h) only needs f(n-1,h-1) and f(n,h-1)
-if n > h, return 0
-if n==0, i can find the return value easily
-if n==1, f(n,h-1) + ( N[n]==H[h]? f(n-1,h-1):0)

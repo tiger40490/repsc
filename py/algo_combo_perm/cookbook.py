@@ -8,17 +8,17 @@ def _com(func, items, howManyMore, logLevel=0):
   if howManyMore==0: yield []; return #recursion exit condition
   assert howManyMore > 0
   indent = (3-howManyMore)*'  '
-  for i,val in enumerate(items):
+  for pos,val in enumerate(items):
     listLedByVal = [val]
     if logLevel: print indent, 'listLedByVal =',val
       
     # func is a func that returns a subset
-    for newList in _com(func, func(items,i), howManyMore-1, logLevel): #recurse down
+    for newList in _com(func, func(items,pos), howManyMore-1, logLevel): #recurse down
       if logLevel: print indent, listLedByVal + newList
       yield listLedByVal + newList #concat 2 lists
 def abbr(word, n): #generates all abbreviations of length==n
-  def after_i_th_item(pool,i):
-    return pool[i+1:]
+  def after_i_th_item(pool,pos):
+    return pool[pos+1:]
   return _com(after_i_th_item, word,n) #,True)
 def allAbbr(word):
   gen = itertools.chain()
@@ -26,15 +26,15 @@ def allAbbr(word):
     gen = itertools.chain(gen, abbr(word,n))
   return gen
 def redraw(pool, n): # redraw n times from same pool. If pool size=55, then 55^n outcomes
-  def keepAll(pool,i): return pool
+  def keepAll(pool,_): return pool
   return _com(keepAll, pool, n) #, True)
 def combo(pool, n): #preserves original order
-  def after_i_th_item(pool,i):
-    return pool[i+1:]
+  def after_i_th_item(pool,pos):
+    return pool[pos+1:]
   return _com(after_i_th_item, pool,n)#,True)
 def subsetPerm(pool, n): #accepts distinct items
-  def skip_i_th_Item(pool, i):
-    return pool[:i] + pool[i+1:]
+  def skip_i_th_Item(pool, pos):
+    return pool[:pos] + pool[pos+1:]
   return _com(skip_i_th_Item, pool, n)#, True)# returns generator object, to be used in iteration context
 def testRedraw():
   print '  v v  --  redraw  --  v v'
