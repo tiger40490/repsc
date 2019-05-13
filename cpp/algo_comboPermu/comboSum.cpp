@@ -1,4 +1,5 @@
 // This recursion-in-loop technique is powerful but easily hits SOF. If no other choice, we may need to convert recursion into iterative.
+//todo: consider memoization 
 #include <iomanip>
 #include <iostream>
 #include <vector>
@@ -7,8 +8,6 @@ using namespace std;
 
 template<typename T,             int min_width=2> ostream & operator<<(ostream & os, vector<T> const & c){
    for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
-   os<<endl;
-   //for(int i=0; i<c.size(); ++i){ os<<setw(min_width)<<i<<" "; }
    //os<<endl;
    return os;
 }
@@ -18,13 +17,14 @@ vector<int> const * cand;
 int target=0;
 bool isPermutation = false;
 void recurs(int gap, int startIndex){ //Warning: SOF if N is large like 99999
+  // add memoization based on gap/startIndex?
   if (isPermutation) startIndex = 0;
   cout<<"trying "<<partial;
   if (gap == 0){
       solutions.push_back(partial);
       cout<<"<-- A solution :)\n";
       return;
-  }
+  }cout<<endl;
   assert(gap > 0);
   for (int i=startIndex; i < cand->size(); ++i){
     auto const & item = (*cand)[i];
@@ -54,6 +54,7 @@ void rerun(bool isP){
 int main(){
   combinationSum(*(new vector<int>({2,3,4})), 9);
   assert(solutions.size() == 3);
+  //return 0;
   rerun(true); //with isPermutation
   assert(solutions.size() == 4 + 1 + 6);
   combinationSum(*(new vector<int>({2,3,4})), 7);
