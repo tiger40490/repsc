@@ -1,6 +1,7 @@
 '''
 showcase: yielding items in sorted sequence
 showcase: defaultdict(int) as frequency counter
+showcase: antiRepeat to avoid creating the same generator and running through it again
 
 todo: understand why sometimes calling gen(someValue) again gives me a different generator object?
 Note the generator function is top-down recursive without memoization.  How to make it non-recursive? No clue
