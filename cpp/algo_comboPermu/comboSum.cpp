@@ -35,7 +35,7 @@ void recurs(int gap, int startIndex){ //Warning: SOF if N is large like 99999
   }
 }
 vector<vector<int> > combinationSum(vector<int>& candidates, int tgt) {
-  cout<<target<<" to be broken into v v v v v v    "<<candidates;
+  cout<<tgt<<" to be broken into v v v v v v    "<<candidates;
   isPermutation=false;
   cand = &candidates;
   solutions.clear();
