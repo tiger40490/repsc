@@ -1,5 +1,6 @@
 '''
 showcase: yielding items in sorted sequence
+Note the generator function is recursive.  How to make it non-recursive? No clue
 '''
 from pprint import pprint
 def gen(n):
