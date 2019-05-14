@@ -1,7 +1,7 @@
 '''
 showcase: yielding items in sorted sequence
 showcase: defaultdict(int) as frequency counter
-showcase: antiRepeat to avoid creating the same generator and running through it again. Without this feature, code is still correct and fairly fast.
+showcase: antiRepeat to avoid creating the same generator and running through it again. Without this feature, code is still correct and possibly just as fast.
 
 todo: understand why sometimes calling gen(someValue) again gives me a different generator object?
 
@@ -28,14 +28,13 @@ def gen(n):
     for tu in listOfTu: 
       yield (i,) + tu #concat two tuples
 def test(n):
-  li = list(gen(n))
-  uniq = set(li)
-  #pprint(li)
+  li = list(gen(n)); uniq = set(li)
+  if n < 5: pprint(li) # all paths
+  assert len(li)==len(uniq)==2**(n-1)
+  # now check the generators
   print len(uniqueGenerator), 'unique generators: ', uniqueGenerator
   assert len(uniqueGenerator)==n, 'each time gen(11) is called it should return the same generator object'
-  uniqueGenerator.clear()
-  antiRepeat.clear()
-  assert len(li)==len(uniq)==2**(n-1)
+  uniqueGenerator.clear(); antiRepeat.clear()
 test(13)
 test(4)
 '''
