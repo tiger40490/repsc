@@ -17,7 +17,6 @@ vector<int> const * cand;
 int target=0;
 bool isPermutation = false;
 void recurs(int gap, int startIndex){ //Warning: SOF if N is large like 99999
-  // add memoization based on gap/startIndex?
   if (isPermutation) startIndex = 0;
   cout<<"trying "<<partial;
   if (gap == 0){
@@ -34,6 +33,31 @@ void recurs(int gap, int startIndex){ //Warning: SOF if N is large like 99999
     partial.pop_back(); //backtrack up the tree
   }
 }
+#ifdef MEMOIZATION
+vector<vector<int>> recursM(int gap, int startIndex/*, vector<int> partial*/){ //returns a collection of formulas each adding up to gap
+  // add memoization based on gap/startIndex?
+  //cout<<"trying "<<partial;
+  assert(gap > 0);
+  vector<vector<in>> ret;
+  for (int i=startIndex; i < cand->size(); ++i){
+    auto const & item = (*cand)[i];
+    if (gap < item) return ret; 
+    vector<int> formula;
+    formula.push_back(item);
+    if (gap == item){
+      cout<<"<-- A solution :)\n";
+      ret.push_back(formula);
+      return ret;
+    }
+    for (auto finisher: recursM(gap - item, i, clone)){
+      if (finisher[0].empty()) continue;
+      auto clone=formula;
+      clone.insert(clone.end(), finisher.begin(), finisher.end());
+      ret.push_back(clone);
+    }
+  }return ret;
+} 
+#endif
 vector<vector<int> > combinationSum(vector<int>& candidates, int tgt) {
   cout<<tgt<<" to be broken into v v v v v v    "<<candidates;
   isPermutation=false;
