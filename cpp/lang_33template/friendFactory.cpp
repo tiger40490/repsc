@@ -1,5 +1,5 @@
 //showcase: singleton enforced by private ctor and factory (instead of static method)
-//showcase: template factory function to support any number of target classes
+//showcase: template factory function to support any number of target classes, based on P291 [[c++cookbook]
 
 /*Showcasing two alternative ways to keep cached instances:
 1) static local variable in each distinct instantiation of the create() template. Note each instantiation is like a separately defined function.
