@@ -1,6 +1,8 @@
 '''
 Q: what if the pool contains duplicates? Very common in REALISTIC abbr problems.
-Perhaps simplest solution treats the pool as non-repeating and then uses a dictionary. 
+Perhaps simplest solution treats the pool as non-repeating and then uses a dictionary. In reality, we don't get horrible input like 010100000001010010
+
+Note with non-repeating pool, fixed-size abbr and combo algos are identical
 '''
 from pprint import pprint
 import sys,itertools
