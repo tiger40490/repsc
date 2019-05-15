@@ -1,5 +1,4 @@
 '''
-todo: test combo with non-stirngs
 Q: what if the pool has dupes? 
 A: I think simplest solution uses a dictionary. I feel there's no need to fight this battle
 '''
