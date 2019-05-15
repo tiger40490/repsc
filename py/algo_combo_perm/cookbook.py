@@ -22,16 +22,13 @@ def abbr(word, n): #generates all abbreviations of length==n
   return _com(after_i_th_item, word,n) #,True)
 def allAbbr(word):
   gen = itertools.chain()
-  for n in xrange(1+len(word)):
+ #for n in xrange(1+len(word)):
+  for n in range(len(word),0,-1)+[0]: #longest first
     gen = itertools.chain(gen, abbr(word,n))
   return gen
 def redraw(pool, n): # redraw n times from same pool. If pool size=55, then 55^n outcomes
   def keepAll(pool,_): return pool
   return _com(keepAll, pool, n) #, True)
-def combo(pool, n): #preserves original order
-  def after_i_th_item(pool,pos):
-    return pool[pos+1:]
-  return _com(after_i_th_item, pool,n) #,True)
 def subsetPerm(pool, n): #accepts distinct items
   def skip_i_th_Item(pool, pos):
     return pool[:pos] + pool[pos+1:]
@@ -64,7 +61,7 @@ def testCombo():
   print '  v v  --  combo  --  v v'
   fmt1, fmt2='', ''; cnt=0; unique=dict()
   nonRepeat=[1,2,3,4,5,6,7]
-  for out in combo(nonRepeat, 3):
+  for out in abbr(nonRepeat, 3):
     word = ''.join(str(i) for i in out)
     fmt2 += word + ' '
     fmt1 += str(out)
