@@ -1,6 +1,6 @@
 '''
 todo: more tests
-idea: first scan to identify all the "runs" ... useful?
+todo: why return -1?
 
 showcase a for-loop with custom control on looping variable
 
