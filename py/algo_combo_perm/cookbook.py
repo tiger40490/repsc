@@ -1,10 +1,13 @@
 '''
-Q: what if the pool has dupes? 
+Q: what if the pool contains duplicates? 
 A: I think simplest solution uses a dictionary. I feel there's no need to fight this battle
 '''
+from pprint import pprint
 import sys,itertools
 def _com(func, items, howManyMore, logLevel=0): 
-#internal recursive generator function to generate all subsets of items, each in a list of length = howManyMore
+  '''internal recursive generator function to generate all subsets of items, each in a list of length = howManyMore
+This function calls itself from inside a loop
+  '''
   if howManyMore==0: yield []; return #recursion exit condition
   assert howManyMore > 0
   indent = (3-howManyMore)*'  '
@@ -15,7 +18,7 @@ def _com(func, items, howManyMore, logLevel=0):
     # func is a two-arg callable that returns a subset
     for newList in _com(func, func(items,pos), howManyMore-1, logLevel): #recurse down
       if logLevel: print indent, listLedByVal + newList
-      yield listLedByVal + newList #concat 2 lists
+      yield listLedByVal + newList #append newList
 def abbr(word, n): #generates all abbreviations of length==n
   def after_i_th_item(pool,pos):
     return pool[pos+1:]
@@ -82,9 +85,11 @@ def testPerm():
   print fmt2, fmt1
   assert len(unique)==12==cnt
   
+  print '  v v  --  full Permutations  --  v v'
   li=list(subsetPerm(nonRepeat, len(nonRepeat))) #full permutation
   unique=dict(enumerate(li))
-  assert len(unique)==24==len(li)
+  for perm in li: print ''.join(perm),
+  assert len(unique)==24==len(li); print
 def main():
   testPerm()
   testCombo()
