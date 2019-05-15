@@ -1,6 +1,6 @@
 '''
-Q: what if the pool contains duplicates? 
-A: I think simplest solution uses a dictionary. I feel there's no need to fight this battle
+Q: what if the pool contains duplicates? Very common in REALISTIC abbr problems.
+Perhaps simplest solution treats the pool as non-repeating and then uses a dictionary. 
 '''
 from pprint import pprint
 import sys,itertools
