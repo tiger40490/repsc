@@ -1,6 +1,5 @@
 '''
 todo: more tests
-todo: why return -1?
 
 showcase a for-loop with custom control on looping variable
 
@@ -53,7 +52,7 @@ def search(haystack):
     i=j+1
   #print 'returning', winner
   verifyWinner()
-  if winner == s: return -1
+  if winner == s: return -1 #meaning entire string is a palindrome
   return winner
     
 def main():
