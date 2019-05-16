@@ -15,13 +15,12 @@ This function calls itself from inside a loop
   assert howManyMore > 0
   indent = (3-howManyMore)*'  '
   for pos,val in enumerate(items):
-    listLedByVal = [val]
     if logLevel: print indent, 'listLedByVal =',val
       
     # func is a two-arg callable that returns a subset
     for newList in _com(func, func(items,pos), howManyMore-1, logLevel): #recurse down
-      if logLevel: print indent, listLedByVal + newList
-      yield listLedByVal + newList #append newList
+      if logLevel: print indent, [val] + newList
+      yield [val] + newList #append newList
 def abbr(word, n): #generates all abbreviations of length==n
   def after_i_th_item(pool,pos):
     return pool[pos+1:]
