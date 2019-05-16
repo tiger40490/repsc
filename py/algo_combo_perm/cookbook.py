@@ -1,6 +1,7 @@
 '''
 Q: what if the pool contains duplicates? Very common in REALISTIC abbr problems.
-Perhaps simplest solution treats the pool as non-repeating and then uses a dictionary. In reality, we don't get horrible input like 010100000001010010
+A: if not performance too serious (data size not extreme), then Perhaps simplest solution treats the pool as non-repeating and then uses a dictionary. In reality, we don't get horrible input like 010100000001010010. No point spent so much time optimzing an algo that's not really needed in any imagable context.
+A: if performance becomes a real problem, then other algorithms are needed.
 
 Note with non-repeating pool, fixed-size abbr and combo algos are identical
 '''
