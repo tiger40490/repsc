@@ -31,18 +31,33 @@ def allAbbr(word):
   for n in range(len(word),0,-1)+[0]: #longest first
     gen = itertools.chain(gen, abbr(word,n))
   return gen
-def redraw(pool, n): # permutations by redraw n times from same pool. If pool size=55, then 55^n outcomes
+def redrawP(pool, n): # permutations by redraw n times from same pool. If pool size=55, then 55^n outcomes
   def keepAll(pool,_): return pool
   return _com(keepAll, pool, n) #, True)
+def redrawC(pool, n): # generate combos by redraw n times from same pool. 
+  def keepAllFollower(pool,pos): return pool[pos:]
+  return _com(keepAllFollower, pool, n) #, True)
 def subsetPerm(pool, n): #accepts distinct items
   def skip_i_th_Item(pool, pos):
     return pool[:pos] + pool[pos+1:]
   return _com(skip_i_th_Item, pool, n)#, True)# returns generator object, to be used in iteration context
 def testRedraw():
-  print '  v v  --  redraw  --  v v'
+  print '  v v  --  redraw combinations  --  v v'
   fmt1, fmt2='', ''; cnt=0; unique=dict()
   nonRepeat='abc'
-  for out in redraw(nonRepeat, 2):
+  for out in redrawC(nonRepeat, 3):
+    word = ''.join(out)
+    fmt2 += word + ' '
+    fmt1 += str(out)
+    cnt += 1
+    unique[word]=1
+  print fmt2, fmt1
+  assert len(unique)==10==cnt
+
+  print '  v v  --  redraw permutations  --  v v'
+  fmt1, fmt2='', ''; cnt=0; unique=dict()
+  nonRepeat='abc'
+  for out in redrawP(nonRepeat, 2):
     word = ''.join(out)
     fmt2 += word + ' '
     fmt1 += str(out)
