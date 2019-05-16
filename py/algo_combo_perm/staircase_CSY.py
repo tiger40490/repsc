@@ -33,13 +33,16 @@ def gen(n): #simple generator, easy to memorize and reproduce
   for step1 in xrange(1, n+1):
     for steps in gen(n-step1):
       yield (step1,) + steps
-def test(n):
-  li = list(gen(n)); uniq = set(li)
+def bottomUp(n): #produce a collection of tuples, each a path
+  pass
+def verify(n, algo):
+  li = list(algo(n)); uniq = set(li)
   if n < 5: pprint(li) # all paths
   assert len(li)==len(uniq)==2**(n-1)
   
-  li = list(genenrateWithMemoization(n)); uniq = set(li)
-  assert len(li)==len(uniq)==2**(n-1)
+def test(n):
+  verify(n, gen)
+  verify(n, genenrateWithMemoization)
   # now check the generators
   #print len(uniqueGenerator), 'unique generators: ', uniqueGenerator
   assert len(uniqueGenerator)==n, 'each time gen(11) is called it should return the same generator object'
