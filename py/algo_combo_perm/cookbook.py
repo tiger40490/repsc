@@ -31,7 +31,7 @@ def allAbbr(word):
   for n in range(len(word),0,-1)+[0]: #longest first
     gen = itertools.chain(gen, abbr(word,n))
   return gen
-def redraw(pool, n): # redraw n times from same pool. If pool size=55, then 55^n outcomes
+def redraw(pool, n): # permutations by redraw n times from same pool. If pool size=55, then 55^n outcomes
   def keepAll(pool,_): return pool
   return _com(keepAll, pool, n) #, True)
 def subsetPerm(pool, n): #accepts distinct items
