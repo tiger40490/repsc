@@ -1,8 +1,9 @@
 //Q: how does this algo automatically avoid duplicates?
+
 //For each formula, this solution prints the factors in ascending order:)
+//See also py solution
 #include <iostream>
 #include <iomanip>
-//#include <string>
 #include <vector>
 #include <math.h>
 #include <assert.h>
@@ -48,7 +49,6 @@ size_t factorize(unsigned int bigNum){
 }
 int main(){
   assert(10 == factorize(60));
-  return 0;
   assert(8  == factorize(36));
   assert(6  == factorize(24));
   assert(3  == factorize(12));
