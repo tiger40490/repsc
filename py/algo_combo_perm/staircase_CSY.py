@@ -60,7 +60,7 @@ def verify(n, algo):
   li = list(algo(n)); uniq = set(li)
   if n < 5: pprint(li) # all paths
   assert len(li)==len(uniq)==2**(n-1)
-def test(n):
+def test(n): #all three solutions generate formulas in ascending order :)
   verify(n, buttom_up)
   verify(n, gen_memoize)
   verify(n, gen)
