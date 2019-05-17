@@ -3,7 +3,7 @@ todo: identiy all ABA clusters? Not useful
 
 showcase a for-loop with custom control on looping variable
 
-I think this solution is still O(NN). I think there exists O(N) solutions. I don't have to discover it. I can read it in a few years.
+I think algo2() is still O(NN). I think there exists O(N) solutions. I don't have to discover it. I can read it in a few years.
 '''
 winner=''
 s=''
@@ -29,7 +29,7 @@ def endOfRun(i):
       assert s[i]==s[j-1]
       return j-1 # could be i itself
   return   len(s)-1
-def verifyWinner():
+def verifyAlgo2Winner():
   sz=len(winner)
   for le in xrange(sz/2+1):
     ri=sz-1-le
@@ -43,7 +43,7 @@ def algo2():
     startfrom(i,j)
     i=j+1
   #print 'returning', winner
-  verifyWinner()
+  verifyAlgo2Winner()
   if winner == s: return -1 #meaning entire string is a palindrome
   return winner
 def search(haystack): 
@@ -54,33 +54,40 @@ def search(haystack):
   global s, winner; winner=''; s=haystack
   #print endOfRun(29); return
   ## end of initial set-up
-  return algo2();
+  ret = algo2()
+  print 'search() returning...', ret
+  return ret
+#### new algo
 def verify(le,ri):
+  #print 'verifying', s[le:ri+1]
   assert le <= ri
   while le < ri:
     assert s[le] == s[ri]
-    le += 1
-    ri -= 1
-    
-# need to handle a run
+    le += 1; ri -= 1
+def maxPalEndingHere(i): # return the le index such thatat s[le:i+1] is the longest palindrome. I hope there's an efficient algo. Here I hardcoded the return values for one test case
+  #print 'maxPalEndingHere received', i
+  if i in [0,1]: return i
+  if i in [5,12,14,18,20]: return i-1
+  if i in [3,16,17,27]: return i-2
+  if i == 8: return 4
+  if i == 28: return 25
+  if i == 29: return 24
+  raise Exception     
 def algo1(): #1-scan unfinished
-  ret=s[0];  le=ri=1; #maxLen=1; 
-  for i in xrange(1, len(s)):
-    ch = s[i]
-    print i, 'le=',le, 'ri=',ri    
-    if le > 0 and s[le-1] == ch:
-      le -= 1; ri += 1
-      # check the length only when this palindrome ends
+  le = Le = Ri =0
+  for i in xrange(len(s)):
+    newLe=le-1
+    if le>0 and s[newLe] == s[i]:
+      le = newLe
+      print le,'-',i, ': new pal = ', s[le:i+1]
       continue
-    verify(le, ri)
-    pal = s[le:ri+1]
-    print pal, 'is a new palindrome'
-    if ri-le+1 > len(ret):
-      ret = pal
-      print ret, 'is a new winner, from', le, 'to', ri
-      #maxLen == ri-le+1
-    le=ri=i    
-  return ret
+    cand = s[le:i]
+    if len(cand) > Ri-Le+1:
+        Le,Ri=le,i-1
+        print 'last pal is new winner :)'
+    le = maxPalEndingHere(i)
+    verify(le, i)
+  return s[Le:Ri+1]  
 def main():
   assert 'aababbaabbabaa' == search('abab aabaa babb aab abb aa bba baa aab')
   #return
