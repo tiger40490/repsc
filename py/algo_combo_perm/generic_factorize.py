@@ -1,3 +1,5 @@
+''' todo: use yield
+'''
 from math import sqrt
 from collections import defaultdict
 
