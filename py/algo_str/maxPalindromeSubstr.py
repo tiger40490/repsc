@@ -1,5 +1,5 @@
 '''
-todo: more tests
+todo: identiy all ABA clusters? Not useful
 
 showcase a for-loop with custom control on looping variable
 
@@ -20,7 +20,7 @@ def startfrom(le,ri):
   newLen=2*i+ri-le+1
   if newLen > len(winner):
      winner = s[le-i : ri+i+1]
-     #print (le,ri),'found a longer palindrome @', (le-i,ri+i), winner
+     print 'new winner @', (le-i,ri+i), winner
 
 def endOfRun(i):
   for j in xrange(i+1, len(s)):
@@ -35,15 +35,7 @@ def verifyWinner():
     ri=sz-1-le
     if le >  ri: return
     assert winner[le]==winner[ri]
-def search(haystack): 
-  haystack = haystack.replace(' ','')
-  print ' '+('  '.join(list(haystack)))
-  for i in range(len(haystack)): print '%2s' % i,
-  print
-  global s, winner; winner=''; s=haystack
-  #print endOfRun(29); return
-  ## end of initial set-up
-  
+def algo2():  
   i=0
   while i<len(s):
     j = endOfRun(i)
@@ -54,13 +46,48 @@ def search(haystack):
   verifyWinner()
   if winner == s: return -1 #meaning entire string is a palindrome
   return winner
+def search(haystack): 
+  haystack = haystack.replace(' ','')
+  print ' '+('  '.join(list(haystack)))
+  for i in range(len(haystack)): print '%2s' % i,
+  print
+  global s, winner; winner=''; s=haystack
+  #print endOfRun(29); return
+  ## end of initial set-up
+  return algo2();
+def verify(le,ri):
+  assert le <= ri
+  while le < ri:
+    assert s[le] == s[ri]
+    le += 1
+    ri -= 1
     
+# need to handle a run
+def algo1(): #1-scan unfinished
+  ret=s[0];  le=ri=1; #maxLen=1; 
+  for i in xrange(1, len(s)):
+    ch = s[i]
+    print i, 'le=',le, 'ri=',ri    
+    if le > 0 and s[le-1] == ch:
+      le -= 1; ri += 1
+      # check the length only when this palindrome ends
+      continue
+    verify(le, ri)
+    pal = s[le:ri+1]
+    print pal, 'is a new palindrome'
+    if ri-le+1 > len(ret):
+      ret = pal
+      print ret, 'is a new winner, from', le, 'to', ri
+      #maxLen == ri-le+1
+    le=ri=i    
+  return ret
 def main():
-  assert -1 == search('bbbb')
-  assert 'a' == search('ab da cba dba cba')
-  assert -1 == search('ab da cba dba cba abcabdabcadba')
-  assert 'aababbaabbabaa' == search('ababaabaababb aab abb aa bba baa aab')
+  assert 'aababbaabbabaa' == search('abab aabaa babb aab abb aa bba baa aab')
+  #return
   assert 'qwqwwqqwwqwq' == search('qwqwwqqwwqwqwq')
+  assert 'a' == search('ab da cba dba cba')
+  assert -1 == search('bbbb')
+  assert -1 == search('ab da cba dba cba abcabdabcadba')
   assert 'babbaabaabbab' == search('babbabbaabaabbaba')
 
 main()
