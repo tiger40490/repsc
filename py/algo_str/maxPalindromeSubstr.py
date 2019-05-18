@@ -1,4 +1,5 @@
 '''
+reduce special cases
 todo: clean up
 todo: reduce global vars
 
@@ -93,7 +94,7 @@ def algo1(logLevel=1): #1-scan, to be cleaned up
     if mem.len() > best[0].len(): 
       best[0] = mem
       if logging: print '.. new best', best[0]
-  ### end of nested functions    
+  ### end of nested functions ###
   print ' vv  algo1()  vv <- ' + s;  le=0
   q = deque(); q.append(Member(0,0)); best=[q[0]]
   for i in xrange(1, len(s)):
@@ -115,24 +116,22 @@ def algo1(logLevel=1): #1-scan, to be cleaned up
     if oo.incr2ends(logging): updateBest(oo); continue
     # oldest pal (might be new best) just ended ...
     updateBest(oo)
-    q.popleft() 
     if logging: dump('after pop, before cleanup')
     
-    while True:
+    while oo.ri != i:
+      q.popleft() # update next oldest member
       oo = q[0] #oldest to be updated
       if oo.ri==i: break #optional optimization
       if logging: print '.. cleaning up queue at', oo
       for _r in xrange(i, oo.ri, -1):
         _l = oo.le+oo.ri - _r
-        if _l < 0: break
-        if s[_l] != s[_r]: break
-      else: 
+        if _l < 0: break #invalid member, to be kicked out
+        if s[_l] != s[_r]: break #invalid member, to be kicked out
+      else: #normal end of for-loop
         oo.le = oo.le+oo.ri - i
         oo.ri = i
         updateBest(oo)
         if logging: print 'Queue clean-up completed at', oo
-        break 
-      q.popleft() # update next oldest member
   return best[0].str()
 def main():
   assert -1 == search('bbbb', [2,1])
