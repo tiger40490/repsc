@@ -83,24 +83,25 @@ class Member: #queue member
     self.ri += 1
     assert self.ri < len(s)
     print 'expandBothEnds() completed for', self
-def dump(q, msg='', limit=2):
+def dump(q, msg='', limit=4):
   if len(msg): print '-'+msg+'->',
   for member in q: 
     print member, 
     limit -= 1
-    if limit == 0: print '..'; return
+    if limit == 0: print '..more'; return
   else: print
 def algo1(logLevel=1): #1-scan, to be cleaned up
   print ' vv  algo1()  vv <- ' + s;  le=0
   q = deque(); q.append(Member(0,0)); best=q[0]
   for i in xrange(1, len(s)):
-    log = logLevel if i < 99999 else 0
+    log = logLevel if i > 3 else 0
+    #if log: print '  i =', i, ; dump(q)
     if s[i] == s[i-1]:
-      latest=q[-1]
-      assert latest.ri == i-1
-      latest.ri=i
-      if log: print 'just extended', latest
-      if latest.len() > best.len(): best = latest
+      youngest=q[-1]
+      assert youngest.ri == i-1
+      youngest.ri=i
+      if log: print 'just extended youngest ->', youngest
+      if youngest.len() > best.len(): best = youngest
           #if log: print '.. new best', best
       # why can't I do continue?
     else:
@@ -111,12 +112,16 @@ def algo1(logLevel=1): #1-scan, to be cleaned up
     assert oo.ri==i-1
     if oo.le >= 1 and s[oo.le-1] == s[i]:
         oo.expandBothEnds()
+        if oo.len() > best.len(): best = oo
+        '''to be removed
+        if i+1==len(s): break
         if i +1 == len(s) and oo.len() > best.len():
           best = oo
-          print 'ret...'; 
+          print 'ret...';
           return s[oo.le : oo.ri+1] #code smell
+        '''
         continue
-    if log: print 'oldest pal just ended :(', oo  #bug
+    assert oo.ri != i, 'I believe oldest pal just ended'
     if i-oo.le > best.len():
         best.le, best.ri= oo.le,i-1; # cleanup
         #bestLe,bestRi=oo.le,i-1; 
