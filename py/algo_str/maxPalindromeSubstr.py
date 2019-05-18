@@ -51,7 +51,7 @@ def search(haystack):
   global s, winner; winner=''; s=haystack
   #print endOfRun(29); return
   ## end of initial set-up
-  ret = algo2()
+  ret = algo1()
   print 'search() returning...', ret
   return ret
 #### Algo 1
@@ -71,11 +71,11 @@ def maxPalEndingHere(i): # return the le index such thatat s[le:i+1] is the long
   if i == 29: return 24
   raise Exception     
 def algo1(): #1-scan unfinished
-  le = Le = Ri =0
+  le = 0; Le = Ri =0 # current winner
   for i in xrange(len(s)):
-    newLe=le-1
-    if le>0 and s[newLe] == s[i]:
-      le = newLe
+    tmp=le-1
+    if tmp>=0 and s[tmp] == s[i]:
+      le = tmp
       print le,'-',i, ': new pal = ', s[le:i+1]
       continue
     cand = s[le:i]
@@ -87,13 +87,12 @@ def algo1(): #1-scan unfinished
   return s[Le:Ri+1]  
 def main():
   assert 'aababbaabbabaa' == search('abab aabaa babb aab abb aa bba baa aab')
-  #return
+  return
   assert 'qwqwwqqwwqwq' == search('qwqwwqqwwqwqwq')
   assert 'a' == search('ab da cba dba cba')
   assert -1 == search('bbbb')
   assert -1 == search('ab da cba dba cba abcabdabcadba')
   assert 'babbaabaabbab' == search('babbabbaabaabbaba')
-
 main()
 '''https://bintanvictor.wordpress.com/2018/03/04/find-longest-palindrome-substring-unsolved/ has my analysis
 '''
