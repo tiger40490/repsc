@@ -77,6 +77,12 @@ class Member: #queue member
   def len(self): return self.ri +1 - self.le
   def __str__(self):
     return '{c@'+str((self.le+self.ri)/2.0)+' '+ str(self.le) + '-' + str(self.ri)+' ' + s[self.le: self.ri+1] +' }'
+  def expandBothEnds(self):
+    assert self.le > 0
+    self.le -= 1
+    self.ri += 1
+    assert self.ri < len(s)
+    print 'expandBothEnds() completed for', self
 def dump(q, msg='', limit=2):
   if len(msg): print '-'+msg+'->',
   for member in q: 
@@ -104,8 +110,7 @@ def algo1(logLevel=1): #1-scan, to be cleaned up
     if oo.ri==i: continue # already the longest member in the queue
     assert oo.ri==i-1
     if oo.le >= 1 and s[oo.le-1] == s[i]:
-        oo.le -= 1; oo.ri += 1
-        if log: print 'oldest pal updated to ', oo
+        oo.expandBothEnds()
         if i +1 == len(s) and oo.len() > best.len():
           best = oo
           print 'ret...'; 
