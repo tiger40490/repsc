@@ -1,4 +1,5 @@
 '''
+todo: clean up the LeRi update
 todo: clean up
 
 showcase a for-loop with custom control on looping variable
@@ -83,38 +84,38 @@ def dump(q, msg='', limit=2):
     limit -= 1
     if limit == 0: print '..'; return
   else: print
-def algo1(logLevel=1): #1-scan unfinished
-  print ' vv  algo1()  vv <- ' + s; le = 0; Le = Ri =0 # current winner
-  q = deque()
-  q.append(Member(0,0))
+def algo1(logLevel=1): #1-scan, to be cleaned up
+  print ' vv  algo1()  vv <- ' + s;  le=0
+  q = deque(); q.append(Member(0,0)); best=q[0]
   for i in xrange(1, len(s)):
-    log = logLevel
-    #if i < 26 : log = 0
+    log = logLevel if i < 99999 else 0
     if s[i] == s[i-1]:
       latest=q[-1]
-      assert latest.ri==i-1
-      latest.ri=i # need to check if new winner
-      if log: print i, 'just extended', latest
-      if latest.len() > Ri+1-Le:
-          Le,Ri=latest.le,latest.ri 
-          if log: print '.. new winner :)',s[Le:Ri+1] 
+      assert latest.ri == i-1
+      latest.ri=i
+      if log: print 'just extended', latest
+      if latest.len() > best.len(): best = latest
+          #if log: print '.. new best', best
+      # why can't I do continue?
     else:
       q.append(Member(i,i)) 
     if log: print '  i =', i, ; dump(q)
-    oo = q[0] #oldest
-    
-    if oo.ri==i: continue # need to clean up
-    if oo.le>=1 and s[oo.le-1] == s[i]:
+    oo = q[0] #alias to the oldest member
+    if oo.ri==i: continue # already the longest member in the queue
+    assert oo.ri==i-1
+    if oo.le >= 1 and s[oo.le-1] == s[i]:
         oo.le -= 1; oo.ri += 1
         if log: print 'oldest pal updated to ', oo
-        if i +1 == len(s) and oo.len() > Ri-Le+1: 
+        if i +1 == len(s) and oo.len() > best.len():
+          best = oo
           print 'ret...'; 
           return s[oo.le : oo.ri+1] #code smell
         continue
     if log: print 'oldest pal just ended :(', oo  #bug
-    if i-oo.le > Ri-Le:
-        Le,Ri=oo.le,i-1; 
-        if log: print 'new winner :)',s[Le:Ri+1] 
+    if i-oo.le > best.len():
+        best.le, best.ri= oo.le,i-1; # cleanup
+        #bestLe,bestRi=oo.le,i-1; 
+        if log: print 'new winner :)', best
     q.popleft() 
     if log: dump(q, 'after pop, before cleanup')
     while True:
@@ -130,12 +131,13 @@ def algo1(logLevel=1): #1-scan unfinished
       else: 
         oo.le, oo.ri = oo.le+oo.ri - i , i
         if log: print 'clean-up completed at', oo
-        if oo.len() > Ri+1-Le:
-          Le,Ri=oo.le,i-1; 
-          if log: print '..... new winner :)',s[Le:Ri+1] 
+        if oo.len() > best.len():
+          best = oo
+          #bestLe,bestRi=oo.le,i-1; 
+          if log: print '..... new winner :)', best
         break
       q.popleft()
-  return s[Le:Ri+1] 
+  return s[best.le : best.ri+1] 
 def main():
   assert -1 == search('bbbb', [2,1])
   assert -1 == search('aa', [2,1])
