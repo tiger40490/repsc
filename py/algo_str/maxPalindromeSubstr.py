@@ -43,15 +43,20 @@ def algo2():
   verifyAlgo2Winner()
   if winner == s: return -1 #meaning entire string is a palindrome
   return winner
-def search(haystack): 
+def search(haystack, algos=[2]): 
   haystack = haystack.replace(' ','')
   print ' '+('  '.join(list(haystack)))
   for i in range(len(haystack)): print '%2s' % i,
   print
   global s, winner; winner=''; s=haystack
   #print endOfRun(29); return
+  algoDict={1:algo1,  2:algo2}
   ## end of initial set-up
-  ret = algo1()
+  
+  ret=None
+  for aid in algos:
+    prev, ret = ret, algoDict[aid]()
+    assert prev is None or prev == ret
   print 'search() returning...', ret
   return ret
 #### Algo 1
@@ -71,28 +76,27 @@ def maxPalEndingHere(i): # return the le index such thatat s[le:i+1] is the long
   if i == 29: return 24
   raise Exception     
 def algo1(): #1-scan unfinished
-  le = 0; Le = Ri =0 # current winner
+  print ' vv  algo1()  vv <- ' + s; le = 0; Le = Ri =0 # current winner
   for i in xrange(len(s)):
     tmp=le-1
     if tmp>=0 and s[tmp] == s[i]:
       le = tmp
       print le,'-',i, ': new pal = ', s[le:i+1]
       continue
-    cand = s[le:i]
+    # the "current" pal just ended
+    cand = s[le:i] # s[le] to s[i-1]
     if len(cand) > Ri-Le+1:
-        Le,Ri=le,i-1
-        print 'last pal is new winner :)'
+        Le,Ri=le,i-1;   print 'last pal is new winner :)'
     le = maxPalEndingHere(i)
     verify4Algo1(le, i)
   return s[Le:Ri+1]  
 def main():
-  assert 'aababbaabbabaa' == search('abab aabaa babb aab abb aa bba baa aab')
-  return
   assert 'qwqwwqqwwqwq' == search('qwqwwqqwwqwqwq')
   assert 'a' == search('ab da cba dba cba')
   assert -1 == search('bbbb')
   assert -1 == search('ab da cba dba cba abcabdabcadba')
   assert 'babbaabaabbab' == search('babbabbaabaabbaba')
+  assert 'aababbaabbabaa' == search('abab aabaa babb aab abb aa bba baa aab', [2,1])
 main()
 '''https://bintanvictor.wordpress.com/2018/03/04/find-longest-palindrome-substring-unsolved/ has my analysis
 '''
