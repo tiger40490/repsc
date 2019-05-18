@@ -1,9 +1,10 @@
 '''
 todo: clean up
-showcase a for-loop with custom control on looping variable
 
+showcase a for-loop with custom control on looping variable
 I think algo2() is still O(NN). I think there exists O(N) solutions. I don't have to discover it. I can read it in a few years.
 '''
+from collections import deque
 winner = s =''
 def startfrom(le,ri):
   global winner  
@@ -56,6 +57,8 @@ def search(haystack, algos=[2]):
   ret=None
   for aid in algos:
     prev, ret = ret, algoDict[aid]()
+    if ret == s: ret = -1
+    print aid,' algo returned -->',ret
     assert prev is None or prev == ret
   print 'search() returning...', ret
   return ret
@@ -66,37 +69,84 @@ def verify4Algo1(le,ri):
   while le < ri:
     assert s[le] == s[ri]
     le += 1; ri -= 1
-def maxPalEndingHere(i): # return the le index such thatat s[le:i+1] is the longest palindrome. I hope there's an efficient algo. Here I hardcoded the return values for one test case
-  #print 'maxPalEndingHere received', i
-  if i in [0,1]: return i
-  if i in [5,12,14,18,20]: return i-1
-  if i in [3,16,17,27]: return i-2
-  if i == 8: return 4
-  if i == 28: return 25
-  if i == 29: return 24
-  raise Exception     
-def algo1(): #1-scan unfinished
+class Member: #queue member
+  def __init__(self, leftPos, rightPos):
+    self.le = leftPos
+    self.ri = rightPos
+  def len(self): return self.ri +1 - self.le
+  def __str__(self):
+    return '{c@'+str((self.le+self.ri)/2.0)+' '+ str(self.le) + '-' + str(self.ri)+' ' + s[self.le: self.ri+1] +' }'
+def dump(q, msg='', limit=2):
+  if len(msg): print '-'+msg+'->',
+  for member in q: 
+    print member, 
+    limit -= 1
+    if limit == 0: print '..'; return
+  else: print
+def algo1(logLevel=1): #1-scan unfinished
   print ' vv  algo1()  vv <- ' + s; le = 0; Le = Ri =0 # current winner
-  for i in xrange(len(s)):
-    tmp=le-1
-    if tmp>=0 and s[tmp] == s[i]:
-      le = tmp
-      print le,'-',i, ': new pal = ', s[le:i+1]
-      continue
-    # the "current" pal just ended
-    cand = s[le:i] # s[le] to s[i-1]
-    if len(cand) > Ri-Le+1:
-        Le,Ri=le,i-1;   print 'last pal is new winner :)'
-    le = maxPalEndingHere(i)
-    verify4Algo1(le, i)
-  return s[Le:Ri+1]  
+  q = deque()
+  q.append(Member(0,0))
+  for i in xrange(1, len(s)):
+    log = logLevel
+    #if i < 26 : log = 0
+    if s[i] == s[i-1]:
+      latest=q[-1]
+      assert latest.ri==i-1
+      latest.ri=i # need to check if new winner
+      if log: print i, 'just extended', latest
+      if latest.len() > Ri+1-Le:
+          Le,Ri=latest.le,latest.ri 
+          if log: print '.. new winner :)',s[Le:Ri+1] 
+    else:
+      q.append(Member(i,i)) 
+    if log: print '  i =', i, ; dump(q)
+    oo = q[0] #oldest
+    
+    if oo.ri==i: continue # need to clean up
+    if oo.le>=1 and s[oo.le-1] == s[i]:
+        oo.le -= 1; oo.ri += 1
+        if log: print 'oldest pal updated to ', oo
+        if i +1 == len(s) and oo.len() > Ri-Le+1: 
+          print 'ret...'; 
+          return s[oo.le : oo.ri+1] #code smell
+        continue
+    if log: print 'oldest pal just ended :(', oo  #bug
+    if i-oo.le > Ri-Le:
+        Le,Ri=oo.le,i-1; 
+        if log: print 'new winner :)',s[Le:Ri+1] 
+    q.popleft() 
+    if log: dump(q, 'after pop, before cleanup')
+    while True:
+      oo = q[0] #oldest to be updated
+      if oo.ri==i: break #optional optimization
+      if log: print '.. cleaning up queue at', oo
+      for _r in xrange(i, oo.ri, -1):
+        _l = oo.le+oo.ri - _r
+        if _l < 0: print 'failed 000'; break
+        if s[_l] != s[_r]: 
+          #print 'failed match ..'; 
+          break
+      else: 
+        oo.le, oo.ri = oo.le+oo.ri - i , i
+        if log: print 'clean-up completed at', oo
+        if oo.len() > Ri+1-Le:
+          Le,Ri=oo.le,i-1; 
+          if log: print '..... new winner :)',s[Le:Ri+1] 
+        break
+      q.popleft()
+  return s[Le:Ri+1] 
 def main():
-  assert 'qwqwwqqwwqwq' == search('qwqwwqqwwqwqwq')
+  assert -1 == search('bbbb', [2,1])
+  assert -1 == search('aa', [2,1])
+  assert 'aa' == search('aab', [2,1])
+  assert 'aa' == search('baa', [2,1])
   assert 'a' == search('ab da cba dba cba')
-  assert -1 == search('bbbb')
   assert -1 == search('ab da cba dba cba abcabdabcadba')
+  assert 'qwqwwqqwwqwq' == search('qwqwwqqwwqwqwq')
   assert 'babbaabaabbab' == search('babbabbaabaabbaba')
   assert 'aababbaabbabaa' == search('abab aabaa babb aab abb aa bba baa aab', [2,1])
+                            #search('abab aabaa babb aab abb aa bba baa aab', [2,1])
 main()
 '''https://bintanvictor.wordpress.com/2018/03/04/find-longest-palindrome-substring-unsolved/ has my analysis
 '''
