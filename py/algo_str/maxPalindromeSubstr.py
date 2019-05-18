@@ -75,7 +75,8 @@ class Member: #queue member
     self.le = leftPos
     self.ri = rightPos
   def len(self): return self.ri +1 - self.le
-  def __str__(self):
+  def str(self): return s[self.le : self.ri+1] 
+  def __str__(self):  
     return '{c@'+str((self.le+self.ri)/2.0)+' '+ str(self.le) + '-' + str(self.ri)+' ' + s[self.le: self.ri+1] +' }'
   def incr2ends(self):
     if self.le <= 0: return False #unable to expand to left
@@ -93,8 +94,14 @@ def dump(q, msg='', limit=4):
     if limit == 0: print '..more'; return
   else: print
 def algo1(logLevel=1): #1-scan, to be cleaned up
+
   print ' vv  algo1()  vv <- ' + s;  le=0
-  q = deque(); q.append(Member(0,0)); best=q[0]
+  q = deque(); q.append(Member(0,0)); best=[q[0]]
+  def updateBest(mem):
+    if mem.len() > best[0].len(): 
+      best[0] = mem
+      if log: print '.. new best', best[0]
+      
   for i in xrange(1, len(s)):
     log = logLevel if i > 3 else 0
     #if log: print '  i =', i, ; dump(q)
@@ -103,23 +110,19 @@ def algo1(logLevel=1): #1-scan, to be cleaned up
       assert youngest.ri == i-1
       youngest.ri=i
       if log: print 'just extended youngest ->', youngest
-      if youngest.len() > best.len(): best = youngest
-          #if log: print '.. new best', best
+      updateBest(youngest) 
       # why can't I do continue?
     else:
       q.append(Member(i,i)) 
     if log: print '  i =', i, ; dump(q)
     oo = q[0] #alias to the oldest member
     if oo.ri==i: continue # already the longest member in the queue
-    assert oo.ri==i-1
+    assert oo.ri == i-1
     if oo.incr2ends():
-      if oo.len() > best.len(): best = oo
+      updateBest(oo)
       continue
-    assert oo.ri != i, 'I believe oldest pal just ended'
-    if i-oo.le > best.len():
-        best.le, best.ri= oo.le,i-1; # cleanup
-        #bestLe,bestRi=oo.le,i-1; 
-        if log: print 'new winner :)', best
+    # oldest pal (might be new best) just ended ...
+    updateBest(oo)
     q.popleft() 
     if log: dump(q, 'after pop, before cleanup')
     while True:
@@ -128,20 +131,17 @@ def algo1(logLevel=1): #1-scan, to be cleaned up
       if log: print '.. cleaning up queue at', oo
       for _r in xrange(i, oo.ri, -1):
         _l = oo.le+oo.ri - _r
-        if _l < 0: print 'failed 000'; break
-        if s[_l] != s[_r]: 
-          #print 'failed match ..'; 
-          break
+        if _l < 0: break
+        if s[_l] != s[_r]: break
+          #print 'failed match ..'; break
       else: 
-        oo.le, oo.ri = oo.le+oo.ri - i , i
-        if log: print 'clean-up completed at', oo
-        if oo.len() > best.len():
-          best = oo
-          #bestLe,bestRi=oo.le,i-1; 
-          if log: print '..... new winner :)', best
-        break
-      q.popleft()
-  return s[best.le : best.ri+1] 
+        oo.le = oo.le+oo.ri - i
+        oo.ri = i
+        updateBest(oo)
+        if log: print 'Queue clean-up completed at', oo
+        break 
+      q.popleft() # update next oldest member
+  return best[0].str()
 def main():
   assert -1 == search('bbbb', [2,1])
   assert -1 == search('aa', [2,1])
