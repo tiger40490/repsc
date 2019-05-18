@@ -1,12 +1,10 @@
 '''
-todo: identiy all ABA clusters? Not useful
-
+todo: clean up
 showcase a for-loop with custom control on looping variable
 
 I think algo2() is still O(NN). I think there exists O(N) solutions. I don't have to discover it. I can read it in a few years.
 '''
-winner=''
-s=''
+winner = s =''
 def startfrom(le,ri):
   global winner  
   cnt=min(le, len(s)-1-ri) #how many chars to check on both sides
@@ -21,7 +19,6 @@ def startfrom(le,ri):
   if newLen > len(winner):
      winner = s[le-i : ri+i+1]
      print 'new winner @', (le-i,ri+i), winner
-
 def endOfRun(i):
   for j in xrange(i+1, len(s)):
     #print 'j=',j
@@ -57,8 +54,8 @@ def search(haystack):
   ret = algo2()
   print 'search() returning...', ret
   return ret
-#### new algo
-def verify(le,ri):
+#### Algo 1
+def verify4Algo1(le,ri):
   #print 'verifying', s[le:ri+1]
   assert le <= ri
   while le < ri:
@@ -86,7 +83,7 @@ def algo1(): #1-scan unfinished
         Le,Ri=le,i-1
         print 'last pal is new winner :)'
     le = maxPalEndingHere(i)
-    verify(le, i)
+    verify4Algo1(le, i)
   return s[Le:Ri+1]  
 def main():
   assert 'aababbaabbabaa' == search('abab aabaa babb aab abb aa bba baa aab')
