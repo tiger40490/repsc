@@ -64,12 +64,6 @@ def search(haystack, algos=[2]):
   print 'search() returning...', ret
   return ret
 #### Algo 1
-def verify4Algo1(le,ri):
-  #print 'verifying', s[le:ri+1]
-  assert le <= ri
-  while le < ri:
-    assert s[le] == s[ri]
-    le += 1; ri -= 1
 class Member: #queue member
   def __init__(self, leftPos, rightPos):
     self.le = leftPos
@@ -94,7 +88,6 @@ def dump(q, msg='', limit=4):
     if limit == 0: print '..more'; return
   else: print
 def algo1(logLevel=1): #1-scan, to be cleaned up
-
   print ' vv  algo1()  vv <- ' + s;  le=0
   q = deque(); q.append(Member(0,0)); best=[q[0]]
   def updateBest(mem):
