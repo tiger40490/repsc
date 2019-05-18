@@ -77,12 +77,14 @@ class Member: #queue member
   def len(self): return self.ri +1 - self.le
   def __str__(self):
     return '{c@'+str((self.le+self.ri)/2.0)+' '+ str(self.le) + '-' + str(self.ri)+' ' + s[self.le: self.ri+1] +' }'
-  def expandBothEnds(self):
-    assert self.le > 0
+  def incr2ends(self):
+    if self.le <= 0: return False #unable to expand to left
+    if self.ri >= len(s)-1: return False #unable to expand to right
+    if s[self.le-1] != s[self.ri+1]: return False
     self.le -= 1
     self.ri += 1
-    assert self.ri < len(s)
-    print 'expandBothEnds() completed for', self
+    print 'incr2ends() completed for', self
+    return True
 def dump(q, msg='', limit=4):
   if len(msg): print '-'+msg+'->',
   for member in q: 
@@ -110,17 +112,9 @@ def algo1(logLevel=1): #1-scan, to be cleaned up
     oo = q[0] #alias to the oldest member
     if oo.ri==i: continue # already the longest member in the queue
     assert oo.ri==i-1
-    if oo.le >= 1 and s[oo.le-1] == s[i]:
-        oo.expandBothEnds()
-        if oo.len() > best.len(): best = oo
-        '''to be removed
-        if i+1==len(s): break
-        if i +1 == len(s) and oo.len() > best.len():
-          best = oo
-          print 'ret...';
-          return s[oo.le : oo.ri+1] #code smell
-        '''
-        continue
+    if oo.incr2ends():
+      if oo.len() > best.len(): best = oo
+      continue
     assert oo.ri != i, 'I believe oldest pal just ended'
     if i-oo.le > best.len():
         best.le, best.ri= oo.le,i-1; # cleanup
