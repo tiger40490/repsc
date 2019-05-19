@@ -11,7 +11,10 @@ del li[:]; print li #wipe clean in-place
 ## dict init:
 di={1:'j', 3+2:'a'}; 
 for k,v in di.items(): print v,k
-print di.keys(); sys.exit()
-
+print di.keys()
+## matrix
+width,height=3,2
+m = [['_' for x in range(width)] for y in range(height)]
+pprint(m); sys.exit()
 '''This is a template for timed online tests. It saves screen real estate
 '''
