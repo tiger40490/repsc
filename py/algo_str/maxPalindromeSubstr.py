@@ -5,7 +5,6 @@ I think algo1() is possibly O(N)
 I think algo2() is still O(NN). I think there exists O(N) solutions. I don't have to discover it. I can read it in a few years.
 '''
 from collections import deque
-winner = s =''
 def startfrom(le,ri):
   global winner  
   cnt=min(le, len(s)-1-ri) #how many chars to check on both sides
