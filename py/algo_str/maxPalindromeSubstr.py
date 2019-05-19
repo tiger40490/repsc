@@ -1,9 +1,7 @@
 '''
-reduce special cases
-todo: clean up
-todo: reduce global vars
-
+showcase nested function update enclosing-scope pointers
 showcase a for-loop with custom control on looping variable
+I think algo1() is possibly O(N)
 I think algo2() is still O(NN). I think there exists O(N) solutions. I don't have to discover it. I can read it in a few years.
 '''
 from collections import deque
@@ -59,7 +57,6 @@ def search(haystack, algos=[2]):
   ret=None
   for aid in algos:
     prev, ret = ret, algoDict[aid]()
-    if ret == s: ret = -1
     print aid,' algo returned -->',ret
     assert prev is None or prev == ret
   print 'search() returning...', ret
@@ -106,7 +103,7 @@ def algo1(logLevel=1): #1-scan, to be cleaned up
       youngest.ri=i
       if logging: print 'just extended youngest ->', youngest
       updateBest(youngest) 
-      # why can't I do continue?
+      # why can't I do continue? Well, the q[0] member may be able to expand
     else:
       q.append(Member(i,i)) 
     if logging: print '  i =', i, ; dump()
@@ -114,14 +111,14 @@ def algo1(logLevel=1): #1-scan, to be cleaned up
     if oo.ri==i: continue # already the longest member in the queue
     assert oo.ri == i-1
     if oo.incr2ends(logging): updateBest(oo); continue
-    # oldest pal (might be new best) just ended ...
+    # oldest member (might be new best) just ended ...
     updateBest(oo)
     if logging: dump('after pop, before cleanup')
     
-    while oo.ri != i:
+    while oo.ri != i: #guaranteed to end up with q[0].ri == i, since s[i] itself is a member
       q.popleft() # update next oldest member
       oo = q[0] #oldest to be updated
-      if oo.ri==i: break #optional optimization
+      #if oo.ri==i: break #optional optimization
       if logging: print '.. cleaning up queue at', oo
       for _r in xrange(i, oo.ri, -1):
         _l = oo.le+oo.ri - _r
@@ -132,18 +129,19 @@ def algo1(logLevel=1): #1-scan, to be cleaned up
         oo.ri = i
         updateBest(oo)
         if logging: print 'Queue clean-up completed at', oo
-  return best[0].str()
+  ret = best[0].str()
+  if ret == s: return -1
+  return ret
 def main():
   assert -1 == search('bbbb', [2,1])
   assert -1 == search('aa', [2,1])
   assert 'aa' == search('aab', [2,1])
   assert 'aa' == search('baa', [2,1])
-  assert 'a' == search('ab da cba dba cba')
-  assert -1 == search('ab da cba dba cba abcabdabcadba')
-  assert 'qwqwwqqwwqwq' == search('qwqwwqqwwqwqwq')
-  assert 'babbaabaabbab' == search('babbabbaabaabbaba')
+  assert 'qwqwwqqwwqwq' == search('qwqwwqqwwqwqwq',[2,1])
+  assert 'babbaabaabbab' == search('babbabbaabaabbaba',[2,1])
   assert 'aababbaabbabaa' == search('abab aabaa babb aab abb aa bba baa aab', [2,1])
-                            #search('abab aabaa babb aab abb aa bba baa aab', [2,1])
+  assert 'a' == search('ab da cba dba cba', [2,1]) #O(N) in algo1
+  assert -1 == search('ab da cba dba cba abcabdabcadba', [2,1])
 main()
 '''https://bintanvictor.wordpress.com/2018/03/04/find-longest-palindrome-substring-unsolved/ has my analysis
 '''
