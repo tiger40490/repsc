@@ -12,26 +12,25 @@ class Stripe(object):
   def __str__(self):
     return 'Stripe['+str(self.min) + ' ' + str(self.max) + ']\t@ ' + str(id(self)%1000)
 
-def solve2Wrapper(randomList):
-  li = list(set(randomList))
-  for _ in xrange(9):
-    li = li[1::2]+li[::2]
-  act = solve2(li)
-  exp = sort_check(li) 
-  assert exp == act, 'expecting ' + str(exp)
-def sort_check(uniq):
-  isVerbose=16 > len(uniq)
+def verifyBySorting(uniq):
   cnt=max=1
   ascd = sorted(uniq)
   for i in xrange(1, len(ascd)):
     if ascd[i-1] + 1 == ascd[i]:
       cnt += 1
-    else:
+    else: # a run just ended
       if (cnt > max): max = cnt
       cnt = 1
   if (cnt > max): max = cnt
-  print 'verifying (by sort) ...', max 
+  print 'verifying (by sort) ... found', max 
   return max
+def solve2Wrapper(randomList):
+  li = list(set(randomList))
+  for _ in xrange(2):
+    li = li[1::2]+li[::2]
+  act = solve2(li)
+  exp = verifyBySorting(li) 
+  assert exp == act, 'expecting ' + str(exp)
 def solve2(uniq):
   isVerbose=16 > len(uniq)
   print 'uniq =', uniq
