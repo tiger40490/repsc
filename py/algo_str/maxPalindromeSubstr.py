@@ -129,6 +129,7 @@ def algo1(logLevel=1): #1-scan, to be cleaned up
         oo.ri = i
         updateBest(oo)
         if logging: print 'Queue clean-up completed at', oo
+  assert q[0].ri == len(s)-1
   ret = best[0].str()
   if ret == s: return -1
   return ret
