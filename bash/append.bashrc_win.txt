@@ -48,6 +48,10 @@ pp(){ #by default does a  traditiona pp
  git pull;  git push --all -v
  set +x
 }
+sav(){
+  fn=$1
+  cp -pv $fn $fn.$RANDOM
+}
 
 git config core.whitespace -trailing-space # complains if not in a git repo directory
 g++ --version |grep g++.exe
