@@ -1,4 +1,4 @@
-// This recursion-in-loop technique is powerful but easily hits SOF. If no other choice, we may need to convert recursion into iterative.
+// This recursion-in-loop technique is powerful but easily hits SOF. If no other choice, we may need to convert recursion into iterative. This non-optimal solution is often celebrated.
 //todo: memoization (not even half done) ... won't reduce SOF
 #include <iomanip>
 #include <iostream>
