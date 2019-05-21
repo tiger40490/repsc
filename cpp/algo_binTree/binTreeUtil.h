@@ -1,3 +1,4 @@
+//todo: indent can be a non-type template param
 #include <iostream>
 #include <iomanip>
 
@@ -14,4 +15,5 @@ void dumpTreeNode(Node const * n, size_t const indent=4, size_t const depth=0){
     std::cout<<  "       ============  ^ ^ ^ ^\n";
   }
 }/*Based on P458 [[data structure and other objects using c++]]
+Can this function serialize/deserialize a binary tree? I think it can.
 */
