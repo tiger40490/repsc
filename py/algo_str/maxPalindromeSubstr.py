@@ -61,7 +61,7 @@ def search(haystack, algos=[2]):
   print 'search() returning...', ret
   return ret
 #### Algo 1
-class Member: #queue member
+class Member: #queue item
   def __init__(self, leftPos, rightPos):
     self.le = leftPos
     self.ri = rightPos
@@ -77,7 +77,7 @@ class Member: #queue member
     self.ri += 1
     if logging: print 'incr2ends() completed for', self
     return True
-def algo1(logLevel=1): #1-scan, to be cleaned up
+def algo1(logLevel=1): #1-scan
   def dump(msg='', limit=4):
     if not logging: return
     if len(msg): print '-'+msg+'->',
@@ -97,14 +97,14 @@ def algo1(logLevel=1): #1-scan, to be cleaned up
     logging = logLevel if i > 22 else 0
     #if logging: print '  i =', i, ; dump()
     if s[i] == s[i-1]:
-      youngest=q[-1]
+      youngest=q[-1] #youngest member in queue i.e it has highest self.le
       assert youngest.ri == i-1
       youngest.ri=i
       if logging: print 'just extended youngest ->', youngest
       updateBest(youngest) 
       # why can't I do continue? Well, the q[0] member may be able to expand
     else:
-      q.append(Member(i,i)) 
+      q.append(Member(i,i)) # new youngest member
     if logging: print '  i =', i, ; dump()
     oo = q[0] #alias to the oldest member
     if oo.ri==i: continue # already the longest member in the queue
