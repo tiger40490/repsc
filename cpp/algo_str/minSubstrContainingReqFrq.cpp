@@ -105,5 +105,6 @@ int main(){
   assert(minWindow("abcabccbabcc", "bbc")=="bcab");
 }
 /*Req: https://bintanvictor.wordpress.com/2018/07/28/find-min-substring-containing-all-my-chars/
-Given a string Haystack and a string T, find the minimum window in Haystack which contains all the characters in T in complexity O(n).
+Given a string Haystack and a string T, find the minimum window in Haystack which contains all the characters of T. T is like a bag or multiset of characters.
+O(n) possible.
 */
