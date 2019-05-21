@@ -97,33 +97,33 @@ def algo1(logLevel=1): #1-scan
     logging = logLevel if i > 22 else 0
     #if logging: print '  i =', i, ; dump()
     if s[i] == s[i-1]:
-      youngest=q[-1] #youngest member in queue i.e it has highest self.le
+      youngest=q[-1] #youngest Member in queue i.e it has highest self.le
       assert youngest.ri == i-1
       youngest.ri=i
       if logging: print 'just extended youngest ->', youngest
       updateBest(youngest) 
-      # why can't I do continue? Well, the q[0] member may be able to expand
+      # why can't I do continue? Well, the q[0] Member may be able to expand
     else:
-      q.append(Member(i,i)) # new youngest member
+      q.append(Member(i,i)) # new youngest Member
     if logging: print '  i =', i, ; dump()
-    oo = q[0] #alias to the oldest member
-    if oo.ri==i: continue # already the longest member in the queue
+    oo = q[0] #alias to the oldest Member
+    if oo.ri==i: continue # already the longest Member in the queue
     assert oo.ri == i-1
     if oo.incr2ends(logging): updateBest(oo); continue
     
-    # oldest member (might be new best) just ended ...
+    # oldest Member (might be a new best) just ended ...
     updateBest(oo)
     if logging: dump('after pop, before cleanup')
     
-    while oo.ri != i: #guaranteed to end up with q[0].ri == i, since s[i] itself is a member
-      q.popleft() # update next oldest member
+    while oo.ri != i: #guaranteed to end up with q[0].ri == i, since s[i] itself is a Member
+      q.popleft() # update next oldest Member
       oo = q[0] #oldest to be updated
       #if oo.ri==i: break #optional optimization
       if logging: print '.. cleaning up queue at', oo
       for _r in xrange(i, oo.ri, -1):
         _l = oo.le+oo.ri - _r
-        if _l < 0: break #invalid member, to be kicked out
-        if s[_l] != s[_r]: break #invalid member, to be kicked out
+        if _l < 0: break #invalid Member, to be kicked out
+        if s[_l] != s[_r]: break #invalid Member, to be kicked out
       else: #normal end of for-loop
         oo.le = oo.le+oo.ri - i
         oo.ri = i
