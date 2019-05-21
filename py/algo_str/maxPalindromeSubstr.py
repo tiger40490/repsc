@@ -81,8 +81,8 @@ def algo1(logLevel=1): #1-scan
   def dump(msg='', limit=4):
     if not logging: return
     if len(msg): print '-'+msg+'->',
-    for member in q: 
-      print member, 
+    for mem in q: 
+      print mem, 
       limit -= 1
       if limit == 0: print '..more'; return
     else: print
@@ -110,6 +110,7 @@ def algo1(logLevel=1): #1-scan
     if oo.ri==i: continue # already the longest member in the queue
     assert oo.ri == i-1
     if oo.incr2ends(logging): updateBest(oo); continue
+    
     # oldest member (might be new best) just ended ...
     updateBest(oo)
     if logging: dump('after pop, before cleanup')
