@@ -1,4 +1,5 @@
 //showcase: parsing a stringstream
+//todo: use the tree dumper
 //todo: how to pass the stringstream object rather than a global variable
 //todo: more tests. Might be buggy
 #include <queue>
@@ -39,7 +40,7 @@ https://en.wikipedia.org/wiki/Threaded_binary_tree#Non_recursive_Inorder_travers
     Node _8(8, &_7, &_9);
     Node _6(6, NULL, &_8);
     Node root(5, &_4, &_6);
-void dumpNode(Node * n){cout<<*n;}
+void dumpNode(Node * n){ cout<<*n; }
 void BreadthFirstTraversal(Node* node, void(*callback)(Node*)){
   queue<Node*> q;
   q.push(node); // must be root
