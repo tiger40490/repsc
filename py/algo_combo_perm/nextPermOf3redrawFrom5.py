@@ -1,3 +1,5 @@
+'''same output as cookbook but non-recursive :)
+'''
 #!/usr/bin/env python
 comboLen=3
 pool=tuple(sorted(['b', 'c', 'e', 'd', 'a']))

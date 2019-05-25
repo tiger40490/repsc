@@ -1,0 +1,34 @@
+The redrawC algo is more challenging to me. 
+
+Challenge 1: even if you can write working code, the math formula is not obvious. 
+Challenge 2: even if you know the math, writing elegant algo to produce the combos is not easy for most people.
+
+f(p, c) := count of unique combos of length c, drawn from a size-p pool of non-repeating letters.
+
+For example, with pool = 'a/b/c', f(3,3) = 10 consisting of aaa aab aac abb abc acc bbb bbc bcc ccc.
+
+To rule out duplicates, I represent each combo as a sorted string. This decision is completely fine and only enhances the validity and clarity of the algo.
+
+I can prove that f(p,c) = f(p-1, c) + f(p, c-1). "In a 2D grid, the two direct neighbors add up to the new value"
+
+--An example is extremely useful. Given a pool of letters 'b/c',
+
+f(1,2) is 1 since there's only one way to construct a 2-letter combo when the pool has only one letter 'c'. The link between f(1,2) and f(2,2) -- f(1,2) is the count of qualified combos not starting with 'b'. 
+
+In fact, f(1,anyValue) = 1
+
+f(2,1) is 2 since f(2,1) counts how many one-letter combos there are from a 2-letter pool. The link between f(2,1) and f(2,2) -- f(2,1) is the count of qualified combos starting with 'b'
+
+Since all qualified combos either start with 'b' or not start with 'b', without overlap, the two counts above add up to the correct answer.
+
+--Example 2: f(3,3). Given pool a/b/c, let's see why the count of 3-letter combos equal f(2,3) + f(3,2)
+
+f(2,3) means count of 3-letter combos from a pool 'b/c'. This is the count of qualified combos without 'a'.
+f(3,2) means count of 2-letter combos from a pool 'a/b/c'. This assumes there IS at least one 'a' in the combos. Since our combos are always sorted, first slot must be 'a'. The remaining 2 vacancies can be filled in f(3,2) ways.
+
+--Now let' work out the analytical formula for f(p,c): 
+f(1, anyValue) = 1
+f(p, 1) = p
+f(2, c) = f(1,c) + f(2, c-1) = 1 + f(2, c-1) = c+1
+f(3, c) = f(2,c) + f(3, c-1) = c+1 + c + c-1 ... + 1 = (c+1)(c+2)/2. For example, f(3,3)=5*4/2
+f(4, c) = f(3,c) + f(4, c-1). I give up
