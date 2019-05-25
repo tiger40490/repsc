@@ -1,4 +1,4 @@
-'''todo: early exit if either origin or destination is an island, but detecting it could be slower than the main scan.
+'''
 todo: improve BFT Test 9 performance from 11 sec
 
 * Key idea: DP
@@ -91,6 +91,7 @@ def readScore(r,c, verbose=1):
   '''Created for revisit accounting, which hurts performance. 
   Comment out next line after verifying revisits.  
   '''
+  if r<0 or c<0: return 0
   if verbose: 
     addr=(r,c); revisits[addr] = revisits.get(addr, 0) + 1  
     assert r>=0 and c>=0
@@ -108,8 +109,8 @@ def startBFT(verbose):
     r,c = q.deQ()
     if readScore(r,c,verbose) > 0: continue # See Keynote in blog
     if m[r][c] == 0: continue
-    tmp  = readScore(r-1, c,verbose) if r>0 else 0
-    tmp += readScore(r, c-1,verbose) if c>0 else 0
+    tmp  = readScore(r-1, c,verbose)
+    tmp += readScore(r, c-1,verbose)
     assert tmp > 0
     score[r][c] = tmp 
     if verbose: print r,c,' --> score set to ', score[r][c]   
