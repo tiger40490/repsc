@@ -79,11 +79,11 @@ def startDFT(r,c, verbose): ### see comment in blog
 ######## BFT -- see comments in blog
 class Q: #class based on collections.deque
     def __init__(self):
-        self.list = deque()
+        self.qq = deque()
     def enQ(self, item):
-        self.list.append(item)
+        self.qq.append(item)
     def deQ(self): 
-        return self.list.popleft() # throws error if empty
+        return self.qq.popleft() # throws error if empty
 
 score=list() #shadow matrix
 
@@ -97,13 +97,14 @@ def readScore(r,c, verbose=1):
   return score[r][c]
 def startBFT(verbose): 
   global finalCnt, score
+  print 'using BFT'
   # 0 means unknown
   score=[[0 for _ in xrange(width)] for _ in xrange(height)]
   score[0][0] = 1
   q = Q()
   q.enQ((1,0))
   q.enQ((0,1))
-  while q.list:
+  while q.qq:
     r,c = q.deQ()
     if readScore(r,c,verbose) > 0: continue # See Keynote in blog
     if m[r][c] == 0: continue
@@ -142,7 +143,7 @@ def work(setup1test):
   finalCnt=0
   revisits=dict()
   
-  if 11>2: 
+  if 1>2: 
     startSpreadsheet()
   else:
     verbose = (height * width < 99999)
