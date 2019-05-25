@@ -92,9 +92,7 @@ def readScore(r,c, verbose=1):
   Comment out next line after verifying revisits.  
   '''
   if r<0 or c<0: return 0
-  if verbose: 
-    addr=(r,c); revisits[addr] = revisits.get(addr, 0) + 1  
-    assert r>=0 and c>=0
+  if verbose: addr=(r,c); revisits[addr] = revisits.get(addr, 0) + 1  
   return score[r][c]
 def startBFT(verbose): 
   global finalCnt, score
@@ -155,6 +153,15 @@ def work(setup1test):
     print 'most revisited node is ', max(revisits.iteritems(), key=operator.itemgetter(1))
   print '-----------> finalCnt =', finalCnt
   if finalCnt >= 0: assert exp == finalCnt%100000000000
+def timeBFT():
+  startTime=datetime.now()
+  q = Q()
+  for x in xrange (1000):
+    for y in xrange (1000):
+      q.enQ((x,y))
+  while q.qq:
+    q.deQ()
+  print 'timeBFT()', (datetime.now()-startTime).total_seconds(), 'seconds'
 def main():
   work(test1)
   work(test2)
@@ -164,7 +171,8 @@ def main():
   startTime=datetime.now()
   work(test9)
   print (datetime.now()-startTime).total_seconds(), 'seconds'
-  work(test9b)
+  timeBFT()
+  #work(test9b)
 main()
 ''' Req: https://bintanvictor.wordpress.com/2018/05/28/count-paths-between-2-tree-nodes/
 '''
