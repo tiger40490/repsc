@@ -6,9 +6,14 @@ A: if performance becomes a real problem, then need to try other algorithms, bas
 Efficiency? May not be optimal due to recursion, but still elegant
 
 sound-byte: Note each nested function returns a list.
+sound-byte: newList from func()
 sound-byte: _com generates a bunch of lists
+sound-byte:   func,func(...)
+challenge: _com is hard to test without a high-order function
 
 Note with non-repeating pool, "fixed-size abbr" and "combo" algos are identical
+
+Most useful: combo/abbr, subsetPerm. The redraw* algos are often used in coding tests too.
 '''
 from pprint import pprint
 import sys,itertools
@@ -42,7 +47,7 @@ def allAbbr(word):
   return gen
 def redrawP(pool, n): # permutations by n redraws from same pool. 
 # If pool size==55, then 55^n outcomes
-  def keepAll(pool,_): 
+  def keepAll(pool, unused): 
     return pool
   return _com(keepAll, pool, n) #, True)
 def redrawC(pool, n): # generate combos by n redraws from same pool. 
