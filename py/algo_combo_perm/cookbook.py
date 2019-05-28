@@ -6,21 +6,21 @@ A: if performance becomes a real problem, then need to try other algorithms, bas
 Efficiency? May not be optimal due to recursion, but still elegant
 
 sound-byte: Note nested function always returns a list
-sound-byte: _com generates a bunch of lists
-sound-byte: for newList in _com(..)
+sound-byte: _yield() generates a bunch of lists
+sound-byte: for newList in _yield(..)
 sound-byte:   func,func(...)
 sound-byte: pos is needed only once
 
-The tricky part of _com() is really one line only. Hard to understand; hard to memorize...
+The tricky part of _yield() is really one line only. Hard to understand; hard to memorize...
 
-challenge: _com is hard to test without a high-order function
+challenge: _yield is hard to test without a high-order function
 Note with non-repeating pool, "fixed-size abbr" and "combo" algos are identical
 
 Most useful: combo/abbr, subsetPerm. The redraw* algos are often used in coding tests too.
 '''
 from pprint import pprint
 import sys,itertools
-def _com(func, pool, howManyMore, logLevel=0): 
+def _yield(func, pool, howManyMore, logLevel=0): 
   '''internal recursive generator function to generate all subsets of pool, each in a list of length = howManyMore
 This function calls itself from inside a loop
   '''
@@ -33,7 +33,7 @@ This function calls itself from inside a loop
     if logLevel: print indent, 'listLedByVal =', char
       
     ## func is a two-arg callable that returns a subset
-    for newList in _com(func, func(pool,pos), howManyMore-1, logLevel): #recurse down
+    for newList in _yield(func, func(pool,pos), howManyMore-1, logLevel): #recurse down
       if logLevel: print indent, [char] + newList
       yield [char] + newList
 
@@ -41,7 +41,7 @@ def abbr(word, n): #generates all abbreviations of length==n.
 # if pool size==55, then 55-C-n abbreviations??
   def after_i_th_item(pool,pos):
     return pool[pos+1:]
-  return _com(after_i_th_item, word,n) #,True)
+  return _yield(after_i_th_item, word,n) #,True)
 def allAbbr(word):
   gen = itertools.chain()
  #for n in xrange(1+len(word)):
@@ -52,15 +52,15 @@ def redrawP(pool, n): # permutations by n redraws from same pool.
 # If pool size==55, then 55^n outcomes
   def keepAll(pool, unused): 
     return pool
-  return _com(keepAll, pool, n) #, True)
+  return _yield(keepAll, pool, n) #, True)
 def redrawC(pool, n): # generate combos by n redraws from same pool. 
   def keepAllFollower(pool,pos): 
     return pool[pos:]
-  return _com(keepAllFollower, pool, n) #, True)
+  return _yield(keepAllFollower, pool, n) #, True)
 def subsetPerm(pool, n): #accepts distinct items
   def skip_i_th_Item(pool, pos):
     return pool[:pos] + pool[pos+1:]
-  return _com(skip_i_th_Item, pool, n)#, True)# returns generator object, to be used in iteration context
+  return _yield(skip_i_th_Item, pool, n)#, True)# returns generator object, to be used in iteration context
 def testRedraw():
   print '  v v  --  redraw combinations  --  v v'
   fmt1, fmt2='', ''; cnt=0; unique=dict()
