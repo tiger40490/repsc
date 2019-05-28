@@ -5,15 +5,10 @@ A: if performance becomes a real problem, then need to try other algorithms, bas
 
 Efficiency? May not be optimal due to recursion, but still elegant
 
-sound-byte: Note nested function always returns a list
-sound-byte: _yield() generates a bunch of lists
-sound-byte: for newList in _yield(..)
-sound-byte:   func,func(...)
-sound-byte: pos is needed only once
-
-The tricky part of _yield() is really one line only. Hard to understand; hard to memorize...
+sound-byte: Note each nested function always returns a list
 
 challenge: _yield is hard to test without a high-order function
+
 Note with non-repeating pool, "fixed-size abbr" and "combo" algos are identical
 
 Most useful: combo/abbr, subsetPerm. The redraw* algos are often used in coding tests too.
@@ -22,7 +17,13 @@ from pprint import pprint
 import sys,itertools
 def _yield(func, pool, howManyMore, logLevel=0): 
   '''internal recursive generator function to generate all subsets of pool, each in a list of length = howManyMore
-This function calls itself from inside a loop
+* sound-byte: _yield() calls itself from inside a loop
+* sound-byte: _yield() generates a bunch of lists
+* sound-byte: for newList in _yield(..)
+* sound-byte:   func,func(...)
+* sound-byte: pos is needed only once
+
+The tricky part of _yield() is really one line only. Hard to understand; hard to memorize...
   '''
   if howManyMore==0: yield []; return #recursion exit condition
   assert howManyMore > 0
