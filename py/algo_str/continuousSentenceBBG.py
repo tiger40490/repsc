@@ -47,7 +47,7 @@ def parse(remain): # This solution uses backtracking but inefficient
   # end of for loop    
   return False       
 
-def sol1(sentence): # one-pass
+def sol2(sentence): # one-pass, non-recursive
   sz = len(sentence)
   aboveWater = [False] * sz
   # Within the sentence, a position is "above water" if the char thereat is the last char of a known word, and we can hop off it.
@@ -69,7 +69,7 @@ def sol1(sentence): # one-pass
   
 def main():
   print wordDict
-  print sol1("catsandog")
+  print sol2("catsandog")
 main()
 '''Req: https://bintanvictor.wordpress.com/2018/02/24/splitcontinuoussentenceusingdictionary/
 '''
