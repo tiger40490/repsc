@@ -5,11 +5,13 @@ A: if performance becomes a real problem, then need to try other algorithms, bas
 
 Efficiency? May not be optimal due to recursion, but still elegant
 
-sound-byte: Note each nested function returns a list.
-sound-byte: newList from func()
+sound-byte: Note nested function always returns a list
 sound-byte: _com generates a bunch of lists
+sound-byte: for newList in _com(..)
 sound-byte:   func,func(...)
-sound-byte: pos is used only once
+sound-byte: pos is needed only once
+
+The tricky part of _com() is really one line only. Hard to understand; hard to memorize...
 
 challenge: _com is hard to test without a high-order function
 Note with non-repeating pool, "fixed-size abbr" and "combo" algos are identical
