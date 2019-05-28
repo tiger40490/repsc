@@ -1,8 +1,8 @@
 def gen(fn, pool, n):
   if n == 0: yield []; return
-  for pos, val in enumerate(pool):
+  for pos, ch in enumerate(pool):
     for newList in gen(fn, fn(pool,pos), n-1):
-      yield [val] + newList
+      yield [ch] + newList
 	  
 pool='abcde'
 def f(pool, pos):
