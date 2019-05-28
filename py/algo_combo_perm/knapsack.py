@@ -6,6 +6,8 @@ showcase class attribute
 showcase defaultdict(int)
 showcase memoization using dict as key -- need to use the string version of it.
 
+Simple and clean logic to support limited or unlimited availability.
+
 My knapsack greedy() is similar to comboSum.cpp without 'startIndex' param. 
 I believe startIndex complicates memoization a bit. Not sure if the startIndex version is more efficient for knapsack problem
 '''
