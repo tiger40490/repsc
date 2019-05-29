@@ -1,4 +1,9 @@
-# Focus on correctness. The performance requirements are rarely needed so let's not spend too much time
+''' Focus on correctness. The performance requirements are rarely needed so let's not spend too much time
+
+If given this problem at a coding test, i will just try my best. i won't try to memorize all the key details here.
+
+I consider this basically a DP algo but much harder than a regular DP string problem
+'''
 def match(haystack, regex):
       print 'haystack = ', haystack, '\t regex = ', regex
       if 0==len(regex): return 0==len(haystack)
@@ -65,9 +70,9 @@ def main():
   assert match('a-aab', 'a*.*a*aab')
   assert not match('a-aab', 'a*a*aab')
 main()
-"""
+'''
 Q: A simple regex (SRE) can use alphanumerics, dot and star. It is enclosed between implicit ^ and $. 
 Write a match() function taking a SRE and a word. No white space allowed.
 
 Detailed requirements https://wp.me/p74oew-32
-"""
+'''
