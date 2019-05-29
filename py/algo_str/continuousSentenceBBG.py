@@ -51,21 +51,24 @@ def sol2(sentence): # one-pass, non-recursive
   sz = len(sentence)
   aboveWater = [False] * sz
   # Within the sentence, a position is "above water" if the char thereat is the last char of a known word, and we can hop off it.
+  
   for idx in xrange(sz): 
     # print 'setting', idx
     for word in wordDict:
       hopBack = idx - len(word)
       if hopBack < -1: continue # to next word in wordDict, since current word is too long and we are near beginning of sentence
       
-      if word == sentence [hopBack+1 : hopBack+1+len(word)]:
+      aa = (word == sentence[hopBack+1 : hopBack+1+len(word)] )
       # (assuming the word's size is 4) counting back from idx, the last 4 chars  matches the word:)
-      
-         # -1 means this word is at the start of sentence
-        if hopBack == -1 or aboveWater[hopBack]:
-           # print word, 'provides a hop from ', hopBack
-           aboveWater[idx] = True #This position is reachable via some "dry ground", if we start from left end.
-           break
-  return aboveWater[-1] # a boolean to indicate punctuating completed or failed
+	  
+      # -1 means this word is at the start of sentence
+	  # check this condition before reading aboveWater[hopBack]
+      bb = ( hopBack == -1 or aboveWater[hopBack] )
+      if aa and bb:
+         # print word, 'provides a hop from ', hopBack
+         aboveWater[idx] = True #This position is reachable via some "dry ground", if we start from left end.
+         break #from inner for-loop
+  return aboveWater[-1] # a boolean to indicate punctuation completed or failed
   
 def main():
   print wordDict
