@@ -12,6 +12,10 @@ Q: What's the (time and space) complexity of next update() after creating N vers
 For instance, a simple solution would snapshot entire resume for each updated version. Space complexity is bad, but let's look at time complexity. Worst case -- there are N keys in the resume -- version1 creates key1, version 5 creates key5 etc.
 A single get() is O(N) just to read the N fields. I think this is the lowest complexity for get()? I think update() is O(N) since we need to update all N fields
 
+I think the key idea is binary search.
+
+Interviewer said there are ways to beat O(N) read. I felt all tags can be saved in one "big string" to speed up read, but now I feel time-complexity will not improve. 
+
 My design 1 is basically that. I use a vector for each key.
 
 My design 2 is a minor optimization to remove the cloning of unchanged values
