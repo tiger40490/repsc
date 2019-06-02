@@ -20,5 +20,5 @@ def test(exp, *args):
   assert len(output) == exp
 test(18,  ['aa','ab', 'bb'], [11,12,22], ['x','xx'] )
 
-'''Req: given N Sets of strings, all unique, pick one from each Set and concate the N strings as one output. Generate all output.
+'''Req: given N Sets of strings, all unique, pick one from each Set and concate the N strings as one output string. Generate all output strings.
 '''
