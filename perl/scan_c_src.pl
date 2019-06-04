@@ -1,5 +1,6 @@
 #!/usr/bin/perl -n
 # todo: make it progressively more portable. Every improvement counts. Don't belittle your effort
+# todo: when no match found,  report 0 rathan than "grand total =     needles found"
 
 # ---- usage examples ----
 # find .|grep1.pl -i -v -A3 'strinG & value'
