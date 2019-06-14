@@ -85,6 +85,7 @@ def test():
   assert [(-1,-21), (-1,-21), (-1,-21), (-1,3,3)]==maxProf_maxSubSum((-2, -3, -4, -1, -2, -1, -5, -3))
 
 def gfg(a): # looks simpler than my watermark1pass but non-intuitive
+# i think this is basically same as my disposableCurSubarr()
     max_so_far = float('-inf')
     capped_level = 0
     for i in range(0, len(a)):
