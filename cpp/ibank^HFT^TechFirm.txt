@@ -1,3 +1,5 @@
+Let's focus on c++ IV for now.
+
 Tech firms never test your language or system (socket, thr..) skills.
 
 ibanks don't test tough algos and seldom speed-coding.
