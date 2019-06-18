@@ -14,7 +14,7 @@ Note with non-repeating pool, "fixed-size abbr" and "combo" algos are identical
 Most useful: combo/abbr, subsetPerm. The redraw* algos are often used in coding tests too.
 '''
 from pprint import pprint
-import sys,itertools
+import sys
 def _yield(func, pool, howManyMore, logLevel=0): 
   '''internal recursive generator function to generate all subsets of pool, each in a list of length = howManyMore
 * sound-byte: _yield() calls itself from inside a loop
@@ -44,6 +44,7 @@ def abbr(word, n): #generates all abbreviations of length==n.
     return pool[pos+1:]
   return _yield(after_i_th_item, word,n) #,True)
 def allAbbr(word):
+  import itertools
   gen = itertools.chain()
  #for n in xrange(1+len(word)):
   for n in range(len(word),0,-1)+[0]: #longest first
