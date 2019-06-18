@@ -13,7 +13,7 @@ I can prove that f(p,c) = f(p-1, c) + f(p, c-1). "In a 2D grid, the two direct n
 
 --An example is extremely useful. Given a pool of letters 'b/c',
 
-f(1,2) is 1 since there's only one way to construct a 2-letter combo when the pool has only one letter 'c'. The link between f(1,2) and f(2,2) -- f(1,2) is the count of qualified combos not starting with 'b'. 
+f(1,2) is one since there's only one way to construct a 2-letter combo when the pool has only one letter 'c'. The link between f(1,2) and f(2,2) -- f(1,2) is the count of qualified combos not starting with 'b'. 
 
 In fact, f(1,anyValue) = 1
 

@@ -55,7 +55,7 @@ def redrawP(pool, n): # permutations by n redraws from same pool.
   def keepAll(pool, unused): 
     return pool
   return _yield(keepAll, pool, n) #, True)
-def redrawC(pool, n): # generate combos by n redraws from same pool. 
+def redrawC(pool, n): # generate combos by n redraws from same pool. See my notes in the txt file.
   def keepAllFollower(pool,pos): 
     return pool[pos:]
   return _yield(keepAllFollower, pool, n) #, True)
