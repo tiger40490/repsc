@@ -24,9 +24,11 @@ assert( [-11, 5,7] == solve([1,-3,-6,7,4,-5,2,-8,5,9,-1,3,8]) )
 assert( [-10, 0,2] == solve([-3,-6,-1]) ) # all negative ints
 assert( [0, None,None] == solve([1,3,6,7,4,5,2,8,5,9,1,3,8]) ) # all positive ints
 assert( [0, None,None] == solve([0]) ) 
-assert( [0, None,None] == solve([44]) ) 
+assert( [-4, 0,0] == solve([-4]) ) 
 
 '''Req: given a signed int array, find the subarray with minimum sum. If all elements are positive, then return 0.
 
-Kadane algo is directly applicable. This is a rewrite/drill of the algo.
+what if the subarray must be non-empty? Just return the minimum element
+
+Kadane algo is directly applicable. This is a rewrite/drill.
 '''
