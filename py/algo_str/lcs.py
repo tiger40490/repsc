@@ -50,4 +50,5 @@ def main():
   assert 22==wrapper('abb--bbbb-bbbb-bbbb aaaaa bbbb aaaaaa', 'aabbabbaabaabaaababababaabaababbabaaba')
 main()
 '''Req: longest common subsequence (not sub-string) between two strings X and Y
+This is my DP solution. [[Algorithms]] P 350 also discussed a DP solution
 '''
