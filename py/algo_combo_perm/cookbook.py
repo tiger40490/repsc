@@ -23,7 +23,8 @@ def _yield(func, pool, howManyMore, logLevel=0):
 * sound-byte:   func,func(...)
 * sound-byte: pos is needed only once
 
-The tricky part of _yield() is really one line only. Hard to understand; hard to memorize...
+The tricky part of _yield() is really one or two lines only, beside the func header and the yield line at the end. 
+Hard to understand; hard to memorize...
   '''
   if howManyMore==0: yield []; return #recursion exit condition
   assert howManyMore > 0
