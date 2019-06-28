@@ -24,12 +24,12 @@ revisits = dict()
 def test9():
   global m
   m = [[1 for x in xrange(bigMatSize)] for y in xrange(bigMatSize)]
-  assert len(m) == bigMatSize and len(m[0]) == bigMatSize
+  assert len(m) == len(m[0]) == bigMatSize
   return 15305440000
 def test9b():
   global m
   m = [[1 for x in xrange(bigMatSize)] for y in xrange(bigMatSize)]
-  assert len(m) == bigMatSize and len(m[0]) == bigMatSize
+  assert len(m) == len(m[0]) == bigMatSize
   m[-1][-1]=0
   return 0
 def test4():
@@ -142,7 +142,7 @@ def work(setup1test):
   finalCnt=0
   revisits=dict()
   
-  if 1>2: 
+  if 1<2: 
     startSpreadsheet()
   else:
     verbose = (height * width < 99999)
