@@ -21,12 +21,11 @@ def next():
   sz = len(origLine)
   vo = Vo(origLine[0])
   line[:]=[] # no "global" needed
-  for i in range(1,sz):
-    if vo.v==origLine[i]:
-      vo.c+=1
-      continue
-    vo.save()
-    vo=Vo(origLine[i])
+  for i in origLine[1:]:
+    if vo.v==i: vo.c+=1; 
+    else: 
+      vo.save()
+      vo=Vo(i) # new VO
   vo.save() 
   print line
   
