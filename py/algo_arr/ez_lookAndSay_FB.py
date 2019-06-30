@@ -18,9 +18,9 @@ class Vo:
 
 def next(): 
   origLine=list(line)
-  line[:]=[] # no "global" needed
   sz = len(origLine)
   vo = Vo(origLine[0])
+  line[:]=[] # no "global" needed
   for i in range(1,sz):
     if vo.v==origLine[i]:
       vo.c+=1
@@ -30,10 +30,11 @@ def next():
   vo.save() 
   print line
   
-def main():
+def test():
   for _ in range(9):
     next()
-main()
+  assert line == [1, 3, 2, 1, 1, 3, 1, 1, 1, 2, 3, 1, 1, 3, 1, 1, 2, 2, 1, 1]
+test()
 
 '''https://bintanvictor.wordpress.com/2018/02/07/look-n-say-sequence-fb/
 I took 6 min to write the basic function on window and another 5 min to test it with one input
