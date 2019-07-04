@@ -11,7 +11,30 @@ def swap(p1, p2):
   tmp = arr[p1]
   arr[p1] = arr[p2]
   arr[p2] = tmp
-  
+def partR(le, ri): #based on https://leetcode.com/problems/kth-largest-element-in-an-array/discuss/60294/Solution-explained
+# not tested
+  pivot = arr[ri]
+  back=le
+  for front in xrange(le, ri):
+    if arr[front] <= pivot : # throw low values back
+      swap(back,front)
+      back += 1
+  assert arr[back] > pivot
+  swap(back,ri) # anchor the pivot 
+  return back
+''' private int partition(int[] nums, int lo, int hi) {
+        int pivot = nums[hi];
+        int i = lo;
+        for (int j = lo; j < hi; j++) {
+            if (nums[j] <= pivot) {
+                swap(nums, i, j);
+                i++;
+            }
+        }
+        swap(nums, i, hi);
+        return i;
+    }
+'''
 def partL(le, ri):
 '''Regard left most object as pivot.
 shift it to its anchor position such that 
