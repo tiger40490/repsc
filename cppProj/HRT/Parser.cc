@@ -11,16 +11,27 @@
 using namespace std;
 
 struct MsgParser{
-  size_t msgSz=34; //fake
-  void parse(const char *buf){
-    cout<<"inside pppparse"<<endl;
+  size_t const msgSz; // should be a private field with a getter
+  virtual char parse(const char *buf) = 0;
+protected:
+  MsgParser(size_t sz): msgSz(sz){}
+};
+struct AddOrder: public MsgParser{
+  AddOrder(): MsgParser(34){}
+  char parse(const char *buf) override{
+    cout<<"inside AddOrder::parse"<<endl;
+    return 0;
   }
 };
-map<char, MsgParser*> workers; //should be a nonstatic  field of Parser
-
+map<char, MsgParser*> workers; //todo: could be a static field of Parser
 
 Parser::Parser(int date, const std::string &outputFilename) {
-  workers['A'] = new MsgParser();
+  if (workers.empty()){
+    workers['A'] = new AddOrder();
+//  workers['E'] = new ExeOrder();
+//  workers['X'] = new CxlOrder();
+//  workers['R'] = new RepOrder();
+  }
 }
 char readBody( const char *buf, size_t len) {
   cout<<len<<" = len in readBody()"<<endl;
