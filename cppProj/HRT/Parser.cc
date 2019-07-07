@@ -36,8 +36,7 @@ class AddOrderParser: public MsgParser{
 public:
   AddOrderParser(): MsgParser(34){}
   char parse(char *buf) override{
-    cout<<"inside AddOrderParser::parse"<<endl;
-    //cast
+    //cout<<"inside AddOrderParser::parse"<<endl;
     auto * msg = cast<AddOrderMsg>(buf);
     return 0; //0 means good
   }
@@ -81,7 +80,7 @@ char readBody( char *buf, size_t len) {
 }
 void Parser::onUDPPacket(const char *buf, size_t len) {
   size_t const len2 = len;
-  dumpBuffer(buf, len, "into onUDP");
+  //dumpBuffer(buf, len, "into onUDP");
   auto hdr = cast<PacketHeader>(const_cast<char*>(buf));
   //dumpBuffer(buf, len, "after reinterpret_cast, showing in-place endianness conversion");
   cout<<"Received pakt of len = "<<len<<", header showing sz = "<<hdr->sz<<", seq = "<<hdr->seq<<endl;

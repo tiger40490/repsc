@@ -5,6 +5,7 @@ set -e
 make 
 ls -l ./feed
 ./feed
+printf '    ~~~~~~~~~~~~~~~~~~~~~~\n'
 make clean 
 
 printf 'v v   untracked files   v v\n'

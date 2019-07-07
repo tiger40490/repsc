@@ -22,14 +22,13 @@ T betoh(const T &input) {
 
 ///// should be defined in utils.c
 uint64_t sinceEpoch(uint64_t sinceMidnight){
-    using namespace std::chrono;
-    using namespace std;
-    using days = std::chrono::duration<int, ratio<86400>>;
+    using days = std::chrono::duration<int, std::ratio<86400>>;
+
     std::chrono::nanoseconds lastMidnight =
-        time_point_cast<days>(system_clock::now()).time_since_epoch();
-    std::cout<<lastMidnight.count()<<" = lastMidnight in nanos\n";
+        std::chrono::time_point_cast<days>(std::chrono::system_clock::now()).time_since_epoch();
+    //std::cout<<lastMidnight.count()<<" = lastMidnight in nanos\n"; //verified
     auto ret = lastMidnight.count() + sinceMidnight;
-    std::cout<<"sinceEpoch() returning "<< ret<<" nanos\n";
+    //std::cout<<"sinceEpoch() returning "<< ret<<" nanos\n";
     return ret;
 }
 //static 
