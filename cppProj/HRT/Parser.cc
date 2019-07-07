@@ -53,12 +53,13 @@ void Parser::onUDPPacket(const char *buf, size_t len) {
   size_t const len2 = len;
   dumpBuffer(buf, len, "into onUDP");
   auto hdr = cast<PacketHeader>(buf);
-  //dumpBuffer(buf+6, len-6, "after cast");
+  dumpBuffer(buf, len, "after reinterpret_cast, showing in-place endianness conversion");
   cout<<"Received pakt of len = "<<len<<", header showing sz = "<<hdr->sz<<", seq = "<<hdr->seq<<endl;
   if (len != hdr->sz){
       cerr<<"Size value in header differs from buffer length... corrupted buffer, to be discarded."<<endl; return; //no updateSeq()
   }
-  if (len < 6){
+  size_t const PKT_HDR_SZ = sizeof(PacketHeader);
+  if (len < PKT_HDR_SZ){
       cerr<<"buffer too short ... corrupted buffer, to be discarded."<<endl; return; //no updateSeq()
   }
   if (hdr->seq < 1 + this->lastSeq){
@@ -67,7 +68,6 @@ void Parser::onUDPPacket(const char *buf, size_t len) {
   // need to handle seq num 
   assert (hdr->seq == 1 + this->lastSeq );
   cout<<"Header seq above is The Expected .. now processing packet"<<endl;
-  size_t const PKT_HDR_SZ=6;
   if (len == PKT_HDR_SZ ){ cout<<"dummy packet .. taken as a heartbeat"<<endl; 
   }else{
     assert(len > PKT_HDR_SZ ); 

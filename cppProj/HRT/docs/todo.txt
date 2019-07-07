@@ -1,14 +1,15 @@
---todo: parse packet header
+--done: parse packet header
+--milestone achieved: dump an AddOrder msg in hex digits
 
---milestone:
-dump an AddOrder msg in hex digits
+--todo: output some details from the AddOrder so as to assert...
+
 --todo: add in-memory containers to process order reduction etc
 unordered_map<int, Order> ?
 --todo: handle seq num issues
 out-of-order
-dup
+After processing a buffer, look for the nextSeq in the warehouse. If not found, then wait for next onUDP
 --todo: ensure that on any cpu we can read the big-endian ints and output little-endian ints
---todo: product output file and add some santity checks
+--todo: produce output file and add some santity checks
 --todo: create a test case where a msg is split between packets
 --todo: make a msgGenerator.py to create test cases. Possibly integrated with a test script
 --todo: turn off assertions for a release build

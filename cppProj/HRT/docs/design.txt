@@ -4,4 +4,17 @@ The warehouse -- I use a deque indexed by the seq num to hold unprocessed packet
 
 I use two variables to mark the lowest and highest seq num in the warehouse. In this container, All elements before the lowest are subject to removal from the container, so as to free up memory.
 
-To deal with a partial message received-but-unprocessed, I copy it to a tiny global buffer (33 bytes). Normally this buffer is empty. When not empty, it would contain a single received-but-unprocessed partial message. In such a situation, We would wait for the second half of this message, contained in the next expected packet. Meanwhile, any unexpected i.e. out-of-sequence packets must be warehoused i.e. copied to an array on heap and saved in the warehouse container.
+To deal with a partial message received-but-unprocessed, I copy it to a "stub" buffer. Normally this buffer is empty. When not empty, it would contain a single received-but-unprocessed partial message. In such a situation, We would look for the second half of this message, contained in the next expected packet, either in the warehouse or the next onUDP(). Meanwhile, any unexpected i.e. out-of-sequence packets must be warehoused i.e. copied to an array on heap and saved in the warehouse container.
+
+Merging the stub buffer with the next packet is a design challenge. My Goal is to minimize memory allocation 
+
+-- Cloning the buffer --
+Cloing the buffer is relatively expensive in terms of heap allocation. I try to minimize it.
+
+Cloning is probably required when we warehouse a packet, when it is received out of sequence for example. Without cloning it, the buffer could be overwritten by the next or subsequent packet coming down the wire.
+
+When warehousing is not required, I make do without cloning, to gain efficiency. I use reinterpret_cast to pick apart the data fields, with zero copy. The endianness conversion, however, is now in-place. During the conversion, the original buffer content is modified . Buffer is not treated as immutable. In other words, the physical bytes of the packet is modified during the endianness conversion. Some programmers may be surprised.
+
+I classify my design tradeoff as quick-n-dirty. Quick as in simple and fast. Dirty as in unconventional. May give subtle surprises in the future.
+
+One of the subtle thing to remeber is -- when an out-of-order packet is warehoused, it is saved not in the original format. Its packet header has already been converted so as to read its sequence number. It's best to avoid parsing the packet header again. By construction, the sequence number IS the index used to locate the packet within the warehouse, so we have it already. 
