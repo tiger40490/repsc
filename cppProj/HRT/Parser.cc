@@ -1,7 +1,6 @@
 #include "Parser.h"
 
-#include <string>
-#include <cstdio>
+#include <cassert>
 #include <arpa/inet.h>
 #include <iostream>
 #include <deque>
@@ -19,10 +18,13 @@ struct PacketHeader{
      return this;
   }
 };
+template<class T> T const * cast(char const* buf) {
+    T const * ret = reinterpret_cast<T const*>(buf)->cleanup();
+    return ret;
+}
 void Parser::onUDPPacket(const char *buf, size_t len) {
-    printf("Received packet of size %zu\n", len);
-    // optionally validate len
-    PacketHeader const * hdr = reinterpret_cast<PacketHeader const*>(buf)->cleanup();
-    cout<<"pkg hdr sz = "<<hdr->sz<<" , seq = "<<hdr->seq<<endl;
+    auto * hdr = cast<PacketHeader>(buf);
+    cout<<"Received pkt of len = "<<len<<", header showing sz = "<<hdr->sz<<", seq = "<<hdr->seq<<endl;
+    assert (len == hdr->sz);
 }
 
