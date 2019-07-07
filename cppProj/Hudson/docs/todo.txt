@@ -1,0 +1,5 @@
+--todo: make a msgGenerator.py to create test cases. Possibly integrated with a test script
+--todo: make a testAll.sh to run all test cases after a clean build
+--todo: add some instrumentation feature to measure throughput
+--todo: turn off assertions for a release build
+--todo: add some TMP features
