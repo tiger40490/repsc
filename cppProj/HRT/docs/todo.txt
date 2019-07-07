@@ -1,17 +1,18 @@
 --done: parse packet header
---milestone achieved: dump an AddOrder msg in hex digits
-
---todo: output some details from the AddOrder so as to assert...
-
---todo: add in-memory containers to process order reduction etc
-unordered_map<int, Order> ?
---todo: handle seq num issues
+--done: milestone: dump an AddOrder msg in hex digits
+--done: output some details from the AddOrder so as to assert...
+--done: add in-memory containers to process order reduction etc
+--todo: create order cxl msg
+--todo: produce output file and add some santity checks
+--todo: warehouse and stub .. can be postpone or even "discussed in documentation" only
 out-of-order
 After processing a buffer, look for the nextSeq in the warehouse. If not found, then wait for next onUDP
---todo: ensure that on any cpu we can read the big-endian ints and output little-endian ints
---todo: produce output file and add some santity checks
---todo: create a test case where a msg is split between packets
---todo: make a msgGenerator.py to create test cases. Possibly integrated with a test script
+
+--todo: separate out header vs implementation files. 
+For now, it's too much work to keep both in-sync
+
 --todo: turn off assertions for a release build
 --todo: add some TMP features
 --todo: add some instrumentation feature to measure throughput
+--todo: make a msgGenerator.py to create test cases. Possibly integrated with a test script
+--todo: print timestamp in yyyymmdd, but I can verify it on https://www.epochconverter.com
