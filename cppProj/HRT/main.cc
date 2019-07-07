@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
     char bigbuf[5000];
     while (read(fd, bigbuf, 2) != 0) {
         uint16_t packetSize = htons(*(uint16_t *)bigbuf);
-        read(fd, bigbuf + 2, packetSize - 2);
+        auto dummy = read(fd, bigbuf + 2, packetSize - 2);
 
         myParser.onUDPPacket(bigbuf, packetSize);
     }
