@@ -1,16 +1,39 @@
+#pragma once
 #include <cstdio>
+#include <chrono> //will be needed
 #include <iostream>
 #include <iomanip>
+#include <cassert>
 
-template<class T>  // this template has to live in a header file
+template<class T> inline 
 T const*  cast(char* buf) { // buf content is modified .. not const char*
     T const * ret = reinterpret_cast<T*>(buf)->cleanup();
     return ret;
 }
 
-// should be defined in utils.c
-//inline 
-void dumpBuffer(char const * const buf, size_t const len, std::string headline=""){
+template <typename T> inline 
+T betoh(const T &input) {
+    if (sizeof(T) == 4) return be32toh(input); //same as ntohl()
+    if (sizeof(T) == 8) return be64toh(input);
+    if (sizeof(T) == 2) return be16toh(input);
+    assert (false && "programmer error .. unsupported input data type");
+    return 0;
+}
+
+///// should be defined in utils.c
+uint64_t sinceEpoch(uint64_t sinceMidnight){
+    using namespace std::chrono;
+    using namespace std;
+    using days = std::chrono::duration<int, ratio<86400>>;
+    std::chrono::nanoseconds lastMidnight =
+        time_point_cast<days>(system_clock::now()).time_since_epoch();
+    std::cout<<lastMidnight.count()<<" = lastMidnight in nanos\n";
+    auto ret = lastMidnight.count() + sinceMidnight;
+    std::cout<<"sinceEpoch() returning "<< ret<<" nanos\n";
+    return ret;
+}
+//static 
+void dumpBuffer(char const * buf, size_t const len, std::string const headline=""){
   if ( headline.size()) std::cout<<"---- "<<headline<<" ----\n";
 
   for(size_t i = 0; i< len; ++i){

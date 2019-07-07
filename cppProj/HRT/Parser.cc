@@ -10,7 +10,7 @@
 #include <map>
 using namespace std;
 
-struct AbstractMsg{}; // virtual char cleanup() = 0; };
+struct AbstractMsg{}; // not in use now
 
 struct MsgParser{
   size_t const msgSz; // should be a private field with a getter
@@ -20,10 +20,19 @@ protected:
 };
 class AddOrderParser: public MsgParser{
   struct AddOrderMsg: public AbstractMsg{
+    char const msgType; //not in use
+    uint64_t nanos; //nanos since midnight
+    uint64_t oid;
+    char const side;
+    uint32_t qty;
+    char const stock[8];
+    uint32_t px4; //price scaled up by 10 four times
     AddOrderMsg const * cleanup(){ // override{
-      return 0;
+       oid = betoh(oid); qty = betoh(qty); px4 = betoh(px4); nanos = sinceEpoch(betoh(nanos));
+       cout<<oid<<" = oid, "<<qty<<" = qty, px (scaled up by 10000) = "<<px4<<", nanos since epoch = "<<nanos<<endl;
+       return this;
     }
-  };
+  } __attribute__((packed));
 public:
   AddOrderParser(): MsgParser(34){}
   char parse(char *buf) override{
@@ -74,7 +83,7 @@ void Parser::onUDPPacket(const char *buf, size_t len) {
   size_t const len2 = len;
   dumpBuffer(buf, len, "into onUDP");
   auto hdr = cast<PacketHeader>(const_cast<char*>(buf));
-  dumpBuffer(buf, len, "after reinterpret_cast, showing in-place endianness conversion");
+  //dumpBuffer(buf, len, "after reinterpret_cast, showing in-place endianness conversion");
   cout<<"Received pakt of len = "<<len<<", header showing sz = "<<hdr->sz<<", seq = "<<hdr->seq<<endl;
   if (len != hdr->sz){
       cerr<<"Size value in header differs from buffer length... corrupted buffer, to be discarded."<<endl; return; //no updateSeq()
@@ -96,4 +105,3 @@ void Parser::onUDPPacket(const char *buf, size_t len) {
   }
   updateSeq(hdr->seq); return;
 }
-
