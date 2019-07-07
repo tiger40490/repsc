@@ -1,7 +1,7 @@
 #include "Parser.h"
+#include "PacketHeader.h"
 
 #include <cassert>
-#include <arpa/inet.h>
 #include <iostream>
 #include <deque>
 using namespace std;
@@ -9,15 +9,6 @@ using namespace std;
 Parser::Parser(int date, const std::string &outputFilename) {
 }
 
-struct PacketHeader{
-  mutable uint16_t sz;
-  mutable uint32_t seq;
-  PacketHeader const * cleanup() const{
-     sz = ntohs(sz);
-     seq = ntohs(seq);
-     return this;
-  }
-};
 template<class T> T const * cast(char const* buf) {
     T const * ret = reinterpret_cast<T const*>(buf)->cleanup();
     return ret;
