@@ -1,5 +1,16 @@
+--todo: parse packet header
+
+--milestone:
+dump an AddOrder msg in hex digits
+--todo: add in-memory containers to process order reduction etc
+unordered_map<int, Order> ?
+--todo: handle seq num issues
+out-of-order
+dup
+--todo: ensure that on any cpu we can read the big-endian ints and output little-endian ints
+--todo: product output file and add some santity checks
+--todo: create a test case where a msg is split between packets
 --todo: make a msgGenerator.py to create test cases. Possibly integrated with a test script
---todo: make a testAll.sh to run all test cases after a clean build
---todo: add some instrumentation feature to measure throughput
 --todo: turn off assertions for a release build
 --todo: add some TMP features
+--todo: add some instrumentation feature to measure throughput
