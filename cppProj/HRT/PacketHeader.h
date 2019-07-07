@@ -6,7 +6,7 @@ struct PacketHeader{
   mutable uint32_t seq;
   PacketHeader const * cleanup() const{
      sz = ntohs(sz);
-     seq = ntohs(seq);
+     seq = ntohl(seq);
      return this;
   }
-};
+} __attribute__((packed));
