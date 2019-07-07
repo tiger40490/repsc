@@ -3,9 +3,9 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"/..
 
 set -e
 make 
+ls -l ./feed
 ./feed
 make clean 
 
-printf '~~ untracked files ~~\n'
+printf 'v v   untracked files   v v\n'
 git clean -n
-#ls -l

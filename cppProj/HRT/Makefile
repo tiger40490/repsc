@@ -1,4 +1,4 @@
-OBJS = Parser.o
+OBJS = Parser.o utils.o
 
 all: feed
 
