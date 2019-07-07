@@ -2,9 +2,9 @@
 #include <arpa/inet.h>
 
 struct PacketHeader{
-  mutable uint16_t sz;
-  mutable uint32_t seq;
-  PacketHeader const * cleanup() const{
+  uint16_t sz;
+  uint32_t seq;
+  PacketHeader const * cleanup() {
      sz = ntohs(sz);
      seq = ntohl(seq);
      return this;

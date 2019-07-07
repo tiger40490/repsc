@@ -3,12 +3,14 @@
 #include <iomanip>
 
 template<class T>  // this template has to live in a header file
-T const*  cast(char const* buf) {
-    T const* ret = reinterpret_cast<T const*>(buf)->cleanup();
+T const*  cast(char* buf) { // buf content is modified .. not const char*
+    T const * ret = reinterpret_cast<T*>(buf)->cleanup();
     return ret;
 }
 
-inline void dumpBuffer(char const * const buf, size_t const len, std::string headline=""){
+// should be defined in utils.c
+//inline 
+void dumpBuffer(char const * const buf, size_t const len, std::string headline=""){
   if ( headline.size()) std::cout<<"---- "<<headline<<" ----\n";
 
   for(size_t i = 0; i< len; ++i){
