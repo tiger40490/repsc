@@ -19,12 +19,15 @@ void Parser::onUDPPacket(const char *buf, size_t len) {
       cerr<<"Size value in header differs from buffer length. Will discard buffer."<<endl;
       return;
   }
+  if (hdr->seq < 1 + this->lastSeq){
+    cout<<"Header seq above is a dupe .. dropped"<<endl;
+    return;
+  }
   // need to handle seq num 
   assert (hdr->seq == 1 + this->lastSeq );
-  cout<<"Header seq above is Expected .. now processing packet"<<endl;
+  cout<<"Header seq above is The Expected .. now processing packet"<<endl;
 
 
-  this->lastSeq = hdr->seq;
-  return;
+  updateSeq(hdr->seq); return;
 }
 
