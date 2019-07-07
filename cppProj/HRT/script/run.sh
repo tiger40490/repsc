@@ -4,7 +4,7 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"/..
 set -e
 make 
 ./feed
-rm *.o *.a 
+make clean 
 
 printf '~~ untracked files ~~\n'
 git clean -n
