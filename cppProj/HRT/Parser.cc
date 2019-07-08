@@ -10,15 +10,23 @@
 #include <map>
 using namespace std;
 
-static map<std::string, map<std::string, uint64_t>> eventRecorder; //for simple testing. 1st lookup key is some event id; 2nd key (defaults to "") is stock ticker.
+map<std::string, map<std::string, uint64_t>> Parser::eventRecorder;
+
 char record(std::string eventId, uint64_t val, std::string stock =""){
-  if (eventRecorder.count(eventId) ){
-     assert(eventRecorder[eventId].count(stock) ==0 && "Programmer error.. repeated eventId for the same stock" );
+  if (Parser::eventRecorder.count(eventId) ){
+     assert(Parser::eventRecorder[eventId].count(stock) ==0 && "Programmer error.. repeated eventId for the same stock" );
      return 'r';  //repeat
   }
-  eventRecorder[eventId][stock] = val;
+  Parser::eventRecorder[eventId][stock] = val;
   cout<<val<<" recorded against "<<eventId<<endl;
   return 0; 
+}
+char Parser::check(std::string eventId, uint64_t exp, std::string stock){
+  if (Parser::eventRecorder.count(eventId) == 0) return 'e'  ; //event id not in recorder
+  if (Parser::eventRecorder[eventId].count(stock) == 0) return 's';
+  if (Parser::eventRecorder[eventId][stock] != exp ) return 'u' ;  //unequal
+  cout<<exp<<" verified against "<<eventId<<endl;
+  return 0;
 }
 struct AbstractMsg{}; // not in use now
 

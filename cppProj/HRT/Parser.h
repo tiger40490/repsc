@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <map>
 #include <cassert>
 
 class Parser {
@@ -21,4 +22,8 @@ class Parser {
     // buf - points to a char buffer containing bytes from a single UDP packet.
     // len - length of the packet.
     void onUDPPacket(const char *buf, size_t len);
+
+    //for simple testing. 1st lookup key is some event id; 2nd key (defaults to "") is stock ticker.
+    static std::map<std::string, std::map<std::string, uint64_t>> eventRecorder; 
+    static char check(std::string eventId, uint64_t exp, std::string stock ="");
 };
