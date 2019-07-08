@@ -21,6 +21,7 @@ T betoh(const T &input) {
 }
 
 ///// should be defined in utils.c
+inline //required if in header
 uint64_t sinceEpoch(uint64_t sinceMidnight){
     using days = std::chrono::duration<int, std::ratio<86400>>;
 
@@ -31,7 +32,7 @@ uint64_t sinceEpoch(uint64_t sinceMidnight){
     //std::cout<<"sinceEpoch() returning "<< ret<<" nanos\n";
     return ret;
 }
-//static 
+static  //required if in header
 void dumpBuffer(char const * buf, size_t const len, std::string const headline=""){
   if ( headline.size()) std::cout<<"---- "<<headline<<" ----\n";
 

@@ -2,6 +2,7 @@
 */
 #include "Parser.h"
 #include "PacketHeader.h"
+#include "AddOrderMsg.h"
 #include "utils.h"
 
 #include <cassert>
@@ -12,27 +13,13 @@ using namespace std;
 
 // move to AddOrderParser.h or MsgParser.h
 class AddOrderParser: public MsgParser{
-  struct AddOrderMsg: public AbstractMsg{
-    char const msgType; //not in use
-    uint64_t nanos; //nanos since midnight
-    uint64_t oid;
-    char const side;
-    uint32_t qty;
-    char const stock[8];
-    uint32_t px4; //price scaled up by 10 four times
-    AddOrderMsg const * cleanup(){ // override{
-       oid = betoh(oid); qty = betoh(qty); px4 = betoh(px4); nanos = sinceEpoch(betoh(nanos));
-       cout<<oid<<" = oid, "<<qty<<" = qty, px (scaled up by 10000) = "<<px4<<", nanos since epoch = "<<nanos<<endl;
-       cout<<side<<" = side, stock = "<<string(stock, stock+8)<<endl;
-       assert ((side == 'S' || 'B' == side)  && "Likely programmer error while parsing the SIDE field, as exchange would not send anything beside B or S" );
-       return this;
-    }
-  } __attribute__((packed));
 public:
   AddOrderParser(): MsgParser(34){}
   char parse(char *buf) override{
     //cout<<"inside AddOrderParser::parse"<<endl;
     auto * msg = cast<AddOrderMsg>(buf);
+    Parser::orders.emplace(make_pair(msg->oid, msg));
+    std::cout<<Parser::orders.size()<<" orders currently in the lookup table\n";
     Parser::record("px#" + to_string(msg->oid), msg->px4);
     Parser::record("nano#" + to_string(msg->oid), msg->nanos);
     return 0; //0 means good
