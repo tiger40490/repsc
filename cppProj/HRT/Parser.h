@@ -1,7 +1,10 @@
 #pragma once
 
+#include "Order.h"
+#include "MsgParser.h"
 #include <string>
 #include <map>
+#include <unordered_map>
 #include <cassert>
 
 class Parser {
@@ -25,7 +28,9 @@ class Parser {
 
 
     //for simple testing. 1st lookup key is some event id; 2nd key (defaults to "") is stock ticker.
+    static std::map<char, MsgParser*> workers; //todo: could be a static field of Parser
     static std::map<std::string, std::map<std::string, uint64_t>> eventRecorder; 
+    static std::unordered_map<uint32_t, Order> orders;
     static char check (std::string eventId, uint64_t exp, std::string stock ="");
     static char record(std::string eventId, uint64_t val, std::string stock ="");
 };

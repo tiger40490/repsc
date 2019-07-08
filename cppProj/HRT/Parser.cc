@@ -10,16 +10,7 @@
 #include <map>
 using namespace std;
 
-//should move to MsgParser.h:
-struct AbstractMsg{}; // not in use now
-
-struct MsgParser{
-  size_t const msgSz; // should be a private field with a getter
-  virtual char parse(char *buf) = 0; //no buffer len needed .. guaranteed to be sufficient
-protected:
-  MsgParser(size_t sz): msgSz(sz){}
-};
-// move to AddOrderParser.h
+// move to AddOrderParser.h or MsgParser.h
 class AddOrderParser: public MsgParser{
   struct AddOrderMsg: public AbstractMsg{
     char const msgType; //not in use
@@ -48,8 +39,8 @@ public:
   }
 };
 ///////////
-map<char, MsgParser*> workers;
-//static std::map<char, MsgParser*> workers; //todo: could be a static field of Parser
+map<char, MsgParser*> Parser::workers;
+std::unordered_map<uint32_t, Order> Parser::orders;
 map<std::string, map<std::string, uint64_t>> Parser::eventRecorder;
 char Parser::record(std::string eventId, uint64_t val, std::string stock ){
   if (Parser::eventRecorder.count(eventId) ){
@@ -82,7 +73,7 @@ char readBody( char *buf, size_t len) {
   for (int cnt=1; ; ++cnt){
       //check msg type then remaining size
     char const msgType = buf[0];
-    MsgParser * worker = workers[msgType];
+    MsgParser * worker = Parser::workers[msgType];
     if (worker == nullptr){
       cerr<<msgType<<" is invalid msgType"<<endl;
       return 'i';
