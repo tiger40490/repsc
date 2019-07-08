@@ -12,7 +12,7 @@
 #include <map>
 using namespace std;
 
-// move to AddOrderParser.h or MsgParser.h
+// move to AddOrderParser.h or MsgParser.h, but for vi-IDE, this way is much quicker
 class AddOrderParser: public MsgParser{
 public:
   AddOrderParser(): MsgParser(34){}
@@ -26,10 +26,10 @@ public:
     return 0; //0 means good
   }
 };
-///////////
-map<char, MsgParser*> Parser::workers;
+/////////// now the static fields and other members of Parser class
+std::map<char, MsgParser*> Parser::workers;
 std::unordered_map<uint32_t, Order> Parser::orders;
-map<std::string, map<std::string, uint64_t>> Parser::eventRecorder;
+std::map<std::string, map<std::string, uint64_t>> Parser::eventRecorder;
 char Parser::record(std::string eventId, uint64_t val, std::string stock ){
   if (Parser::eventRecorder.count(eventId) ){
      assert(Parser::eventRecorder[eventId].count(stock) ==0 && "Programmer error.. repeated eventId for the same stock" );
