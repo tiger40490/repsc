@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef> //size_t
+
 //should move to MsgParser.h:
 struct AbstractMsg{}; // not in use now
 

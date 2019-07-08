@@ -1,6 +1,7 @@
 /* todo: Parser ctor 
 */
 #include "Parser.h"
+#include "Order.h"
 #include "PacketHeader.h"
 #include "AddOrderMsg.h"
 #include "utils.h"
@@ -35,7 +36,7 @@ char Parser::record(std::string eventId, uint64_t val, std::string stock ){
      return 'r';  //repeat
   }
   Parser::eventRecorder[eventId][stock] = val;
-  cout<<val<<" recorded against "<<eventId<<endl;
+  //cout<<val<<" recorded against "<<eventId<<endl;
   return 0; 
 }
 char Parser::check(std::string eventId, uint64_t exp, std::string stock){

@@ -1,11 +1,13 @@
 #pragma once
 
-#include "Order.h"
+//#include "Order.h" //circular dependency
 #include "MsgParser.h"
 #include <string>
 #include <map>
 #include <unordered_map>
 #include <cassert>
+
+struct Order;
 
 class Parser {
   uint32_t lastSeq=0, nextSeq=1; //We only need one of these two fields, but I keep both for convenience.
