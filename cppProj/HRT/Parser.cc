@@ -10,6 +10,16 @@
 #include <map>
 using namespace std;
 
+static map<std::string, map<std::string, uint64_t>> eventRecorder; //for simple testing. 1st lookup key is some event id; 2nd key (defaults to "") is stock ticker.
+char record(std::string eventId, uint64_t val, std::string stock =""){
+  if (eventRecorder.count(eventId) ){
+     assert(eventRecorder[eventId].count(stock) ==0 && "Programmer error.. repeated eventId for the same stock" );
+     return 'r';  //repeat
+  }
+  eventRecorder[eventId][stock] = val;
+  cout<<val<<" recorded against "<<eventId<<endl;
+  return 0; 
+}
 struct AbstractMsg{}; // not in use now
 
 struct MsgParser{
@@ -18,6 +28,7 @@ struct MsgParser{
 protected:
   MsgParser(size_t sz): msgSz(sz){}
 };
+static map<char, MsgParser*> workers; //todo: could be a static field of Parser
 class AddOrderParser: public MsgParser{
   struct AddOrderMsg: public AbstractMsg{
     char const msgType; //not in use
@@ -30,6 +41,8 @@ class AddOrderParser: public MsgParser{
     AddOrderMsg const * cleanup(){ // override{
        oid = betoh(oid); qty = betoh(qty); px4 = betoh(px4); nanos = sinceEpoch(betoh(nanos));
        cout<<oid<<" = oid, "<<qty<<" = qty, px (scaled up by 10000) = "<<px4<<", nanos since epoch = "<<nanos<<endl;
+       cout<<side<<" = side, stock = "<<string(stock, stock+8)<<endl;
+       assert ((side == 'S' || 'B' == side)  && "Likely programmer error while parsing the SIDE field, as exchange would not send anything beside B or S" );
        return this;
     }
   } __attribute__((packed));
@@ -38,10 +51,11 @@ public:
   char parse(char *buf) override{
     //cout<<"inside AddOrderParser::parse"<<endl;
     auto * msg = cast<AddOrderMsg>(buf);
+    record("px#" + to_string(msg->oid), msg->px4);
+    record("nano#" + to_string(msg->oid), msg->nanos);
     return 0; //0 means good
   }
 };
-static map<char, MsgParser*> workers; //todo: could be a static field of Parser
 
 Parser::Parser(int date, const std::string &outputFilename) {
   if (workers.empty()){
