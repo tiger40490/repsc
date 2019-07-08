@@ -10,24 +10,7 @@
 #include <map>
 using namespace std;
 
-map<std::string, map<std::string, uint64_t>> Parser::eventRecorder;
-
-char record(std::string eventId, uint64_t val, std::string stock =""){
-  if (Parser::eventRecorder.count(eventId) ){
-     assert(Parser::eventRecorder[eventId].count(stock) ==0 && "Programmer error.. repeated eventId for the same stock" );
-     return 'r';  //repeat
-  }
-  Parser::eventRecorder[eventId][stock] = val;
-  cout<<val<<" recorded against "<<eventId<<endl;
-  return 0; 
-}
-char Parser::check(std::string eventId, uint64_t exp, std::string stock){
-  if (Parser::eventRecorder.count(eventId) == 0) return 'e'  ; //event id not in recorder
-  if (Parser::eventRecorder[eventId].count(stock) == 0) return 's';
-  if (Parser::eventRecorder[eventId][stock] != exp ) return 'u' ;  //unequal
-  cout<<exp<<" verified against "<<eventId<<endl;
-  return 0;
-}
+//should move to MsgParser.h:
 struct AbstractMsg{}; // not in use now
 
 struct MsgParser{
@@ -36,7 +19,7 @@ struct MsgParser{
 protected:
   MsgParser(size_t sz): msgSz(sz){}
 };
-static map<char, MsgParser*> workers; //todo: could be a static field of Parser
+// move to AddOrderParser.h
 class AddOrderParser: public MsgParser{
   struct AddOrderMsg: public AbstractMsg{
     char const msgType; //not in use
@@ -59,11 +42,31 @@ public:
   char parse(char *buf) override{
     //cout<<"inside AddOrderParser::parse"<<endl;
     auto * msg = cast<AddOrderMsg>(buf);
-    record("px#" + to_string(msg->oid), msg->px4);
-    record("nano#" + to_string(msg->oid), msg->nanos);
+    Parser::record("px#" + to_string(msg->oid), msg->px4);
+    Parser::record("nano#" + to_string(msg->oid), msg->nanos);
     return 0; //0 means good
   }
 };
+///////////
+map<char, MsgParser*> workers;
+//static std::map<char, MsgParser*> workers; //todo: could be a static field of Parser
+map<std::string, map<std::string, uint64_t>> Parser::eventRecorder;
+char Parser::record(std::string eventId, uint64_t val, std::string stock ){
+  if (Parser::eventRecorder.count(eventId) ){
+     assert(Parser::eventRecorder[eventId].count(stock) ==0 && "Programmer error.. repeated eventId for the same stock" );
+     return 'r';  //repeat
+  }
+  Parser::eventRecorder[eventId][stock] = val;
+  cout<<val<<" recorded against "<<eventId<<endl;
+  return 0; 
+}
+char Parser::check(std::string eventId, uint64_t exp, std::string stock){
+  if (Parser::eventRecorder.count(eventId) == 0) return 'e'  ; //event id not in recorder
+  if (Parser::eventRecorder[eventId].count(stock) == 0) return 's';
+  if (Parser::eventRecorder[eventId][stock] != exp ) return 'u' ;  //unequal
+  cout<<exp<<" verified against "<<eventId<<endl;
+  return 0;
+}
 
 Parser::Parser(int date, const std::string &outputFilename) {
   if (workers.empty()){

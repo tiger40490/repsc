@@ -18,7 +18,7 @@ void checkRecorder(){
   assert(0== Parser::check("nano#2", 1562544002123456789));
 }
 
-int main(int argc, char **argv) {
+int test2(){
     constexpr int currentDate = 20180612;
     Parser myParser(currentDate, "myTestFile");
 
@@ -39,4 +39,7 @@ int main(int argc, char **argv) {
     close(fd);
     checkRecorder();
     return 0;
+}
+int main(int argc, char **argv) {
+  test2();
 }
