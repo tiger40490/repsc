@@ -1,6 +1,5 @@
 #pragma once
 #include "utils.h" // sinceEpoch
-//#include <string>
 
   struct AddOrderMsg{
     char const msgType; //not in use
@@ -9,7 +8,7 @@
     char const side;
     uint32_t qty;
     char const stock[8];
-    uint32_t px4; //price scaled up by 10 four times
+    uint32_t px4; //price scaled up by 10, four times
     AddOrderMsg const * cleanup(){ // override{
        oid = betoh(oid); qty = betoh(qty); px4 = betoh(px4); nanos = sinceEpoch(betoh(nanos));
        std::cout<<oid<<" = oid, "<<qty<<" = qty, px (scaled up by 10000) = "<<px4<<", nanos since epoch = "<<nanos<<std::endl;

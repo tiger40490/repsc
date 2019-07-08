@@ -7,10 +7,12 @@
 //#include "Parser.h" //circular dependency ... must use forward declaration
 struct Parser;
 
+// not an Msg or Event object
 struct Order{
   uint32_t const px4, qty; 
   std::string const stock;
   //char side; //not needed, also order id
+
   Order(AddOrderMsg const * msg): Order(msg->px4, msg->qty, std::string(msg->stock, msg->stock+8)) {
     Parser::record("o+#" + std::to_string(msg->oid), qty, stock);
   }
