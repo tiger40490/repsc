@@ -2,8 +2,6 @@
 #include "utils.h" 
 
   struct AddOrderMsg: public AbstractMsg{
-    uint64_t nanos; //nanos since midnight
-    uint64_t oid;
     char const side;
     uint32_t qty;
     char const stock[8];

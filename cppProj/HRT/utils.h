@@ -7,8 +7,13 @@
 //should move to MsgParser.h:
 struct AbstractMsg{ 
     char const msgType; //not in use
-  //virtual ~AbstractMsg(){} //breaks reinterpret_cast
-};
+    uint64_t nanos; //nanos since midnight
+    uint64_t oid;
+  //virtual ~AbstractMsg(){} //breaks reinterpret_cast, probably due to sizeof change
+    AbstractMsg const * cleanup(){ //non-virtual
+      throw std::string("cleanup() should be implemented by each subclass !");
+    }
+} __attribute__((packed));
 
 template<class T> 
 T const*  cast(char* buf) { // buf content is modified .. not const char*
