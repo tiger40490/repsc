@@ -78,6 +78,8 @@ char readPayload( char *buf, size_t len) {
       }
       assert (len == worker->msgSz);
       cout<<cnt<<" messages parsed and packet is exhausted"<<endl;
+
+      // todo should look for the next packet's payload in the warehouse , in tail recursive call
       return 0;
     }else{ 
       //todo save the partial msg
@@ -98,11 +100,14 @@ void Parser::onUDPPacket(const char *buf, size_t len) {
   if (len < PKT_HDR_SZ){
       cerr<<"buffer too short ... corrupted buffer, to be discarded."<<endl; return; //no updateSeq()
   }
-  if (hdr->seq < 1 + this->lastSeq){
+  if (hdr->seq < this->expectedSeq){
     cout<<"Header seq above is a dupe .. dropped"<<endl; return; //no updateSeq()
   }
-  // need to handle seq num 
-  assert (hdr->seq == 1 + this->lastSeq );
+
+  if (hdr->seq > this->expectedSeq){ // todo: warehouse it
+    return; //no updateSeq()
+  }
+  assert (hdr->seq == this->expectedSeq );
   cout<<"Header seq above is The Expected .. now processing packet"<<endl;
   if (len == PKT_HDR_SZ ){ cout<<"dummy packet .. taken as a heartbeat"<<endl; 
   }else{
