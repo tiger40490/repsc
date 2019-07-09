@@ -54,7 +54,7 @@ Parser::Parser(int date, const std::string &outputFilename) {
   if (workers.empty()){
     workers['A'] = new AddOrderParser();
 //  workers['E'] = new ExeOrder();
-//  workers['X'] = new CxlOrder();
+//  workers['X'] = new DecOrder();
 //  workers['R'] = new RepOrder();
   }
 }
