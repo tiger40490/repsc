@@ -21,6 +21,7 @@ template <class T> void castPrice(T* sub, HasPrice *, T* ser=nullptr, char mode=
   }
 }
 ////// Code above is tricky but simple template metaprogramming /////
+
 template<class T, size_t msgSz, bool hasPrice=false, bool hasSide=false,
                                 bool hasStock=false, bool hasNewOid=false>
 struct AbstractMsg{ 
@@ -48,7 +49,7 @@ struct AbstractMsg{
     }
     return sub;
   }
-  char* ser4test() const{ //return a serialized byte array, for testing purpose only
+  char* ser4test() const{ //return a serialized byte array to created a test msg, for testing only, not for production
     T * sub = (T*)this; T clone(*sub);
     clone.oid = htobe(sub->oid);
     //if (hasNewOid) clone.oidNew = htobe(sub->oidNew); //only needed for testing RepOrder
@@ -68,14 +69,23 @@ struct AddOrderMsg: public AbstractMsg<AddOrderMsg, 34, true,true,true>, public 
   char side_() const {return side; }
   std::string stock_() const {return std::string(stock, stock+8); }
 } __attribute__((packed));
+
 struct DecOrderMsg: public AbstractMsg<DecOrderMsg, 21>{
   uint32_t qty;
+  static char* fakeMsg(char _oid, char _qty, long _nanos){
+    static char serBuf[sizeof(DecOrderMsg)]; //to be overwritten each time
+    //DecOrderMsg const msg; //'X', _nanos, _oid, _qty);
+    //msg.ser4test();
+  }
 } __attribute__((packed));
+
 struct ExeOrderMsg: public AbstractMsg<ExeOrderMsg, 21>{ //identical to DecOrderMsg, but can become different in the future
   uint32_t qty;
 } __attribute__((packed));
+
 struct RepOrderMsg: public AbstractMsg<RepOrderMsg, 33, true,false,false,true>{
   uint64_t oidNew;
   uint32_t qty;
   uint32_t px4;
+//  uint64_t oidNew_() const {return oidNew; }
 } __attribute__((packed));
