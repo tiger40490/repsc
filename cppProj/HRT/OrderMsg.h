@@ -25,7 +25,7 @@ template <class T> void castPrice(T* sub, HasPrice *, T* ser=nullptr, char mode=
 template<class T, size_t msgSz, bool hasPrice=false, bool hasSide=false,
                                 bool hasStock=false, bool hasNewOid=false>
 struct AbstractMsg{ 
-  char const msgType; //not in use
+  char const msgType; //for ser4test() only
   uint64_t nanos; //nanos since midnight
   uint64_t oid;
 
@@ -49,7 +49,7 @@ struct AbstractMsg{
     }
     return sub;
   }
-  char* ser4test() const{ //return a serialized byte array to created a test msg, for testing only, not for production
+  char* ser4test(char* tgt=nullptr) const{ //return a serialized byte array to created a test msg, for testing only, not for production
     T * sub = (T*)this; T clone(*sub);
     clone.oid = htobe(sub->oid);
     //if (hasNewOid) clone.oidNew = htobe(sub->oidNew); //only needed for testing RepOrder
@@ -59,7 +59,11 @@ struct AbstractMsg{
     if (hasPrice) castPrice(sub, sub, &clone, 's');
     static_assert( sizeof(T) == msgSz);
     auto ret = reinterpret_cast<char*> (&clone); dumpBuffer(ret, sizeof(T), "serialized msg");
-    return ret;
+    if (tgt) {
+      memcpy(tgt, ret, msgSz);
+      std::cout<<msgSz<<" = memcpy byte count\n";
+    }
+    return tgt;
   }
 } __attribute__((packed));
 
@@ -72,10 +76,12 @@ struct AddOrderMsg: public AbstractMsg<AddOrderMsg, 34, true,true,true>, public 
 
 struct DecOrderMsg: public AbstractMsg<DecOrderMsg, 21>{
   uint32_t qty;
-  static char* fakeMsg(char _oid, char _qty, long _nanos){
-    static char serBuf[sizeof(DecOrderMsg)]; //to be overwritten each time
-    //DecOrderMsg const msg; //'X', _nanos, _oid, _qty);
-    //msg.ser4test();
+  static char* fakeMsg(uint64_t _oid, uint32_t _qty, uint64_t _nanos){
+    static size_t const sz=sizeof(DecOrderMsg);
+    static char serBuf[sz]; //to be overwritten each time
+    DecOrderMsg msg={'X', _nanos, _oid, _qty };
+    msg.ser4test(serBuf); dumpBuffer(serBuf, sz, "serialized fake Dec msg");
+    return serBuf;
   }
 } __attribute__((packed));
 
