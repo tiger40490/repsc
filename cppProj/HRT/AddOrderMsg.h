@@ -1,8 +1,7 @@
 #pragma once
-#include "utils.h" // sinceEpoch
+#include "utils.h" 
 
-  struct AddOrderMsg{
-    char const msgType; //not in use
+  struct AddOrderMsg: public AbstractMsg{
     uint64_t nanos; //nanos since midnight
     uint64_t oid;
     char const side;
@@ -17,9 +16,9 @@
        return this;
     }
 
-    char* rc4test() const{
+    char* cast4test() const{
        AddOrderMsg clone(*this);
-       //clone.oid = htobe(this->oid);
+       clone.oid = htobe(this->oid);
        //clone.qty = htobe(this->qty);
        //clone.px4 = htobe(this->px4);
        //clone.qty = htobe(this->qty);
