@@ -41,8 +41,9 @@ public:
 
     Parser::orders.emplace(make_pair(msg->oid, msg));
     std::cout<<Parser::orders.size()<<" orders currently in the lookup table\n";
-    Parser::record("px#" + to_string(msg->oid), msg->px4);
-    Parser::record("nano#" + to_string(msg->oid), msg->nanos%10000000000);
+    Parser::record("px#" + to_string(msg->oid), msg->px4,  msg->stock_());
+    Parser::record("nano#" + to_string(msg->oid), msg->nanos%10000000000,  msg->stock_());
+    Parser::record("side#" + to_string(msg->oid), msg->side, msg->stock_());
     return 0; //0 means good
   }
 };
