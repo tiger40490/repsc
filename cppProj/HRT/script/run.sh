@@ -2,7 +2,7 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"/..
 # now we are in the parent dir of run.sh
 
 set -e
-make clean all
+make clean all 2>&1 |less -E
 ls -l ./feed
 ./feed
 printf '    ~~~~~~~~~~~~~~~~~~~~~~\n'

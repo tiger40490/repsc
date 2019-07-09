@@ -6,7 +6,7 @@
 
 template<class T> 
 T const*  cast(char* buf) { // buf content is modified .. not const char*
-    T const * ret = reinterpret_cast<T*>(buf)->cleanup();
+    T const * ret = reinterpret_cast<T*>(buf)->init();
     return ret;
 }
 

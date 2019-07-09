@@ -12,7 +12,24 @@
 #include <map>
 using namespace std;
 
-// move to AddOrderParser.h or MsgParser.h, but for vi-IDE, this way is much quicker
+// move to MsgParser.h, but for vi-IDE, this way is much quicker
+class DecOrderParser: public MsgParser{
+public:
+  DecOrderParser(): MsgParser(34){}
+  char parse(char *buf) override{
+    //cout<<"inside DecOrderParser::parse"<<endl;
+    auto * msg = cast<DecOrderMsg>(buf);
+    msg->ser4test();
+
+    //todo: decrement qty
+    //Parser::orders.emplace(make_pair(msg->oid, msg));
+
+    //todo (optional): record
+    //Parser::record("px#" + to_string(msg->oid), msg->px4);
+    //Parser::record("nano#" + to_string(msg->oid), msg->nanos%10000000000);
+    return 0; //0 means good
+  }
+};
 class AddOrderParser: public MsgParser{
 public:
   AddOrderParser(): MsgParser(34){}
@@ -39,7 +56,7 @@ char Parser::record(std::string eventId, uint64_t val, std::string stock ){
      return 'r';  //repeat
   }
   Parser::eventRecorder[eventId][stock] = val;
-  //cout<<val<<" recorded against "<<eventId<<endl;
+  cout<<val<<" recorded against "<<eventId<<endl;
   return 0; 
 }
 char Parser::check(std::string eventId, uint64_t exp, std::string stock){
@@ -54,7 +71,7 @@ Parser::Parser(int date, const std::string &outputFilename) {
   if (workers.empty()){
     workers['A'] = new AddOrderParser();
 //  workers['E'] = new ExeOrder();
-//  workers['X'] = new DecOrder();
+    workers['X'] = new DecOrderParser();
 //  workers['R'] = new RepOrder();
   }
 }
