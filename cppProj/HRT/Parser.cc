@@ -19,6 +19,9 @@ public:
   char parse(char *buf) override{
     //cout<<"inside AddOrderParser::parse"<<endl;
     auto * msg = cast<AddOrderMsg>(buf);
+
+    msg->ser4test();
+
     Parser::orders.emplace(make_pair(msg->oid, msg));
     std::cout<<Parser::orders.size()<<" orders currently in the lookup table\n";
     Parser::record("px#" + to_string(msg->oid), msg->px4);

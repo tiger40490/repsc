@@ -6,7 +6,7 @@
     uint32_t qty;
     char const stock[8];
     uint32_t px4; //price scaled up by 10, four times
-    AddOrderMsg const * cleanup(){ // override{
+    AddOrderMsg const * cleanup(){
        oid = betoh(oid); qty = betoh(qty); px4 = betoh(px4); nanos = sinceEpoch(betoh(nanos));
        std::cout<<oid<<" = oid, "<<qty<<" = qty, px (scaled up by 10000) = "<<px4<<", nanos since epoch = "<<nanos<<std::endl;
        std::cout<<side<<" = side, stock = "<<std::string(stock, stock+8)<<std::endl;
@@ -14,15 +14,14 @@
        return this;
     }
 
-    char* cast4test() const{
+    char* ser4test() const{
        AddOrderMsg clone(*this);
        clone.oid = htobe(this->oid);
-       //clone.qty = htobe(this->qty);
-       //clone.px4 = htobe(this->px4);
-       //clone.qty = htobe(this->qty);
-       //clone.qty = htobe(this->qty);
-
+       clone.qty = htobe(this->qty);
+       clone.px4 = htobe(this->px4);
+       clone.nanos = htobe(this->nanos%10000000000);
        auto ret = reinterpret_cast<char*> (&clone);
+       dumpBuffer(ret, sizeof(AddOrderMsg), "serialized msg");
        return ret;
     }
   } __attribute__((packed));
