@@ -16,4 +16,16 @@
        assert ((side == 'S' || 'B' == side)  && "Likely programmer error while parsing the SIDE field, as exchange would not send anything beside B or S" );
        return this;
     }
+
+    char* rc4test() const{
+       AddOrderMsg clone(*this);
+       //clone.oid = htobe(this->oid);
+       //clone.qty = htobe(this->qty);
+       //clone.px4 = htobe(this->px4);
+       //clone.qty = htobe(this->qty);
+       //clone.qty = htobe(this->qty);
+
+       auto ret = reinterpret_cast<char*> (&clone);
+       return ret;
+    }
   } __attribute__((packed));

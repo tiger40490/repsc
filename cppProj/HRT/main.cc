@@ -16,7 +16,7 @@ const char *inputFile = "test.in";
 void checkRecorder(){
   assert(0== Parser::check("px#1", 2000000));
   assert(0== Parser::check("o+#1", 100, "SPY     ")); //order created
-  assert(0== Parser::check("nano#2", 1562544002123456789));
+  assert(0== Parser::check("nano#2", 2123456789));
 }
 
 int test2(){

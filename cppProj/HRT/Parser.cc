@@ -22,7 +22,7 @@ public:
     Parser::orders.emplace(make_pair(msg->oid, msg));
     std::cout<<Parser::orders.size()<<" orders currently in the lookup table\n";
     Parser::record("px#" + to_string(msg->oid), msg->px4);
-    Parser::record("nano#" + to_string(msg->oid), msg->nanos);
+    Parser::record("nano#" + to_string(msg->oid), msg->nanos%10000000000);
     return 0; //0 means good
   }
 };
@@ -55,8 +55,8 @@ Parser::Parser(int date, const std::string &outputFilename) {
 //  workers['R'] = new RepOrder();
   }
 }
-char readBody( char *buf, size_t len) {
-  cout<<len<<" = len in readBody()"<<endl;
+char readPayload( char *buf, size_t len) {
+  cout<<len<<" = len in readPayload()"<<endl;
   dumpBuffer(buf, len);
   for (int cnt=1; ; ++cnt){
       //check msg type then remaining size
@@ -104,7 +104,7 @@ void Parser::onUDPPacket(const char *buf, size_t len) {
   if (len == PKT_HDR_SZ ){ cout<<"dummy packet .. taken as a heartbeat"<<endl; 
   }else{
     assert(len > PKT_HDR_SZ ); 
-    readBody(const_cast<char*>(buf)+PKT_HDR_SZ,  len-PKT_HDR_SZ);
+    readPayload(const_cast<char*>(buf)+PKT_HDR_SZ,  len-PKT_HDR_SZ);
   }
   updateSeq(hdr->seq); return;
 }
