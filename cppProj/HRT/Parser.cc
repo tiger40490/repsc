@@ -3,7 +3,7 @@
 #include "Parser.h"
 #include "Order.h"
 #include "PacketHeader.h"
-#include "AddOrderMsg.h"
+#include "OrderMsg.h"
 #include "utils.h"
 
 #include <cassert>
