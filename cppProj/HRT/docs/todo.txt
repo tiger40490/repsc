@@ -2,10 +2,10 @@
 --done: milestone: dump an AddOrder msg in hex digits
 --done: output some details from the AddOrder so as to assert...
 --done: add in-memory containers to process order reduction etc
+--done: create order cxl msg. the biz logic is more complex
+--done: replace: remove the item from hashmap at old id, and add it under new id. Update px and qty in-place
 
---todo: create order cxl msg. the biz logic is more complex
---todo: replace: remove the item from hashmap at old id, and add it under new id. Update px and qty in-place
-
+--todo: exe: decrement qty just as dec msg, but send out exe qty
 --todo: produce output file and add some sanity checks
 --todo: fix parser::date (static or not) to the date passed in
 --todo (advanced): warehouse and stub .. can be postpone or even "discussed in documentation" only
