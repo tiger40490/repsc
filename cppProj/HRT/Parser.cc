@@ -43,6 +43,36 @@ public:
     return 0; //0 means good
   }
 };
+class RepOrderParser: public MsgParser{
+public:
+  RepOrderParser(): MsgParser(sizeof(RepOrderMsg)){}
+  char parse(char *buf) override{
+    cout<<"inside RepOrderParser::parse"<<endl;
+    auto * msg = cast<RepOrderMsg>(buf);
+    msg->ser4test();
+
+    cout<<"Looking up the orders table using order id = "<<msg->oid<<" ..\n";
+    if (Parser::orders.count(msg->oid) == 0){
+      cout<<"order not found. ReplaceOrder message dropped\n";
+      return 'm'; //missing
+    }
+
+    Order& order = Parser::orders[msg->oid];
+    if (order.qty < msg->qty){
+      order.qty = 0;
+      cout<<"Current order qty "<<order.qty<<" is less than cancel qty "<<msg->qty<<" ! Will zero out order qty.\n";
+    }else{
+      order.qty -= msg->qty;
+      cout<<"order qty reduced to "<<order.qty<<endl;
+    }
+    cout<<order<<" is the updated order\n";
+
+    //todo (optional): record
+    //Parser::record("px#" + to_string(msg->oid), msg->px4);
+    //Parser::record("nano#" + to_string(msg->oid), msg->nanos%10000000000);
+    return 0; //0 means good
+  }
+};
 class AddOrderParser: public MsgParser{
 public:
   AddOrderParser(): MsgParser(sizeof(AddOrderMsg)){}
@@ -88,7 +118,7 @@ Parser::Parser(int date, const std::string &outputFilename) {
     workers['A'] = new AddOrderParser();
 //  workers['E'] = new ExeOrder();
     workers['X'] = new DecOrderParser();
-//  workers['R'] = new RepOrder();
+    workers['R'] = new RepOrderParser();
   }
 }
 

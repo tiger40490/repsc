@@ -90,9 +90,16 @@ struct ExeOrderMsg: public AbstractMsg<ExeOrderMsg, 21>{ //identical to DecOrder
   uint32_t qty;
 } __attribute__((packed));
 
-struct RepOrderMsg: public AbstractMsg<RepOrderMsg, 33, true,false,false,true>{
+struct RepOrderMsg: public AbstractMsg<RepOrderMsg, 33, true,false,false,true>, public HasPrice{
   uint64_t oidNew;
   uint32_t qty;
   uint32_t px4;
 //  uint64_t oidNew_() const {return oidNew; }
+  static char* fakeMsg(uint64_t h_oid, uint64_t h_oidNew, uint32_t h_qty, uint64_t h_nanos, uint32_t h_px4){ //h_ means in host endianness
+    static size_t const sz=sizeof(RepOrderMsg);
+    static char serBuf[sz]; //to be overwritten each time
+    RepOrderMsg msg={'R', h_nanos, h_oid, {}, h_oidNew, h_qty, h_px4};
+    msg.ser4test(serBuf); //dumpBuffer(serBuf, sz, "serialized fake Rep msg");
+    return serBuf;
+  }
 } __attribute__((packed));
