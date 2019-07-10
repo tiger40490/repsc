@@ -29,8 +29,8 @@ public:
 
     Order& order = Parser::orders[msg->oid];
     if (order.qty < msg->qty){
-      order.qty = 0;
       cout<<"Current order qty "<<order.qty<<" is less than cancel qty "<<msg->qty<<" ! Will zero out order qty.\n";
+      order.qty = 0;
     }else{
       order.qty -= msg->qty;
       cout<<"order qty reduced to "<<order.qty<<endl;
@@ -58,9 +58,10 @@ public:
     }
 
     Order& order = Parser::orders[msg->oid];
+    cout<<order<<" is the original order\n";
     if (order.qty < msg->qty){
-      order.qty = 0;
       cout<<"Current order qty "<<order.qty<<" is less than cancel qty "<<msg->qty<<" ! Will zero out order qty.\n";
+      order.qty = 0;
     }else{
       order.qty -= msg->qty;
       cout<<"order qty reduced to "<<order.qty<<endl;
