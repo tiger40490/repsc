@@ -44,12 +44,13 @@ struct AbstractMsg{
     if (hasStock) cout<<", stock = "<<sub->stock_();
     if (hasSide){
       char const orderSide = sub->side_();
-      cout<<", side = "<<orderSide <<std::endl;
+      cout<<", side = "<<orderSide;
       assert( (orderSide == 'S' || 'B' == orderSide)  && "Likely programmer error while parsing the SIDE field, as exchange would not send anything beside B or S" );
     }
+    cout<<endl;
     return sub;
   }
-  char* ser4test(char* tgt=nullptr) const{ //return a serialized byte array to created a test msg, for testing only, not for production
+  char* ser4test(char* tgt=nullptr) const{ //basica the reverse of init(): return a serialized byte array to created a test msg, for testing only, not for production
     T * sub = (T*)this; T clone(*sub);
     clone.oid = htobe(sub->oid);
     //if (hasNewOid) clone.oidNew = htobe(sub->oidNew); //only needed for testing RepOrder

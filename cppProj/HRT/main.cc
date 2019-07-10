@@ -32,7 +32,7 @@ int test2(){
     }
     close(fd);
 
-    char* decMsg = DecOrderMsg::fakeMsg(1,5,404904049);
+    char* decMsg = DecOrderMsg::fakeMsg(1,5,40490);
 //    cout<<"sending dec..\n";
     myParser.readPayload(decMsg, sizeof(DecOrderMsg));
     assert(0== Parser::check("px#1", 2000000,      "SPY     "));
