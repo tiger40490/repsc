@@ -7,16 +7,20 @@
 --todo: replace: remove the item from hashmap at old id, and add it under new id. Update px and qty in-place
 
 --todo: produce output file and add some sanity checks
-
+--todo: fix parser::date (static or not) to the date passed in
 --todo (advanced): warehouse and stub .. can be postpone or even "discussed in documentation" only
 out-of-order
 After processing a buffer, look for the nextSeq in the warehouse. If not found, then wait for next onUDP
 
---todo: separate out header vs implementation files. 
+--todo (LGpp): separate out header vs implementation files. 
 For now, it's too much work to keep both in-sync
 
---todo: turn off assertions for a release build
+--todo (LG2): turn off assertions for a release build
 --todo (advanced): add some TMP features
---todo: add some instrumentation feature to measure throughput
+simplify the castNewOid()
+
+--todo (LG2): add some instrumentation feature to measure throughput
 --todo (advanced): make a msgGenerator.py to create test cases. Possibly integrated with a test script
---todo: print timestamp in yyyymmdd, but I can verify it on https://www.epochconverter.com
+--todo (LG2): print timestamp in yyyymmdd, but I can verify it on https://www.epochconvertkjer.com
+--
+orders should be unordered_map
