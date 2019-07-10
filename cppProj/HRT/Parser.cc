@@ -21,8 +21,21 @@ public:
     auto * msg = cast<DecOrderMsg>(buf);
     msg->ser4test();
 
-    //todo: decrement qty
-    //Parser::orders.emplace(make_pair(msg->oid, msg));
+    cout<<"Looking up the orders table using order id = "<<msg->oid<<" ..\n";
+    if (Parser::orders.count(msg->oid) == 0){
+      cout<<"order not found. CancelOrder message dropped\n";
+      return 'm'; //missing
+    }
+
+    Order& order = Parser::orders[msg->oid];
+    if (order.qty < msg->qty){
+      order.qty = 0;
+      cout<<"Current order qty "<<order.qty<<" is less than cancel qty "<<msg->qty<<" ! Will zero out order qty.\n";
+    }else{
+      order.qty -= msg->qty;
+      cout<<"order qty reduced to "<<order.qty<<endl;
+    }
+    cout<<order<<" is the updated order\n";
 
     //todo (optional): record
     //Parser::record("px#" + to_string(msg->oid), msg->px4);
@@ -40,6 +53,8 @@ public:
     msg->ser4test();
 
     Parser::orders.emplace(make_pair(msg->oid, msg));
+    cout<<"Order ID's currently saved in order lookup table : ";
+    for(auto it = Parser::orders.begin(); it != Parser::orders.end(); ++it){ cout<<it->first<<" "; }
     std::cout<<Parser::orders.size()<<" orders currently in the lookup table\n";
     Parser::record("px#" + to_string(msg->oid), msg->px4,  msg->stock_());
     Parser::record("nano#" + to_string(msg->oid), msg->nanos%10000000000,  msg->stock_());
@@ -96,7 +111,7 @@ char Parser::readPayload( char *buf, size_t len) {
           continue;
       }
       assert (len == worker->msgSz);
-      cout<<cnt<<" messages parsed and packet is exhausted"<<endl;
+//      cout<<cnt<<" messages parsed and packet is exhausted"<<endl;
 
       // todo should look for the next packet's payload in the warehouse , in tail recursive call
       return 0;

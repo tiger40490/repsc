@@ -3,22 +3,26 @@
 #include "OrderMsg.h"
 #include <cassert>
 #include <iostream>
+//#include <ostream>
 
-//#include "Parser.h" //circular dependency ... must use forward declaration
-struct Parser;
+struct Parser; //#include "Parser.h" //circular dependency ... must use forward declaration
 
-// not an Msg or Event object
-struct Order{
-  uint32_t const px4, qty; 
+struct Order{ // not a Msg or Event object, but a plain old struct
+  uint32_t const px4;
+  uint32_t qty; 
   std::string const stock;
   //char side; //not needed, also order id
 
+  Order(): Order(0,0,std::string()){}
   Order(AddOrderMsg const * msg): Order(msg->px4, msg->qty, std::string(msg->stock, msg->stock+8)) {
     Parser::record("o+#" + std::to_string(msg->oid), qty, stock);
   }
+  friend std::ostream & operator<<(std::ostream & os, Order const & i){
+    os<<"Order{ q= "<<i.qty<<" p(int)= "<<i.px4<<" stock= "<<i.stock<<"}";
+    return os;
+  }
 private:
   Order(uint32_t p, uint32_t q, std::string s): px4(p), qty(q), stock(s){
-    std::cout<<stock<<qty<<" <-- an order for this stock has been created .. ";    
+//    std::cout<<stock<<qty<<" <-- an order for this stock has been created .. ";    
   }
-  // add non-static methods to output something? 
 }; 

@@ -32,9 +32,9 @@ int test2(){
     }
     close(fd);
 
-    char* decMsg = DecOrderMsg::fakeMsg(1,5,40490);
+//    char* decMsg = DecOrderMsg::fakeMsg(1,599,40490);
 //    cout<<"sending dec..\n";
-    myParser.readPayload(decMsg, sizeof(DecOrderMsg));
+    myParser.readPayload(DecOrderMsg::fakeMsg(1,599,40490), sizeof(DecOrderMsg));
     assert(0== Parser::check("px#1", 2000000,      "SPY     "));
     assert(0== Parser::check("o+#1", 100,          "SPY     ")); //o+ means order created in 'orders' container
     assert(0== Parser::check("side#2", 'B',        "SPY     "));
