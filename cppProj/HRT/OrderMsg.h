@@ -80,7 +80,7 @@ struct DecOrderMsg: public AbstractMsg<DecOrderMsg, 21>{
     static size_t const sz=sizeof(DecOrderMsg);
     static char serBuf[sz]; //to be overwritten each time
     DecOrderMsg msg={'X', _nanos, _oid, _qty };
-    msg.ser4test(serBuf); dumpBuffer(serBuf, sz, "serialized fake Dec msg");
+    msg.ser4test(serBuf); //dumpBuffer(serBuf, sz, "serialized fake Dec msg");
     return serBuf;
   }
 } __attribute__((packed));

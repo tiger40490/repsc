@@ -76,7 +76,8 @@ Parser::Parser(int date, const std::string &outputFilename) {
 //  workers['R'] = new RepOrder();
   }
 }
-char readPayload( char *buf, size_t len) {
+
+char Parser::readPayload( char *buf, size_t len) {
   cout<<len<<" = len in readPayload()"<<endl;
   dumpBuffer(buf, len);
   for (int cnt=1; ; ++cnt){

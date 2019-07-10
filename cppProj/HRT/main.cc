@@ -1,15 +1,15 @@
 #include "Parser.h"
-
+#include "OrderMsg.h"
 #include <cstdio>
-
 #include <cstdint>
-
 #include <fcntl.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/uio.h>
+#include <iostream>
+using namespace std;
 
 const char *inputFile = "test.in";
 
@@ -30,8 +30,11 @@ int test2(){
 
         myParser.onUDPPacket(bigbuf, packetSize);
     }
-
     close(fd);
+
+    char* decMsg = DecOrderMsg::fakeMsg(1,5,18037093);
+//    cout<<"sending dec..\n";
+    myParser.readPayload(decMsg, sizeof(DecOrderMsg));
     assert(0== Parser::check("px#1", 2000000,      "SPY     "));
     assert(0== Parser::check("o+#1", 100,          "SPY     ")); //o+ means order created in 'orders' container
     assert(0== Parser::check("side#2", 'B',        "SPY     "));
