@@ -59,14 +59,11 @@ public:
 
     Order& order = Parser::orders[msg->oid];
     cout<<order<<" is the original order\n";
-    if (order.qty < msg->qty){
-      cout<<"Current order qty "<<order.qty<<" is less than cancel qty "<<msg->qty<<" ! Will zero out order qty.\n";
-      order.qty = 0;
-    }else{
-      order.qty -= msg->qty;
-      cout<<"order qty reduced to "<<order.qty<<endl;
-    }
-    cout<<order<<" is the updated order\n";
+    Parser::orders.erase(msg->oid);
+    order.px4=msg->px4;
+    order.qty=msg->qty;
+    Parser::orders.emplace(msg->oidNew, order);
+    cout<<Parser::orders[msg->oidNew]<<" is the updated order in the lookup table\n";
 
     //todo (optional): record
     //Parser::record("px#" + to_string(msg->oid), msg->px4);
