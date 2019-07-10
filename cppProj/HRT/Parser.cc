@@ -15,9 +15,9 @@ using namespace std;
 // move to MsgParser.h, but for vi-IDE, this way is much quicker
 class DecOrderParser: public MsgParser{
 public:
-  DecOrderParser(): MsgParser(34){}
+  DecOrderParser(): MsgParser(sizeof(DecOrderMsg)){}
   char parse(char *buf) override{
-    //cout<<"inside DecOrderParser::parse"<<endl;
+    cout<<"inside DecOrderParser::parse"<<endl;
     auto * msg = cast<DecOrderMsg>(buf);
     msg->ser4test();
 
@@ -32,7 +32,7 @@ public:
 };
 class AddOrderParser: public MsgParser{
 public:
-  AddOrderParser(): MsgParser(34){}
+  AddOrderParser(): MsgParser(sizeof(AddOrderMsg)){}
   char parse(char *buf) override{
     //cout<<"inside AddOrderParser::parse"<<endl;
     auto * msg = cast<AddOrderMsg>(buf);

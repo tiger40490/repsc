@@ -76,10 +76,10 @@ struct AddOrderMsg: public AbstractMsg<AddOrderMsg, 34, true,true,true>, public 
 
 struct DecOrderMsg: public AbstractMsg<DecOrderMsg, 21>{
   uint32_t qty;
-  static char* fakeMsg(uint64_t _oid, uint32_t _qty, uint64_t _nanos){
+  static char* fakeMsg(uint64_t h_oid, uint32_t h_qty, uint64_t h_nanos){ //h_ means in host endianness
     static size_t const sz=sizeof(DecOrderMsg);
     static char serBuf[sz]; //to be overwritten each time
-    DecOrderMsg msg={'X', _nanos, _oid, _qty };
+    DecOrderMsg msg={'X', h_nanos, h_oid, h_qty };
     msg.ser4test(serBuf); //dumpBuffer(serBuf, sz, "serialized fake Dec msg");
     return serBuf;
   }
