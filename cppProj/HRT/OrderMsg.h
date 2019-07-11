@@ -20,7 +20,7 @@ template <class T> void castPrice(T* sub, HasPrice const*, T* ser=nullptr, char 
 
 template<class T, size_t msgSz, bool hasPrice=false, bool hasSide=false,
                                 bool hasStock=false, bool hasNewOid=false>
-struct AbstractMsg{ 
+struct BaseOrderMsg{ 
   char const msgType; //for ser4test() only
   uint64_t nanos; //nanosecond since midnight
   uint64_t oid;
@@ -68,12 +68,12 @@ struct AbstractMsg{
   }
 } __attribute__((packed));
 
-struct RepOrderMsg: public AbstractMsg<RepOrderMsg, 33, true,false,false,true>, public HasPrice{
+struct RepOrderMsg: public BaseOrderMsg<RepOrderMsg, 33, true,false,false,true>, public HasPrice{
   uint64_t oidNew; uint32_t qty; uint32_t px4;
-  void serNewOid4test(RepOrderMsg const* sub){ this->oidNew = htobe(sub->oidNew); }
-  void deserNewOid(){
+  inline void serNewOid4test(RepOrderMsg const* sub){ this->oidNew = htobe(sub->oidNew); }
+  inline void deserNewOid(){
     oidNew = betoh(oidNew); 
-    std::cout<<", replacement order id = "<<oidNew;
+    //std::cout<<", replacement order id = "<<oidNew;
   }
   static char* fakeMsg(uint64_t h_oid, uint64_t h_oidNew, uint32_t h_qty, uint64_t h_nanos, uint32_t h_px4){ //h_ means in host endianness
 using namespace std;
@@ -85,7 +85,7 @@ using namespace std;
   }
 } __attribute__((packed));
 
-struct DecOrderMsg: public AbstractMsg<DecOrderMsg, 21>{
+struct DecOrderMsg: public BaseOrderMsg<DecOrderMsg, 21>{ //DecrementOrder
   uint32_t qty;
   static char* fakeMsg(uint64_t h_oid, uint32_t h_qty, uint64_t h_nanos){ //h_ means in host endianness
     static size_t const sz=sizeof(DecOrderMsg);
@@ -96,13 +96,11 @@ struct DecOrderMsg: public AbstractMsg<DecOrderMsg, 21>{
   }
 } __attribute__((packed));
 
-struct ExeOrderMsg: public AbstractMsg<ExeOrderMsg, 21>{ //identical to DecOrderMsg, but can become different in the future
-  uint32_t qty;
-} __attribute__((packed));
+struct ExeOrderMsg: public DecOrderMsg{};
 
-struct AddOrderMsg: public AbstractMsg<AddOrderMsg, 34, true,true,true>, public HasPrice{
-  char const side; uint32_t qty; char const stock[8];
-  uint32_t px4; //price scaled up by 10, four times
-  char side_() const {return side; }
-  std::string stock_() const {return std::string(stock, stock+8); }
+struct AddOrderMsg: public BaseOrderMsg<AddOrderMsg, 34, true,true,true>, public HasPrice{
+  char const side; uint32_t qty; char const stock[8]; uint32_t px4; //price scaled up by 10, four times
+
+  inline char side_() const {return side; }
+  inline std::string stock_() const {return std::string(stock, stock+8); }
 } __attribute__((packed));
