@@ -64,9 +64,8 @@ public:
     Parser::orders.emplace(msg->oidNew, order);
     cout<<Parser::orders[msg->oidNew]<<" is the updated order in the lookup table\n";
 
-    //todo (optional): record
-    //Parser::record("px#" + to_string(msg->oid), msg->px4);
-    //Parser::record("nano#" + to_string(msg->oid), msg->nanos%10000000000);
+    Parser::record("px#" + to_string(msg->oidNew), msg->px4, order.stock);
+    Parser::record("q#" + to_string(msg->oidNew), msg->qty, order.stock);
     return 0; //0 means good
   }
 };
