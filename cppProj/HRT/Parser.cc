@@ -1,5 +1,3 @@
-/* todo: Parser ctor 
-*/
 #include "Parser.h"
 #include "Order.h"
 #include "PacketHeader.h"
