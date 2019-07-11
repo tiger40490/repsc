@@ -4,15 +4,14 @@
 
 struct HasPrice{}; //struct HasSide{}; struct HasStock{}; struct HasNewOid{}; 
 
-template <class T> void castPrice(T* sub,  void const*,    T* _  =nullptr, char mode='c'){ throw std::string("This overload should never get picked up"); }
+template <class T> void castPrice(T* sub,  void const*,    T* _  =nullptr){ throw std::string("This overload should never get picked up at runtime, but is needed at compile-time"); }
 
-template <class T> void castPrice(T* sub, HasPrice const*, T* ser=nullptr, char mode='c'){
-  if (mode == 'c'){ //cast to host endianness
+template <class T> void castPrice(T* sub, HasPrice const*, T* ser=nullptr){
+  if (ser == nullptr){ //cast to host endianness
       sub->px4 = betoh(sub->px4);
       std::cout<<", px4 (scaled up by 10000) = "<<sub->px4;
-  }else if (mode == 's'){ //serialize to big-endian
+  }else { //serialize to big-endian, for creation of fake testing messages, not for production
       assert (ser != sub && "Programmer error");
-      assert (ser != nullptr && "Programmer error");
       ser->px4 = htobe(sub->px4);
   }
 }
@@ -49,20 +48,20 @@ struct BaseOrderMsg{
     return sub;
   }
   char* ser4test(char* tgt=nullptr) const{ //basically the reverse of init(): return a serialized byte array to created a test msg, for testing only, not for production
-    //T const* sub = (T*)this;
     T const* sub = static_cast<T const*>(this);
     T clone(*sub); //bitwise clone
     clone.oid = htobe(sub->oid);
     clone.qty = htobe(sub->qty);
     uint64_t tmp= 24*3600; tmp *= 1000*1000*1000 ;
     clone.nanos = htobe(sub->nanos % tmp); // nanos since midnight
-    if (hasPrice) castPrice(const_cast<T*>(sub), sub, &clone, 's');
+
+    if (hasPrice) castPrice(const_cast<T*>(sub), sub, &clone);
     if (hasNewOid) clone.serNewOid4test(sub);
     static_assert( sizeof(T) == msgSz);
     auto ret = reinterpret_cast<char*> (&clone); dumpBuffer(ret, sizeof(T), "serialized msg (BE) for test");
     if (tgt) {
       memcpy(tgt, ret, msgSz);
-      std::cout<<msgSz<<" = memcpy byte count\n";
+      //std::cout<<msgSz<<" = memcpy byte count\n";
     }
     return tgt;
   }
@@ -76,7 +75,6 @@ struct RepOrderMsg: public BaseOrderMsg<RepOrderMsg, 33, true,false,false,true>,
     //std::cout<<", replacement order id = "<<oidNew;
   }
   static char* fakeMsg(uint64_t h_oid, uint64_t h_oidNew, uint32_t h_qty, uint64_t h_nanos, uint32_t h_px4){ //h_ means in host endianness
-using namespace std;
     static size_t const sz=sizeof(RepOrderMsg);
     static char serBuf[sz]; //to be overwritten each time
     RepOrderMsg msg={'R', h_nanos, h_oid, {}, h_oidNew, h_qty, h_px4};
