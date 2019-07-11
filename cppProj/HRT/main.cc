@@ -32,11 +32,14 @@ int test2(){
     }
     close(fd);
 
-//    char* decMsg = DecOrderMsg::fakeMsg(1,599,40490);
-    //cout<<"sending dec..\n";
+    cout<<"\nsending cxl..\n";
     myParser.readPayload(DecOrderMsg::fakeMsg(1,5,404904049), sizeof(DecOrderMsg));
-    cout<<"sending rep..\n";
-    myParser.readPayload(RepOrderMsg::fakeMsg(1,3,250,404904049, 200.11*10000), sizeof(RepOrderMsg));
+    assert(0== Parser::check("qDec#1", 95,      "SPY     "));
+    cout<<"\nsending cxl with oversized qty..\n";
+    myParser.readPayload(DecOrderMsg::fakeMsg(1,5555,404904049), sizeof(DecOrderMsg));
+    assert(0== Parser::check("qDecOver#1", 0,      "SPY     "));
+    cout<<"\nsending replace..\n";
+    myParser.readPayload(RepOrderMsg::fakeMsg(1,7,250,404904049, 200.11*10000), sizeof(RepOrderMsg));
     assert(0== Parser::check("px#1", 2000000,      "SPY     "));
     assert(0== Parser::check("o+#1", 100,          "SPY     ")); //o+ means order created in 'orders' container
     assert(0== Parser::check("side#2", 'B',        "SPY     "));

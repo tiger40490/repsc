@@ -31,15 +31,14 @@ public:
     if (order.qty < msg->qty){
       cout<<"Current order qty "<<order.qty<<" is less than cancel qty "<<msg->qty<<" ! Will zero out order qty.\n";
       order.qty = 0;
+      Parser::record("qDecOver#" + to_string(msg->oid), order.qty, order.stock);
     }else{
       order.qty -= msg->qty;
       cout<<"order qty reduced to "<<order.qty<<endl;
+      Parser::record("qDec#" + to_string(msg->oid), order.qty, order.stock);
     }
     cout<<order<<" is the updated order\n";
 
-    //todo (optional): record
-    //Parser::record("px#" + to_string(msg->oid), msg->px4);
-    //Parser::record("nano#" + to_string(msg->oid), msg->nanos%10000000000);
     return 0; //0 means good
   }
 };
