@@ -43,10 +43,13 @@ int test2(){
     cout<<"\nsending cxl with oversized qty..\n";
     myParser.readPayload(DecOrderMsg::fakeMsg(1,5555,404904049), sizeof(DecOrderMsg));
     assert(0== Parser::check("qDecOver#1", 0,   "SPY     "));
-    cout<<"\nsending replace..\n";
+    cout<<"\n sending replace..\n";
     myParser.readPayload(RepOrderMsg::fakeMsg(1,3,250,404904049, 200.11*10000), sizeof(RepOrderMsg));
     assert(0== Parser::check("q#3", 250,      "SPY     "));
     assert(0== Parser::check("px#3", 2001100, "SPY     "));
+    cout<<"\n sending replace for bad order id..\n";
+    myParser.readPayload(RepOrderMsg::fakeMsg(1110111,3,250,404904049, 200.11*10000), sizeof(RepOrderMsg));
+    assert(0== Parser::check("miss#1110111", 0, "lookupMiss" ));
     return 0;
 }
 int main(int argc, char **argv) {

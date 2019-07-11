@@ -54,7 +54,8 @@ struct AbstractMsg{
     T clone(*sub); //bitwise clone
     clone.oid = htobe(sub->oid);
     clone.qty = htobe(sub->qty);
-    clone.nanos = htobe(sub->nanos% (24*3600*1000*1000*1000)); // nanos since midnight
+    uint64_t tmp= 24*3600; tmp *= 1000*1000*1000 ;
+    clone.nanos = htobe(sub->nanos % tmp); // nanos since midnight
     if (hasPrice) castPrice(const_cast<T*>(sub), sub, &clone, 's');
     if (hasNewOid) clone.serNewOid4test(sub);
     static_assert( sizeof(T) == msgSz);

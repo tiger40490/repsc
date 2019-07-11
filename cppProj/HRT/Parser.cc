@@ -53,6 +53,7 @@ public:
     cout<<"Looking up the orders table using order id = "<<msg->oid<<" ..\n";
     if (Parser::orders.count(msg->oid) == 0){
       cout<<"order not found. ReplaceOrder message dropped\n";
+      Parser::record("miss#" + to_string(msg->oid), 0, "lookupMiss" );
       return 'm'; //missing
     }
 
