@@ -11,6 +11,34 @@
 using namespace std;
 
 // move to MsgParser.h, but for vi-IDE, this way is much quicker
+class ExeOrderParser: public MsgParser{
+public:
+  ExeOrderParser(): MsgParser(sizeof(ExeOrderParser)){}
+  char parse(char *buf) override{
+    cout<<"inside ExeOrderParser::parse"<<endl;
+    auto * msg = cast<ExeOrderMsg>(buf);
+    msg->ser4test();
+
+    cout<<"Looking up the orders table using order id = "<<msg->oid<<" ..\n";
+    if (Parser::orders.count(msg->oid) == 0){
+      cout<<"order not found. ExecOrder message dropped\n";
+      return 'm'; //missing
+    }
+
+    Order& order = Parser::orders[msg->oid];
+    if (order.qty < msg->qty){
+      cout<<"Current order qty "<<order.qty<<" is less than execution qty "<<msg->qty<<" ! Will zero out order qty.\n";
+      order.qty = 0;
+      Parser::record("qExeOver#" + to_string(msg->oid), order.qty, order.stock);
+    }else{
+      order.qty -= msg->qty;
+      cout<<"order qty reduced to "<<order.qty<<endl;
+      Parser::record("qExe#" + to_string(msg->oid), order.qty, order.stock);
+    }
+    cout<<order<<" is the updated order\n";
+    return 0; //0 means good
+  }
+};
 class DecOrderParser: public MsgParser{
 public:
   DecOrderParser(): MsgParser(sizeof(DecOrderMsg)){}
@@ -37,6 +65,7 @@ public:
     }
     cout<<order<<" is the updated order\n";
 
+    // now send msg out
     return 0; //0 means good
   }
 };
@@ -91,9 +120,11 @@ public:
 std::map<char, MsgParser*> Parser::workers;
 std::unordered_map<uint32_t, Order> Parser::orders;
 std::map<std::string, map<std::string, uint64_t>> Parser::eventRecorder;
+
 char Parser::record(std::string eventId, uint64_t val, std::string stock ){
   if (Parser::eventRecorder.count(eventId) ){
-     assert(Parser::eventRecorder[eventId].count(stock) ==0 && "Programmer error.. repeated eventId for the same stock" );
+     //throw string( "eventId should be globally unique" );
+     assert(Parser::eventRecorder[eventId].count(stock) ==0 && "Programmer error.. repeated eventId for the same stock, However, this is part of test fixture, not for production error reporting, so we should  NOT throw exception." );
      return 'r';  //repeat
   }
   Parser::eventRecorder[eventId][stock] = val;
@@ -101,17 +132,17 @@ char Parser::record(std::string eventId, uint64_t val, std::string stock ){
   return 0; 
 }
 char Parser::check(std::string eventId, uint64_t exp, std::string stock){
-  if (Parser::eventRecorder.count(eventId) == 0) return 'e'  ; //event id not in recorder
-  if (Parser::eventRecorder[eventId].count(stock) == 0) return 's';
-  if (Parser::eventRecorder[eventId][stock] != exp ) return 'u' ;  //unequal
-  cout<<exp<<" verified against "<<eventId<<endl;
+  if (Parser::eventRecorder.count(eventId) == 0) return 'e'  ; //no such event id in recorder
+  if (Parser::eventRecorder[eventId].count(stock) == 0) return 's'; // no such stock
+  if (Parser::eventRecorder[eventId][stock] != exp ) return 'u' ;  // values unequal
+  cout<<"  :) "<<exp<<" verified against "<<eventId<<" / "<<stock<<endl;
   return 0;
 }
 
 Parser::Parser(int date, const std::string &outputFilename) {
   if (workers.empty()){
     workers['A'] = new AddOrderParser();
-//  workers['E'] = new ExeOrder();
+    workers['E'] = new ExeOrderParser();
     workers['X'] = new DecOrderParser();
     workers['R'] = new RepOrderParser();
   }

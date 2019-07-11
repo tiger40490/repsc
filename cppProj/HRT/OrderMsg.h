@@ -94,7 +94,16 @@ struct DecOrderMsg: public BaseOrderMsg<DecOrderMsg, 21>{ //DecrementOrder
   }
 } __attribute__((packed));
 
-struct ExeOrderMsg: public DecOrderMsg{};
+struct ExeOrderMsg: public BaseOrderMsg<ExeOrderMsg, 21>{  //similiar to Dec except 'E'
+  uint32_t qty;
+  static char* fakeMsg(uint64_t h_oid, uint32_t h_qty, uint64_t h_nanos){ //h_ means in host endianness
+    static size_t const sz=sizeof(ExeOrderMsg);
+    static char serBuf[sz]; //to be overwritten each time
+    ExeOrderMsg msg={'E', h_nanos, h_oid, h_qty };
+    msg.ser4test(serBuf); //dumpBuffer(serBuf, sz, "serialized fake Exe msg");
+    return serBuf;
+  }
+} __attribute__((packed));
 
 struct AddOrderMsg: public BaseOrderMsg<AddOrderMsg, 34, true,true,true>, public HasPrice{
   char const side; uint32_t qty; char const stock[8]; uint32_t px4; //price scaled up by 10, four times
