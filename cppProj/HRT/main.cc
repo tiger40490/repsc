@@ -1,3 +1,4 @@
+#include "utils.h"
 #include "Parser.h"
 #include "OrderMsg.h"
 #include <cstdio>
@@ -61,6 +62,8 @@ int test2(){
     return 0;
 }
 int main(int argc, char **argv) {
+  cout<<htole(0.1);
+  return 0;
   test2();
   Parser::file.close();
 }
