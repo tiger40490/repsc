@@ -47,13 +47,17 @@ int test2(){
     myParser.readPayload(ExeOrderMsg::fakeMsg(2,54,404904049), sizeof(ExeOrderMsg));
     assert(0== Parser::check("qExe#2", 46,      "SPY     "));
 
+    { // to limit variable scop
+    auto oidNew = 3; auto qty = 25; auto px4=200.11*10000;
     cout<<"\n  -----sending replace..\n";
-    myParser.readPayload(RepOrderMsg::fakeMsg(1,3,250,404904049, 200.11*10000), sizeof(RepOrderMsg));
-    assert(0== Parser::check("q#3", 250,      "SPY     "));
-    assert(0== Parser::check("px#3", 2001100, "SPY     "));
+    myParser.readPayload(RepOrderMsg::fakeMsg(1,oidNew,qty,404904049, px4 ), sizeof(RepOrderMsg));
+    assert(0== Parser::check("q#3",  qty, "SPY     "));
+    assert(0== Parser::check("px#3", px4, "SPY     "));
     cout<<"\n sending replace for bad order id..\n";
-    myParser.readPayload(RepOrderMsg::fakeMsg(1110111,3,250,404904049, 200.11*10000), sizeof(RepOrderMsg));
+    auto oidOld = 1110111;
+    myParser.readPayload(RepOrderMsg::fakeMsg(oidOld,oidNew,qty,404904049, px4 ), sizeof(RepOrderMsg));
     assert(0== Parser::check("miss#1110111", 0, "lookupMiss" ));
+    }
     return 0;
 }
 int main(int argc, char **argv) {
