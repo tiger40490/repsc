@@ -1,13 +1,12 @@
---done: parse packet header
---done: milestone: dump an AddOrder msg in hex digits
---done: output some details from the AddOrder so as to assert...
---done: add in-memory containers to process order reduction etc
---done: create order cxl msg. the biz logic is more complex
---done: replace: remove the item from hashmap at old id, and add it under new id. Update px and qty in-place
+--todo: create temp *EventMsg objects on the stack, convert the physical memory location to a byte array and write it to file
 
---todo: exe: decrement qty just as dec msg, but send out exe qty
---todo: produce output file and add some sanity checks
---todo: fix parser::date (static or not) to the date passed in
+--todo: add more unit test
+the test on the output file is harder
+--todo: also simplify .. not the test fixtures but the main logic?
+give up some features like date parsing
+
+--todo: output packet header
+
 --todo (advanced): warehouse and stub .. can be postpone or even "discussed in documentation" only
 out-of-order
 After processing a buffer, look for the nextSeq in the warehouse. If not found, then wait for next onUDP
@@ -15,12 +14,17 @@ After processing a buffer, look for the nextSeq in the warehouse. If not found, 
 --todo (LGpp): separate out header vs implementation files. 
 For now, it's too much work to keep both in-sync
 
---todo (LG2): turn off assertions for a release build
 --todo (advanced): add some TMP features
-simplify the castNewOid()
-
---todo (LG2): add some instrumentation feature to measure throughput
---todo (advanced): make a msgGenerator.py to create test cases. Possibly integrated with a test script
 --todo (LG2): print timestamp in yyyymmdd, but I can verify it on https://www.epochconvertkjer.com
---
-orders should be unordered_map
+
+--back burner: 
+what's more valuable long-term? coding drill motivation, TMP, GTD? no; automated tests for self-assurance ?
+BP? no
+--back burner:
+put *OrderMsg classes in one file
+--back burner:
+put *OrderParser classes separately?
+
+--back burner:
+realistically, do I want to implement the warehousing? I feel it's doable but reliable testing would be challenging
+

@@ -31,3 +31,8 @@ When warehousing is not required, I make do without cloning, to gain efficiency.
 I classify my design trade-off as quick-n-dirty. Quick as in simple and fast. Dirty as in unconventional. May give subtle surprises in the future.
 
 One of those subtle thing to remember is -- when an out-of-sequence packet is warehoused, it can't (easily) be saved in the original format -- Its packet header has already been converted so as to read its sequence number. By luck (actually by design), this very sequence number is the index used to locate the packet within the warehouse, so we have it already. Therefore, only the original payload is warehoused.
+
+-- output efficiency --
+I think output socket is a common interface to broadcast event message to multiple subscribers. Another possible output interface is a messaging bus.
+
+In this toy program, we are required to save the output to a file. Therefore, I have decided to forgo efficiency and simply dump each event message to the same file and close the file after each event message.
