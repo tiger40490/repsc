@@ -9,6 +9,18 @@
 #include <deque>
 #include <map>
 using namespace std;
+//move to Event.h
+struct BaseEvent{
+  uint16_t evType;
+  uint16_t evSz;
+  char stock[8];
+  uint64_t nanosEp;
+  uint64_t oid;
+} __attribute__((packed));
+struct ExeEvent{
+  uint32_t qty;
+  double pxFloat;
+} __attribute__((packed));
 
 // move to MsgParser.h, but for vi-IDE, this way is much quicker
 class ExeOrderParser: public MsgParser{
@@ -35,7 +47,10 @@ public:
       cout<<"order qty reduced to "<<order.qty<<endl;
       Parser::record("qExe#" + to_string(msg->oid), order.qty, order.stock);
     }
-    cout<<order<<" is the updated order\n";
+    cout<<order<<" is the updated order.. Now sending event..\n";
+
+    //static char serBuf[sz]; //to be overwritten each time
+
     return 0; //0 means good
   }
 };
