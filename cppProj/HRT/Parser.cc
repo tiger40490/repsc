@@ -16,10 +16,26 @@ struct BaseEvent{
   char stock[8];
   uint64_t nanosEp;
   uint64_t oid;
+  inline std::string stock_() const {return std::string(stock, stock+8); }
+  void init(){
+    evType = htole(evType);
+    evSz = htole(evSz);
+    nanosEp = htole(nanosEp);
+    oid = htole(oid);
+//    cout<<"BaseEvent::init() done\n";
+  }
 } __attribute__((packed));
-struct ExeEvent{
+struct ExeEvent: public BaseEvent{
   uint32_t qty;
   double pxFloat;
+  ExeEvent * init(){
+    this->BaseEvent::init();
+    qty     = htole(qty);
+    pxFloat = htole(pxFloat/(double)10000);
+    dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
+    cout<<"stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<endl;
+    return this;
+  }
 } __attribute__((packed));
 
 // move to MsgParser.h, but for vi-IDE, this way is much quicker
@@ -48,6 +64,8 @@ public:
       Parser::record("qExe#" + to_string(msg->oid), order.qty, order.stock);
     }
     cout<<order<<" is the updated order.. Now sending event..\n";
+    auto s=order.stock.c_str();
+    ExeEvent * ev=ExeEvent{0x02, sizeof(ExeEvent), {s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]}, msg->nanos, msg->oid, msg->qty, (double)order.px4}.init();
 
     //static char serBuf[sz]; //to be overwritten each time
 
