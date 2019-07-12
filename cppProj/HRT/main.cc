@@ -48,8 +48,8 @@ int test2(){
     assert(0== Parser::check("qExe#2", 46,      "SPY     "));
 
     { // to limit variable scop
-    auto oidNew = 3; auto qty = 25; auto px4=200.11*10000;
     cout<<"\n  -----sending replace..\n";
+    auto oidNew = 3; auto qty = 25; auto px4=200.11*10000;
     myParser.readPayload(RepOrderMsg::fakeMsg(1,oidNew,qty,404904049, px4 ), sizeof(RepOrderMsg));
     assert(0== Parser::check("q#3",  qty, "SPY     "));
     assert(0== Parser::check("px#3", px4, "SPY     "));
@@ -62,4 +62,5 @@ int test2(){
 }
 int main(int argc, char **argv) {
   test2();
+  Parser::file.close();
 }

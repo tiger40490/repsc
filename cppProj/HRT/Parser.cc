@@ -117,6 +117,7 @@ public:
   }
 };
 /////////// now the static fields and other members of Parser class
+ofstream Parser::file;
 std::map<char, MsgParser*> Parser::workers;
 std::unordered_map<uint32_t, Order> Parser::orders;
 std::map<std::string, map<std::string, uint64_t>> Parser::eventRecorder;
@@ -140,6 +141,7 @@ char Parser::check(std::string eventId, uint64_t exp, std::string stock){
 }
 
 Parser::Parser(int date, const std::string &outputFilename) {
+  file = ofstream(to_string(date)+".out", std::ofstream::out);
   if (workers.empty()){
     workers['A'] = new AddOrderParser();
     workers['E'] = new ExeOrderParser();

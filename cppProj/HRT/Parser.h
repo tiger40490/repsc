@@ -2,6 +2,7 @@
 
 //#include "Order.h" //circular dependency
 #include "MsgParser.h"
+#include <fstream>
 #include <string>
 #include <map>
 #include <unordered_map>
@@ -13,6 +14,7 @@ class Parser {
     static std::map<char, MsgParser*> workers; //individual msg parsers
 
     static std::map<std::string, std::map<std::string, uint64_t>> eventRecorder; //for simple testing... 1st lookup key is some event id; 2nd key is stock ticker or zero-length string.
+
 
     // sequence management:
     uint32_t lastSeq=0, expectedSeq=1; //We only need one of these two fields, but I keep both for convenience.
@@ -38,6 +40,8 @@ class Parser {
 
     typedef uint32_t oid_t;
     static std::unordered_map<oid_t, Order> orders;
+
+    static std::ofstream file; //accessible from main() and msg parsers...
 
     static char check (std::string eventId, uint64_t exp, std::string stock ="");
     static char record(std::string eventId, uint64_t val, std::string stock ="");
