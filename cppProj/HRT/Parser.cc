@@ -7,6 +7,7 @@
 #include <cassert>
 #include <iostream>
 #include <deque>
+#include <vector>
 #include <map>
 using namespace std;
 //move to Event.h
@@ -53,9 +54,9 @@ class ExeOrderParser: public MsgParser{
 public:
   ExeOrderParser(): MsgParser(sizeof(ExeOrderParser)){}
   char parse(char *buf) override{
-    cout<<"inside ExeOrderParser::parse"<<endl;
+//    cout<<"inside ExeOrderParser::parse"<<endl;
     auto * msg = cast<ExeOrderMsg>(buf);
-    msg->ser4test();
+    //msg->ser4test();
 
     cout<<"Looking up the orders table using order id = "<<msg->oid<<" ..\n";
     if (Parser::orders.count(msg->oid) == 0){
@@ -84,9 +85,9 @@ class DecOrderParser: public MsgParser{
 public:
   DecOrderParser(): MsgParser(sizeof(DecOrderMsg)){}
   char parse(char *buf) override{
-    cout<<"inside DecOrderParser::parse"<<endl;
+//    cout<<"inside DecOrderParser::parse"<<endl;
     auto * msg = cast<DecOrderMsg>(buf);
-    msg->ser4test();
+    //msg->ser4test();
 
     cout<<"Looking up the orders table using order id = "<<msg->oid<<" ..\n";
     if (Parser::orders.count(msg->oid) == 0){
@@ -104,8 +105,7 @@ public:
       cout<<"order qty reduced to "<<order.qty<<endl;
       Parser::record("qDec#" + to_string(msg->oid), order.qty, order.stock);
     }
-    cout<<order<<" is the updated order\n";
-
+    cout<<order<<" is the updated order.. now sending event\n";
     auto s=order.stock.c_str();
     DecEvent * ev=DecEvent{0x03, sizeof(DecEvent), {s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]}, msg->nanos, msg->oid, order.qty}.init();
     Parser::w2f(ev);
@@ -114,13 +114,27 @@ public:
     return 0; //0 means good
   }
 };
+struct RepEvent: public BaseEvent{
+  uint64_t oidNew;
+  uint32_t qty;
+  double pxFloat;
+  RepEvent * init(){
+    this->BaseEvent::init();
+    oidNew  = htole(oidNew);
+    qty     = htole(qty);
+    pxFloat = htole(pxFloat/(double)10000);
+    //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
+    cout<<"oidNew = "<<oidNew<<" , stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<endl;
+    return this;
+  }
+} __attribute__((packed));
 class RepOrderParser: public MsgParser{
 public:
   RepOrderParser(): MsgParser(sizeof(RepOrderMsg)){}
   char parse(char *buf) override{
-    cout<<"inside RepOrderParser::parse"<<endl;
+//    cout<<"inside RepOrderParser::parse"<<endl;
     auto * msg = cast<RepOrderMsg>(buf);
-    msg->ser4test();
+    //msg->ser4test();
 
     cout<<"Looking up the orders table using order id = "<<msg->oid<<" ..\n";
     if (Parser::orders.count(msg->oid) == 0){
@@ -128,17 +142,19 @@ public:
       Parser::record("miss#" + to_string(msg->oid), 0, "lookupMiss" );
       return 'm'; //missing
     }
-
     Order& order = Parser::orders[msg->oid];
     cout<<order<<" is the original order\n";
     Parser::orders.erase(msg->oid);
     order.px4=msg->px4;
     order.qty=msg->qty;
     Parser::orders.emplace(msg->oidNew, order);
-    cout<<Parser::orders[msg->oidNew]<<" is the updated order in the lookup table\n";
-
     Parser::record("px#" + to_string(msg->oidNew), msg->px4, order.stock);
     Parser::record("q#" + to_string(msg->oidNew), msg->qty, order.stock);
+    cout<<Parser::orders[msg->oidNew]<<" is the updated order in the lookup table.. now sending event ..\n";
+    auto s=order.stock.c_str();
+    RepEvent * ev=RepEvent{0x04, sizeof(RepEvent), {s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]}, msg->nanos, msg->oid, msg->oidNew, msg->qty, (double)msg->px4}.init();
+    Parser::w2f(ev);
+//    Parser::record("qRepEv#" + to_string(msg->oid*10000+msg->qty), ev->qty, order.stock);
     return 0; //0 means good
   }
 };
@@ -148,8 +164,7 @@ public:
   char parse(char *buf) override{
     //cout<<"inside AddOrderParser::parse"<<endl;
     auto * msg = cast<AddOrderMsg>(buf);
-
-    msg->ser4test();
+    //msg->ser4test();
 
     Parser::orders.emplace(make_pair(msg->oid, msg));
     cout<<"Order ID's currently saved in order lookup table : ";
@@ -167,8 +182,18 @@ std::map<char, MsgParser*> Parser::workers;
 std::unordered_map<uint32_t, Order> Parser::orders;
 std::map<std::string, map<std::string, uint64_t>> Parser::eventRecorder;
 
+void countWrites(size_t sz){ //Can't be part of w2f since each template instantiation of w2f has a separate allocation of static local variables
+    static int cnt=0; ++cnt;
+    static int len=0; len += sz;
+    static vector<uint8_t> sizes; sizes.push_back(sz);
+    cout<<cnt<<" events written to file. Write sizes are : ";
+    for (auto const & i : sizes) cout<<(int)i<<" ";
+    cout<<len<<" is the total length\n"; 
+}
+
 template<class E> void Parser::w2f(E const* ev){
     file.write(reinterpret_cast<char const*>(ev), sizeof(E));
+    countWrites(sizeof(E));
 }
 char Parser::record(std::string eventId, uint64_t val, std::string stock ){
   if (Parser::eventRecorder.count(eventId) ){
