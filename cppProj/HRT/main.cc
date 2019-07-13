@@ -80,10 +80,15 @@ int test2(){
 void testPackets(){
   PacketBuilder builder;
   builder.fakeMsg<ExeOrderMsg>(3,555,404904049040490);
+
+  auto oidNew = 3; auto qty = 1000; auto px4=200.11*10000;
+  builder.fakeMsg<RepOrderMsg>(1,oidNew,qty,404904049040490, px4);
+
+  Parser parser(0,"out");
+  builder.pack_n_send(&parser,3);
 }
 int main(int argc, char **argv) {
-  testPackets();
-  return 0;
+  testPackets(); return 0;
   test2();
   Parser::file.close();
 }
