@@ -60,6 +60,8 @@ Parser::Parser(int date, const std::string &outputFilename) {
   }
 }
 
+deque<vector<char>> wh;
+int64_t whLowSeq=-1; // wh[ pktSeq-lowSeq ] is the vector holding the payload of a packet
 char Parser::readPayload( char *buf, size_t len) {
   cout<<len<<" ===== len in readPayload()"<<endl;
   //dumpBuffer(buf, len);
@@ -80,7 +82,7 @@ char Parser::readPayload( char *buf, size_t len) {
           continue;
       }
       assert (len == worker->msgSz);
-      cout<<cnt<<" messages parsed and packet is exhausted"<<endl;
+      cout<<cnt<<" messages parsed and payload is exhausted. Now looking for next payload in warehouse.."<<endl;
 
       // todo should look for the next packet's payload in the warehouse , in tail recursive call
       return 0;
@@ -103,20 +105,43 @@ void Parser::onUDPPacket(const char *buf, size_t len) {
   if (len < PKT_HDR_SZ){
       cerr<<"buffer too short ... corrupted buffer, to be discarded."<<endl; return; //no updateSeq()
   }
-  if (hdr->seq < this->expectedSeq){
+  auto const seq = hdr->seq;
+  if (seq < this->expectedSeq){
     cout<<"Header seq above is a dupe .. dropped"<<endl; return; //no updateSeq()
   }
 
-  if (hdr->seq > this->expectedSeq){ // todo: warehouse it
-    cout<<"warehousing\n";
+  if (seq > this->expectedSeq){ // 
+    cout<<"warehousing "<<seq<<" # current whLowSeq = "<<whLowSeq <<endl;
+    auto whHiSeq = whLowSeq + wh.size() -1 ;
+    if (wh.empty()){ 
+        wh.push_back( vector<char>(buf + PKT_HDR_SZ, buf + len));
+        whLowSeq = seq; cout<<seq<<" is the newly added payload seq in an empty warehouse.";
+    }else if (seq < whLowSeq ) {
+          for (auto next2fill = whLowSeq-1; next2fill >= seq; --next2fill){
+            wh.push_front(vector<char>());
+            cout<<next2fill<<" <-- This pkt seq has not arrived but a dummy pkt is saved in warehouse\n";
+          }
+          whLowSeq = seq;
+    }else if (whHiSeq < seq) {
+          for (auto next2fill = whHiSeq+1; next2fill <= seq; ++next2fill){
+            wh.push_back(vector<char>());
+            cout<<next2fill<<" <-- This pkt seq has not arrived but a dummy pkt is saved in warehouse\n";
+          }
+          assert(whLowSeq + wh.size()-1 == seq);
+    }
+    assert ( whLowSeq <= seq && seq < whLowSeq + wh.size());
+    wh[seq-whLowSeq] = vector<char>(buf + PKT_HDR_SZ, buf + len);
+    char const * saved = wh[seq-whLowSeq].data();
+    dumpBuffer(saved, len-PKT_HDR_SZ, "warehoused payload with seq matching our header ");
     return; //no updateSeq()
   }
-  assert (hdr->seq == this->expectedSeq );
-  //cout<<"Header seq above is The Expected .. now processing packet"<<endl;
+  assert (seq == this->expectedSeq );
+  //cout<<"Header seq above is The Expected .. now processing payload"<<endl;
   if (len == PKT_HDR_SZ ){ cout<<"dummy packet .. taken as a heartbeat"<<endl; 
   }else{
     assert(len > PKT_HDR_SZ ); 
     readPayload(const_cast<char*>(buf)+PKT_HDR_SZ,  len-PKT_HDR_SZ);
   }
-  updateSeq(hdr->seq); return;
+  updateSeq(seq); 
+  return;
 }

@@ -98,6 +98,28 @@ void testPackets(){
       builder.fakeMsg<RepOrderMsg>(1,oidNew,qtyNew,404904049040490, px4)
              .fakeMsg<ExeOrderMsg>(1,555,404904049040491);
       builder.pack_n_send( &parser, 2);
+  cout<<"\n ---- simple tests of out-of-sequence handling --- \n";
+      auto qtyEx=50;
+      builder.fakeMsg<ExeOrderMsg>( 3,qtyEx++,404904049040495);
+      builder.pack_n_send( &parser, 11);
+      builder.fakeMsg<ExeOrderMsg>( 3,qtyEx++,404904049040495);
+      builder.pack_n_send( &parser, 8);  //fill to the left
+      builder.fakeMsg<ExeOrderMsg>( 3,qtyEx++,404904049040495);
+      builder.pack_n_send( &parser, 15); //fill to the right
+      builder.fakeMsg<ExeOrderMsg>( 3,qtyEx++,404904049040495);
+      builder.pack_n_send( &parser, 13); //overwrite an existing dummy
+      builder.fakeMsg<ExeOrderMsg>( 3,qtyEx++,404904049040495);
+      builder.pack_n_send( &parser, 15); //overwrite a warehoused packe
+  cout<<"\n ---- cxl --- \n";
+      auto qtyExe=50, qtyRem = qtyNew - qtyExe;
+      auto qtyDec = 55, qty = qtyRem - qtyDec;
+      builder.fakeMsg< DecOrderMsg>( 3,qtyDec,404904049040496);
+      cout<<"\n creating cxl with oversized qty..\n";
+      builder.fakeMsg< DecOrderMsg>( 3,5555,404904049040497);
+      builder.pack_n_send( &parser, 5);
+  cout<<"\n ---- exe --- \n";
+      builder.fakeMsg<ExeOrderMsg>( 3,qtyExe,404904049040495);
+      builder.pack_n_send( &parser, 4);
   cout<<"  ----- replace -----\n";
       auto const oidOld = 1; //already replaced
       builder.fakeMsg<RepOrderMsg>(oidOld,oidNew,qtyNew,404904049040492, px4 );
@@ -106,21 +128,12 @@ void testPackets(){
       cout<<" creating replace with bad new order id..\n";
       builder.fakeMsg<RepOrderMsg>( 2,oidNew,qtyNew,hc("oldNew is already in use"), px4 );
       builder.pack_n_send( &parser, 3);
+
       assert(0== Parser::check("q#3",  qtyNew, "SPY     ")); //rep
       assert(0== Parser::check("px#3", px4, "SPY     ")); //rep
       assert(0== Parser::check("miss#1", -1, "lookupMiss" )); //bad oid
       assert(0== Parser::check("clash#2", -1, "clash" )); //bad rep oid
-  cout<<"\n ---- exe --- \n";
-      auto qtyExe=50, qtyRem = qtyNew - qtyExe;
-      builder.fakeMsg<ExeOrderMsg>( 3,qtyExe,404904049040495);
-      builder.pack_n_send( &parser, 4);
       assert(0== Parser::check("qExe#3", qtyRem, "SPY     ")); //exe
-  cout<<"\n ---- cxl --- \n";
-      auto qtyDec = 55, qty = qtyRem - qtyDec;
-      builder.fakeMsg< DecOrderMsg>( 3,qtyDec,404904049040496);
-      cout<<"\n creating cxl with oversized qty..\n";
-      builder.fakeMsg< DecOrderMsg>( 3,5555,404904049040497);
-      builder.pack_n_send( &parser, 5);
       assert(0== Parser::check("qDec#3",    qty,      "SPY     ")); //cxl
       assert(0== Parser::check("qDecEv#30055", qty,"SPY     ")); //cxl
       assert(0== Parser::check("qDecOver#3", 0,   "SPY     ")); //oversized cxl
