@@ -26,16 +26,9 @@ struct BaseEvent{
 //    cout<<"BaseEvent::init() done\n";
   }
 } __attribute__((packed));
-struct DecEvent: public BaseEvent{
-  uint32_t qty;
-  DecEvent * init(){
-    this->BaseEvent::init();
-    qty     = htole(qty);
-    //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
-    cout<<"qty rem = "<<qty<<" , stock = "<<stock_()<<", nanosEp = "<<nanosEp<<endl;
-    return this;
-  }
-} __attribute__((packed));
+
+// move to MsgParser.h, but for vi-IDE, this way is much quicker
+class ExeOrderParser: public MsgParser{
 struct ExeEvent: public BaseEvent{
   uint32_t qty;
   double pxFloat;
@@ -48,9 +41,6 @@ struct ExeEvent: public BaseEvent{
     return this;
   }
 } __attribute__((packed));
-
-// move to MsgParser.h, but for vi-IDE, this way is much quicker
-class ExeOrderParser: public MsgParser{
 public:
   ExeOrderParser(): MsgParser(sizeof(ExeOrderParser)){}
   char parse(char *buf) override{
@@ -82,6 +72,16 @@ public:
   }
 };
 class DecOrderParser: public MsgParser{
+struct DecEvent: public BaseEvent{
+  uint32_t qty;
+  DecEvent * init(){
+    this->BaseEvent::init();
+    qty     = htole(qty);
+    //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
+    cout<<"qty rem = "<<qty<<" , stock = "<<stock_()<<", nanosEp = "<<nanosEp<<endl;
+    return this;
+  }
+} __attribute__((packed));
 public:
   DecOrderParser(): MsgParser(sizeof(DecOrderMsg)){}
   char parse(char *buf) override{
@@ -114,6 +114,7 @@ public:
     return 0; //0 means good
   }
 };
+class RepOrderParser: public MsgParser{
 struct RepEvent: public BaseEvent{
   uint64_t oidNew;
   uint32_t qty;
@@ -128,7 +129,6 @@ struct RepEvent: public BaseEvent{
     return this;
   }
 } __attribute__((packed));
-class RepOrderParser: public MsgParser{
 public:
   RepOrderParser(): MsgParser(sizeof(RepOrderMsg)){}
   char parse(char *buf) override{
@@ -158,6 +158,7 @@ public:
     return 0; //0 means good
   }
 };
+class AddOrderParser: public MsgParser{
 struct AddEvent: public BaseEvent{
   char side;
   char padding[3];
@@ -172,7 +173,6 @@ struct AddEvent: public BaseEvent{
     return this;
   }
 } __attribute__((packed));
-class AddOrderParser: public MsgParser{
 public:
   AddOrderParser(): MsgParser(sizeof(AddOrderMsg)){}
   char parse(char *buf) override{
