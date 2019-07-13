@@ -18,7 +18,9 @@ public:
     size_t sz = sizeof(T);
     memcpy(buf + offset, ret, sz);
     //dumpBuffer(buf + offset, sz, "packet builder's buffer");
+    std::cout<<offset<<" <- offset advanced to ";
     offset += sz;
+    std::cout<<offset<<std::endl;
     return const_cast<PacketBuilder&>(*this); // for chaining
   }
 
@@ -28,6 +30,7 @@ public:
     char* hdr = PacketHeader::fakeMsg(this->offset,seq);
     memcpy(buf, hdr, sizeof(PacketHeader));
     parser->onUDPPacket(this->buf, this->offset);
+    offset = sizeof(PacketHeader);
     return this->lastSeq = seq;
   }
 };

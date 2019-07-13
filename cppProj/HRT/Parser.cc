@@ -93,7 +93,7 @@ void Parser::onUDPPacket(const char *buf, size_t len) {
   //dumpBuffer(buf, len, "into onUDP");
   auto hdr = cast<PacketHeader>(const_cast<char*>(buf));
   //dumpBuffer(buf, len, "after reinterpret_cast, showing in-place endianness conversion");
-  cout<<"Received pkt of len = "<<len<<", header showing { sz = "<<hdr->sz<<", seq = "<<hdr->seq<<"} while parser's expectedSeq is "<<this->expectedSeq<<endl;
+  cout<<"Received pkt of len = "<<len<<", header showing { sz = "<<hdr->sz<<", seq = "<<hdr->seq<<" } while parser's expectedSeq is "<<this->expectedSeq<<endl;
   if (len != hdr->sz){
       cerr<<"Size value in header differs from buffer length... corrupted buffer, to be discarded."<<endl; return; //no updateSeq()
   }
