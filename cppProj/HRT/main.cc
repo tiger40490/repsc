@@ -15,7 +15,7 @@ using namespace std;
 
 const char *inputFile = "test.in";
 
-int test2(){
+int test2(){ //Outdated test used to test readPayload() directly
     constexpr int currentDate = 20180612;
     Parser myParser(currentDate, "myTestFile");
 
@@ -76,20 +76,20 @@ int test2(){
     } return 0;
 }
 void testPackets(){
-  Parser parser(20191130,"out");
-  { //original 2 AddOrders
-    int fd = open(inputFile, O_RDONLY);
-    if (fd == -1) {
+      Parser parser(20191130,"out");
+      //original 2 AddOrders
+      int fd = open(inputFile, O_RDONLY);
+      if (fd == -1) {
         fprintf(stderr, "Couldn't open %s\n", inputFile);
         return ;
-    }
-    char bigbuf[5000];
-    while (read(fd, bigbuf, 2) != 0) {
+      }
+      char bigbuf[5000];
+      while (read(fd, bigbuf, 2) != 0) {
         uint16_t packetSize = htons(*(uint16_t *)bigbuf);
         auto dummy = read(fd, bigbuf + 2, packetSize - 2);
         parser.onUDPPacket(bigbuf, packetSize);
-    }
-  }
+      }
+
       PacketBuilder builder;
       auto oidNew = 3; auto qty = 1000; auto px4=200.11*10000;
       cout<<" creating duplicate seq \n";
@@ -105,24 +105,21 @@ void testPackets(){
       oidOld = 2; // oidNew is still 3 :(
       builder.fakeMsg<RepOrderMsg>( oidOld,oidNew,qty,404904049040490, px4 );
       builder.pack_n_send( &parser, 3);
-  cout<<"\n ---- exe --- \n";
-      auto qtyExe=50; qty -= qtyExe;
-builder.fakeMsg<ExeOrderMsg>( 3,qtyExe,404904049040490);
- // builder.pack_n_send( &parser, 4);
-      cout<<"\n ---- cxl --- \n";
-      auto qtyDec = 55; qty -= qtyDec;
-builder.fakeMsg< DecOrderMsg>( 3,qtyDec,404904049040490);
-      cout<<"\n creating cxl with oversized qty..\n";
-builder.fakeMsg< DecOrderMsg>( 3,5555,404904049040490);
-  builder.pack_n_send( &parser, 5);
-return;
       assert(0== Parser::check("q#3",  qty, "SPY     ")); //rep
       assert(0== Parser::check("px#3", px4, "SPY     ")); //rep
       assert(0== Parser::check("miss#1", -1, "lookupMiss" )); //bad oid
       assert(0== Parser::check("clash#2", -1, "clash" )); //bad rep oid
-
+  cout<<"\n ---- exe --- \n";
+      auto qtyExe=50; qty -= qtyExe;
+      builder.fakeMsg<ExeOrderMsg>( 3,qtyExe,404904049040490);
+      builder.pack_n_send( &parser, 4);
       assert(0== Parser::check("qExe#3", qty,      "SPY     ")); //exe
-
+  cout<<"\n ---- cxl --- \n";
+      auto qtyDec = 55; qty -= qtyDec;
+      builder.fakeMsg< DecOrderMsg>( 3,qtyDec,404904049040490);
+      cout<<"\n creating cxl with oversized qty..\n";
+      builder.fakeMsg< DecOrderMsg>( 3,5555,404904049040490);
+      builder.pack_n_send( &parser, 5);
       assert(0== Parser::check("qDec#3",    qty,      "SPY     ")); //cxl
       assert(0== Parser::check("qDecEv#30055", qty,"SPY     ")); //cxl
       assert(0== Parser::check("qDecOver#3", 0,   "SPY     ")); //oversized cxl
@@ -133,4 +130,3 @@ int main(int argc, char **argv) {
   test2();
   Parser::file.close();
 }
-

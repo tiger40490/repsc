@@ -38,10 +38,11 @@ char Parser::record(std::string eventId, int64_t val, std::string stock ){
      return 'r';  //repeat
   }
   Parser::eventRecorder[eventId][stock] = val;
-  cout<<val<<" recorded against "<<eventId<<endl;
+  //cout<<val<<" recorded against "<<stock<<eventId<<endl;
   return 0; 
 }
 char Parser::check(std::string eventId, int64_t exp, std::string stock){
+  //cout<<"checking "<<eventId<<endl;
   if (Parser::eventRecorder.count(eventId) == 0) return 'e'  ; //no such event id in recorder
   if (Parser::eventRecorder[eventId].count(stock) == 0) return 's'; // no such stock
   if (Parser::eventRecorder[eventId][stock] != exp ) return 'u' ;  // values unequal
@@ -61,13 +62,13 @@ Parser::Parser(int date, const std::string &outputFilename) {
 
 char Parser::readPayload( char *buf, size_t len) {
   cout<<len<<" ===== len in readPayload()"<<endl;
-  dumpBuffer(buf, len);
+  //dumpBuffer(buf, len);
   for (int cnt=1; ; ++cnt){
     char const msgType = buf[0];
 //    cout<<msgType<<" = msgType found in first byte of # "<<cnt<<" message in this pkt\n";
     MsgParser * worker = Parser::workers[msgType];
     if (worker == nullptr){
-      cerr<<msgType<<" is invalid msgType"<<endl;
+      cerr<<(int)msgType<<" is invalid msgType"<<endl;
       return 'i';
     }
     if (len >= worker->msgSz){
@@ -75,7 +76,7 @@ char Parser::readPayload( char *buf, size_t len) {
       if (len > worker->msgSz){
           len -= worker->msgSz;
           buf += worker->msgSz;
- //         cout<<len<<" = len after processing "<<cnt<<" messages in this pkt\n";
+          //cout<<len<<" = len after processing "<<cnt<<" messages in this pkt\n";
           continue;
       }
       assert (len == worker->msgSz);
@@ -111,7 +112,7 @@ void Parser::onUDPPacket(const char *buf, size_t len) {
     return; //no updateSeq()
   }
   assert (hdr->seq == this->expectedSeq );
-  cout<<"Header seq above is The Expected .. now processing packet"<<endl;
+  //cout<<"Header seq above is The Expected .. now processing packet"<<endl;
   if (len == PKT_HDR_SZ ){ cout<<"dummy packet .. taken as a heartbeat"<<endl; 
   }else{
     assert(len > PKT_HDR_SZ ); 

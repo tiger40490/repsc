@@ -18,9 +18,9 @@ public:
     size_t sz = sizeof(T);
     memcpy(buf + offset, ret, sz);
     //dumpBuffer(buf + offset, sz, "packet builder's buffer");
-    std::cout<<offset<<" <- offset advanced to ";
+    //std::cout<<offset<<" <- offset advanced to ";
     offset += sz;
-    std::cout<<offset<<std::endl;
+    //std::cout<<offset<<std::endl;
     return const_cast<PacketBuilder&>(*this); // for chaining
   }
 
