@@ -24,7 +24,7 @@ class ExeOrderParser: public MsgParser{
       qty     = htole(qty);
       pxFloat = htole(pxFloat/(double)10000);
       //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
-      std::cout<<"stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<std::endl;
+      //std::cout<<"BaseEvent convertion done: stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<std::endl;
       return this;
     }
   } __attribute__((packed));
@@ -80,7 +80,6 @@ public:
   char parse(char *buf) override{
 //    std::cout<<"inside DecOrderParser::parse"<<std::endl;
     auto * msg = cast<DecOrderMsg>(buf);
-    //msg->ser4test();
     std::cout<<"Looking up the orders table using order id = "<<msg->oid<<" ..\n";
     if (Parser::orders.count(msg->oid) == 0){
       std::cout<<"order not found. CancelOrder message dropped\n";
@@ -116,7 +115,7 @@ class RepOrderParser: public MsgParser{
       qty     = htole(qty);
       pxFloat = htole(pxFloat/(double)10000);
       //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
-      std::cout<<"oidNew = "<<oidNew<<" , stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<std::endl;
+      //std::cout<<"oidNew = "<<oidNew<<" , stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<std::endl;
       return this;
     }
   } __attribute__((packed));
@@ -125,18 +124,17 @@ public:
     static_assert(sizeof(RepEvent) == 48);
   }
   char parse(char *buf) override{
-//    std::cout<<"inside RepOrderParser::parse"<<std::endl;
     auto * msg = cast<RepOrderMsg>(buf);
-    //msg->ser4test();
     std::cout<<"Looking up the orders table using order id = "<<msg->oid<<" ..\n";
     if (Parser::orders.count(msg->oid) == 0){
       std::cout<<".. Above order id not found. ReplaceOrder message dropped\n";
       Parser::record("miss#" + std::to_string(msg->oid), -1, "lookupMiss" );
       return 'm'; //missing
     }
-    std::cout<<"Looking up the orders table using new order id = "<<msg->oidNew<<" ..\n";
+
+    std::cout<<"Looking up the orders table using replacement order id = "<<msg->oidNew<<" ..\n";
     if (Parser::orders.count(msg->oidNew)){
-      std::cout<<".. Above replacement order id is already in used.. ReplaceOrder message dropped\n";
+      std::cout<<".. Above replacement order id is already in use .. ReplaceOrder message dropped\n";
       Parser::record("clash#" + std::to_string(msg->oid), -1, "clash" );
       return 'c'; //clash
     }
@@ -167,7 +165,7 @@ class AddOrderParser: public MsgParser{
       qty     = htole(qty);
       pxFloat = htole(pxFloat/(double)10000);
     //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
-      std::cout<<"qty = "<<qty<<" , stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<std::endl;
+      //std::cout<<"qty = "<<qty<<" , stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<std::endl;
       return this;
     }
   } __attribute__((packed));
@@ -176,7 +174,6 @@ public:
     static_assert(sizeof(AddEvent) == 44);
   }
   char parse(char *buf) override{
-    //std::cout<<"inside AddOrderParser::parse"<<std::endl;
     auto * msg = cast<AddOrderMsg>(buf);
     Parser::orders.emplace(std::make_pair(msg->oid, msg));
     std::cout<<"Order ID's currently saved in order lookup table : ";
@@ -184,7 +181,7 @@ public:
     Parser::record("px#" + std::to_string(msg->oid), msg->px4,  msg->stock_());
     Parser::record("nano#" + std::to_string(msg->oid), msg->nanos%10000000000,  msg->stock_());
     Parser::record("side#" + std::to_string(msg->oid), msg->side, msg->stock_());
-    std::cout<<Parser::orders.size()<<" orders currently in the lookup table.. now broadcasting event..\n";
+    std::cout<<".. Total "<<Parser::orders.size()<<" orders currently in the lookup table.. now broadcasting event..\n";
     char const* s=msg->stock;
     AddEvent * ev=AddEvent{0x01, sizeof(AddEvent), {s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]}, msg->nanos, msg->oid, msg->side, {'\0','\0','\0'}, msg->qty, (double)msg->px4}.init();
     Parser::w2f(ev);
