@@ -1,5 +1,6 @@
 #include "Parser.h"
 #include "Order.h"
+#include "BaseEvent.h"
 #include "PacketHeader.h"
 #include "OrderMsg.h"
 #include "utils.h"
@@ -10,23 +11,6 @@
 #include <vector>
 #include <map>
 using namespace std;
-//move to Event.h
-struct BaseEvent{
-  uint16_t evType;
-  uint16_t evSz;
-  char stock[8];
-  uint64_t nanosEp;
-  uint64_t oid;
-  inline std::string stock_() const {return std::string(stock, stock+8); }
-  void init(){
-    evType = htole(evType);
-    evSz = htole(evSz);
-    nanosEp = htole(nanosEp);
-    oid = htole(oid);
-//    cout<<"BaseEvent::init() done\n";
-  }
-} __attribute__((packed));
-
 // move to MsgParser.h, but for vi-IDE, this way is much quicker
 class ExeOrderParser: public MsgParser{
 struct ExeEvent: public BaseEvent{
