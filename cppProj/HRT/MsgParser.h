@@ -132,7 +132,7 @@ public:
     std::cout<<"Looking up the orders table using order id = "<<msg->oid<<" ..\n";
     if (Parser::orders.count(msg->oid) == 0){
       std::cout<<"order not found. ReplaceOrder message dropped\n";
-      Parser::record("miss#" + std::to_string(msg->oid), 0, "lookupMiss" );
+      Parser::record("miss#" + std::to_string(msg->oid), -1, "lookupMiss" );
       return 'm'; //missing
     }
     Order& order = Parser::orders[msg->oid];

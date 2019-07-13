@@ -51,16 +51,19 @@ int test2(){
     assert(0== Parser::check("qExe#2", 46,      "SPY     "));
 
     { // to limit variable scope
-      cout<<"\n  -----sending replace..\n";
-      auto oidNew = 3; auto qty = 25; auto px4=200.11*10000;
-      myParser.readPayload(RepOrderMsg::fakeMsg(1,oidNew,qty,404904049, px4 ), sizeof(RepOrderMsg));
+      cout<<"\n  ----- replace -----\n";
+      auto oidNew = 3; auto qty = 101; auto px4=200.11*10000;
+      myParser.readPayload( RepOrderMsg::fakeMsg(1,oidNew,qty,404904049, px4 )
+                          , sizeof(RepOrderMsg));
       assert(0== Parser::check("q#3",  qty, "SPY     "));
       assert(0== Parser::check("px#3", px4, "SPY     "));
+
       cout<<"\n sending replace for bad order id..\n";
-      auto oidOld = 1110111;
+      auto oidOld = 1; //already replace
       myParser.readPayload(RepOrderMsg::fakeMsg(oidOld,oidNew,qty,404904049, px4 ), sizeof(RepOrderMsg));
-      assert(0== Parser::check("miss#1110111", 0, "lookupMiss" ));
+      assert(0== Parser::check("miss#1", -1, "lookupMiss" ));
     }
+
     return 0;
 }
 int main(int argc, char **argv) {

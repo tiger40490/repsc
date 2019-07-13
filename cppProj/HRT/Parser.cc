@@ -17,7 +17,7 @@ using namespace std;
 ofstream Parser::file;
 std::map<char, MsgParser*> Parser::workers;
 std::unordered_map<uint32_t, Order> Parser::orders;
-std::map<std::string, map<std::string, uint64_t>> Parser::eventRecorder;
+std::map<std::string, map<std::string, int64_t>> Parser::eventRecorder;
 
 void countWrites(size_t sz){ //Can't be part of w2f since each template instantiation of w2f has a separate allocation of static local variables
     static int cnt=0; ++cnt;
@@ -31,7 +31,7 @@ template<class E> void Parser::w2f(E const* ev){
     file.write(reinterpret_cast<char const*>(ev), sizeof(E));
     countWrites(sizeof(E));
 }
-char Parser::record(std::string eventId, uint64_t val, std::string stock ){
+char Parser::record(std::string eventId, int64_t val, std::string stock ){
   if (Parser::eventRecorder.count(eventId) ){
      //throw string( "eventId should be globally unique" );
      assert(Parser::eventRecorder[eventId].count(stock) ==0 && "Programmer error.. repeated eventId for the same stock, However, this is part of test fixture, not for production error reporting, so we should  NOT throw exception." );
@@ -41,7 +41,7 @@ char Parser::record(std::string eventId, uint64_t val, std::string stock ){
   cout<<val<<" recorded against "<<eventId<<endl;
   return 0; 
 }
-char Parser::check(std::string eventId, uint64_t exp, std::string stock){
+char Parser::check(std::string eventId, int64_t exp, std::string stock){
   if (Parser::eventRecorder.count(eventId) == 0) return 'e'  ; //no such event id in recorder
   if (Parser::eventRecorder[eventId].count(stock) == 0) return 's'; // no such stock
   if (Parser::eventRecorder[eventId][stock] != exp ) return 'u' ;  // values unequal
