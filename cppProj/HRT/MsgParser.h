@@ -178,10 +178,10 @@ public:
     Parser::orders.emplace(std::make_pair(msg->oid, msg));
     std::cout<<"Order ID's currently saved in order lookup table : ";
     for(auto it = Parser::orders.begin(); it != Parser::orders.end(); ++it){ std::cout<<it->first<<" "; }
+    std::cout<<".. Total "<<Parser::orders.size()<<" orders currently in the lookup table.. now recording actions and broadcasting event..\n";
     Parser::record("px#" + std::to_string(msg->oid), msg->px4,  msg->stock_());
     Parser::record("nano#" + std::to_string(msg->oid), msg->nanos%10000000000,  msg->stock_());
     Parser::record("side#" + std::to_string(msg->oid), msg->side, msg->stock_());
-    std::cout<<".. Total "<<Parser::orders.size()<<" orders currently in the lookup table.. now broadcasting event..\n";
     char const* s=msg->stock;
     AddEvent * ev=AddEvent{0x01, sizeof(AddEvent), {s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]}, msg->nanos, msg->oid, msg->side, {'\0','\0','\0'}, msg->qty, (double)msg->px4}.init();
     Parser::w2f(ev);
