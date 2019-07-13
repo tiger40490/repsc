@@ -30,7 +30,7 @@ class ExeOrderParser: public MsgParser{
   } __attribute__((packed));
 
 public:
-  ExeOrderParser(): MsgParser(sizeof(ExeOrderParser)){
+  ExeOrderParser(): MsgParser(sizeof(ExeOrderMsg)){
     static_assert(sizeof(ExeEvent) == 40);
   }
   char parse(char *buf) override{
