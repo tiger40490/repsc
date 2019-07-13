@@ -1,6 +1,7 @@
 #include "utils.h"
 #include "Parser.h"
 #include "OrderMsg.h"
+#include "PacketBuilder.h"
 #include <cstdio>
 #include <cstdint>
 #include <fcntl.h>
@@ -76,7 +77,14 @@ int test2(){
 
     return 0;
 }
+void testPackets(){
+  PacketBuilder builder;
+  builder.fakeMsg<ExeOrderMsg>(3,555,404904049040490);
+}
 int main(int argc, char **argv) {
+  testPackets();
+  return 0;
   test2();
   Parser::file.close();
 }
+

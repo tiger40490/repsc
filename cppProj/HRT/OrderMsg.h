@@ -102,7 +102,7 @@ struct ExeOrderMsg: public BaseOrderMsg<ExeOrderMsg, 21>{  //similiar to Dec exc
     static size_t const sz=sizeof(ExeOrderMsg);
     static char serBuf[sz]; //to be overwritten each time
     ExeOrderMsg msg={'E', h_nanos, h_oid, h_qty };
-    msg.ser4test(serBuf); //dumpBuffer(serBuf, sz, "serialized fake Exe msg");
+    msg.ser4test(serBuf); dumpBuffer(serBuf, sz, "serialized fake Exe msg");
     return serBuf;
   }
 } __attribute__((packed));

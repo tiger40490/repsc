@@ -50,7 +50,7 @@ char Parser::check(std::string eventId, int64_t exp, std::string stock){
 }
 
 Parser::Parser(int date, const std::string &outputFilename) {
-  file = ofstream(to_string(date)+".out", std::ofstream::out);
+  this->file = ofstream(outputFilename, std::ofstream::out);
   if (workers.empty()){
     workers['A'] = new AddOrderParser();
     workers['E'] = new ExeOrderParser();
