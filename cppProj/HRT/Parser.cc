@@ -69,6 +69,7 @@ public:
 
     //static char serBuf[sz]; //to be overwritten each time
 
+    Parser::w2f(ev);
     return 0; //0 means good
   }
 };
@@ -155,6 +156,9 @@ std::map<char, MsgParser*> Parser::workers;
 std::unordered_map<uint32_t, Order> Parser::orders;
 std::map<std::string, map<std::string, uint64_t>> Parser::eventRecorder;
 
+template<class E> void Parser::w2f(E const* ev){
+    file.write(reinterpret_cast<char const*>(ev), sizeof(E));
+}
 char Parser::record(std::string eventId, uint64_t val, std::string stock ){
   if (Parser::eventRecorder.count(eventId) ){
      //throw string( "eventId should be globally unique" );

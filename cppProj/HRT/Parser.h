@@ -43,6 +43,8 @@ class Parser {
 
     static std::ofstream file; //accessible from main() and msg parsers...
 
+    template<class E> 
+    static void w2f(E const* ev); //write to file
     static char check (std::string eventId, uint64_t exp, std::string stock ="");
     static char record(std::string eventId, uint64_t val, std::string stock ="");
 };
