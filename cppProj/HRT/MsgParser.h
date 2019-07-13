@@ -8,7 +8,7 @@
 #include <cstddef> //size_t
 #include <cassert>
 
-struct MsgParser{ //StatelessMsgParser
+struct MsgParser{ 
   size_t const msgSz; 
   virtual char parse(char *buf) = 0; //no buffer len needed .. guaranteed to be sufficient
 protected:
@@ -30,8 +30,9 @@ class ExeOrderParser: public MsgParser{
   } __attribute__((packed));
 
 public:
-  ExeOrderParser(): MsgParser(sizeof(ExeOrderParser)){}
-
+  ExeOrderParser(): MsgParser(sizeof(ExeOrderParser)){
+    static_assert(sizeof(ExeEvent) == 40);
+  }
   char parse(char *buf) override{
 //    std::cout<<"inside ExeOrderParser::parse"<<std::endl;
     auto * msg = cast<ExeOrderMsg>(buf);
@@ -72,20 +73,19 @@ class DecOrderParser: public MsgParser{
       return this;
     }
   } __attribute__((packed));
-
 public:
-  DecOrderParser(): MsgParser(sizeof(DecOrderMsg)){}
+  DecOrderParser(): MsgParser(sizeof(DecOrderMsg)){
+    static_assert(sizeof(DecEvent) == 32);
+  }
   char parse(char *buf) override{
 //    std::cout<<"inside DecOrderParser::parse"<<std::endl;
     auto * msg = cast<DecOrderMsg>(buf);
     //msg->ser4test();
-
     std::cout<<"Looking up the orders table using order id = "<<msg->oid<<" ..\n";
     if (Parser::orders.count(msg->oid) == 0){
       std::cout<<"order not found. CancelOrder message dropped\n";
       return 'm'; //missing
     }
-
     Order& order = Parser::orders[msg->oid];
     if (order.qty < msg->qty){
       std::cout<<"Current order qty "<<order.qty<<" is less than cancel qty "<<msg->qty<<" ! Will zero out order qty.\n";
@@ -100,12 +100,11 @@ public:
     auto s=order.stock.c_str();
     DecEvent * ev=DecEvent{0x03, sizeof(DecEvent), {s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]}, msg->nanos, msg->oid, order.qty}.init();
     Parser::w2f(ev);
-
     Parser::record("qDecEv#" + std::to_string(msg->oid*10000+msg->qty), ev->qty, order.stock);
     return 0; //0 means good
   }
 };
-
+////////////////////////////////////
 class RepOrderParser: public MsgParser{
   struct RepEvent: public BaseEvent{
     uint64_t oidNew;
@@ -121,21 +120,20 @@ class RepOrderParser: public MsgParser{
       return this;
     }
   } __attribute__((packed));
-
 public:
-  RepOrderParser(): MsgParser(sizeof(RepOrderMsg)){}
+  RepOrderParser(): MsgParser(sizeof(RepOrderMsg)){
+    static_assert(sizeof(RepEvent) == 48);
+  }
   char parse(char *buf) override{
 //    std::cout<<"inside RepOrderParser::parse"<<std::endl;
     auto * msg = cast<RepOrderMsg>(buf);
     //msg->ser4test();
-
     std::cout<<"Looking up the orders table using order id = "<<msg->oid<<" ..\n";
     if (Parser::orders.count(msg->oid) == 0){
       std::cout<<".. Above order id not found. ReplaceOrder message dropped\n";
       Parser::record("miss#" + std::to_string(msg->oid), -1, "lookupMiss" );
       return 'm'; //missing
     }
-
     std::cout<<"Looking up the orders table using new order id = "<<msg->oidNew<<" ..\n";
     if (Parser::orders.count(msg->oidNew)){
       std::cout<<".. Above replacement order id is already in used.. ReplaceOrder message dropped\n";
@@ -157,7 +155,7 @@ public:
     return 0; //0 means good
   }
 };
-
+////////////////////////////////////
 class AddOrderParser: public MsgParser{
   struct AddEvent: public BaseEvent{
     char side;
@@ -173,14 +171,13 @@ class AddOrderParser: public MsgParser{
       return this;
     }
   } __attribute__((packed));
-
 public:
-  AddOrderParser(): MsgParser(sizeof(AddOrderMsg)){}
+  AddOrderParser(): MsgParser(sizeof(AddOrderMsg)){
+    static_assert(sizeof(AddEvent) == 44);
+  }
   char parse(char *buf) override{
     //std::cout<<"inside AddOrderParser::parse"<<std::endl;
     auto * msg = cast<AddOrderMsg>(buf);
-    //msg->ser4test();
-
     Parser::orders.emplace(std::make_pair(msg->oid, msg));
     std::cout<<"Order ID's currently saved in order lookup table : ";
     for(auto it = Parser::orders.begin(); it != Parser::orders.end(); ++it){ std::cout<<it->first<<" "; }
