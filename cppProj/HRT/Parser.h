@@ -1,7 +1,7 @@
 #pragma once
 
 //#include "Order.h" //circular dependency
-#include "MsgParser.h"
+//#include "MsgParser.h"
 #include <fstream>
 #include <string>
 #include <map>
@@ -9,6 +9,7 @@
 #include <cassert>
 
 struct Order;
+struct MsgParser;
 
 class Parser {
     static std::map<char, MsgParser*> workers; //individual msg parsers

@@ -1,9 +1,11 @@
 #include "Parser.h"
-#include "Order.h"
-#include "BaseEvent.h"
 #include "PacketHeader.h"
 #include "OrderMsg.h"
+#include "MsgParser.h"
 #include "utils.h"
+
+#include "Order.h"
+#include "BaseEvent.h"
 
 #include <cassert>
 #include <iostream>
@@ -12,171 +14,8 @@
 #include <map>
 using namespace std;
 // move to MsgParser.h, but for vi-IDE, this way is much quicker
-class ExeOrderParser: public MsgParser{
-struct ExeEvent: public BaseEvent{
-  uint32_t qty;
-  double pxFloat;
-  ExeEvent * init(){
-    this->BaseEvent::init();
-    qty     = htole(qty);
-    pxFloat = htole(pxFloat/(double)10000);
-    //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
-    cout<<"stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<endl;
-    return this;
-  }
-} __attribute__((packed));
-public:
-  ExeOrderParser(): MsgParser(sizeof(ExeOrderParser)){}
-  char parse(char *buf) override{
-//    cout<<"inside ExeOrderParser::parse"<<endl;
-    auto * msg = cast<ExeOrderMsg>(buf);
-    //msg->ser4test();
 
-    cout<<"Looking up the orders table using order id = "<<msg->oid<<" ..\n";
-    if (Parser::orders.count(msg->oid) == 0){
-      cout<<"order not found. ExecOrder message dropped\n";
-      return 'm'; //missing
-    }
 
-    Order& order = Parser::orders[msg->oid];
-    if (order.qty < msg->qty){
-      cout<<"Current order qty "<<order.qty<<" is less than execution qty "<<msg->qty<<" ! Will zero out order qty.\n";
-      order.qty = 0;
-      Parser::record("qExeOver#" + to_string(msg->oid), order.qty, order.stock);
-    }else{
-      order.qty -= msg->qty;
-      cout<<"order qty reduced to "<<order.qty<<endl;
-      Parser::record("qExe#" + to_string(msg->oid), order.qty, order.stock);
-    }
-    cout<<order<<" is the updated order.. Now sending event..\n";
-    auto s=order.stock.c_str();
-    ExeEvent * ev=ExeEvent{0x02, sizeof(ExeEvent), {s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]}, msg->nanos, msg->oid, msg->qty, (double)order.px4}.init();
-    Parser::w2f(ev);
-    return 0; //0 means good
-  }
-};
-class DecOrderParser: public MsgParser{
-struct DecEvent: public BaseEvent{
-  uint32_t qty;
-  DecEvent * init(){
-    this->BaseEvent::init();
-    qty     = htole(qty);
-    //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
-    cout<<"qty rem = "<<qty<<" , stock = "<<stock_()<<", nanosEp = "<<nanosEp<<endl;
-    return this;
-  }
-} __attribute__((packed));
-public:
-  DecOrderParser(): MsgParser(sizeof(DecOrderMsg)){}
-  char parse(char *buf) override{
-//    cout<<"inside DecOrderParser::parse"<<endl;
-    auto * msg = cast<DecOrderMsg>(buf);
-    //msg->ser4test();
-
-    cout<<"Looking up the orders table using order id = "<<msg->oid<<" ..\n";
-    if (Parser::orders.count(msg->oid) == 0){
-      cout<<"order not found. CancelOrder message dropped\n";
-      return 'm'; //missing
-    }
-
-    Order& order = Parser::orders[msg->oid];
-    if (order.qty < msg->qty){
-      cout<<"Current order qty "<<order.qty<<" is less than cancel qty "<<msg->qty<<" ! Will zero out order qty.\n";
-      order.qty = 0;
-      Parser::record("qDecOver#" + to_string(msg->oid), order.qty, order.stock);
-    }else{
-      order.qty -= msg->qty;
-      cout<<"order qty reduced to "<<order.qty<<endl;
-      Parser::record("qDec#" + to_string(msg->oid), order.qty, order.stock);
-    }
-    cout<<order<<" is the updated order.. now sending event\n";
-    auto s=order.stock.c_str();
-    DecEvent * ev=DecEvent{0x03, sizeof(DecEvent), {s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]}, msg->nanos, msg->oid, order.qty}.init();
-    Parser::w2f(ev);
-
-    Parser::record("qDecEv#" + to_string(msg->oid*10000+msg->qty), ev->qty, order.stock);
-    return 0; //0 means good
-  }
-};
-class RepOrderParser: public MsgParser{
-struct RepEvent: public BaseEvent{
-  uint64_t oidNew;
-  uint32_t qty;
-  double pxFloat;
-  RepEvent * init(){
-    this->BaseEvent::init();
-    oidNew  = htole(oidNew);
-    qty     = htole(qty);
-    pxFloat = htole(pxFloat/(double)10000);
-    //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
-    cout<<"oidNew = "<<oidNew<<" , stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<endl;
-    return this;
-  }
-} __attribute__((packed));
-public:
-  RepOrderParser(): MsgParser(sizeof(RepOrderMsg)){}
-  char parse(char *buf) override{
-//    cout<<"inside RepOrderParser::parse"<<endl;
-    auto * msg = cast<RepOrderMsg>(buf);
-    //msg->ser4test();
-
-    cout<<"Looking up the orders table using order id = "<<msg->oid<<" ..\n";
-    if (Parser::orders.count(msg->oid) == 0){
-      cout<<"order not found. ReplaceOrder message dropped\n";
-      Parser::record("miss#" + to_string(msg->oid), 0, "lookupMiss" );
-      return 'm'; //missing
-    }
-    Order& order = Parser::orders[msg->oid];
-    cout<<order<<" is the original order\n";
-    Parser::orders.erase(msg->oid);
-    order.px4=msg->px4;
-    order.qty=msg->qty;
-    Parser::orders.emplace(msg->oidNew, order);
-    Parser::record("px#" + to_string(msg->oidNew), msg->px4, order.stock);
-    Parser::record("q#" + to_string(msg->oidNew), msg->qty, order.stock);
-    cout<<Parser::orders[msg->oidNew]<<" is the updated order in the lookup table.. now sending event ..\n";
-    auto s=order.stock.c_str();
-    RepEvent * ev=RepEvent{0x04, sizeof(RepEvent), {s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]}, msg->nanos, msg->oid, msg->oidNew, msg->qty, (double)msg->px4}.init();
-    Parser::w2f(ev);
-//    Parser::record("qRepEv#" + to_string(msg->oid*10000+msg->qty), ev->qty, order.stock);
-    return 0; //0 means good
-  }
-};
-class AddOrderParser: public MsgParser{
-struct AddEvent: public BaseEvent{
-  char side;
-  char padding[3];
-  uint32_t qty;
-  double pxFloat;
-  AddEvent * init(){
-    this->BaseEvent::init();
-    qty     = htole(qty);
-    pxFloat = htole(pxFloat/(double)10000);
-    //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
-    cout<<"qty = "<<qty<<" , stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<endl;
-    return this;
-  }
-} __attribute__((packed));
-public:
-  AddOrderParser(): MsgParser(sizeof(AddOrderMsg)){}
-  char parse(char *buf) override{
-    //cout<<"inside AddOrderParser::parse"<<endl;
-    auto * msg = cast<AddOrderMsg>(buf);
-    //msg->ser4test();
-
-    Parser::orders.emplace(make_pair(msg->oid, msg));
-    cout<<"Order ID's currently saved in order lookup table : ";
-    for(auto it = Parser::orders.begin(); it != Parser::orders.end(); ++it){ cout<<it->first<<" "; }
-    Parser::record("px#" + to_string(msg->oid), msg->px4,  msg->stock_());
-    Parser::record("nano#" + to_string(msg->oid), msg->nanos%10000000000,  msg->stock_());
-    Parser::record("side#" + to_string(msg->oid), msg->side, msg->stock_());
-    std::cout<<Parser::orders.size()<<" orders currently in the lookup table.. now sending event..\n";
-    char const* s=msg->stock;
-    AddEvent * ev=AddEvent{0x01, sizeof(AddEvent), {s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]}, msg->nanos, msg->oid, msg->side, {'\0','\0','\0'}, msg->qty, (double)msg->px4}.init();
-    Parser::w2f(ev);
-    return 0; //0 means good
-  }
-};
 /////////// now the static fields and other members of Parser class
 ofstream Parser::file;
 std::map<char, MsgParser*> Parser::workers;
