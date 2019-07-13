@@ -131,9 +131,16 @@ public:
 
     std::cout<<"Looking up the orders table using order id = "<<msg->oid<<" ..\n";
     if (Parser::orders.count(msg->oid) == 0){
-      std::cout<<"order not found. ReplaceOrder message dropped\n";
+      std::cout<<".. Above order id not found. ReplaceOrder message dropped\n";
       Parser::record("miss#" + std::to_string(msg->oid), -1, "lookupMiss" );
       return 'm'; //missing
+    }
+
+    std::cout<<"Looking up the orders table using new order id = "<<msg->oidNew<<" ..\n";
+    if (Parser::orders.count(msg->oidNew)){
+      std::cout<<".. Above replacement order id is already in used.. ReplaceOrder message dropped\n";
+      Parser::record("clash#" + std::to_string(msg->oid), -1, "clash" );
+      return 'c'; //clash
     }
     Order& order = Parser::orders[msg->oid];
     std::cout<<order<<" is the original order\n";

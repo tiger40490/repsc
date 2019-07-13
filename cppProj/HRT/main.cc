@@ -62,6 +62,11 @@ int test2(){
       auto oidOld = 1; //already replace
       myParser.readPayload(RepOrderMsg::fakeMsg(oidOld,oidNew,qty,404904049, px4 ), sizeof(RepOrderMsg));
       assert(0== Parser::check("miss#1", -1, "lookupMiss" ));
+
+      cout<<"\n sending replace with bad new order id..\n";
+      oidOld = 2; // oidNew is still 3 :(
+      myParser.readPayload(RepOrderMsg::fakeMsg(oidOld,oidNew,qty,404904049, px4 ), sizeof(RepOrderMsg));
+      assert(0== Parser::check("clash#2", -1, "clash" ));
     }
 
     return 0;
