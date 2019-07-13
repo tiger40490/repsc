@@ -1,5 +1,5 @@
 #pragma once
-#include "OrderMsg.h"
+#include "OrderMsg.h" // to see the content of AddOrderMsg
 #include <cassert>
 #include <iostream>
 
@@ -11,7 +11,7 @@ struct Order{ // not a Msg or Event object, but a plain old struct
   std::string const stock;
   //char side; //not needed, also order id
 
-  Order(): Order(0,0,std::string()){}
+  Order(): Order(0,0,std::string()){} //needed in STL
 
   Order(AddOrderMsg const * msg): Order(msg->px4, msg->qty, std::string(msg->stock, msg->stock+8)) {
     Parser::record("o+#" + std::to_string(msg->oid), qty, stock);
@@ -23,6 +23,7 @@ struct Order{ // not a Msg or Event object, but a plain old struct
   }
 
 private:
+
   Order(uint32_t p, uint32_t q, std::string s): px4(p), qty(q), stock(s){
 //    std::cout<<stock<<qty<<" <-- an order for this stock has been created .. ";    
   }

@@ -1,8 +1,10 @@
 #pragma once
+
+// Nice -- this header has very few dependencies.. only utils.h
 #include "utils.h" 
 #include <type_traits>
 
-struct HasPrice{}; //struct HasSide{}; struct HasStock{}; struct HasNewOid{}; 
+struct HasPrice{};
 
 template <class T> void castPrice(T* sub,  void const*,    T* _  =nullptr){ throw std::string("This overload should never get picked up at runtime, but is needed at compile-time"); }
 

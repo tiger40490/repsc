@@ -53,7 +53,7 @@ public:
       std::cout<<"order qty reduced to "<<order.qty<<std::endl;
       Parser::record("qExe#" + std::to_string(msg->oid), order.qty, order.stock);
     }
-    std::cout<<order<<" is the updated order.. Now sending event..\n";
+    std::cout<<order<<" is the updated order.. Now broadcasting event..\n";
     auto s=order.stock.c_str();
     ExeEvent * ev=ExeEvent{0x02, sizeof(ExeEvent), {s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]}, msg->nanos, msg->oid, msg->qty, (double)order.px4}.init();
     Parser::w2f(ev);
@@ -96,7 +96,7 @@ public:
       std::cout<<"order qty reduced to "<<order.qty<<std::endl;
       Parser::record("qDec#" + std::to_string(msg->oid), order.qty, order.stock);
     }
-    std::cout<<order<<" is the updated order.. now sending event\n";
+    std::cout<<order<<" is the updated order.. now broadcasting event\n";
     auto s=order.stock.c_str();
     DecEvent * ev=DecEvent{0x03, sizeof(DecEvent), {s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]}, msg->nanos, msg->oid, order.qty}.init();
     Parser::w2f(ev);
@@ -143,7 +143,7 @@ public:
     Parser::orders.emplace(msg->oidNew, order);
     Parser::record("px#" + std::to_string(msg->oidNew), msg->px4, order.stock);
     Parser::record("q#" + std::to_string(msg->oidNew), msg->qty, order.stock);
-    std::cout<<Parser::orders[msg->oidNew]<<" is the updated order in the lookup table.. now sending event ..\n";
+    std::cout<<Parser::orders[msg->oidNew]<<" is the replacement order in the lookup table.. now broadcasting event ..\n";
     auto s=order.stock.c_str();
     RepEvent * ev=RepEvent{0x04, sizeof(RepEvent), {s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]}, msg->nanos, msg->oid, msg->oidNew, msg->qty, (double)msg->px4}.init();
     Parser::w2f(ev);
@@ -181,7 +181,7 @@ public:
     Parser::record("px#" + std::to_string(msg->oid), msg->px4,  msg->stock_());
     Parser::record("nano#" + std::to_string(msg->oid), msg->nanos%10000000000,  msg->stock_());
     Parser::record("side#" + std::to_string(msg->oid), msg->side, msg->stock_());
-    std::cout<<Parser::orders.size()<<" orders currently in the lookup table.. now sending event..\n";
+    std::cout<<Parser::orders.size()<<" orders currently in the lookup table.. now broadcasting event..\n";
     char const* s=msg->stock;
     AddEvent * ev=AddEvent{0x01, sizeof(AddEvent), {s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]}, msg->nanos, msg->oid, msg->side, {'\0','\0','\0'}, msg->qty, (double)msg->px4}.init();
     Parser::w2f(ev);
