@@ -158,6 +158,20 @@ public:
     return 0; //0 means good
   }
 };
+struct AddEvent: public BaseEvent{
+  char side;
+  char padding[3];
+  uint32_t qty;
+  double pxFloat;
+  AddEvent * init(){
+    this->BaseEvent::init();
+    qty     = htole(qty);
+    pxFloat = htole(pxFloat/(double)10000);
+    //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
+    cout<<"qty = "<<qty<<" , stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<endl;
+    return this;
+  }
+} __attribute__((packed));
 class AddOrderParser: public MsgParser{
 public:
   AddOrderParser(): MsgParser(sizeof(AddOrderMsg)){}
@@ -169,10 +183,13 @@ public:
     Parser::orders.emplace(make_pair(msg->oid, msg));
     cout<<"Order ID's currently saved in order lookup table : ";
     for(auto it = Parser::orders.begin(); it != Parser::orders.end(); ++it){ cout<<it->first<<" "; }
-    std::cout<<Parser::orders.size()<<" orders currently in the lookup table\n";
     Parser::record("px#" + to_string(msg->oid), msg->px4,  msg->stock_());
     Parser::record("nano#" + to_string(msg->oid), msg->nanos%10000000000,  msg->stock_());
     Parser::record("side#" + to_string(msg->oid), msg->side, msg->stock_());
+    std::cout<<Parser::orders.size()<<" orders currently in the lookup table.. now sending event..\n";
+    char const* s=msg->stock;
+    AddEvent * ev=AddEvent{0x01, sizeof(AddEvent), {s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]}, msg->nanos, msg->oid, msg->side, {'\0','\0','\0'}, msg->qty, (double)msg->px4}.init();
+    Parser::w2f(ev);
     return 0; //0 means good
   }
 };
@@ -190,7 +207,6 @@ void countWrites(size_t sz){ //Can't be part of w2f since each template instanti
     for (auto const & i : sizes) cout<<(int)i<<" ";
     cout<<len<<" is the total length\n"; 
 }
-
 template<class E> void Parser::w2f(E const* ev){
     file.write(reinterpret_cast<char const*>(ev), sizeof(E));
     countWrites(sizeof(E));
