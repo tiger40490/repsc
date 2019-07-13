@@ -20,6 +20,7 @@ template <typename T> T htobe(const T &input) { // only for testing
     if (s == 2) return htobe16(input);
     throw "Unsupported input data type";
 }
+
 static // static or inline needed to keep this func in header. I prefer to keep this func overload together with the templates. Note func template specialization is a bad idea!
 double htole(double d){ //returns the original d value, if on a little-endian CPU
   uint64_t hostFormat;
@@ -31,6 +32,7 @@ double htole(double d){ //returns the original d value, if on a little-endian CP
   std::memcpy(&ret, &le, sizeof d); //convert from int to float
   return ret;
 }
+
 template <typename T> T htole(const T &input) { // for output to file
     constexpr size_t s = sizeof(T);
     static_assert( (s==2||s==4||s==8) && "programmer error .. unsupported input data type"); //tested

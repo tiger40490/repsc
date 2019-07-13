@@ -25,6 +25,16 @@ struct BaseEvent{
 //    cout<<"BaseEvent::init() done\n";
   }
 } __attribute__((packed));
+struct DecEvent: public BaseEvent{
+  uint32_t qty;
+  DecEvent * init(){
+    this->BaseEvent::init();
+    qty     = htole(qty);
+    //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
+    cout<<"qty rem = "<<qty<<" , stock = "<<stock_()<<", nanosEp = "<<nanosEp<<endl;
+    return this;
+  }
+} __attribute__((packed));
 struct ExeEvent: public BaseEvent{
   uint32_t qty;
   double pxFloat;
@@ -70,16 +80,6 @@ public:
     return 0; //0 means good
   }
 };
-struct DecEvent: public BaseEvent{
-  uint32_t qty;
-  DecEvent * init(){
-    this->BaseEvent::init();
-    qty     = htole(qty);
-    dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
-    cout<<"qty rem = "<<qty<<" , stock = "<<stock_()<<", nanosEp = "<<nanosEp<<endl;
-    return this;
-  }
-} __attribute__((packed));
 class DecOrderParser: public MsgParser{
 public:
   DecOrderParser(): MsgParser(sizeof(DecOrderMsg)){}
