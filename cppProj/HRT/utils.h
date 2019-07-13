@@ -5,8 +5,12 @@
 #include <iomanip>
 #include <cassert>
 
+void dumpBuffer(char const * buf, size_t const len, std::string const headline="");
+uint64_t sinceEpoch(uint64_t sinceMidnight);
+
 template<class T> 
 T const*  cast(char* buf) { // buf content is modified .. not const char*
+    //dumpBuffer(buf, sizeof(T), "utils.h cast()");
     T const * ret = reinterpret_cast<T*>(buf)->init();
     return ret;
 }
@@ -51,6 +55,3 @@ template <typename T> T htobe(const T &input) { // only for testing
     if (s == 2) return htobe16(input);
     throw "Unsupported input data type";
 }
-
-void dumpBuffer(char const * buf, size_t const len, std::string const headline="");
-uint64_t sinceEpoch(uint64_t sinceMidnight);

@@ -37,7 +37,7 @@ struct BaseOrderMsg{
     oid = betoh(oid); 
     nanos = sinceEpoch(betoh(nanos));
     sub->qty = betoh(sub->qty); 
-    cout<<"oid = "<< oid<<", qty = "<<sub->qty<<", nanos since epoch = "<<nanos;
+    cout<<"in BaseOrderMsg::init(): oid = "<< oid<<", qty = "<<sub->qty<<", nanos since epoch = "<<nanos;
 
     if (hasNewOid) sub->deserNewOid();
     if (hasPrice ) castPrice(sub, sub);

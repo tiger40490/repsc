@@ -60,25 +60,26 @@ Parser::Parser(int date, const std::string &outputFilename) {
 }
 
 char Parser::readPayload( char *buf, size_t len) {
-  cout<<len<<" = len in readPayload()"<<endl;
+  cout<<len<<" ===== len in readPayload()"<<endl;
   dumpBuffer(buf, len);
   for (int cnt=1; ; ++cnt){
-      //check msg type then remaining size
     char const msgType = buf[0];
+//    cout<<msgType<<" = msgType found in first byte of # "<<cnt<<" message in this pkt\n";
     MsgParser * worker = Parser::workers[msgType];
     if (worker == nullptr){
       cerr<<msgType<<" is invalid msgType"<<endl;
       return 'i';
     }
     if (len >= worker->msgSz){
-      worker->parse(buf);
-      //if (len == worker->msgSz){
+      worker->parse(buf); //return value should be 0 but if not nothing can be done
       if (len > worker->msgSz){
           len -= worker->msgSz;
+          buf += worker->msgSz;
+ //         cout<<len<<" = len after processing "<<cnt<<" messages in this pkt\n";
           continue;
       }
       assert (len == worker->msgSz);
-//      cout<<cnt<<" messages parsed and packet is exhausted"<<endl;
+      cout<<cnt<<" messages parsed and packet is exhausted"<<endl;
 
       // todo should look for the next packet's payload in the warehouse , in tail recursive call
       return 0;

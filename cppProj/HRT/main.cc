@@ -73,18 +73,60 @@ int test2(){
       myParser.readPayload(DecOrderMsg::fakeMsg(3,5555,404904049040490), sizeof(DecOrderMsg));
       assert(0== Parser::check("qDecOver#3", 0,   "SPY     "));
       assert(0== Parser::check("qDecEv#35555", 0,   "SPY     "));
-    }
-
-    return 0;
+    } return 0;
 }
 void testPackets(){
-  PacketBuilder builder;
-  auto oidNew = 3; auto qty = 1000; auto px4=200.11*10000;
-  builder.fakeMsg<RepOrderMsg>(1,oidNew,qty,404904049040490, px4)
-         .fakeMsg<ExeOrderMsg>(3,555,404904049040490);
-
   Parser parser(20191130,"out");
-  builder.pack_n_send( &parser, 4);
+  { //original 2 AddOrders
+    int fd = open(inputFile, O_RDONLY);
+    if (fd == -1) {
+        fprintf(stderr, "Couldn't open %s\n", inputFile);
+        return ;
+    }
+    char bigbuf[5000];
+    while (read(fd, bigbuf, 2) != 0) {
+        uint16_t packetSize = htons(*(uint16_t *)bigbuf);
+        auto dummy = read(fd, bigbuf + 2, packetSize - 2);
+        parser.onUDPPacket(bigbuf, packetSize);
+    }
+  }
+      PacketBuilder builder;
+      auto oidNew = 3; auto qty = 1000; auto px4=200.11*10000;
+      cout<<" creating duplicate seq \n";
+      builder.fakeMsg<RepOrderMsg>(1,oidNew,qty,404904049040490, px4)
+             .fakeMsg<ExeOrderMsg>(3,555,404904049040490);
+      builder.pack_n_send( &parser, 2);
+  cout<<"  ----- replace -----\n";
+      builder.fakeMsg<RepOrderMsg>(1,oidNew,qty,404904049040490, px4 );
+      cout<<" creating replace for bad order id..\n";
+      auto oidOld = 1; //already replace
+      builder.fakeMsg<RepOrderMsg>( oidOld,oidNew,qty,404904049040490, px4 );
+      cout<<" creating replace with bad new order id..\n";
+      oidOld = 2; // oidNew is still 3 :(
+      builder.fakeMsg<RepOrderMsg>( oidOld,oidNew,qty,404904049040490, px4 );
+      builder.pack_n_send( &parser, 3);
+  cout<<"\n ---- exe --- \n";
+      auto qtyExe=50; qty -= qtyExe;
+builder.fakeMsg<ExeOrderMsg>( 3,qtyExe,404904049040490);
+ // builder.pack_n_send( &parser, 4);
+      cout<<"\n ---- cxl --- \n";
+      auto qtyDec = 55; qty -= qtyDec;
+builder.fakeMsg< DecOrderMsg>( 3,qtyDec,404904049040490);
+      cout<<"\n creating cxl with oversized qty..\n";
+builder.fakeMsg< DecOrderMsg>( 3,5555,404904049040490);
+  builder.pack_n_send( &parser, 5);
+return;
+      assert(0== Parser::check("q#3",  qty, "SPY     ")); //rep
+      assert(0== Parser::check("px#3", px4, "SPY     ")); //rep
+      assert(0== Parser::check("miss#1", -1, "lookupMiss" )); //bad oid
+      assert(0== Parser::check("clash#2", -1, "clash" )); //bad rep oid
+
+      assert(0== Parser::check("qExe#3", qty,      "SPY     ")); //exe
+
+      assert(0== Parser::check("qDec#3",    qty,      "SPY     ")); //cxl
+      assert(0== Parser::check("qDecEv#30055", qty,"SPY     ")); //cxl
+      assert(0== Parser::check("qDecOver#3", 0,   "SPY     ")); //oversized cxl
+      assert(0== Parser::check("qDecEv#35555", 0,   "SPY     ")); //oversized cxl
 }
 int main(int argc, char **argv) {
   testPackets(); return 0;
