@@ -154,7 +154,6 @@ public:
     auto s=order.stock.c_str();
     RepEvent * ev=RepEvent{0x04, sizeof(RepEvent), {s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]}, msg->nanos, msg->oid, msg->oidNew, msg->qty, (double)msg->px4}.init();
     Parser::w2f(ev);
-//    Parser::record("qRepEv#" + std::to_string(msg->oid*10000+msg->qty), ev->qty, order.stock);
     return 0; //0 means good
   }
 };

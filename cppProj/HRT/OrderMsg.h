@@ -60,7 +60,7 @@ struct BaseOrderMsg{
     if (hasPrice) castPrice(const_cast<T*>(sub), sub, &clone);
     if (hasNewOid) clone.serNewOid4test(sub);
     static_assert( sizeof(T) == msgSz);
-    auto ret = reinterpret_cast<char*> (&clone); dumpBuffer(ret, sizeof(T), "serialized msg (BE) for test");
+    auto ret = reinterpret_cast<char*> (&clone); //dumpBuffer(ret, sizeof(T), "serialized msg (BE) for test");
     if (tgt) {
       memcpy(tgt, ret, msgSz);
       //std::cout<<msgSz<<" = memcpy byte count\n";

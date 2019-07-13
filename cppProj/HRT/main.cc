@@ -38,21 +38,10 @@ int test2(){
     assert(0== Parser::check("nano#2", 2123456789, "SPY     "));
     // basic basic test done, using the two AddOrder's provided
 
-    cout<<"\n ---- sending cxl.. 55 shares\n";
-    myParser.readPayload(DecOrderMsg::fakeMsg(1,55,404904049), sizeof(DecOrderMsg));
-    assert(0== Parser::check("qDec#1",   45,      "SPY     "));
-    assert(0== Parser::check("qDecEv#10055", 45,      "SPY     "));
-    cout<<"\nsending cxl with oversized qty..\n";
-    myParser.readPayload(DecOrderMsg::fakeMsg(1,5555,404904049), sizeof(DecOrderMsg));
-    assert(0== Parser::check("qDecOver#1", 0,   "SPY     "));
-    assert(0== Parser::check("qDecEv#15555", 0,   "SPY     "));
-    cout<<"\n ---- sending exe.. \n";
-    myParser.readPayload(ExeOrderMsg::fakeMsg(2,54,404904049), sizeof(ExeOrderMsg));
-    assert(0== Parser::check("qExe#2", 46,      "SPY     "));
 
     { // to limit variable scope
       cout<<"\n  ----- replace -----\n";
-      auto oidNew = 3; auto qty = 101; auto px4=200.11*10000;
+      auto oidNew = 3; auto qty = 1000; auto px4=200.11*10000;
       myParser.readPayload( RepOrderMsg::fakeMsg(1,oidNew,qty,404904049, px4 )
                           , sizeof(RepOrderMsg));
       assert(0== Parser::check("q#3",  qty, "SPY     "));
@@ -67,6 +56,22 @@ int test2(){
       oidOld = 2; // oidNew is still 3 :(
       myParser.readPayload(RepOrderMsg::fakeMsg(oidOld,oidNew,qty,404904049, px4 ), sizeof(RepOrderMsg));
       assert(0== Parser::check("clash#2", -1, "clash" ));
+
+      cout<<"\n ---- exe --- \n";
+      auto qtyExe=50; qty -= qtyExe;
+      myParser.readPayload(ExeOrderMsg::fakeMsg(3,qtyExe,404904049), sizeof(ExeOrderMsg));
+      assert(0== Parser::check("qExe#3", qty,      "SPY     "));
+
+      cout<<"\n ---- cxl --- \n";
+      auto qtyDec = 55; qty -= qtyDec;
+      myParser.readPayload(DecOrderMsg::fakeMsg(3,qtyDec,404904049), sizeof(DecOrderMsg));
+      assert(0== Parser::check("qDec#3",    qty,      "SPY     "));
+      assert(0== Parser::check("qDecEv#30055", qty,"SPY     "));
+
+      cout<<"\nsending cxl with oversized qty..\n";
+      myParser.readPayload(DecOrderMsg::fakeMsg(3,5555,404904049), sizeof(DecOrderMsg));
+      assert(0== Parser::check("qDecOver#3", 0,   "SPY     "));
+      assert(0== Parser::check("qDecEv#35555", 0,   "SPY     "));
     }
 
     return 0;

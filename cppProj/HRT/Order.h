@@ -18,7 +18,7 @@ struct Order{ // not a Msg or Event object, but a plain old struct
   }
 
   friend std::ostream & operator<<(std::ostream & os, Order const & i){
-    os<<"Order{ q= "<<i.qty<<" p(int)= "<<i.px4<<" stock= "<<i.stock<<"}";
+    os<<"Order{ q= "<<i.qty<<" , p(int)= "<<i.px4<<" , stock= "<<i.stock<<"}";
     return os;
   }
 
