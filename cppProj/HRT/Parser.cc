@@ -17,7 +17,7 @@ using namespace std;
 ofstream Parser::file;
 std::map<char, MsgParser*> Parser::workers;
 std::unordered_map<uint32_t, Order> Parser::orders;
-std::map<std::string, map<std::string, int64_t>> Parser::eventRecorder;
+std::map<std::string, map<std::string, int64_t>> Parser::actionRecorder;
 
 void countWrites(size_t sz){ //Can't be part of w2f since each template instantiation of w2f has a separate allocation of static local variables
     static int cnt=0; ++cnt;
@@ -31,22 +31,22 @@ template<class E> void Parser::w2f(E const* ev){
     file.write(reinterpret_cast<char const*>(ev), sizeof(E));
     countWrites(sizeof(E));
 }
-char Parser::record(std::string eventId, int64_t val, std::string stock ){
-  if (Parser::eventRecorder.count(eventId) ){
-     //throw string( "eventId should be globally unique" );
-     assert(Parser::eventRecorder[eventId].count(stock) ==0 && "Programmer error.. repeated eventId for the same stock, However, this is part of test fixture, not for production error reporting, so we should  NOT throw exception." );
+char Parser::record(std::string actionId, int64_t val, std::string stock ){
+  if (Parser::actionRecorder.count(actionId) ){
+     //throw string( "actionId should be globally unique" );
+     assert(Parser::actionRecorder[actionId].count(stock) ==0 && "Programmer error.. repeated actionId for the same stock, However, this is part of test fixture, not for production error reporting, so we should  NOT throw exception." );
      return 'r';  //repeat
   }
-  Parser::eventRecorder[eventId][stock] = val;
-  //cout<<val<<" recorded against "<<stock<<eventId<<endl;
+  Parser::actionRecorder[actionId][stock] = val;
+  //cout<<val<<" recorded against "<<stock<<actionId<<endl;
   return 0; 
 }
-char Parser::check(std::string eventId, int64_t exp, std::string stock){
-  //cout<<"checking "<<eventId<<endl;
-  if (Parser::eventRecorder.count(eventId) == 0) return 'e'  ; //no such event id in recorder
-  if (Parser::eventRecorder[eventId].count(stock) == 0) return 's'; // no such stock
-  if (Parser::eventRecorder[eventId][stock] != exp ) return 'u' ;  // values unequal
-  cout<<"  :) "<<exp<<" verified against "<<eventId<<" / "<<stock<<endl;
+char Parser::check(std::string actionId, int64_t exp, std::string stock){
+  //cout<<"checking "<<actionId<<endl;
+  if (Parser::actionRecorder.count(actionId) == 0) return 'e'  ; //no such event id in recorder
+  if (Parser::actionRecorder[actionId].count(stock) == 0) return 's'; // no such stock
+  if (Parser::actionRecorder[actionId][stock] != exp ) return 'u' ;  // values unequal
+  cout<<"  :) "<<exp<<" verified against "<<actionId<<" / "<<stock<<endl;
   return 0;
 }
 

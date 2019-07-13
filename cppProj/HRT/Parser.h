@@ -14,7 +14,7 @@ struct MsgParser;
 class Parser {
     static std::map<char, MsgParser*> workers; //individual msg parsers
 
-    static std::map<std::string, std::map<std::string, int64_t>> eventRecorder; //for simple testing... 1st lookup key is some event id; 2nd key is stock ticker or zero-length string.
+    static std::map<std::string, std::map<std::string, int64_t>> actionRecorder; //for simple testing... 1st lookup key is some action id; 2nd key is stock ticker or zero-length string.
 
 
     // sequence management:
@@ -46,6 +46,6 @@ class Parser {
 
     template<class E> 
     static void w2f(E const* ev); //write to file
-    static char check (std::string eventId, int64_t exp, std::string stock ="");
-    static char record(std::string eventId, int64_t val, std::string stock ="");
+    static char check (std::string actionId, int64_t exp, std::string stock ="");
+    static char record(std::string actionId, int64_t val, std::string stock ="");
 };
