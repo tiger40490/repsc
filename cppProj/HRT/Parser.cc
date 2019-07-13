@@ -32,7 +32,7 @@ struct ExeEvent: public BaseEvent{
     this->BaseEvent::init();
     qty     = htole(qty);
     pxFloat = htole(pxFloat/(double)10000);
-    dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
+    //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
     cout<<"stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<endl;
     return this;
   }
@@ -66,13 +66,20 @@ public:
     cout<<order<<" is the updated order.. Now sending event..\n";
     auto s=order.stock.c_str();
     ExeEvent * ev=ExeEvent{0x02, sizeof(ExeEvent), {s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]}, msg->nanos, msg->oid, msg->qty, (double)order.px4}.init();
-
-    //static char serBuf[sz]; //to be overwritten each time
-
     Parser::w2f(ev);
     return 0; //0 means good
   }
 };
+struct DecEvent: public BaseEvent{
+  uint32_t qty;
+  DecEvent * init(){
+    this->BaseEvent::init();
+    qty     = htole(qty);
+    dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
+    cout<<"qty rem = "<<qty<<" , stock = "<<stock_()<<", nanosEp = "<<nanosEp<<endl;
+    return this;
+  }
+} __attribute__((packed));
 class DecOrderParser: public MsgParser{
 public:
   DecOrderParser(): MsgParser(sizeof(DecOrderMsg)){}
@@ -99,7 +106,11 @@ public:
     }
     cout<<order<<" is the updated order\n";
 
-    // now send msg out
+    auto s=order.stock.c_str();
+    DecEvent * ev=DecEvent{0x03, sizeof(DecEvent), {s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]}, msg->nanos, msg->oid, order.qty}.init();
+    Parser::w2f(ev);
+
+    Parser::record("qDecEv#" + to_string(msg->oid*10000+msg->qty), ev->qty, order.stock);
     return 0; //0 means good
   }
 };

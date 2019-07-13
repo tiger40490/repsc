@@ -40,10 +40,13 @@ int test2(){
 
     cout<<"\n ---- sending cxl.. 55 shares\n";
     myParser.readPayload(DecOrderMsg::fakeMsg(1,55,404904049), sizeof(DecOrderMsg));
-    assert(0== Parser::check("qDec#1", 45,      "SPY     "));
+    assert(0== Parser::check("qDec#1",   45,      "SPY     "));
+    assert(0== Parser::check("qDecEv#10055", 45,      "SPY     "));
     cout<<"\nsending cxl with oversized qty..\n";
     myParser.readPayload(DecOrderMsg::fakeMsg(1,5555,404904049), sizeof(DecOrderMsg));
     assert(0== Parser::check("qDecOver#1", 0,   "SPY     "));
+    assert(0== Parser::check("qDecEv#15555", 0,   "SPY     "));
+return 0;
     cout<<"\n ---- sending exe.. \n";
     myParser.readPayload(ExeOrderMsg::fakeMsg(2,54,404904049), sizeof(ExeOrderMsg));
     assert(0== Parser::check("qExe#2", 46,      "SPY     "));
