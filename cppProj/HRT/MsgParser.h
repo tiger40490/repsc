@@ -1,17 +1,12 @@
 #pragma once
 #include "Parser.h"
-#include "OrderMsg.h"
 #include "Order.h"
 #include "BaseEvent.h"
 #include "utils.h"
 #include <iostream>
-#include <deque>
 #include <vector>
-#include <map>
 #include <cstddef> //size_t
 #include <cassert>
-
-//struct Parser; //#include "Parser.h" //circular dependency ... must use forward declaration
 
 struct MsgParser{ //StatelessMsgParser
   size_t const msgSz; 
@@ -19,22 +14,24 @@ struct MsgParser{ //StatelessMsgParser
 protected:
   MsgParser(size_t sz): msgSz(sz){}
 };
-// move to MsgParser.h, but for vi-IDE, this way is much quicker
+
 class ExeOrderParser: public MsgParser{
-struct ExeEvent: public BaseEvent{
-  uint32_t qty;
-  double pxFloat;
-  ExeEvent * init(){
-    this->BaseEvent::init();
-    qty     = htole(qty);
-    pxFloat = htole(pxFloat/(double)10000);
-    //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
-    std::cout<<"stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<std::endl;
-    return this;
-  }
-} __attribute__((packed));
+  struct ExeEvent: public BaseEvent{
+    uint32_t qty;
+    double pxFloat;
+    ExeEvent * init(){
+      this->BaseEvent::init();
+      qty     = htole(qty);
+      pxFloat = htole(pxFloat/(double)10000);
+      //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
+      std::cout<<"stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<std::endl;
+      return this;
+    }
+  } __attribute__((packed));
+
 public:
   ExeOrderParser(): MsgParser(sizeof(ExeOrderParser)){}
+
   char parse(char *buf) override{
 //    std::cout<<"inside ExeOrderParser::parse"<<std::endl;
     auto * msg = cast<ExeOrderMsg>(buf);
@@ -63,17 +60,19 @@ public:
     return 0; //0 means good
   }
 };
+
 class DecOrderParser: public MsgParser{
-struct DecEvent: public BaseEvent{
-  uint32_t qty;
-  DecEvent * init(){
-    this->BaseEvent::init();
-    qty     = htole(qty);
-    //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
-    std::cout<<"qty rem = "<<qty<<" , stock = "<<stock_()<<", nanosEp = "<<nanosEp<<std::endl;
-    return this;
-  }
-} __attribute__((packed));
+  struct DecEvent: public BaseEvent{
+    uint32_t qty;
+    DecEvent * init(){
+      this->BaseEvent::init();
+      qty     = htole(qty);
+      //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
+      std::cout<<"qty rem = "<<qty<<" , stock = "<<stock_()<<", nanosEp = "<<nanosEp<<std::endl;
+      return this;
+    }
+  } __attribute__((packed));
+
 public:
   DecOrderParser(): MsgParser(sizeof(DecOrderMsg)){}
   char parse(char *buf) override{
@@ -106,21 +105,23 @@ public:
     return 0; //0 means good
   }
 };
+
 class RepOrderParser: public MsgParser{
-struct RepEvent: public BaseEvent{
-  uint64_t oidNew;
-  uint32_t qty;
-  double pxFloat;
-  RepEvent * init(){
-    this->BaseEvent::init();
-    oidNew  = htole(oidNew);
-    qty     = htole(qty);
-    pxFloat = htole(pxFloat/(double)10000);
-    //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
-    std::cout<<"oidNew = "<<oidNew<<" , stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<std::endl;
-    return this;
-  }
-} __attribute__((packed));
+  struct RepEvent: public BaseEvent{
+    uint64_t oidNew;
+    uint32_t qty;
+    double pxFloat;
+    RepEvent * init(){
+      this->BaseEvent::init();
+      oidNew  = htole(oidNew);
+      qty     = htole(qty);
+      pxFloat = htole(pxFloat/(double)10000);
+      //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
+      std::cout<<"oidNew = "<<oidNew<<" , stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<std::endl;
+      return this;
+    }
+  } __attribute__((packed));
+
 public:
   RepOrderParser(): MsgParser(sizeof(RepOrderMsg)){}
   char parse(char *buf) override{
@@ -150,21 +151,23 @@ public:
     return 0; //0 means good
   }
 };
+
 class AddOrderParser: public MsgParser{
-struct AddEvent: public BaseEvent{
-  char side;
-  char padding[3];
-  uint32_t qty;
-  double pxFloat;
-  AddEvent * init(){
-    this->BaseEvent::init();
-    qty     = htole(qty);
-    pxFloat = htole(pxFloat/(double)10000);
+  struct AddEvent: public BaseEvent{
+    char side;
+    char padding[3];
+    uint32_t qty;
+    double pxFloat;
+    AddEvent * init(){
+      this->BaseEvent::init();
+      qty     = htole(qty);
+      pxFloat = htole(pxFloat/(double)10000);
     //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
-    std::cout<<"qty = "<<qty<<" , stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<std::endl;
-    return this;
-  }
-} __attribute__((packed));
+      std::cout<<"qty = "<<qty<<" , stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<std::endl;
+      return this;
+    }
+  } __attribute__((packed));
+
 public:
   AddOrderParser(): MsgParser(sizeof(AddOrderMsg)){}
   char parse(char *buf) override{

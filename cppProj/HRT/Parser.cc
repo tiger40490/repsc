@@ -2,18 +2,17 @@
 #include "PacketHeader.h"
 #include "OrderMsg.h"
 #include "MsgParser.h"
-#include "utils.h"
 
+#include "utils.h"
 #include "Order.h"
 #include "BaseEvent.h"
 
-#include <cassert>
 #include <iostream>
 #include <deque>
 #include <vector>
 #include <map>
+#include <cassert>
 using namespace std;
-// move to MsgParser.h, but for vi-IDE, this way is much quicker
 
 
 /////////// now the static fields and other members of Parser class
