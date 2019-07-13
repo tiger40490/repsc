@@ -19,8 +19,8 @@ class Parser {
 
     // sequence management:
     uint32_t lastSeq=0, expectedSeq=1; //We only need one of these two fields, but I keep both for convenience.
-    void updateSeq(uint32_t processed){
-      assert( lastSeq+1 == expectedSeq && expectedSeq == processed );
+    void updateSeq(uint32_t processed=0){
+      if (processed > 0) assert( lastSeq+1 == expectedSeq && expectedSeq == processed );
       ++lastSeq;
       expectedSeq = lastSeq  + 1;
     }

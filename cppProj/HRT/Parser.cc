@@ -60,8 +60,6 @@ Parser::Parser(int date, const std::string &outputFilename) {
   }
 }
 
-deque<vector<char>> wh;
-int64_t whLowSeq=-1; // wh[ pktSeq-lowSeq ] is the vector holding the payload of a packet
 char Parser::readPayload( char *buf, size_t len) {
   cout<<len<<" ===== len in readPayload()"<<endl;
   //dumpBuffer(buf, len);
@@ -83,21 +81,20 @@ char Parser::readPayload( char *buf, size_t len) {
       }
       assert (len == worker->msgSz);
       cout<<cnt<<" messages parsed and payload is exhausted. Now looking for next payload in warehouse.."<<endl;
-
-      // todo should look for the next packet's payload in the warehouse , in tail recursive call
       return 0;
     }else{ 
-      //todo save the partial msg
-      return 'p';
+      return 'p'; //todo save the partial msg
     }
   }    
 }
+deque<vector<char>> wh;
+int64_t whLowSeq=-1; // wh[ pktSeq-lowSeq ] is the vector holding the payload of a packet
 void Parser::onUDPPacket(const char *buf, size_t len) {
   size_t const len2 = len;
   //dumpBuffer(buf, len, "into onUDP");
   auto hdr = cast<PacketHeader>(const_cast<char*>(buf));
   //dumpBuffer(buf, len, "after reinterpret_cast, showing in-place endianness conversion");
-  cout<<"Received pkt of len = "<<len<<", header showing { sz = "<<hdr->sz<<", seq = "<<hdr->seq<<" } while parser's expectedSeq is "<<this->expectedSeq<<endl;
+
   if (len != hdr->sz){
       cerr<<"Size value in header differs from buffer length... corrupted buffer, to be discarded."<<endl; return; //no updateSeq()
   }
@@ -132,16 +129,34 @@ void Parser::onUDPPacket(const char *buf, size_t len) {
     assert ( whLowSeq <= seq && seq < whLowSeq + wh.size());
     wh[seq-whLowSeq] = vector<char>(buf + PKT_HDR_SZ, buf + len);
     char const * saved = wh[seq-whLowSeq].data();
-    dumpBuffer(saved, len-PKT_HDR_SZ, "warehoused payload with seq matching our header ");
+    dumpBuffer(saved, len-PKT_HDR_SZ, "just warehoused ");
     return; //no updateSeq()
   }
   assert (seq == this->expectedSeq );
-  //cout<<"Header seq above is The Expected .. now processing payload"<<endl;
+  cout<<"Header seq above is The Expected .. now processing payload"<<endl;
   if (len == PKT_HDR_SZ ){ cout<<"dummy packet .. taken as a heartbeat"<<endl; 
-  }else{
-    assert(len > PKT_HDR_SZ ); 
-    readPayload(const_cast<char*>(buf)+PKT_HDR_SZ,  len-PKT_HDR_SZ);
+    updateSeq(seq); 
+    return;
   }
+  assert(len > PKT_HDR_SZ ); 
+  readPayload(const_cast<char*>(buf)+PKT_HDR_SZ,  len-PKT_HDR_SZ);
   updateSeq(seq); 
+  for(;/*idx < wh.size() && wh[idx].size()*/;){
+    int idx = this->expectedSeq - whLowSeq;
+    if (idx < 0) break;
+    if (idx >= (int) wh.size()) break;
+    if (wh[idx].empty()) break; //dummy payload
+    char * payload = wh[idx].data();
+    cout<<this->expectedSeq<<" <-- The payload with this seq now located in warehouse.. parsing..\n";
+    readPayload(payload, wh[idx].size());
+    updateSeq(); 
+    size_t const outdatedCnt = this->expectedSeq - whLowSeq; 
+    cout<<"Freeing memory by releasing  "<<outdatedCnt<< "  outdated payloads from warehouse..\n";
+    for (size_t popped=0; popped < outdatedCnt; ++popped){
+      wh.pop_front(); //std::vector would destroy the underlying array on heap, freeing up memory
+    }
+    whLowSeq = this->expectedSeq;
+    cout<<whLowSeq<<" is the now the Lowest Seq in warehouse\n";
+  }
   return;
 }
