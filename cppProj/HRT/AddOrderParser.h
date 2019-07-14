@@ -16,7 +16,7 @@ class AddOrderParser: public MsgParser{
       qty     = htole(qty);
       pxFloat = htole(pxFloat/(double)10000);
     //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
-      //std::cout<<"qty = "<<qty<<" , stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<std::endl;
+      ss1<<"qty = "<<qty<<" , stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<std::endl;
       return this;
     }
   } __attribute__((packed));
@@ -27,9 +27,9 @@ public:
   char parse(char *buf) override{
     auto * msg = cast<AddOrderMsg>(buf);
     Parser::orders.emplace(std::make_pair(msg->oid, msg));
-    std::cout<<"Order ID's currently saved in order lookup table : ";
-    for(auto it = Parser::orders.begin(); it != Parser::orders.end(); ++it){ std::cout<<it->first<<" "; }
-    std::cout<<".. Total "<<Parser::orders.size()<<" orders currently in the lookup table.. now recording actions and broadcasting event..\n";
+    ss2<<"Order ID's currently saved in order lookup table : ";
+    for(auto it = Parser::orders.begin(); it != Parser::orders.end(); ++it){ ss2<<it->first<<" "; }
+    ss2<<".. Total "<<Parser::orders.size()<<" orders currently in the lookup table.. now recording actions and broadcasting event..\n";
     Parser::record("px#" + std::to_string(msg->oid), msg->px4,  msg->stock_());
     Parser::record("nano#" + std::to_string(msg->oid), msg->nanos%10000000000,  msg->stock_());
     Parser::record("side#" + std::to_string(msg->oid), msg->side, msg->stock_());

@@ -16,7 +16,7 @@ class RepOrderParser: public MsgParser{
       qty     = htole(qty);
       pxFloat = htole(pxFloat/(double)10000);
       //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
-      //std::cout<<"oidNew = "<<oidNew<<" , stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<std::endl;
+      ss1<<"oidNew = "<<oidNew<<" , stock = "<<stock_()<<",pxFloat = "<<pxFloat<< ", nanosEp = "<<nanosEp<<std::endl;
       return this;
     }
   } __attribute__((packed));
@@ -26,28 +26,28 @@ public:
   }
   char parse(char *buf) override{
     auto * msg = cast<RepOrderMsg>(buf);
-    std::cout<<"Looking up the orders table using order id = "<<msg->oid<<" ..\n";
+    ss1<<"Looking up the orders table using order id = "<<msg->oid<<" ..\n";
     if (Parser::orders.count(msg->oid) == 0){
-      std::cout<<".. Above order id not found. ReplaceOrder message dropped\n";
+      ss3<<".. Above order id not found. ReplaceOrder message dropped\n";
       Parser::record("miss#" + std::to_string(msg->oid), -1, "lookupMiss" );
       return 'm'; //missing
     }
 
-    std::cout<<"Looking up the orders table using replacement order id = "<<msg->oidNew<<" ..\n";
+    ss2<<"Looking up the orders table using replacement order id = "<<msg->oidNew<<" ..\n";
     if (Parser::orders.count(msg->oidNew)){
-      std::cout<<".. Above replacement order id is already in use .. ReplaceOrder message dropped\n";
+      ss3<<".. Above replacement order id is already in use .. ReplaceOrder message dropped\n";
       Parser::record("clash#" + std::to_string(msg->oid), -1, "clash" );
       return 'c'; //clash
     }
     Order& order = Parser::orders[msg->oid];
-    std::cout<<order<<" is the original order\n";
+    ss2<<order<<" is the original order\n";
     Parser::orders.erase(msg->oid);
     order.px4=msg->px4;
     order.qty=msg->qty;
     Parser::orders.emplace(msg->oidNew, order);
     Parser::record("px#" + std::to_string(msg->oidNew), msg->px4, order.stock);
     Parser::record("q#" + std::to_string(msg->oidNew), msg->qty, order.stock);
-    std::cout<<Parser::orders[msg->oidNew]<<" is the replacement order in the lookup table.. now broadcasting event ..\n";
+    ss2<<Parser::orders[msg->oidNew]<<" is the replacement order in the lookup table.. now broadcasting event ..\n";
     auto s=order.stock.c_str();
     RepEvent * ev=RepEvent{0x04, sizeof(RepEvent), {s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]}, msg->nanos, msg->oid, msg->oidNew, msg->qty, (double)msg->px4}.init();
     Parser::w2f(ev);
