@@ -55,6 +55,6 @@ Due to lack of time, many rough edes and loose ends..
 
 * Many "global" functions and variables are implemented as static members. They can become non-static members or stand-alone classes.
 
-* Many member functions are implemented in headers. They should probably go into implementation files.
+* Many member functions are implemented in headers. They should probably go into implementation files. However, template functions must remain in headers.
 
 * reinterpret_cast is controversial and non-portable, but I have seen it used in high-performance production codebase on linux.
