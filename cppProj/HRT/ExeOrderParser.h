@@ -47,6 +47,10 @@ public:
     auto s=order.stock.c_str();
     ExeEvent * ev=ExeEvent{0x02, sizeof(ExeEvent), {s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]}, msg->nanos, msg->oid, msg->qty, (double)order.px4}.init();
     Parser::w2f(ev);
+    if (order.qty == 0){
+      Parser::orders.erase(msg->oid);
+      ss2<<"Order # "<<msg->oid<<" remved from order lookup table, to free up memory and speed up future lookup\n";
+    }
     return 0; //0 means good
   }
 };

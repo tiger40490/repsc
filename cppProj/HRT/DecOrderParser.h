@@ -43,6 +43,10 @@ public:
     DecEvent * ev=DecEvent{0x03, sizeof(DecEvent), {s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]}, msg->nanos, msg->oid, order.qty}.init();
     Parser::w2f(ev);
     Parser::record("qDecEv#" + std::to_string(msg->oid*10000+msg->qty), ev->qty, order.stock);
+    if (order.qty == 0){
+      Parser::orders.erase(msg->oid);
+      ss2<<"Order # "<<msg->oid<<" remved from order lookup table, to free up memory and speed up future lookup\n";
+    }
     return 0; //0 means good
   }
 };
