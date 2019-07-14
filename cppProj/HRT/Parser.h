@@ -8,8 +8,8 @@
 #include <unordered_map>
 #include <cassert>
 
-struct Order;
-struct MsgParser;
+class Order;
+class MsgParser;
 
 class Parser {
     static std::map<char, MsgParser*> workers; //individual msg parsers

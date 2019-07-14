@@ -3,7 +3,7 @@
 #include <cassert>
 #include <iostream>
 
-struct Parser; //#include "Parser.h" //circular dependency ... must use forward declaration
+class Parser; //#include "Parser.h" //circular dependency ... must use forward declaration
 
 struct Order{ // not a Msg or Event object, but a plain old struct
   uint32_t px4;
