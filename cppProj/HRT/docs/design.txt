@@ -5,7 +5,9 @@
 
 #2 Assumption: packets must be processed in strict incrementing sequence with no "jump". 
 
-These assumptions have fundamental implications.
+These two assumptions have fundamental implications.
+
+#3 Assumption: Upon a Replace message, we only need to generate a Replace event, which includes the original order ID. Therefore, cancellation of original order is implied and should Not be broadcast as a redundant event adding unnecssary load to network and sender/receivers.
 
 # -- Warehouse container of OOS packet payloads --
 I decided to use a std::deque of packet (payloads actually), indexed by their seq nums to hold unprocessed packets, usually received too early i.e. out-of-sequence. 
@@ -46,15 +48,32 @@ I think output socket is one of the simplest and fastest interfaces for broadcas
 
 In this toy program, I am required to save the output to a file. Therefore, I have decided to forgo efficiency and simply dump each event message to the same file.
 
+# -- dev-only, non-production files --
+Source code in a few files are quick-n-dirty because these are strictly for dev-testing only, not production:
+* PacketBuilder.h
+* main.cc
+* ser4test() in messages.h
+* actionRecorder in Parser.*
+* dumpBuffer() in utils.cc
+
 # -- Coding convention notes --
 Due to lack of time, many rough edes and loose ends..
 
-* Many functions return a 'char' status code. Status can be checked in the future.
+* char return type -- is used in many functions as status code. Status can be checked in the future.
 
-* A few simple template function/classes were thrown together in my solution, but not fully justified. In a bigger project templates would be evaluated against many design tradeoffs.
+* templates -- A few simple template function/classes were thrown together in my solution, but not fully justified. In a bigger project templates would be evaluated against many design tradeoffs.
 
-* Many "global" functions and variables are implemented as static members. They can become non-static members or stand-alone classes.
+* Capitalized filenames -- Only Capitalized filenames define classes, where the class name is the file name. In messages.h, there are many small and similar classes .. better maintained as a unit, based on my experience.
+
+* "global" functions and variables -- many are implemented as static members. They can become non-static members or stand-alone classes.
 
 * Many member functions are implemented in headers. They should probably go into implementation files. However, template functions must remain in headers.
 
-* reinterpret_cast is controversial and non-portable, but I have seen it used in high-performance production codebase on linux.
+* reinterpret_cast -- controversial and non-portable, but I have seen it used in high-performance production codebase on linux.
+
+* virtual functions -- I used very few of them. Instead, I prefer templates.
+
+* raw array vs dynamic containers -- in general, I prefer fixed arrays instead of dynamic containers because on-demand heap allocation is expensive at run-time when the container needs reallocation. 
+  * the 'actionRecorder' container is not used in production.. no efficiency consideration.
+  * the 'workers' lookup table is static and never grows after initilization. In produciton codebase, raw array is preferrable, otherwise perfect-hash.
+  * the 'warehouse' data structure is discussed in a dedicated section
