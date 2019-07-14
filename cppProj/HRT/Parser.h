@@ -1,7 +1,6 @@
 #pragma once
 
 //#include "Order.h" //circular dependency
-//#include "MsgParser.h"
 #include <fstream>
 #include <string>
 #include <map>
@@ -48,4 +47,5 @@ class Parser {
     static void w2f(E const* ev); //write to file
     static char check (std::string actionId, int64_t exp, std::string stock ="");
     static char record(std::string actionId, int64_t val, std::string stock ="");
+    static void clear();
 };

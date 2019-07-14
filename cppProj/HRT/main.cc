@@ -75,9 +75,12 @@ int test2(){ //Outdated test used to test readPayload() directly
       myParser.readPayload(DecOrderMsg::fakeMsg(3,5555,404904049040490), sizeof(DecOrderMsg));
       assert(0== Parser::check("qDecOver#3", 0,   "SPY     "));
       assert(0== Parser::check("qDecEv#35555", 0,   "SPY     "));
-    } return 0;
+    }
+    Parser::clear();
+    cout<<"\n==========================================================\n";
+    return 0;
 }
-void testPackets(){
+void testPackets(){ // integration test
       Parser parser(20191130,"out");
       //original 2 AddOrders
       int fd = open(inputFile, O_RDONLY);
@@ -138,11 +141,9 @@ void testPackets(){
       assert(0== Parser::check("qDecEv#30055", qty,"SPY     ")); //cxl
       assert(0== Parser::check("qDecOver#3", 0,   "SPY     ")); //oversized cxl
       assert(0== Parser::check("qDecEv#35555", 0,   "SPY     ")); //oversized cxl
-#ifdef aaa
-#endif
 }
 int main(int argc, char **argv) {
-  testPackets(); return 0;
   test2();
+  testPackets(); 
   Parser::file.close();
 }

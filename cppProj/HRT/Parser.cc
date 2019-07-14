@@ -38,6 +38,11 @@ char Parser::check(std::string actionId, int64_t exp, std::string stock){
   cout<<"  :) "<<exp<<" verified against "<<actionId<<" / "<<stock<<endl;
   return 0;
 }
+void Parser::clear(){ 
+      orders.clear();
+      actionRecorder.clear(); 
+      //ss3<<actionRecorder.size()<<" is the new size after clearRecorder()\n";
+}
 // v v v v    writing events to file   v v v v  
 static void countWrites(size_t const sz){ //This function Can't be part of w2f since each template instantiation of w2f has a separate allocation of static local variables
     static int cnt=0; ++cnt;
