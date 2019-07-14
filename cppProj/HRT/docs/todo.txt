@@ -1,20 +1,21 @@
 --todo (advanced): stub .. can be postpone or even "discussed in documentation" only
 
+--todo: mv semantics for Order objects saved in map
+
 --todo: also simplify .. not the test fixtures but the main logic?
 
 --todo (LGpp): separate out header vs implementation files, esp. MsgParser.h
 For now, it's too much work to keep both in-sync
---todo (LGpp): simplify ser4test to use the PacketHeader technique?
-
 --todo (LG2): remove unused headers
 
 --back burner: 
-what's more valuable long-term? coding drill motivation, TMP, 
+what's more valuable long-term? coding drill motivation, 
+halos like TMP? yes
+automated tests for self-assurance, halo and fun?
 GTD? no; 
-automated tests for self-assurance ?
 BP? no
 --back burner:
 put *OrderMsg classes in one file
 
---back burner:
+--todo:
 put *OrderParser classes separately?
