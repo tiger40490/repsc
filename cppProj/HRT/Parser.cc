@@ -19,7 +19,7 @@ using namespace std;
 // v v v v   static data members   v v v v  
 std::ofstream Parser::file;
 std::map<char, MsgParser*> Parser::workers;
-std::unordered_map<uint32_t, Order> Parser::orders;
+std::unordered_map<Parser::oid_t, Order> Parser::orders;
 std::map<std::string, map<std::string, int64_t>> Parser::actionRecorder;
 // v v v v   action recorder, for dev testing   v v v v  
 char Parser::record(std::string actionId, int64_t val, std::string stock ){
