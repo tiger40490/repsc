@@ -16,43 +16,42 @@
 #include <cassert>
 using namespace std;
 
-/////////////// static data members 
+// v v v v   static data members   v v v v  
 std::ofstream Parser::file;
 std::map<char, MsgParser*> Parser::workers;
 std::unordered_map<uint32_t, Order> Parser::orders;
 std::map<std::string, map<std::string, int64_t>> Parser::actionRecorder;
-
-static void countWrites(size_t sz){ //This function Can't be part of w2f since each template instantiation of w2f has a separate allocation of static local variables
+// v v v v   actiona recorder, for dev testing   v v v v  
+char Parser::record(std::string actionId, int64_t val, std::string stock ){
+  if (actionRecorder.count(actionId) ){
+     assert(actionRecorder[actionId].count(stock) ==0 && "Programmer error.. repeated actionId for the same stock, However, this is part of test fixture, not for production error reporting, so we should  NOT throw exception." );
+     return 'r';  //repeat
+  }
+  actionRecorder[actionId][stock] = val;
+  ss1<<val<<" recorded against "<<stock<<actionId<<endl;
+  return 0; 
+}
+char Parser::check(std::string actionId, int64_t exp, std::string stock){
+  if (actionRecorder.count(actionId) == 0) return 'e'  ; //no such event id in recorder
+  if (actionRecorder[actionId].count(stock) == 0) return 's'; // no such stock
+  if (actionRecorder[actionId][stock] != exp ) return 'u' ;  // values unequal
+  cout<<"  :) "<<exp<<" verified against "<<actionId<<" / "<<stock<<endl;
+  return 0;
+}
+// v v v v    writing events to file   v v v v  
+static void countWrites(size_t const sz){ //This function Can't be part of w2f since each template instantiation of w2f has a separate allocation of static local variables
     static int cnt=0; ++cnt;
     static int len=0; len += sz;
     static vector<uint8_t> sizes; sizes.push_back(sz);
-    cout<<cnt<<" events written to file. Write sizes are : ";
+    ss3<<cnt<<" events written to file. Write sizes are : ";
     for (auto const & i : sizes) cout<<(int)i<<" ";
-    cout<<len<<" is the total length\n"; 
+    ss3<<len<<" <-- last length is the total length.. should match file size\n"; 
 }
 template<class E> void Parser::w2f(E const* ev){
     file.write(reinterpret_cast<char const*>(ev), sizeof(E));
     countWrites(sizeof(E));
 }
-char Parser::record(std::string actionId, int64_t val, std::string stock ){
-  if (Parser::actionRecorder.count(actionId) ){
-     //throw string( "actionId should be globally unique" );
-     assert(Parser::actionRecorder[actionId].count(stock) ==0 && "Programmer error.. repeated actionId for the same stock, However, this is part of test fixture, not for production error reporting, so we should  NOT throw exception." );
-     return 'r';  //repeat
-  }
-  Parser::actionRecorder[actionId][stock] = val;
-  //cout<<val<<" recorded against "<<stock<<actionId<<endl;
-  return 0; 
-}
-char Parser::check(std::string actionId, int64_t exp, std::string stock){
-  //cout<<"checking "<<actionId<<endl;
-  if (Parser::actionRecorder.count(actionId) == 0) return 'e'  ; //no such event id in recorder
-  if (Parser::actionRecorder[actionId].count(stock) == 0) return 's'; // no such stock
-  if (Parser::actionRecorder[actionId][stock] != exp ) return 'u' ;  // values unequal
-  cout<<"  :) "<<exp<<" verified against "<<actionId<<" / "<<stock<<endl;
-  return 0;
-}
-
+// v v v v    ctor   v v v v  
 Parser::Parser(int date, const std::string &outputFilename) {
   this->file = ofstream(outputFilename, std::ofstream::out);
   if (workers.empty()){
@@ -62,32 +61,27 @@ Parser::Parser(int date, const std::string &outputFilename) {
     workers['R'] = new RepOrderParser();
   }
 }
-
+// v v v v    packet parsing logic   v v v v  
 char Parser::readPayload( char *buf, size_t len) {
-  cout<<len<<" ===== len in readPayload()"<<endl;
-  //dumpBuffer(buf, len);
-  for (int cnt=1; ; ++cnt){
-    char const msgType = buf[0];
-//    cout<<msgType<<" = msgType found in first byte of # "<<cnt<<" message in this pkt\n";
-    MsgParser * worker = Parser::workers[msgType];
-    if (worker == nullptr){
-      cerr<<(int)msgType<<" is invalid msgType"<<endl;
-      return 'i';
-    }
-    if (len >= worker->msgSz){
-      worker->parse(buf); //return value should be 0 but if not nothing can be done
+  ss2<<len<<" ===== len in readPayload()"<<endl;
+  for (size_t cnt=1; ; ++cnt){
+      char const msgType = buf[0]; MsgParser* worker = Parser::workers[msgType];
+      if (worker == nullptr){ return 'i'; }
+  //      cerr<<(int)msgType<<" is invalid msgType"<<endl;
+
+      if (len < worker->msgSz) return 'p'; //partial msg
+
+      int status = worker->parse(buf); ss1<<"Message parsed, and return code is "<<status<<endl;
+
       if (len > worker->msgSz){
           len -= worker->msgSz;
           buf += worker->msgSz;
-          //cout<<len<<" = len after processing "<<cnt<<" messages in this pkt\n";
+          ss1<<len<<" = len after processing "<<cnt<<" messages in this pkt\n";
           continue;
       }
       assert (len == worker->msgSz);
-      cout<<cnt<<" messages parsed and payload is exhausted. Now looking for next payload in warehouse.."<<endl;
+      ss2<<cnt<<" messages parsed, and payload exhausted. Now looking for next payload in warehouse.."<<endl;
       return 0;
-    }else{ 
-      return 'p'; //todo save the partial msg
-    }
   }    
 }
 void Parser::onUDPPacket(const char *buf, size_t len) {
@@ -116,17 +110,17 @@ void Parser::onUDPPacket(const char *buf, size_t len) {
     auto whHiSeq = whLowSeq + wh.size() -1 ;
     if (wh.empty()){ 
         wh.push_back( vector<char>(buf + PKT_HDR_SZ, buf + len));
-        whLowSeq = seq; cout<<seq<<" is the newly added payload seq in an empty warehouse.";
+        whLowSeq = seq; ss3<<seq<<" is the newly added payload seq in an empty warehouse.";
     }else if (seq < whLowSeq ) {
           for (auto next2fill = whLowSeq-1; next2fill >= seq; --next2fill){
             wh.push_front(vector<char>());
-            cout<<next2fill<<" <-- This pkt seq has not arrived but a dummy pkt is saved in warehouse\n";
+            ss2<<next2fill<<" <-- This pkt seq has not arrived but a dummy pkt is saved in warehouse\n";
           }
           whLowSeq = seq;
     }else if (whHiSeq < seq) {
           for (auto next2fill = whHiSeq+1; next2fill <= seq; ++next2fill){
             wh.push_back(vector<char>());
-            cout<<next2fill<<" <-- This pkt seq has not arrived but a dummy pkt is saved in warehouse\n";
+            ss2<<next2fill<<" <-- This pkt seq has not arrived but a dummy pkt is saved in warehouse\n";
           }
           assert(whLowSeq + wh.size()-1 == seq);
     }
@@ -137,7 +131,7 @@ void Parser::onUDPPacket(const char *buf, size_t len) {
     return; //no updateSeq()
   }
   assert (seq == this->expectedSeq );
-  cout<<"Header seq above is The Expected .. now processing payload"<<endl;
+  ss2<<"Header seq above is The Expected .. now processing payload"<<endl;
   if (len == PKT_HDR_SZ ){ cout<<"dummy packet .. taken as a heartbeat"<<endl; 
     updateSeq(seq); 
     return;
