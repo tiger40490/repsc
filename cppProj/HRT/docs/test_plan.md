@@ -1,7 +1,10 @@
-Q: what integrated test cases are more "effective" at testing multiple classes?
+# Q: what integrated test cases are more "effective" at testing multiple message types?
 
 A: I feel the Cxl i.e. Decrement test is very good. Such a test requires the AddOrder message be saved, and then look-up, then quantity subtraction.
 
 A: Before a Cxl, it's also effective to send a Exe on the same order, as it also requires order look-up and quantity decrement.
 
 A: Before the Exe, it's also effective to send a Rep. This requires look-up.
+
+# -- OOS scenario --
+I sent Packet #1 #2 #5 #4 #3

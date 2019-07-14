@@ -1,21 +1,7 @@
---todo (advanced): stub .. can be postpone or even "discussed in documentation" only
-
---todo: mv semantics for Order objects saved in map
-
---todo: also simplify .. not the test fixtures but the main logic?
-
---todo (LGpp): separate out header vs implementation files, esp. MsgParser.h
-For now, it's too much work to keep both in-sync
---todo (LG2): remove unused headers
+--todo: improve readability
+simplify design?
 
 --back burner: 
 what's more valuable long-term? coding drill motivation, 
 halos like TMP? yes
-automated tests for self-assurance, halo and fun?
-GTD? no; 
-BP? no
---back burner:
-put *OrderMsg classes in one file
 
---todo:
-put *OrderParser classes separately?
