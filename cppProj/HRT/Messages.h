@@ -73,10 +73,7 @@ struct RepOrderMsg: public BaseOrderMsg<RepOrderMsg, 33, true,false,false,true>,
   uint64_t oidNew; uint32_t qty; uint32_t px4;
 
   inline void serNewOid4test(RepOrderMsg const* sub){ this->oidNew = htobe(sub->oidNew); }
-  inline void deserNewOid(){
-    oidNew = betoh(oidNew); 
-    //std::cout<<", replacement order id = "<<oidNew;
-  }
+  inline void deserNewOid(){ oidNew = betoh(oidNew); } //std::cout<<", replacement order id = "<<oidNew;
   static char* fakeMsg(uint64_t h_oid, uint64_t h_oidNew, uint32_t h_qty, uint64_t h_nanos, uint32_t h_px4){ //h_ means in host endianness
     static size_t const sz=sizeof(RepOrderMsg);
     static char serBuf[sz]; //to be overwritten each time
