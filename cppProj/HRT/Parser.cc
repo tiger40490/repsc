@@ -5,7 +5,7 @@
 #include "DecOrderParser.h"
 #include "ExeOrderParser.h"
 
-#include "Messages.h"
+#include "messages.h"
 #include "PacketHeader.h"
 #include "utils.h"
 
