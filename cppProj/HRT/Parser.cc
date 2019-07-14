@@ -65,23 +65,38 @@ Parser::Parser(int date, const std::string &outputFilename) {
 char Parser::readPayload( char *buf, size_t len) {
   ss2<<len<<" ===== len in readPayload()"<<endl;
   for (size_t cnt=1; ; ++cnt){
-      char const msgType = buf[0]; MsgParser* worker = Parser::workers[msgType];
-      if (worker == nullptr){ return 'i'; }
-  //      cerr<<(int)msgType<<" is invalid msgType"<<endl;
+    static vector<char> stub; //1st half of a split msg
+    char const msgType = buf[0];
+    MsgParser* worker = Parser::workers[msgType];
+    if (worker == nullptr){
+        if (len >= sizeof(AddOrderMsg)) //AddOrder is biggest msg
+          return 'i'; //invalid msg type
 
-      if (len < worker->msgSz) return 'p'; //partial msg
+        ss3<<(int)msgType<<" appears invalid as a msgType, but could be 2nd half of a split message"<<endl;
+        if (stub.empty()) return 'i';  //invalid 
 
-      int status = worker->parse(buf); ss1<<"Message parsed, and return code is "<<status<<endl;
+        stub.reserve( stub.size() + len ); 
+        stub.insert ( stub.end(), buf, buf+len );
+        buf = stub.data();
+        len = stub.size();
+        --cnt;
+        continue;
+    }
+    if(len < worker->msgSz){ // overwrite current stub content.. should have been used 
+        stub.assign( buf, buf+len); //Note vector Capacity would never reduce due to assign(). vector::assign() causes an automatic reallocation of the allocated storage space if -and only if- the new vector size surpasses the current vector capacity. Therefore, once capacity has been increased sufficiently , no futhre reallocation (costly) would happen.
+        return 'p'; //partial msg
+    }
+    int status = worker->parse(buf); ss1<<"Message parsed, and return code is "<<status<<endl;
 
-      if (len > worker->msgSz){
+    if (len > worker->msgSz){
           len -= worker->msgSz;
           buf += worker->msgSz;
           ss1<<len<<" = len after processing "<<cnt<<" messages in this pkt\n";
           continue;
-      }
-      assert (len == worker->msgSz);
-      ss2<<cnt<<" messages parsed, and payload exhausted. Now looking for next payload in warehouse.."<<endl;
-      return 0;
+    }
+    assert (len == worker->msgSz);
+    ss2<<cnt<<" messages parsed, and payload exhausted. Now looking for next payload in warehouse.."<<endl;
+    return 0;
   }    
 }
 void Parser::onUDPPacket(const char *buf, size_t len) {
