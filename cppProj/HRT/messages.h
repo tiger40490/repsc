@@ -11,7 +11,7 @@ template <class T> void castPrice(T* sub,  void const*,    T* _  =nullptr){ thro
 template <class T> void castPrice(T* sub, HasPrice const*, T* ser=nullptr){
   if (ser == nullptr){ //cast to host endianness
       sub->px4 = betoh(sub->px4);
-      std::cout<<", px4 (scaled up by 10000) = "<<sub->px4;
+      ss1<<", px4 (scaled up by 10000) = "<<sub->px4;
   }else { //serialize to big-endian, for creation of fake testing messages, not for production
       assert (ser != sub && "Programmer error");
       ser->px4 = htobe(sub->px4);
@@ -37,16 +37,16 @@ struct BaseOrderMsg{
     oid = betoh(oid); 
     nanos = sinceEpoch(betoh(nanos));
     sub->qty = betoh(sub->qty); 
-    cout<<"in BaseOrderMsg::init(): oid = "<< oid<<", qty = "<<sub->qty<<", nanos since epoch = "<<nanos;
+    ss1<<"in BaseOrderMsg::init(): oid = "<< oid<<", qty = "<<sub->qty<<", nanos since epoch = "<<nanos;
 
     if (hasNewOid) sub->deserNewOid();
     if (hasPrice ) castPrice(sub, sub);
-    if (hasStock) cout<<", stock = "<<sub->stock_();
+    if (hasStock) ss1<<", stock = "<<sub->stock_();
     if (hasSide){
-      char const orderSide = sub->side_(); cout<<", side = "<<orderSide;
+      char const orderSide = sub->side_(); ss1<<", side = "<<orderSide;
       assert( (orderSide == 'S' || 'B' == orderSide)  && "Likely programmer error while parsing the SIDE field, as exchange would not send anything beside B or S" );
     }
-    cout<<endl;
+    ss1<<endl;
     return sub;
   }
   char* ser4test(char* tgt=nullptr) const{ //basically the reverse of init(): return a serialized byte array to created a test msg, for testing only, not for production
@@ -63,7 +63,7 @@ struct BaseOrderMsg{
     auto ret = reinterpret_cast<char*> (&clone); //dumpBuffer(ret, sizeof(T), "serialized msg (BE) for test");
     if (tgt) {
       memcpy(tgt, ret, msgSz);
-      //std::cout<<msgSz<<" = memcpy byte count\n";
+      ss1<<msgSz<<" = memcpy byte count\n";
     }
     return tgt;
   }
@@ -73,7 +73,7 @@ struct RepOrderMsg: public BaseOrderMsg<RepOrderMsg, 33, true,false,false,true>,
   uint64_t oidNew; uint32_t qty; uint32_t px4;
 
   inline void serNewOid4test(RepOrderMsg const* sub){ this->oidNew = htobe(sub->oidNew); }
-  inline void deserNewOid(){ oidNew = betoh(oidNew); } //std::cout<<", replacement order id = "<<oidNew;
+  inline void deserNewOid(){ oidNew = betoh(oidNew); } //ss1<<", replacement order id = "<<oidNew;
   static char* fakeMsg(uint64_t h_oid, uint64_t h_oidNew, uint32_t h_qty, uint64_t h_nanos, uint32_t h_px4){ //h_ means in host endianness
     static size_t const sz=sizeof(RepOrderMsg);
     static char serBuf[sz]; //to be overwritten each time

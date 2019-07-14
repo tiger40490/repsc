@@ -43,35 +43,35 @@ int test2(){ //Outdated test used to test readPayload() directly
 
 
     { // to limit variable scope
-      cout<<"\n  ----- replace -----\n";
+      ss2<<"\n  ----- replace -----\n";
       auto oidNew = 3; auto qty = 1000; auto px4=200.11*10000;
       myParser.readPayload( RepOrderMsg::fakeMsg(1,oidNew,qty,404904049040490, px4 )
                           , sizeof(RepOrderMsg));
       assert(0== Parser::check("q#3",  qty, "SPY     "));
       assert(0== Parser::check("px#3", px4, "SPY     "));
 
-      cout<<"\n sending replace for bad order id..\n";
+      ss2<<"\n sending replace for bad order id..\n";
       auto oidOld = 1; //already replace
       myParser.readPayload(RepOrderMsg::fakeMsg(oidOld,oidNew,qty,404904049040490, px4 ), sizeof(RepOrderMsg));
       assert(0== Parser::check("miss#1", -1, "lookupMiss" ));
 
-      cout<<"\n sending replace with bad new order id..\n";
+      ss2<<"\n sending replace with bad new order id..\n";
       oidOld = 2; // oidNew is still 3 :(
       myParser.readPayload(RepOrderMsg::fakeMsg(oidOld,oidNew,qty,404904049040490, px4 ), sizeof(RepOrderMsg));
       assert(0== Parser::check("clash#2", -1, "clash" ));
 
-      cout<<"\n ---- exe --- \n";
+      ss2<<"\n ---- exe --- \n";
       auto qtyExe=50; qty -= qtyExe;
       myParser.readPayload(ExeOrderMsg::fakeMsg(3,qtyExe,404904049040490), sizeof(ExeOrderMsg));
       assert(0== Parser::check("qExe#3", qty,      "SPY     "));
 
-      cout<<"\n ---- cxl --- \n";
+      ss2<<"\n ---- cxl --- \n";
       auto qtyDec = 55; qty -= qtyDec;
       myParser.readPayload(DecOrderMsg::fakeMsg(3,qtyDec,404904049040490), sizeof(DecOrderMsg));
       assert(0== Parser::check("qDec#3",    qty,      "SPY     "));
       assert(0== Parser::check("qDecEv#30055", qty,"SPY     "));
 
-      cout<<"\nsending cxl with oversized qty..\n";
+      ss2<<"\nsending cxl with oversized qty..\n";
       myParser.readPayload(DecOrderMsg::fakeMsg(3,5555,404904049040490), sizeof(DecOrderMsg));
       assert(0== Parser::check("qDecOver#3", 0,   "SPY     "));
       assert(0== Parser::check("qDecEv#35555", 0,   "SPY     "));
@@ -94,11 +94,11 @@ void testPackets(){
 
       PacketBuilder builder;
       auto const oidNew = 3; auto const qtyNew = 1000; auto const px4=200.11*10000;
-      cout<<" creating duplicate seq \n";
+      ss2<<" creating duplicate seq \n";
       builder.fakeMsg<RepOrderMsg>(1,oidNew,qtyNew,404904049040490, px4)
              .fakeMsg<ExeOrderMsg>(1,555,404904049040491);
       builder.pack_n_send( &parser, 2);
-  cout<<"\n ---- simple tests of out-of-sequence handling --- \n";
+  ss3<<" ---- simple tests of out-of-sequence handling --- \n";
       auto qtyEx=50;
       builder.fakeMsg<ExeOrderMsg>( 3,qtyEx++,404904049040495);
       builder.pack_n_send( &parser, 11);
@@ -110,22 +110,22 @@ void testPackets(){
       builder.pack_n_send( &parser, 13); //overwrite an existing dummy
       builder.fakeMsg<ExeOrderMsg>( 3,qtyEx++,404904049040495);
       builder.pack_n_send( &parser, 15); //overwrite a warehoused packe
-  cout<<"\n ---- cxl --- \n";
+  ss3<<"\n ---- cxl --- \n";
       auto qtyExe=50, qtyRem = qtyNew - qtyExe;
       auto qtyDec = 55, qty = qtyRem - qtyDec;
       builder.fakeMsg< DecOrderMsg>( 3,qtyDec,404904049040496);
-      cout<<"\n creating cxl with oversized qty..\n";
+      ss2<<"creating cxl with oversized qty..\n";
       builder.fakeMsg< DecOrderMsg>( 3,5555,404904049040497);
       builder.pack_n_send( &parser, 5);
-  cout<<"\n ---- exe --- \n";
+  ss3<<"\n ---- exe --- \n";
       builder.fakeMsg<ExeOrderMsg>( 3,qtyExe,404904049040495);
       builder.pack_n_send( &parser, 4);
-  cout<<"  ----- replace -----\n";
+  ss3<<"  ----- replace -----\n";
       auto const oidOld = 1; //already replaced
       builder.fakeMsg<RepOrderMsg>(oidOld,oidNew,qtyNew,404904049040492, px4 );
-      cout<<" creating replace for bad order id..\n";
+      ss2<<" creating replace for bad order id..\n";
       builder.fakeMsg<RepOrderMsg>(oidOld,oidNew,qtyNew,hc("oldOid already replaced"), px4 );
-      cout<<" creating replace with bad new order id..\n";
+      ss2<<" creating replace with bad new order id..\n";
       builder.fakeMsg<RepOrderMsg>( 2,oidNew,qtyNew,hc("oldNew is already in use"), px4 );
       builder.pack_n_send( &parser, 3);
 

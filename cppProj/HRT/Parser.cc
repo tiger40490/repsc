@@ -21,7 +21,7 @@ std::ofstream Parser::file;
 std::map<char, MsgParser*> Parser::workers;
 std::unordered_map<uint32_t, Order> Parser::orders;
 std::map<std::string, map<std::string, int64_t>> Parser::actionRecorder;
-// v v v v   actiona recorder, for dev testing   v v v v  
+// v v v v   action recorder, for dev testing   v v v v  
 char Parser::record(std::string actionId, int64_t val, std::string stock ){
   if (actionRecorder.count(actionId) ){
      assert(actionRecorder[actionId].count(stock) ==0 && "Programmer error.. repeated actionId for the same stock, However, this is part of test fixture, not for production error reporting, so we should  NOT throw exception." );
@@ -89,50 +89,54 @@ void Parser::onUDPPacket(const char *buf, size_t len) {
   static int64_t whLowSeq; //wh[ 999-lowSeq ] is a vector holding payload of packet #999
 
   size_t const len2 = len;
-  //dumpBuffer(buf, len, "into onUDP");
+  dumpBuffer(buf, len, "into onUDP", 1);
   auto hdr = cast<PacketHeader>(const_cast<char*>(buf));
-  //dumpBuffer(buf, len, "after reinterpret_cast, showing in-place endianness conversion");
+  dumpBuffer(buf, len, "after reinterpret_cast, showing in-place endianness conversion",1);
 
   if (len != hdr->sz){
-      cerr<<"Size value in header differs from buffer length... corrupted buffer, to be discarded."<<endl; return; //no updateSeq()
+      cerr<<"Size value in header differs from buffer length... corrupted buffer, to be discarded."<<endl; 
+      return; //no updateSeq()
   }
   size_t const PKT_HDR_SZ = sizeof(PacketHeader);
   if (len < PKT_HDR_SZ){
-      cerr<<"buffer too short ... corrupted buffer, to be discarded."<<endl; return; //no updateSeq()
+      cerr<<"buffer too short ... corrupted buffer, to be discarded."<<endl; 
+      return; //no updateSeq()
   }
   auto const seq = hdr->seq;
   if (seq < this->expectedSeq){
-    cout<<"Header seq above is a dupe .. dropped"<<endl; return; //no updateSeq()
+    cout<<"Header seq above is a dupe .. dropped"<<endl; 
+    return; //no updateSeq()
   }
 
   if (seq > this->expectedSeq){ // 
-    cout<<"warehousing "<<seq<<" # current whLowSeq = "<<whLowSeq <<endl;
+    cout<<"warehousing "<<seq<<" , while current whLowSeq = "<<whLowSeq <<endl;
     auto whHiSeq = whLowSeq + wh.size() -1 ;
     if (wh.empty()){ 
         wh.push_back( vector<char>(buf + PKT_HDR_SZ, buf + len));
         whLowSeq = seq; ss3<<seq<<" is the newly added payload seq in an empty warehouse.";
     }else if (seq < whLowSeq ) {
-          for (auto next2fill = whLowSeq-1; next2fill >= seq; --next2fill){
+        for (auto next2fill = whLowSeq-1; next2fill >= seq; --next2fill){
             wh.push_front(vector<char>());
             ss2<<next2fill<<" <-- This pkt seq has not arrived but a dummy pkt is saved in warehouse\n";
-          }
+        }
           whLowSeq = seq;
     }else if (whHiSeq < seq) {
-          for (auto next2fill = whHiSeq+1; next2fill <= seq; ++next2fill){
+        for (auto next2fill = whHiSeq+1; next2fill <= seq; ++next2fill){
             wh.push_back(vector<char>());
             ss2<<next2fill<<" <-- This pkt seq has not arrived but a dummy pkt is saved in warehouse\n";
-          }
-          assert(whLowSeq + wh.size()-1 == seq);
+        }
+        assert(whLowSeq + wh.size()-1 == seq);
     }
     assert ( whLowSeq <= seq && seq < whLowSeq + wh.size());
     wh[seq-whLowSeq] = vector<char>(buf + PKT_HDR_SZ, buf + len);
     char const * saved = wh[seq-whLowSeq].data();
-    dumpBuffer(saved, len-PKT_HDR_SZ, "just warehoused ");
+    dumpBuffer(saved, len-PKT_HDR_SZ, "just warehoused", 1);
     return; //no updateSeq()
   }
   assert (seq == this->expectedSeq );
   ss2<<"Header seq above is The Expected .. now processing payload"<<endl;
-  if (len == PKT_HDR_SZ ){ cout<<"dummy packet .. taken as a heartbeat"<<endl; 
+  if (len == PKT_HDR_SZ ){
+    ss1<<"dummy packet .. taken as a heartbeat"<<endl; 
     updateSeq(seq); 
     return;
   }

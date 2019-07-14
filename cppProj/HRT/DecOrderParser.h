@@ -12,7 +12,7 @@ class DecOrderParser: public MsgParser{
       this->BaseEvent::init();
       qty     = htole(qty);
       //dumpBuffer(reinterpret_cast<char*>(this), sizeof(*this), "at end of init");
-      ss1<<"qty rem = "<<qty<<" , stock = "<<stock_()<<", nanosEp = "<<nanosEp<<std::endl;
+      std::cout<<"qty rem = "<<qty<<std::endl;
       return this;
     }
   } __attribute__((packed));

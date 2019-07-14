@@ -8,17 +8,17 @@
 #define LOG_TRACE 1
 #define LOG_DEBUG 2
 #define LOG_INFO 3
-#define LOG_LEVEL 1 // for now, i will use LOG_DEBUG. Note some logging uses cout directly, not subject to LOG_LEVLE
-#define ss1 if(LOG_LEVEL == LOG_TRACE) std::cout
+#define LOG_LEVEL 2 // for now, i will use LOG_DEBUG. Note some logging uses cout directly, not subject to LOG_LEVLE
+#define ss1 if(LOG_LEVEL <= LOG_TRACE) std::cout
 #define ss2 if(LOG_LEVEL <= LOG_DEBUG)std::cout 
 #define ss3 if(LOG_LEVEL <= LOG_INFO) std::cout
 
-void dumpBuffer(char const * buf, size_t const len, std::string const headline="");
+void dumpBuffer(char const * buf, size_t const len, std::string const headline="", uint8_t logLevel4this=1);
 uint64_t sinceEpoch(uint64_t sinceMidnight);
 
 template<class T> 
 T const*  cast(char* buf) { // buf content is modified .. not const char*
-    //dumpBuffer(buf, sizeof(T), "utils.h cast()");
+    dumpBuffer(buf, sizeof(T), "utils.h cast()", 1);
     T const * ret = reinterpret_cast<T*>(buf)->init();
     return ret;
 }

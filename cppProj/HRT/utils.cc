@@ -18,7 +18,8 @@ uint64_t sinceEpoch(uint64_t sinceMidnight){
     return ret;
 }
 
-void dumpBuffer(char const * buf, size_t const len, std::string const headline){
+void dumpBuffer(char const * buf, size_t const len, std::string const headline, uint8_t logLevel4this){
+  if (LOG_LEVEL > logLevel4this) return;
   if ( headline.size()) std::cout<<"---- "<<headline<<" ----\n";
 
   for(size_t i = 0; i< len; ++i){
