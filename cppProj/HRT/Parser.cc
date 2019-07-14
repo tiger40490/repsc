@@ -1,5 +1,9 @@
 #include "Parser.h"
 #include "MsgParser.h"
+#include "AddOrderParser.h"
+#include "RepOrderParser.h"
+#include "DecOrderParser.h"
+#include "ExeOrderParser.h"
 
 #include "Messages.h"
 #include "PacketHeader.h"
