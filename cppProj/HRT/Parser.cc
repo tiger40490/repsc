@@ -12,14 +12,13 @@
 #include <cassert>
 using namespace std;
 
-
-/////////// now the static fields and other members of Parser class
-ofstream Parser::file;
+/////////////// static data members 
+std::ofstream Parser::file;
 std::map<char, MsgParser*> Parser::workers;
 std::unordered_map<uint32_t, Order> Parser::orders;
 std::map<std::string, map<std::string, int64_t>> Parser::actionRecorder;
 
-void countWrites(size_t sz){ //Can't be part of w2f since each template instantiation of w2f has a separate allocation of static local variables
+static void countWrites(size_t sz){ //This function Can't be part of w2f since each template instantiation of w2f has a separate allocation of static local variables
     static int cnt=0; ++cnt;
     static int len=0; len += sz;
     static vector<uint8_t> sizes; sizes.push_back(sz);
@@ -87,9 +86,10 @@ char Parser::readPayload( char *buf, size_t len) {
     }
   }    
 }
-deque<vector<char>> wh;
-int64_t whLowSeq=-1; // wh[ pktSeq-lowSeq ] is the vector holding the payload of a packet
 void Parser::onUDPPacket(const char *buf, size_t len) {
+  static deque<vector<char>> wh;
+  static int64_t whLowSeq; //wh[ 999-lowSeq ] is a vector holding payload of packet #999
+
   size_t const len2 = len;
   //dumpBuffer(buf, len, "into onUDP");
   auto hdr = cast<PacketHeader>(const_cast<char*>(buf));

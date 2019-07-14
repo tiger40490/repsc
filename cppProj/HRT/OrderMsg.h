@@ -27,7 +27,7 @@ struct BaseOrderMsg{
   uint64_t oid;
   char         side_() const{ throw std::string("unsupported"); } //required at compile time
   std::string stock_() const{ throw std::string("unsupported"); } //required at compile time
-  uint64_t serNewOid4test(T const* sub){  throw std::string("unsupported"); }
+  void serNewOid4test(T const* sub){  throw std::string("unsupported"); }
   void deserNewOid()        { throw std::string("unsupported"); }
 
   T const * init(){
@@ -71,6 +71,7 @@ struct BaseOrderMsg{
 
 struct RepOrderMsg: public BaseOrderMsg<RepOrderMsg, 33, true,false,false,true>, public HasPrice{
   uint64_t oidNew; uint32_t qty; uint32_t px4;
+
   inline void serNewOid4test(RepOrderMsg const* sub){ this->oidNew = htobe(sub->oidNew); }
   inline void deserNewOid(){
     oidNew = betoh(oidNew); 
@@ -102,7 +103,7 @@ struct ExeOrderMsg: public BaseOrderMsg<ExeOrderMsg, 21>{  //similiar to Dec exc
     static size_t const sz=sizeof(ExeOrderMsg);
     static char serBuf[sz]; //to be overwritten each time
     ExeOrderMsg msg={'E', h_nanos, h_oid, h_qty };
-    msg.ser4test(serBuf); dumpBuffer(serBuf, sz, "serialized fake Exe msg");
+    msg.ser4test(serBuf); //dumpBuffer(serBuf, sz, "serialized fake Exe msg");
     return serBuf;
   }
 } __attribute__((packed));
