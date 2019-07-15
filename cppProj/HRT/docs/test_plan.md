@@ -1,4 +1,6 @@
-To run the tests, just execute ./feed, which runs the main() funciton in main.cc
+To run the tests, just execute ./feed, which runs the main() funciton in main.cc.
+
+I used script/run.sh for my own dev testing.
 
 # Q: what integrated test cases are more "effective" at testing multiple message types?
 
