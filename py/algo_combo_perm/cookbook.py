@@ -22,6 +22,7 @@ def _yield(func, pool, howManyMore, logLevel=0):
 * sound-byte: for newList in _yield(..)
 * sound-byte:   func,func(...)
 * sound-byte: pos is needed only once
+* sound-byte: pool is replaced by func(pool,pos) when calling recursively down
 * sound-byte: output string starting with [char]. Subsequent substr generated from same _yield() but based on 
   # * func(pool,pos) replacing pool
   # * n-1 replacing n	  
