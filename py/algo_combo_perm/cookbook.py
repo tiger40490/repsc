@@ -19,16 +19,17 @@ def _yield(func, pool, howManyMore, logLevel=0):
   '''internal recursive generator function to generate all subsets of pool, each in a list of length = howManyMore
 * sound-byte: _yield() calls itself from inside a loop
 * sound-byte: _yield() generates a bunch of lists
+* sound-byte: pos is needed only once
 * sound-byte: for newList in _yield(..)
 * sound-byte:   func,func(...)
-* sound-byte: pos is needed only once
-* sound-byte: pool is replaced by func(pool,pos) when calling recursively down
-* sound-byte: output string starting with [char]. Subsequent substr generated from same _yield() but based on 
+* sound-byte: when calling recursively down, look at the 2nd arg: pool is replaced by func(pool,pos), which is a smaller pool
+* sound-byte: Each output string starts with [char]. Subsequent substr is generated from same _yield() but based on 
   # * func(pool,pos) replacing pool
-  # * n-1 replacing n	  
+  # * n-1 replacing n
 
 The tricky part of _yield() is really one or two lines only, beside the func header and the yield line at the end. 
 Hard to understand; hard to memorize; need to reproduce from memory every few months
+
   '''
   if howManyMore==0: yield []; return #recursion exit condition
   assert howManyMore > 0
