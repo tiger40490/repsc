@@ -1,5 +1,4 @@
 '''
-todo: add asserts
 '''
 from heapq import *
 '''
@@ -15,8 +14,8 @@ ii = [0] * k # k internal iterators
 heap = []
 cnt=0
 def next():
- while True: #needed by yield
-  if len(heap) == 0: return
+ while len(heap): #yield meeds a loop
+  #if len(heap) == 0: return # also usable, if in a while-true loop
   ret = heappop(heap)
   lid = ret[1]
   picked = a[lid]
