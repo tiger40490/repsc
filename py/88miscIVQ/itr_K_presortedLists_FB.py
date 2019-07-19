@@ -1,21 +1,19 @@
 '''
+showcase: how to put an artificial loop around a yield-block. Loop termination is by return|break
+showcase: yield function with an explicit init
 '''
 from heapq import *
-'''
-class Item:
-  def __init__(self, payload, whichList):
-    self.v = payload
-    self.lid = whichList
-    #self.idx .. not needed, due to ii
-'''
 a = [[1,3,5,7],[0],[2,3,5],[0,2,4,6,8],[17]]
 k=len(a)
-ii = [0] * k # k internal iterators
+ii = [0] * k # k internal iterators, maintained in static memory. In my on-site interview, I replaced this with a 3rd field of the heap payload, but with higher DAM overhead IMO. 
 heap = []
 cnt=0
 def next():
- while len(heap): #yield meeds a loop
-  #if len(heap) == 0: return # also usable, if in a while-true loop
+ init()
+ 
+ #while len(heap): # cleaner implementation
+ while True: #yield needs a loop, even if artificial
+  if len(heap) == 0: return # return/break both usable, if in a while-true loop
   ret = heappop(heap)
   lid = ret[1]
   picked = a[lid]
@@ -30,10 +28,7 @@ def init():
     heap.append ( (a[w][0], w) )
     cnt += len(a[w])
   heapify(heap)
-def hasNext():
-  return len(heap)>0
 def test():
-  init()  
   output = [ i for i in next() ]
   print output
   assert output == sorted(output)
