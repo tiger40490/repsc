@@ -2,15 +2,21 @@
 #include <iostream>
 #include <iomanip>
 
+struct Node {
+    int data;
+    Node *le, *ri;
+    Node *next; //optional
+    Node(int x, Node*le_=nullptr, Node*ri_=nullptr) : data(x), le(le_), ri(ri_), next(NULL) {}
+};
 template<typename Node>
-void dumpTreeNode(Node const * n, size_t const indent=4, size_t const depth=0){
+void dumpSubTree(Node const * n, size_t const indent=4, size_t const depth=0){
   if (n == nullptr) return;
   if (depth==0){
     std::cout<<"\n       ============  v v v v\n";
   }
-  dumpTreeNode(n->right, indent, depth+1);
+  dumpSubTree(n->ri, indent, depth+1);
   std::cout<<std::string(indent* depth, ' ')<<std::left<< n->data <<std::endl;
-  dumpTreeNode(n->left,  indent, depth+1);
+  dumpSubTree(n->le,  indent, depth+1);
   if (depth==0){
     std::cout<<  "       ============  ^ ^ ^ ^\n";
   }

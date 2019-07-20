@@ -2,11 +2,6 @@
 #include <iostream>
 using namespace std;
 
-struct Node {
-    int data;
-    Node *left, *right, *next;
-    Node(int x, Node * le = NULL, Node * ri = NULL) : data(x), left(le), right(ri), next(NULL) {}
-};
     Node _15(15);
     Node _14(14);
     Node _13(13);
@@ -28,15 +23,15 @@ void recur(Node * n){
   static int lvl=0;
   ++lvl;
   if (lvl>maxD) maxD = lvl;
-  if (n->left){ recur(n->left); }
+  if (n->le){ recur(n->le); }
   cout<<n->data<<" processed at level = "<<lvl<<endl;
-  if (n->right){ recur(n->right); }
+  if (n->ri){ recur(n->ri); }
   --lvl;
 }
 int maxDepth(){
     recur(&root);
     cout<<maxD;
-    dumpTreeNode(&root, 5);
+    dumpSubTree(&root, 5);
 }
 int main(){
    maxDepth();
