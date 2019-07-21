@@ -2,24 +2,12 @@
 #include <iostream>
 using namespace std;
 
-    Node _15(15);
-    Node _14(14);
-    Node _13(13);
-    Node _12(12);
-    Node _11(11);
-    Node _10(10);
-    Node _9(9);
-    Node _8(8);
-    Node _7(7, &_14, &_15);
-    Node _6(6, NULL, &_13);
-    Node _5(5, &_10, NULL);
-    Node _4(4, NULL, &_9);
-    Node _3(3, &_6,  &_7);
-    Node _2(2, &_4,  &_5);
-    Node root(1, &_2, &_3);
+auto root = Node<>::buildTree({{6, 1.1},
+{3,2.2},{1,4.4},{2,9.9},{5,5.5},{4,10}, //left subtree
+{9,3.3},{7,6.6},{8,13},{11,7.7},{10,14},{12,15}}); //right subtree
 
 int maxD=0;
-void recur(Node * n){
+void recur(Node<> * n){
   static int lvl=0;
   ++lvl;
   if (lvl>maxD) maxD = lvl;
@@ -29,9 +17,9 @@ void recur(Node * n){
   --lvl;
 }
 int maxDepth(){
-    recur(&root);
+    recur(root);
     cout<<maxD;
-    dumpSubTree(&root, 5);
+    dumpSubTree(root, 5);
 }
 int main(){
    maxDepth();
