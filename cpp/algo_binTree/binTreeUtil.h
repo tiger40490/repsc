@@ -43,8 +43,8 @@ struct Node {
       return root;
     }
 };
-template<typename Node>
-void dumpSubTree(Node const * n, size_t const indent=4, size_t const depth=0){
+template<typename T>
+void dumpSubTree(T const * n, size_t const indent=4, size_t const depth=0){
   if (n == nullptr) return;
   if (depth==0){
     std::cout<<"\n       ============  v v v v\n";
