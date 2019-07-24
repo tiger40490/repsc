@@ -5,9 +5,9 @@ import sys, os, random; from pprint import pprint
 random.shuffle() is easier to remember than random.sample() !
 random.shuffle() can handle dupe items, as demonstrated in "extend" line
 '''
-def randomGen(cnt, minOutputVal, min=0):
-  assert cnt <= minOutputVal-min+1 #optional input validation
-  ret=range(min, minOutputVal+1, 1);
+def randomGen(cnt, maxOutputVal, min=0):
+  assert cnt <= maxOutputVal-min+1 #optional input validation
+  ret=range(min, maxOutputVal+1, 1);
   # ret.extend(ret); print ret #add the same items
   random.shuffle(ret); return ret[:cnt]
   
