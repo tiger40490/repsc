@@ -1,4 +1,4 @@
-//showcase jump-increment within member initliazation expression
+//showcase strided-increment within member initialization expression
 //showcase throwing and catching string
 #include <iostream>
 using namespace std;
@@ -8,8 +8,10 @@ struct C{
   int const _i;
   C(): _i(cnt+=2){
     if (_i>8) throw string("bad value in data member this->_i = ") + to_string(this->_i);
+    
     cout<<_i<<" constructed\n";
   }
+  
   ~C(){cout<<_i<<" destructed in reverse sequence\n"; }
 };
 int C::cnt=0;
@@ -19,4 +21,5 @@ int main(){
   }catch(string & err){
     cout<<err;
   }
-}
+}/*Experiment -- array-new constructs A,B,C,D... in try-block. Upon catch D,C,B,A are destructed in reverse order of construction.
+*/
