@@ -26,7 +26,7 @@ Node * fromStaticArray(){
     if( i > 11) return node;
   }
 }
-Node * fromHeap(){
+Node * fromArrayNew(){
   Node * heapArr = new Node[99];
   for (int i=0; ; ++i){
     Node * node = heapArr+i;
@@ -37,7 +37,9 @@ Node * fromHeap(){
 }
 int main(){
      Node const* head = fromStaticArray();
-     head = fromHeap();
+     dump(head);
+     cout<<"<-- fromStaticArray; fromArrayNew -->\n";
+     head = fromArrayNew();
      dump(head);
 }/*Can you pre-allocate storage as a node array then create a linked list?
 */
