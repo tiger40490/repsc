@@ -2,6 +2,7 @@
 Poor scalablity -- can't handle a 6x6 matrix
 
 key idea: deal with cycle by inspecting breadcrumb
+showcase: set 
 showcase: nested function to avoid passing lots of arguments
 showcase: print indent to indicate recursive level
 '''
@@ -45,7 +46,7 @@ def test3():
     m.append([A,0,1,1])
     m.append([1,1,1,0])
     return m  
-  q = Q(mat(), [[0,0], [2,0]]) # A
+  q = Q(mat(), [[0,0], [2,0]]) # north-west corner to A
   assert startDFT(q)==1
   import ast
   li=ast.literal_eval(list(q.paths)[0])
@@ -61,7 +62,7 @@ def test2():
   q = Q(mat(), [[0,0], [1,2]]) # A
   assert startDFT(q)==6 
   assert str([[0,0],[1,0],[1,1],[0,1],[0,2],[0,3],[1,3]]) in q.paths
-  assert startDFT(Q(mat(), [[3,2], [0,0]]))==6 # B
+  assert startDFT(Q(mat(), [[3,2], [0,0]]))==6 # B to north-west corner
 def test1():
   def mat():
     m=list() # create a new editable matrix each time
@@ -70,7 +71,7 @@ def test1():
     m.append([0,1,1,1])
     m.append([1,0,1,0])
     return m  
-  assert startDFT(Q(mat(), [[0,1], [0,0]]))==1 # Node A
+  assert startDFT(Q(mat(), [[0,1], [0,0]]))==1 # A to north-west corner
   q = Q(mat(), [[1,1], [0,0]])
   assert startDFT(q)==2
   assert str([[1,1], [2,1], [2,2], [2,3], [1,3], [0,3],[0,2],[0,1]]) in q.paths
