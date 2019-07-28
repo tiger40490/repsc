@@ -1,6 +1,8 @@
 /* showcase placement-new
    showcase array-new
-showcase std::byte representing raw memory, not a char or numeric type
+showcase std::byte representing nothing but raw memory, without a misleading notion of a char or numeric type. 
+
+Actually, std::byte is designed as a 'backdoor' to access the underlying memory of some other object, like my Node array.
 */
 #include <iostream>
 #include <vector>
