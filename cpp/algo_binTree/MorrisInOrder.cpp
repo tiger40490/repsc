@@ -114,6 +114,7 @@ void m1(Node * cur) { //simpleMorris. cur is any branch node
 
 int main() { 
  dump();
- m3(&root); 
+ //m3(&root); 
+ m1(&root); 
  dump();
 }

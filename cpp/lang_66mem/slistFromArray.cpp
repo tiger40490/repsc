@@ -1,8 +1,10 @@
 /* showcase placement-new
    showcase array-new
+showcase std::byte representing raw memory, not a char or numeric type
 */
 #include <iostream>
 #include <vector>
+#include <cstddef> //std::byte, from c++17
 using namespace std;
 struct Node{
        double data;
@@ -12,7 +14,7 @@ struct Node{
 };
 Node nodeArr[99];
 Node * arrNew;
-char byteArr[99*sizeof(Node)];
+byte byteArr[99*sizeof(Node)];
 
 void dump(Node const* head){
      for (Node const* it = head; it; it = it->next){
