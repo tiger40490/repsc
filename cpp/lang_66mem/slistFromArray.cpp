@@ -12,7 +12,7 @@ struct Node{
 };
 Node nodeArr[99];
 Node * arrNew;
-Node * someArr;
+char byteArr[99*sizeof(Node)];
 
 void dump(Node const* head){
      for (Node const* it = head; it; it = it->next){
@@ -38,10 +38,11 @@ Node * fromArrayNew(){
   }
 }
 Node * fromPlacementNew(){
-  Node * someArr = nodeArr; //backing array can be on heap or in global area
+  //Node * byteArr = nodeArr; //backing array can be a static array !
   for (int i=0; ; ++i){
-    Node * node = new (someArr+i) Node(50-(i^(i<<2)) + i/100.0);
+    Node * node = new (byteArr+i*sizeof(Node)) Node(50-(i^(i<<2)) + i/100.0);
     if (i > 0) node->next = node-1;
+    //cout<< node <<" <- created a node using placement-new\n";
     if( i > 9) return node;
   }
 }
@@ -51,7 +52,7 @@ int main(){
      cout<<"<-- fromStaticArray; fromArrayNew -->\n";
      head = fromArrayNew();
      dump(head);
-     cout<<"<-- fromPlacementNew -->\n";
+     cout<<sizeof(Node)<<" = Node size... fromPlacementNew -->\n";
      head = fromPlacementNew();
      dump(head);
 }/*Can you pre-allocate storage as a node array then create a linked list?
