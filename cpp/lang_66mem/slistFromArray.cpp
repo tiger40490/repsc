@@ -1,4 +1,5 @@
-/* 
+/* showcase placement-new
+   showcase array-new
 */
 #include <iostream>
 #include <vector>
@@ -10,7 +11,8 @@ struct Node{
        :next(_next), data(_payload){}
 };
 Node nodeArr[99];
-Node * heapArr;
+Node * arrNew;
+Node * someArr;
 
 void dump(Node const* head){
      for (Node const* it = head; it; it = it->next){
@@ -23,16 +25,24 @@ Node * fromStaticArray(){
     Node * node = nodeArr+i;
     node->data = 110-(i^(i<<3)) + i/100.0;
     if (i > 0) node->next = node-1;
-    if( i > 11) return node;
+    if( i > 9) return node;
   }
 }
 Node * fromArrayNew(){
-  Node * heapArr = new Node[99];
+  Node * arrNew = new Node[99];
   for (int i=0; ; ++i){
-    Node * node = heapArr+i;
+    Node * node = arrNew+i;
     node->data = 30-(i^(i<<1)) + i/100.0;
     if (i > 0) node->next = node-1;
-    if( i > 11) return node;
+    if( i > 9) return node;
+  }
+}
+Node * fromPlacementNew(){
+  Node * someArr = nodeArr; //backing array can be on heap or in global area
+  for (int i=0; ; ++i){
+    Node * node = new (someArr+i) Node(50-(i^(i<<2)) + i/100.0);
+    if (i > 0) node->next = node-1;
+    if( i > 9) return node;
   }
 }
 int main(){
@@ -41,5 +51,9 @@ int main(){
      cout<<"<-- fromStaticArray; fromArrayNew -->\n";
      head = fromArrayNew();
      dump(head);
+     cout<<"<-- fromPlacementNew -->\n";
+     head = fromPlacementNew();
+     dump(head);
 }/*Can you pre-allocate storage as a node array then create a linked list?
+Yes the placement-new version is best as it uses the correct ctor.
 */
