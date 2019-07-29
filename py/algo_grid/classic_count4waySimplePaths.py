@@ -1,5 +1,4 @@
 '''
-todo: defaultdict(int) for revisits
 todo: breadlookup rename to bcLookup
 
 Poor scalablity -- can't handle a 6x6 matrix
@@ -11,6 +10,7 @@ showcase: print indent to indicate recursive level
 '''
 import sys, operator # locate max entry from dict
 from datetime import datetime
+from collections import defaultdict
 
 A=B=1 # helps me understand the tests
 class Q: #designed for BFT but useful for DFT
@@ -21,7 +21,7 @@ class Q: #designed for BFT but useful for DFT
     self.width =len(m[0])
     self.dest=twoEnds.pop()
     self.start=twoEnds.pop()
-    self.revisits = dict()
+    self.revisits = defaultdict(int)
     self.paths=set()
   def __str__(self):
     ret=''
@@ -84,7 +84,7 @@ def read(r,c, q, recursLevel, isVerbose=0):
   ret = q.m[r][c]
   if ret > 0:
     addr=(r,c)
-    q.revisits[addr] = q.revisits.get(addr, 0) + 1  
+    q.revisits[addr] += 1 
   if isVerbose: 
     assert r>=0 and c>=0
     assert r<q.height and c<q.width
@@ -112,7 +112,7 @@ def startDFT(q): #return simple path count
   # end of recurs ()  
   print q
   isVerbose = (q.height*q.width < 16)
-  breadcrumb = list(); breadlookup = set()
+  breadcrumb = list(); breadlookup = set() #singletons
   recurs(q.start)
   if q.revisits: 
     print '\t most revisited node is ', max(q.revisits.iteritems(), key=operator.itemgetter(1))      
