@@ -1,4 +1,7 @@
 '''
+todo: defaultdict(int) for revisits
+todo: breadlookup rename to bcLookup
+
 Poor scalablity -- can't handle a 6x6 matrix
 
 key idea: deal with cycle by inspecting breadcrumb
@@ -77,11 +80,10 @@ def test1():
   assert str([[1,1], [2,1], [2,2], [2,3], [1,3], [0,3],[0,2],[0,1]]) in q.paths
   assert startDFT(Q(mat(), [[1,1], [2,2]]))==2
   assert startDFT(Q(mat(), [[0,3], [3,0]]))==0 # diagonal
-def read(r,c, q, recursLevel, isVerbose=1):
+def read(r,c, q, recursLevel, isVerbose=0):
   ret = q.m[r][c]
   if ret > 0:
-    assert ret == 1
-    addr=(r,c); 
+    addr=(r,c)
     q.revisits[addr] = q.revisits.get(addr, 0) + 1  
   if isVerbose: 
     assert r>=0 and c>=0
@@ -97,16 +99,16 @@ def startDFT(q): #return simple path count
     if me == q.dest:
       tmp = str(breadcrumb)
       if isVerbose: print ':) path', tmp
-      assert tmp not in q.paths
+      assert tmp not in q.paths, 'algo s/d be dupe-free'
       q.paths.add(tmp)
-      return
+      return # no need to go further
     breadcrumb.append(me); breadlookup.add(myname)
-    assert len(breadcrumb) == len(breadlookup), 'breadcrumb has no dupes'
-    if r-1 >= 0:         stat = recurs([r-1,c])
-    if c+1 <= q.width-1: stat = recurs([r,c+1])
-    if r+1 <=q.height-1: stat = recurs([r+1,c])
-    if c-1 >= 0:         stat = recurs([r,c-1])
-    breadcrumb.pop(); breadlookup.remove(myname) #throws if not in
+    assert len(breadcrumb) == len(breadlookup), 'breadcrumb has no dupe nodes'
+    if r-1 >= 0:         recurs([r-1,c])
+    if c-1 >= 0:         recurs([r,c-1])
+    if c+1 <= q.width-1: recurs([r,c+1])
+    if r+1 <=q.height-1: recurs([r+1,c])
+    breadcrumb.pop(); breadlookup.remove(myname) #throws if missing
   # end of recurs ()  
   print q
   isVerbose = (q.height*q.width < 16)
