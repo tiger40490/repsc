@@ -2,9 +2,10 @@
 Poor scalablity -- can't handle a 6x6 matrix
 
 key idea: deal with cycle by inspecting breadcrumb
-showcase: set 
+showcase: set (ie hash table) actually speeds up dupe-node check
 showcase: nested function to avoid passing lots of arguments
 showcase: print indent to indicate recursive level
+showcase: defaultdict(int)
 '''
 import sys, operator # locate max entry from dict
 from datetime import datetime
@@ -97,7 +98,7 @@ def startDFT(q): #return simple path count
     if me == q.dest:
       tmp = str(breadcrumb)
       if isVerbose: print ':) path', tmp
-      assert tmp not in q.paths, 'algo s/d be dupe-free'
+      assert tmp not in q.paths, 'algo s/d be dupe-free by design'
       q.paths.add(tmp)
       return # no need to go further
     breadcrumb.append(me); bcNodes.add(myname)
