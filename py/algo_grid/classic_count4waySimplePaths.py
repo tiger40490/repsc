@@ -1,6 +1,4 @@
 '''
-todo: breadlookup rename to bcLookup
-
 Poor scalablity -- can't handle a 6x6 matrix
 
 key idea: deal with cycle by inspecting breadcrumb
@@ -93,7 +91,7 @@ def read(r,c, q, recursLevel, isVerbose=0):
 def startDFT(q): #return simple path count
   def recurs(me):
     myname = str(me)
-    if myname in breadlookup: return #check cycle before checking dest
+    if myname in bcNodes: return #check cycle before checking dest
     r,c = me
     if 0 == read(r,c,q,len(breadcrumb),isVerbose): return
     if me == q.dest:
@@ -102,17 +100,17 @@ def startDFT(q): #return simple path count
       assert tmp not in q.paths, 'algo s/d be dupe-free'
       q.paths.add(tmp)
       return # no need to go further
-    breadcrumb.append(me); breadlookup.add(myname)
-    assert len(breadcrumb) == len(breadlookup), 'breadcrumb has no dupe nodes'
+    breadcrumb.append(me); bcNodes.add(myname)
+    assert len(breadcrumb) == len(bcNodes), 'breadcrumb has no dupe nodes'
     if r-1 >= 0:         recurs([r-1,c])
     if c-1 >= 0:         recurs([r,c-1])
     if c+1 <= q.width-1: recurs([r,c+1])
     if r+1 <=q.height-1: recurs([r+1,c])
-    breadcrumb.pop(); breadlookup.remove(myname) #throws if missing
+    breadcrumb.pop(); bcNodes.remove(myname) #throws if missing
   # end of recurs ()  
   print q
   isVerbose = (q.height*q.width < 16)
-  breadcrumb = list(); breadlookup = set() #singletons
+  breadcrumb = list(); bcNodes = set() #singletons
   recurs(q.start)
   if q.revisits: 
     print '\t most revisited node is ', max(q.revisits.iteritems(), key=operator.itemgetter(1))      
