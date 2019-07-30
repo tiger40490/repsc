@@ -10,8 +10,13 @@ print 'sum =',sum(li)
 del li[:]; print li #wipe clean in-place
 ## dict init:
 di={1:'j', 3+2:'a'}; 
+#di=dict(red=1, blue=2) # no quoting required
 for k,v in di.items(): print v,k
 print di.keys()
+# di.pop(
+#from collections import defaultdict
+
+
 ## matrix
 width,height=3,2
 m = [['_' for x in range(width)] for y in range(height)]
