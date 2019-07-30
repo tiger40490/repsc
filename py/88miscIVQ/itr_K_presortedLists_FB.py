@@ -1,6 +1,8 @@
 '''
 showcase: how to put an artificial loop around a yield-block. Loop termination is by return|break
 showcase: yield function with an explicit init
+
+My [[python cookbook]] P721 has another solution, less readable
 '''
 from heapq import *
 a = [[1,3,5,7],[0],[2,3,5],[0,2,4,6,8],[17]]
