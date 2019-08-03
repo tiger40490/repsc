@@ -1,5 +1,5 @@
 '''
-showcase defaultdict(lambda...) to easily handle negative indices
+showcase defaultdict(lambda...) to easily handle negative indices into a matrix
 showcase passing a singe list object into izip() which expects two args
 showcase deepcopy
 '''
@@ -12,33 +12,29 @@ def read(r,c): return a2[ (r,c) ] #easier to read
 def botup(isVerbose=False):
   m=[['.' for _ in range(len(y))] for _ in range(len(x))]
   # Above 2D array is easy to print. m[r][c] is the length of lcs between x[:r] and y[:c]
-  # Below defaultdict easily handles negative indices. I think a2 was designed for instrumentation. The dict value consist of two list of indicess
-  global a2; a2 = defaultdict(lambda: [[],[]])
-  a2[(0, 0)] =  [[0],[0]] if x[0]==y[0]   else [[],[]]
-  m  [0][0] = len(read(0,0))
+  # Below defaultdict easily handles negative indices. I think a2 was designed for instrumentation. The dict value is list of index pairs
+  global a2; a2 = defaultdict(lambda: [])
+  a2[(0, 0)] =  [[0,0]] if x[0]==y[0]   else []
+  m  [0][0] =         1 if x[0]==y[0]   else 0
   for r in xrange(len(x)): 
    for c in xrange(len(y)):
      if isVerbose: print r,c
-     if len( read(r-1,c)[0] )  > len( read(r,c-1)[0] ):
+     if len( read(r-1,c) )  > len( read(r,c-1) ):
        match = deepcopy(read(r-1,c))
      else:
        match = deepcopy(read(r,c-1))
      if x[r] == y[c]:
          match=deepcopy(read(r-1,c-1)) #
-         match[0].append(r)
-         match[1].append(c)
+         match.append([r,c])
      a2[(r,c)] = match
      
      if isVerbose:
        print a2[(r,c)]
-       idxInX,idxInY=a2[(r,c)]
-       assert len(idxInX) == len(idxInY)
-       for i in xrange(len(idxInX)):
-         assert x[idxInX[i]] == y[idxInY[i]]
-     m[r][c] = len(match[0])
+       for X,Y in read(r,c): assert x[X] == y[Y]
+     m[r][c] = len(match)
   # game over. Now print result
   print 'x    y <-- idx into both strings\n------'
-  for X,Y in izip(*read(r,c)): assert x[X] == y[Y]; print "%2d"%X, x[X], Y
+  for X,Y in read(r,c): assert x[X] == y[Y]; print "%2d"%X, x[X], Y
   if len(m[0]) < 15: pprint(m)
   return m[r][c]
 def wrapper(dirtyX,dirtyY):
