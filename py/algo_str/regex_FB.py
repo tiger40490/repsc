@@ -1,19 +1,27 @@
-''' Focus on correctness. The performance requirements are rarely needed so let's not spend too much time
+''' 
+todo: try botup
+showcase decorator
+
+Focus on correctness. The performance requirements are rarely needed so let's not spend too much time
 
 If given this problem at a coding test, i will just try my best. i won't try to memorize all the key details here.
-
-I consider this basically a DP algo but much harder than a regular DP string problem
 '''
+from functools import wraps
 memo=dict()
+def memoize(f):
+  @wraps(f)
+  def wrapper(*args):
+    key = ' '.join(args)
+    if key in memo: return memo[key]
+    ret = f(*args)
+    memo[key]=ret # speeds up first test
+    return ret
+  return wrapper
+@memoize
 def match(haystack, regex):
-  key = ' '.join([haystack,regex])
-  if key in memo: return memo[key]
-  ret = internal(haystack, regex)
-  memo[key]=ret
-  return ret
-def internal(haystack, regex):
       print 'haystack = ', haystack, '\t regex = ', regex
       if 0==len(regex): return 0==len(haystack)
+      # let's not handle empty haystack. Haystack can become empty in this function.
       c,d = (regex[0],'') if len(regex)==1 else regex[0:2]
       assert c != '*', "regex first char is star -- illegal"
 
@@ -24,31 +32,24 @@ def internal(haystack, regex):
           
       assert d == '*'
       
-      # now deal with the right end as an optimization
-      z = regex[-1]
-      if z != '*' and z != '.' :
-        return len(haystack)>0 and haystack[-1] == z and match(haystack[:-1], regex[:-1])
-      
-      ##################3
+      ##################
       if c != '.' : # literal-star. Example: Q* eating up none to all leading Q's, if any
-         if 0==len(haystack): return match('', regex[2:])
          print '   v v v v v   starting * loop with haystack %s vs %s' %(haystack, regex)
          
          # first try skipping the literal-star, as this is a shorter recursion stack
          if match(haystack, regex[2:]): return True
          
-         while haystack[0] == c:
+         while len(haystack) and haystack[0] == c:
            haystack = haystack[1:]
-           print 'trying in * loop'
            if match(haystack, regex): # try consuming the first char in haystack
               return True 
-         print '      ^^^^^ ending * loop ^^^  bad'
+         print '      ^^^^^ ending X* loop ^^^  bad'
          return False
                          
       assert c == '.' and d == '*' # dot-star requires iteration over haystack
       print '   v v v v v   starting  .* loop with haystack %s vs %s' %(haystack, regex)
       for i in [0]+range(1,len(haystack)): # 0 to len-1 but never empty loop
-          print 'in loop, trying i = ', i
+          #print 'in loop, trying i = ', i
           if match(haystack[i:], regex[2:]) :
               if len(haystack): print '  ^^^^^ ending .* loop ^^^ good haystack %s vs %s' %(haystack[i:], regex[2:])
               return True
@@ -60,13 +61,14 @@ def internal(haystack, regex):
 
 def topdn(haystack, regex): # top-down DP with/out memoization
   pass
-def botup(haystack, regex): # bottom-up DP with/out memoization
+def botup(haystack, regex): # bottom-up DP
   ''' Similar to editDistance and lcs. 
 We ask the question botup(i, j): does text[i:] and pattern[j:] match? We can describe our answer in terms of earlier answers to smaller problems. We start from right end, because the std solution seems to hint that.
 '''
   pass
 def main():
-  #assert match("acaabbaccbbacaabbbb", "a*.*b*.*a*aa*a*") # .* need to be greedy as an optimization
+  assert not match("acNeedMemoizationaabbaccbbacaabbbbb", "a*.*b*.*a*aa*a*") # .* need to be greedy as an optimization
+  assert not match('', "b*.*a*aa*a*")
   assert match('aab', 'c*a*b')
   assert not match("", ".*c")
   assert not match("aaaaaaaaaaaaaaaaab", "a*a*c")
@@ -74,6 +76,7 @@ def main():
   assert match('ab', '.*')
   assert match('aa', 'a*')
   assert not match('', '.')
+  assert match('a', '.')
   assert match('xyab-abc', '.*ab.*c.*x*')
   assert match('xyab-abc', '.*ab.*c.*.*')
   assert match('xyab-abc', '.*ab.*c')
