@@ -9,16 +9,16 @@ from copy import deepcopy
 from collections import defaultdict
 from itertools import izip
 def read(r,c): return a2[ (r,c) ] #easier to read
-def botup():
+def botup(isVerbose=False):
   m=[['.' for _ in range(len(y))] for _ in range(len(x))]
-  # Above 2D array is easy to print
-  # Below defaultdict easily handles negative indices
+  # Above 2D array is easy to print. m[r][c] is the length of lcs between x[:r] and y[:c]
+  # Below defaultdict easily handles negative indices. I think a2 was designed for instrumentation. The dict value consist of two list of indicess
   global a2; a2 = defaultdict(lambda: [[],[]])
   a2[(0, 0)] =  [[0],[0]] if x[0]==y[0]   else [[],[]]
   m  [0][0] = len(read(0,0))
   for r in xrange(len(x)): 
    for c in xrange(len(y)):
-     #print r,c
+     if isVerbose: print r,c
      if len( read(r-1,c)[0] )  > len( read(r,c-1)[0] ):
        match = deepcopy(read(r-1,c))
      else:
@@ -28,7 +28,15 @@ def botup():
          match[0].append(r)
          match[1].append(c)
      a2[(r,c)] = match
+     
+     if isVerbose:
+       print a2[(r,c)]
+       idxInX,idxInY=a2[(r,c)]
+       assert len(idxInX) == len(idxInY)
+       for i in xrange(len(idxInX)):
+         assert x[idxInX[i]] == y[idxInY[i]]
      m[r][c] = len(match[0])
+  # game over. Now print result
   print 'x    y <-- idx into both strings\n------'
   for X,Y in izip(*read(r,c)): assert x[X] == y[Y]; print "%2d"%X, x[X], Y
   if len(m[0]) < 15: pprint(m)
@@ -53,4 +61,5 @@ def main():
 main()
 '''Req: longest common subsequence (not sub-string) between two strings X and Y
 This is my DP solution. [[Algorithms]] P 350 also discussed a DP solution
+https://bintanvictor.wordpress.com/wp-admin/post.php?post=29740&action=edit
 '''
