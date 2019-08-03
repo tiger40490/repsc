@@ -1,5 +1,8 @@
 '''
 Top-down is unable to use memoization due to yield. I assume the bottom-up DP is more efficient but less intuitive
+
+showcase: lambda + defaultdict
+showcase: yield
 '''
 from collections import defaultdict
 def isPal(t):
@@ -41,6 +44,7 @@ def gen(s):  #top-down recursive DP
     if not isPal(tail): continue
     for newTuple in gen(s[:i]):
       yield newTuple + (tail,)
+
 def bu(s): #bottom-up DP
   di=defaultdict(lambda:[]) # head substring -> list of splits
   di['']=[()]
@@ -48,13 +52,13 @@ def bu(s): #bottom-up DP
     bigHead = s[:i]
     #print 'spliting bigHead =', bigHead
     for j in xrange(i):
-      mid = s[j:i]
-      #print 'checking', mid
-      if not isPal(mid): continue
-      #print mid, 'is palindrome:)'
+      midSection = s[j:i]
+      #print 'checking', midSection
+      if not isPal(midSection): continue
+      #print midSection, 'is palindrome:)'
       smallHead = s[:j]
       for tup in di[smallHead]:
-        newsplit = tup + (mid,)
+        newsplit = tup + (midSection,)
         di[bigHead].append(newsplit)
     #print bigHead, 'can be split:', di[bigHead]
   return di[s]
