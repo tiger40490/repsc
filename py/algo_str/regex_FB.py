@@ -52,15 +52,16 @@ def match(haystack, regex):
       return False
 
 def topdn(haystack, regex): # top-down DP with/out memoization
-''' Similar to editDistance solution
-We ask the question topdn(i, j): does text[i:] and pattern[j:] match? We can describe our answer in terms of earlier answers to smaller problems. We start from right end.
-
-'''
   pass
+def botup(haystack, regex): # bottom-up DP with/out memoization
+  pass
+''' Similar to editDistance and lcs
+We ask the question botup(i, j): does text[i:] and pattern[j:] match? We can describe our answer in terms of earlier answers to smaller problems. We start from right end.
+'''
 def main():
   #assert match("acaabbaccbbacaabbbb", "a*.*b*.*a*aa*a*") # .* need to be greedy as an optimization
-  assert not match("", ".*c")
   assert match('aab', 'c*a*b')
+  assert not match("", ".*c")
   assert not match("aaaaaaaaaaaaaaaaab", "a*a*c")
   assert not match("ab", ".*c")
   assert match('ab', '.*')
