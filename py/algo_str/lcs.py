@@ -9,7 +9,7 @@ from copy import deepcopy
 from collections import defaultdict
 from itertools import izip
 def read(r,c): return a2[ (r,c) ] #easier to read
-def bu():
+def botup():
   m=[['.' for _ in range(len(y))] for _ in range(len(x))]
   # Above 2D array is easy to print
   # Below defaultdict easily handles negative indices
@@ -41,7 +41,7 @@ def wrapper(dirtyX,dirtyY):
     print ' '+('  '.join(list(s)))
     for i in range(len(s)): print '%2s' % i,  
     print '\n'
-  return bu()
+  return botup()
 def main():
   assert 4==wrapper('AGGTAB', 'GXTXAYB')
   assert 3==wrapper('ABCDGH','AEDFHR')

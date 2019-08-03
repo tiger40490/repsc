@@ -51,9 +51,9 @@ def match(haystack, regex):
       print '      ^^^^^ ending .* loop ^^^  bad'
       return False
 
-def td(haystack, regex): # top-down DP with/out memoization
+def topdn(haystack, regex): # top-down DP with/out memoization
 ''' Similar to editDistance solution
-We ask the question td(i, j): does text[i:] and pattern[j:] match? We can describe our answer in terms of earlier answers to smaller problems. We start from right end.
+We ask the question topdn(i, j): does text[i:] and pattern[j:] match? We can describe our answer in terms of earlier answers to smaller problems. We start from right end.
 
 '''
   pass
