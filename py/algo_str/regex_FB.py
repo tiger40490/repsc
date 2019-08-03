@@ -4,7 +4,14 @@ If given this problem at a coding test, i will just try my best. i won't try to 
 
 I consider this basically a DP algo but much harder than a regular DP string problem
 '''
+memo=dict()
 def match(haystack, regex):
+  key = ' '.join([haystack,regex])
+  if key in memo: return memo[key]
+  ret = internal(haystack, regex)
+  memo[key]=ret
+  return ret
+def internal(haystack, regex):
       print 'haystack = ', haystack, '\t regex = ', regex
       if 0==len(regex): return 0==len(haystack)
       c,d = (regex[0],'') if len(regex)==1 else regex[0:2]
