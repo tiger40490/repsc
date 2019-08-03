@@ -29,14 +29,15 @@ def botup():
          match[1].append(c)
      a2[(r,c)] = match
      m[r][c] = len(match[0])
-  for X,Y in izip(*read(r,c)): assert x[X] == y[Y]; print X, x[X], Y
+  print 'x    y <-- idx into both strings\n------'
+  for X,Y in izip(*read(r,c)): assert x[X] == y[Y]; print "%2d"%X, x[X], Y
   if len(m[0]) < 15: pprint(m)
   return m[r][c]
 def wrapper(dirtyX,dirtyY):
   global x,y
   x = dirtyX.replace(' ','')
   y = dirtyY.replace(' ','')
-  if len(y)<len(x): x,y=y,x
+  if len(y)<len(x): x,y=y,x #ensure x is the shorter string
   for s in [x,y]:
     print ' '+('  '.join(list(s)))
     for i in range(len(s)): print '%2s' % i,  
@@ -44,6 +45,7 @@ def wrapper(dirtyX,dirtyY):
   return botup()
 def main():
   assert 4==wrapper('AGGTAB', 'GXTXAYB')
+  #return
   assert 3==wrapper('ABCDGH','AEDFHR')
   assert 7==wrapper('thisisatest', 'testing123testing')
   assert 10==wrapper('abbbbb-bbbbbb-a', 'aabbaabaababbabaaba')
