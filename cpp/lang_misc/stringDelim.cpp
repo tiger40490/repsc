@@ -8,9 +8,9 @@
 using namespace std;
 
 int main() {
-  stringstream spaces(" a bb   x  ");
+  stringstream spaceDelimted(" a bb   x  ");
   string token;
-  for(; spaces>>token;){
+  for(; spaceDelimted>>token;){
     cout<<token<<"|";
   }
   cout<<endl;
