@@ -1,6 +1,5 @@
 /*
 todo: use external hashmap to save node->meh
-todo: rename to maxDownPathSum.cpp
 */
 #include <iostream>
 #include <vector>
@@ -106,6 +105,12 @@ int main(){
 
   reset(false); //edge case -- all-negative tree
   assert(test() == -1);
+  
+  reset(false); //
+  _9.data *= -1;
+  _6.data *= -1;
+  assert(test() == 9);
+  
 }/* Req: https://wp.me/p74oew-64M   
  non-unique nodes. No uplink. No cycle.
 */
