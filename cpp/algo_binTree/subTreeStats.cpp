@@ -7,16 +7,24 @@ auto root = Node<>::preOrderBuildTree({{6, 1.1},
 {3, 2.2},{1, 4.4},{2,9.9},{5, 5.5},{4, 10}, //left subtree
 {9, 3.3},{7, 6.6},{8, 13},{11,7.7},{10,14},{12, 15}}); //right subtree
 
+struct Stat{
+  size_t size=0, height=0;
+  size_t maxPathSumLe=0, maxPathSumRi=0; //max path sum to any leaf
+};
+
 void postOrder(Node<> * n){
-  static unordered_map<Node<>*, size_t> height={{nullptr, 0}}, size={{nullptr, 0}};
+  static unordered_map<Node<>*, Stat> stat={{nullptr, Stat()}}; 
   static int lvl=0;
   ++lvl;
   if (n->le){ postOrder(n->le); }
   if (n->ri){ postOrder(n->ri); }
   
-  size[n] = 1 + size[n->le] + size[n->ri];
-  height[n] = 1 + max(height[n->le], height[n->ri]);
-  cout<<n->data<<"\theight= "<<height[n]<<" size= "<<size[n]<<" level= "<<lvl<<endl;
+  auto & vo = stat[n];
+  vo.size   = 1 + stat[n->le].size 
+                + stat[n->ri].size;
+  vo.height = 1+max(stat[n->le].height, 
+                    stat[n->ri].height);
+  cout<<n->data<<"\theight= "<<vo.height<<" size= "<<vo.size<<" level= "<<lvl<<endl;
   --lvl;
 }
 int main(){
