@@ -1,3 +1,6 @@
+/*
+todo: rename ValType to PayloadType for clarity? too long?
+*/
 #include <vector>
 #include <iostream>
 #include <iomanip>
@@ -16,7 +19,7 @@ struct Node {
     Node(std::pair<InOrderId,ValType> const & arg)
     : Node(arg.second, nullptr, nullptr, arg.first ) {}
     
-    //To use this function, you first need to walk in-order to assign node IDs then walk pre-order to produce a sequence for preOrderBuildTree()
+    //To use this function on a conceptual tree, you first need to conceptually walk in-order to assign node IDs then walk pre-order to produce an input sequence for preOrderBuildTree()
     static Node * preOrderBuildTree (std::vector<std::pair<InOrderId,ValType>> const & a){ 
       assert(a.size()); Node * const root = new Node(a[0]);
       for (size_t i = 1; i<a.size(); ++i){
