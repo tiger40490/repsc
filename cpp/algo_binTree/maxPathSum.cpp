@@ -1,5 +1,6 @@
 /*
-todo: use external map to save node->meh
+todo: use external hashmap to save node->meh
+todo: rename to maxDownPathSum.cpp
 */
 #include <iostream>
 #include <vector>
@@ -57,11 +58,11 @@ int reset(bool isAllPositive=true){
     n->neg();
     if (isAllPositive) n->data *= -1;
   }
-  auto ret = best;
+  auto const ret0 = best;
   best=INT_MIN;
   path.clear();
   ss<<"=============\n";
-  return ret;
+  return ret0;
 }
 void recur(Node * n=&root){
   int prevMeh=0;
@@ -106,5 +107,5 @@ int main(){
   reset(false); //edge case -- all-negative tree
   assert(test() == -1);
 }/* Req: https://wp.me/p74oew-64M   
-Note: a path is defined as any sequence of nodes from any starting node to any node in the tree along the parent->child connections. The path must contain at least one node and does not need to go through the root. non-unique nodes. No uplink. No cycle.
+ non-unique nodes. No uplink. No cycle.
 */
