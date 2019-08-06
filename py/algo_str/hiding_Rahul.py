@@ -58,7 +58,7 @@ assert 0==solve('a', 'b')
 assert 1==solve('a', 'ab')
 assert 1==solve('a', 'ba')
 # def packed(haystack):  return ''.join(haystack.split()) # less efficient than replace()
-'''Req:
+'''Req: Uber onsite question.
 Given longer and short strings Haystack vs Needle, can string-N match a sub-sequence (not necessarily substring) of string-H? You can say we are checking if string-N is hiding in string-H. If yes how many hiding places (or sub-sequences) can you find? 
 
 For example, if length of string-N is 3, then each hiding place is a tuple of 3 subscripts into string-H, where the 3 characters would form a string equal to string-N
