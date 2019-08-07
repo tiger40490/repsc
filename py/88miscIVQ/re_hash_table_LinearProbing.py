@@ -27,11 +27,12 @@ class Hashmap:
     while True:
       pair = self.arr[buc]
       if pair[0] is None: 
-        if self.size+1 > self.cap * self.loadfac: 
-          self.expand()
-        self.arr[buc]=[key,val]
+        self.arr[buc] = [key,val]
         self.size += 1
         #print 'after inserting', key, self.arr
+        if self.size > self.cap * self.loadfac: 
+          self.expand()
+        assert self.size <= self.cap * self.loadfac
         return self.size
       if pair[0] == key: pair[1]=val; return -1 # existing key updated
       buc = self.incr(buc)
@@ -40,11 +41,12 @@ class Hashmap:
     buc = initialBuc = self.getBucket(key)
     while True:
       pair = self.arr[buc]      
+      if pair[0] is None: return None #special value to indicate invalid key
+        #print 'get() returning', None 
       if pair[0] == key: return pair[1]
         #print 'get() returning', pair[1] 
       buc = self.incr(buc)
-      if buc == initialBuc: return None #special value to indicate invalid key
-        #print 'get() returning', None 
+      assert buc != initialBuc
   def expand(self):
     self.size = 0
     oldArr = self.arr
@@ -54,8 +56,7 @@ class Hashmap:
     for key, val in oldArr:
        if key is not None: self.put(key, val)
     print '\nnew size =', self.size, 'after expand()', self.arr
-    assert 2*(self.size +1) == self.cap
-    assert self.size+1 < self.cap * self.loadfac
+    assert 2*(self.size) <= self.cap
 
 def doTestsPass():
   intList = [(1,12), (3,34), (5,56), (1,18), (2,25), (4,47)]
