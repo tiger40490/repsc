@@ -1,46 +1,59 @@
 '''
+todo:         assert self.size+1 < self.cap * self.loadfac
+
+showcase passing a hashFunction as ctor argument
+showcase populating a list with nested lists
+
+I avoid the generi words index/position when 'bucket' is less ambiguous
+
 Linear probing is one proven collision-resolution. Should be O(1) amortized for put/get/delete. 
 High chance of hitting an empty bucket within 0 to 1 retries, provided load factor is low.
 '''
 class Hashmap:
-  def __init__(self, capacity=4, maxLoadFactor=0.75):
-    self.size=0; 
+  def __init__(self, hashFunc=hash, #hash() is good for int, string, float...
+  capacity=4, maxLoadFactor=0.75):
+    self.hasher=hashFunc
     self.cap=capacity; 
     self.loadfac=maxLoadFactor; 
-    self.arr=[[None, None]] * capacity
+    self.size=0; 
+    self.arr= [[None, None]] * capacity
     #print 'in ctor', self.arr
-  def myHash(self, key):
-    return hash(key) #use python hash() for int, string, float...
+  def getBucket(self, key):
+    assert key is not None
+    hashCode = self.hasher(key)
+    hashCode = hash(hashCode) #rehash to guard against bad hasher, as in java
+    return hashCode % self.cap 
   def incr(self,buc): return (1+buc)%self.cap
-  def put(self, key, val):
-    buc = self.myHash(key)%self.cap
+  def put(self, key, val): # return status
+    buc = self.getBucket(key)
     while True:
-      aa = self.arr[buc]
-      if aa[0] is None: 
-        self.arr[buc]=[key,val]; 
-        self.size += 1; 
-        if self.size > self.cap * self.loadfac: self.expand()
-        assert self.size <= self.cap * self.loadfac
-        return 1 # inserted
-      if aa[0] == key: aa[1]=val; return 2 # existing key updated
+      pair = self.arr[buc]
+      if pair[0] is None: 
+        if self.size+1 > self.cap * self.loadfac: self.expand()
+        assert self.size+1 <= self.cap * self.loadfac
+        self.arr[buc]=[key,val]
+        self.size += 1
+        return self.size
+      if pair[0] == key: pair[1]=val; return -1 # existing key updated
       buc = self.incr(buc)
 
   def get(self, key): #return payload
-    buc = self.myHash(key)%self.cap
+    buc = self.getBucket(key)
     while True:
-      aa = self.arr[buc]      
-      if aa[0] is None: return None #special value to indicate invalid key
-      if aa[0] == key: return aa[1]
+      pair = self.arr[buc]      
+      if pair[0] is None: return None #special value to indicate invalid key
+      if pair[0] == key: return pair[1]
       buc = self.incr(buc)
-  def expand(self): 
+  def expand(self): #advanced feature 
     self.size = 0
-    otherArr = self.arr
+    oldArr = self.arr
     self.cap *= 2
     self.arr = [[None, None]] * self.cap 
-    #print self.arr, '||', otherArr, 'after swap'
-    for key, val in otherArr:
-       self.put(key, val)
-    print 'after expand()', self.arr
+    #print self.arr, '||', oldArr, 'after swap'
+    for key, val in oldArr:
+       if key is not None: self.put(key, val)
+    print '\nnew size =', self.size, 'after expand()', self.arr
+    assert 2*(self.size +1) == self.cap
 
 def doTestsPass():
   intList = [(1,12), (3,34), (5,56), (1,18), (2,25), (4,47)]
@@ -49,10 +62,10 @@ def doTestsPass():
 
   intMap = Hashmap()
   for key, value in intList:
-    print 'adding', key, value, '->', intMap.put(key, value)
+    print 'adding', key, value, '-> ...', intMap.put(key, value)
     if intMap.get(key) != value:
       passed = False
-      print ("Test cased failed [", key, ",", value, "]")
+      print "Test cased failed [", key, ",", value, "]"
   assert intMap.size == 5
   
   strMap = Hashmap()
@@ -60,7 +73,7 @@ def doTestsPass():
     print 'adding', key, value, '->', strMap.put(key, value)
     if strMap.get(key) != value:
       passed = False
-      print("Test cased failed [", key, ",", value, "]")
+      print "Test cased failed [", key, ",", value, "]"
   assert strMap.size == 2
 
   if (passed):
