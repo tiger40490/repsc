@@ -33,18 +33,21 @@ class Hashmap:
         assert self.size+1 <= self.cap * self.loadfac
         self.arr[buc]=[key,val]
         self.size += 1
+        #print 'after inserting', key, self.arr
         return self.size
       if pair[0] == key: pair[1]=val; return -1 # existing key updated
       buc = self.incr(buc)
 
   def get(self, key): #return payload
-    buc = self.getBucket(key)
+    buc = initialBuc = self.getBucket(key)
     while True:
       pair = self.arr[buc]      
-      if pair[0] is None: return None #special value to indicate invalid key
       if pair[0] == key: return pair[1]
+        #print 'get() returning', pair[1] 
       buc = self.incr(buc)
-  def expand(self): #advanced feature 
+      if buc == initialBuc: return None #special value to indicate invalid key
+        #print 'get() returning', None 
+  def expand(self):
     self.size = 0
     oldArr = self.arr
     self.cap *= 2
