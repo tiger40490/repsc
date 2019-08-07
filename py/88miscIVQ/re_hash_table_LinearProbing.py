@@ -1,6 +1,4 @@
 '''
-todo:         assert self.size+1 < self.cap * self.loadfac
-
 showcase passing a hashFunction as ctor argument
 showcase populating a list with nested lists
 
@@ -29,8 +27,8 @@ class Hashmap:
     while True:
       pair = self.arr[buc]
       if pair[0] is None: 
-        if self.size+1 > self.cap * self.loadfac: self.expand()
-        assert self.size+1 <= self.cap * self.loadfac
+        if self.size+1 > self.cap * self.loadfac: 
+          self.expand()
         self.arr[buc]=[key,val]
         self.size += 1
         #print 'after inserting', key, self.arr
@@ -57,6 +55,7 @@ class Hashmap:
        if key is not None: self.put(key, val)
     print '\nnew size =', self.size, 'after expand()', self.arr
     assert 2*(self.size +1) == self.cap
+    assert self.size+1 < self.cap * self.loadfac
 
 def doTestsPass():
   intList = [(1,12), (3,34), (5,56), (1,18), (2,25), (4,47)]
