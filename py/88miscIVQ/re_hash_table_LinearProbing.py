@@ -2,7 +2,11 @@
 showcase passing a hashFunction as ctor argument
 showcase populating a list with nested lists
 
-I avoid the generi words index/position when 'bucket' is less ambiguous
+In the absence of delete(), linear probe can stop when hitting an empty slot. In put(), this means lucky. In get() this means invalid key.
+
+In the presence of delete(), an empty slot could be a vacated bucket. In put(), this means lucky. In get(), this is ambiguous, so we may need to put a sentinel into such a bucket. 
+
+I avoid the generic words index/position when 'bucket' is less ambiguous
 
 Linear probing is one proven collision-resolution. Should be O(1) amortized for put/get/delete. 
 High chance of hitting an empty bucket within 0 to 1 retries, provided load factor is low.
