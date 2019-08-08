@@ -1,14 +1,15 @@
 '''
 todo: more tests
 
+Assuming sz = len(vec)
+vec[ -1] == vec[ sz-1] is the #1 char from end
+vec[:-2] == vec[:sz-2] is a clone after chopping last 2 chars
+Note for empty string e, e[:-1] is itself
+
 showcase using read() to implement conditional logic. Alternative is if/continue within the loop.. confusing
 showcase using an invalid value (0 is valid) to mark the unused region of matrix. See blogpost
 showcase one-liner to clear a dict
 showcase one-liner to assign two vars
-
-Recursive is easy, but DP is clever
-
-Note for empty string e, e[:-1] is itself
 '''
 memo = dict(); SEP = ' ^^^ '
 def topdn(NN, HH): #top-down DP with memoization
@@ -16,7 +17,7 @@ def topdn(NN, HH): #top-down DP with memoization
   if tu in memo: return memo[tu]
   
   if   sz1 == sz2: ret = (1 if NN==HH else 0)
-  elif sz1 == 0:   ret = 1 # optional (minor) optimization
+  elif sz1 == 0:   ret = 1 # optional optimization but meaningful
   
  #elif sz1 >  sz2: ret = 0 # Important simplification : this check was moved into solve().. should not stay in this "hot" function
   else:
@@ -30,21 +31,23 @@ def topdn(NN, HH): #top-down DP with memoization
 mat = list()
 def pprint():
   for r in xrange(len(mat)):
-    for c in xrange(len(mat[0])): print '%3s' % read(r,c),
+    for c in xrange(len(mat[0])): print '%2s' % read(r,c),
     print
-def read(r,c):
+def read(r,c): # $$Valuable reusable technique
   if r > c: return 0
-  if r==0: return 1
+  if r==0: return 1 #special logic
   return mat[r][c]
-def botup(NN,HH):
+def botup(NN,HH): #based on the more natural topdn, this botup algo is unreadable
   sz1,sz2 = len(NN),len(HH);
   global mat; mat=[[999999 for _ in xrange(1+sz2)]for _ in xrange(1+sz1) ]
-  for r in xrange(1, 1+sz1): #inddex:=len(left substr), so loop till sz1
+
+  #r:=len(NN left part), so loop from r=1 till sz1
+  for r in xrange(1, 1+sz1): 
     for c in xrange(r, 1+sz2):
       mat[r][c] = read(r,c-1)
       if NN[r-1]==HH[c-1]:
         mat[r][c] += read(r-1,c-1)
-  print '     '+'  '.join(list(HH))      
+  print '    '+'  '.join(list(HH))      
   pprint()
   return read(-1,-1)
 def solve(needle, haystack):
