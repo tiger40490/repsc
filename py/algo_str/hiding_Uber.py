@@ -11,21 +11,22 @@ Recursive is easy, but DP is clever
 Note for empty string e, e[:-1] is itself
 '''
 memo = dict(); SEP = ' ^^^ '
-def td(NN, HH): #top-down DP with memoization
+def topdn(NN, HH): #top-down DP with memoization
   sz1,sz2 = len(NN),len(HH);  tu=(sz1,sz2)
   if tu in memo: return memo[tu]
   
   if   sz1 == sz2: ret = (1 if NN==HH else 0)
   elif sz1 == 0:   ret = 1 # optional (minor) optimization
- #elif sz1 >  sz2: ret = 0 # this check was moved into solve().. should not stay in this "hot" function
+  
+ #elif sz1 >  sz2: ret = 0 # Important simplification : this check was moved into solve().. should not stay in this "hot" function
   else:
     assert sz1 < sz2
-    ret = td(NN, HH[:-1]) # these hiding places don't include haystack's last char
-    if NN[-1:]==HH[-1:] : ret += td(NN[:-1] , HH[:-1]) 
+    ret = topdn(NN, HH[:-1]) # these hiding places don't include haystack's last char
+    if NN[-1:]==HH[-1:] : ret += topdn(NN[:-1] , HH[:-1]) 
   memo[(sz1,sz2)] = ret
   print NN + ' > ' + HH + ' ..', ret
   return ret
-### end of topDown; rest is bottomUp:
+### end of topDown; rest is bottom up:
 mat = list()
 def pprint():
   for r in xrange(len(mat)):
@@ -35,7 +36,7 @@ def read(r,c):
   if r > c: return 0
   if r==0: return 1
   return mat[r][c]
-def bottomUp(NN,HH):
+def botup(NN,HH):
   sz1,sz2 = len(NN),len(HH);
   global mat; mat=[[999999 for _ in xrange(1+sz2)]for _ in xrange(1+sz1) ]
   for r in xrange(1, 1+sz1): #inddex:=len(left substr), so loop till sz1
@@ -48,8 +49,8 @@ def bottomUp(NN,HH):
   return read(-1,-1)
 def solve(needle, haystack):
   haystack = haystack.replace(' ',''); assert len(needle) <= len(haystack), "invalid input"
-  retT = td      (needle, haystack); memo.clear(); 
-  retB = bottomUp(needle, haystack)
+  retT = topdn(needle, haystack); memo.clear(); 
+  retB = botup(needle, haystack)
   assert retB==retT; print SEP,retT,SEP; return retT
   
 assert 6+5+3==solve('as', '0 as ass asss')
