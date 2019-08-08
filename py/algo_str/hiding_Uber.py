@@ -6,6 +6,8 @@ showcase using an invalid value (0 is valid) to mark the unused region of matrix
 showcase one-liner to clear a dict
 showcase one-liner to assign two vars
 
+Recursive is easy, but DP is clever
+
 Note for empty string e, e[:-1] is itself
 '''
 memo = dict(); SEP = ' ^^^ '
@@ -48,8 +50,8 @@ def solve(needle, haystack):
   haystack = haystack.replace(' ',''); assert len(needle) <= len(haystack), "invalid input"
   retT = td      (needle, haystack); memo.clear(); 
   retB = bottomUp(needle, haystack)
-  
   assert retB==retT; print SEP,retT,SEP; return retT
+  
 assert 6+5+3==solve('as', '0 as ass asss')
 assert 6==solve('aa', 'babbabaa')
 assert 4==solve('Gks', 'Geeks For Geeks')
