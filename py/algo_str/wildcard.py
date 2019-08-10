@@ -1,3 +1,7 @@
+'''
+todo: botup
+
+'''
 from functools import wraps
 memo=dict()
 def memoDecorator(f):
