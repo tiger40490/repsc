@@ -1,27 +1,28 @@
 ''' 
-todo: try botup
-showcase decorator
+showcase: decorator
+showcase: saving func result in dict and also in a "ret" variable
 
 Focus on correctness. The performance requirements are rarely needed so let's not spend too much time
+
+Complicated implementation? There are shorter solutions but this one breaks down the problem into clean subproblems. 
 
 If given this problem at a coding test, i will just try my best. i won't try to memorize all the key details here.
 '''
 from functools import wraps
 memo=dict()
-def memoize(f):
+def memoDecorator(f):
   @wraps(f)
   def wrapper(*args):
     key = ' '.join(args)
     if key in memo: return memo[key]
-    ret = f(*args)
-    memo[key]=ret # speeds up first test
+    memo[key] = ret = f(*args) # speeds up first test
     return ret
   return wrapper
-@memoize
+  
+@memoDecorator
 def match(haystack, regex):
       print 'haystack = ', haystack, '\t regex = ', regex
       if 0==len(regex): return 0==len(haystack)
-      # let's not handle empty haystack. Haystack can become empty in this function.
       c,d = (regex[0],'') if len(regex)==1 else regex[0:2]
       assert c != '*', "regex first char is star -- illegal"
 
@@ -58,14 +59,6 @@ def match(haystack, regex):
               return True
       print '      ^^^^^ ending .* loop ^^^  bad'
       return False
-
-def topdn(haystack, regex): # top-down DP with/out memoization
-  pass
-def botup(haystack, regex): # bottom-up DP
-  ''' Similar to editDistance and lcs. 
-We ask the question botup(i, j): does text[i:] and pattern[j:] match? We can describe our answer in terms of earlier answers to smaller problems. We start from right end, because the std solution seems to hint that.
-'''
-  pass
 def main():
   assert not match("acNeedMemoizationaabbaccbbacaabbbbb", "a*.*b*.*a*aa*a*") # .* need to be greedy as an optimization
   assert not match('', "b*.*a*aa*a*")
