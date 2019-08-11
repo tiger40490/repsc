@@ -5,6 +5,7 @@
 # ---- usage examples ----
 # find .|grep1.pl -i -v -A3 'strinG & value'
 # find .|grep1.pl -i -v --class trade
+# find .|grep1.pl 'TensorApplicator> .* We' # to match "<TensorApplicator> <!-- We"
 # find .|grep1.pl '\-O2' # escape leading dash in needle. grep requirement
 # find .|grep1.pl -P \\bReload\\b # whole word "Reload"
 
@@ -129,3 +130,4 @@ END{
   print $LOG "closing log file :)";
   close $LOG;
 }
+
