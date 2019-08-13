@@ -1,6 +1,8 @@
 '''
 todo: add tests
 feature: use explicit sentinel to enhance clarity and reduce ambiguity
+
+https://leetcode.com/problems/implement-trie-prefix-tree/solution/ java solution is similar.
 '''
 class Trie:
   def __init__(self):
