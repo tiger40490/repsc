@@ -1,5 +1,5 @@
 '''
-valuable technique -- setting t1 and t2 to default objects, to avoid the excessive null check. In this problem, this technique is not absolutely necessary, but very useful in general
+valuable technique -- setting t1 and t2 to default objects, to avoid the excessive null check. In this problem, this technique is not absolutely necessary, but very useful in general. See blog for more details
 '''
 # Definition for a binary tree node.
 # class TreeNode(object):
@@ -20,5 +20,5 @@ class Solution(object):
     t1.right= self.mergeTrees(t1.right, t2.right)    
     return t1
 '''
-https://leetcode.com/problems/merge-two-binary-trees/submissions/
+https://bintanvictor.wordpress.com/wp-admin/post.php?post=33877&action=edit
 '''
