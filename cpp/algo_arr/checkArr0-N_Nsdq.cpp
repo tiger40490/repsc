@@ -13,12 +13,13 @@ size_t sz=0;
 bool isChar(Val val){ return val < 0 || sz < val;}
 void dump(Pos pos, string headline=""){
   cout<<"-------- "<<headline<<" .. current position == "<<pos<<endl;
-  for(Pos i=0; i<sz; ++i) cout<<i<<"\t";
-  cout<<endl;
   for(Pos i=0; i<sz; ++i) {
     if (isChar(a[i])) cout<<(char)a[i]<<"\t";
     else cout<<a[i]<<"\t";
   }
+  cout<<endl;
+
+  for(Pos i=0; i<sz; ++i) cout<<i<<"\t";
   cout<<endl;
 }
 void solution1(){ /*my home-grown solution. Lengthy, powerful, efficient
@@ -68,12 +69,15 @@ void solution2(){ //based on XR's email
   }
 }
 // returns true iff swapped
-bool trySwap(Pos cur, Pos tgt){
-  if(cur==tgt)return false;//current position already correct
-  if( a[cur] == a[tgt] )return false; 
-    //target position is correctly, and current position is a bad duplicate
-  
-  std::swap(a[cur], a[tgt]);
+bool trySwap(Pos cur, int val){
+  if(val==cur)return false;//current position already correct
+  if( a[val] == a[cur] ) { // no point swapping
+    //target position has correct value, but current position is a bad duplicate of that value
+    assert (a[val] == val); 
+    assert (a[cur] != cur);
+    return false; 
+  }
+  std::swap(a[val], a[cur]);
   return true;
 }
 void solution3(){ //inspired by CSY
@@ -88,6 +92,7 @@ void solution3(){ //inspired by CSY
       cout<<i<<" -- is missing\n";
       cout<<a[i]<<" ++ marked as duplicated\n";
     }
+    cout<<"^^^ end of result dump (empty if clean) ^^^\n";
 }
 //////////// by CSY
 bool notSame(Pos i, Pos j){
