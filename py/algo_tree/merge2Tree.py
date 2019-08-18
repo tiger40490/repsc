@@ -8,7 +8,7 @@ valuable technique -- setting t1 and t2 to default objects, to avoid the excessi
 #         self.left = None
 #         self.right = None
 class Solution(object):
-  def mergeTrees(self, t1, t2): #rtype: TreeNode representing merging t1 and t2
+  def mergeTrees(self, t1, t2): #returns: TreeNode representing merging t1 and t2
     if t1 is None and t2 is None: return None
     if t1 is None: t1 = TreeNode(0)
     if t2 is None: t2 = TreeNode(0)
