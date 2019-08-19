@@ -32,7 +32,7 @@ void add(uint8_t *A, size_t const lenA,
   bool carry=false;
   for (int i=lenA-1; i >=0; --i){
     unsigned int a=A[i], b= (i>=offset)?B[i-offset]:0;
-    cout<<i<<" : "<<(int)A[i]<<" + "<<b<<" carry="<<carry<<endl;
+    //cout<<i<<" : "<<(int)A[i]<<" + "<<b<<" carry="<<carry<<endl;
     A[i] +=   b+carry;
     carry =(a+b+carry) > 255;
   }
@@ -47,12 +47,12 @@ void test1(){
   assert ( A == vector<uint8_t>({1,4,254}) );
 }  
 void test2(){
-  vector<uint8_t> A = {5, 129, 0,   255};
-  vector<uint8_t> B = {   128, 255, 255};
+  vector<uint8_t> A = {255,255, 129, 0,   255};
+  vector<uint8_t> B = {         128, 255, 255};
   cout<<A<<B<<".. are the inputs\n";
   sz = A.size();
   add(A.data(), sz, B.data(), B.size());
-  assert ( A == vector<uint8_t>({6,2,0,254}) );
+  assert ( A == vector<uint8_t>({0,0,2,0,254}) );
 }  
 int main(){
   test1();
