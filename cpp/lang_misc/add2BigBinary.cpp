@@ -1,4 +1,5 @@
-/*todo: add unit tests
+/*
+Note unsigned char is harder to print than uint8_t
 */
 #include <vector>
 #include <iostream>
@@ -6,7 +7,7 @@
 #include <cassert>
 using namespace std;
 size_t sz=0;
-ostream & operator<<(ostream & os, uint8_t const * x){
+ostream & operator<<(ostream & os, unsigned char const * x){
   // can't pass array size into operator<<(), so I use a global var
    for(size_t i=0; i<sz; ++i){ 
      unsigned int tmp = x[i];   
@@ -25,8 +26,8 @@ std::ostream& operator<<(std::ostream& os, Container<V, Alloc> const& c){
    os<<endl;
    return os;
 }
-void add(uint8_t *A, size_t const lenA,
-         uint8_t *B, size_t const lenB){
+void add(unsigned char *A, size_t const lenA,
+         unsigned char *B, size_t const lenB){
   assert (lenA >= lenB && "if A is shorter, then user should pass it in as 2nd argument");
   int const offset  = lenA - lenB;
   bool carry=false;
@@ -39,20 +40,20 @@ void add(uint8_t *A, size_t const lenA,
   cout<<(carry?"1(carry)":"")<<A<<".. is the result ----\n";
 }  
 void test1(){
-  vector<uint8_t> A = {129, 1, 255};
-  vector<uint8_t> B = {128, 2, 255};
+  vector<unsigned char> A = {129, 1, 255};
+  vector<unsigned char> B = {128, 2, 255};
   cout<<A<<B<<".. are the inputs\n";
   sz = A.size();
   add(A.data(), sz, B.data(), B.size());
-  assert ( A == vector<uint8_t>({1,4,254}) );
+  assert ( A == vector<unsigned char>({1,4,254}) );
 }  
 void test2(){
-  vector<uint8_t> A = {255,255, 129, 0,   255};
-  vector<uint8_t> B = {         128, 255, 255};
+  vector<unsigned char> A = {255,255, 129, 0,   255};
+  vector<unsigned char> B = {         128, 255, 255};
   cout<<A<<B<<".. are the inputs\n";
   sz = A.size();
   add(A.data(), sz, B.data(), B.size());
-  assert ( A == vector<uint8_t>({0,0,2,0,254}) );
+  assert ( A == vector<unsigned char>({0,0,2,0,254}) );
 }  
 int main(){
   test1();
