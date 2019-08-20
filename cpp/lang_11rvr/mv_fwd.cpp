@@ -93,9 +93,9 @@ Badstr Deepak(){
   return ret;
 }
 void testRVO(){
-  //doesn't call mv-ctor or copier, but you should try g++ -fno-elide-constructors 
+  //skips mv-ctor or copier, but if you try g++ -fno-elide-constructors ...
+  //... you see mv-ctor or (if removed) copier in action
   Badstr clone(Deepak()); 
-  
 }
 ////////////////////////////////////
 struct Trade{
