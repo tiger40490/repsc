@@ -88,6 +88,15 @@ void testEmplace(){
   cout<<s1<<" ... is original string, now vacant.\n";
   cout<<"^^^^^    done with testEmplace()    ^^^^^\n\n";  
 }
+Badstr Deepak(){
+  Badstr ret("Deepak-test");
+  return ret;
+}
+void testRVO(){
+  //doesn't call mv-ctor or copier, but you should try g++ -fno-elide-constructors 
+  Badstr clone(Deepak()); 
+  
+}
 ////////////////////////////////////
 struct Trade{
   Trade(Badstr && s):display(move(s)) /*without move(), s is passed to 
@@ -123,6 +132,7 @@ compile as it disables type deduction and remove universsal reference*/
   cout<<"^^^^^    done with test_fwd()    ^^^^^\n\n";  
 }
 int main(){
+  testRVO();
   testPbValue();
   testAssignment();
   testEmplace();
