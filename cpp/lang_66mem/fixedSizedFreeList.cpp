@@ -22,13 +22,14 @@ template <size_t CHUNK=3, size_t MAX=100> struct FreeList{
     this->head = nullptr;
     cout<<mallocSz<<" bytes allocated at "<<base<<endl;
   }
-  void ffree(void * ptr){
-    char * tmp = (char*) ptr - PTR_SZ;
+  void ffree(void * const ptr){//fairly fast
+    char * const tmp = (char*) ptr - PTR_SZ;
     Node * node = static_cast<Node*> ((void*)tmp);
-    //Node * node = new (tmp) Node(); //broken
     node->next = this->head;
     this->head = node;
     cout<<ptr<<" passed into ffree(). New free list head = "<<node<<endl;
+    assert ( this->head != ptr);
+    assert (!this->isNullHead());
   }
   /* 
   returns the current head node
@@ -47,10 +48,14 @@ template <size_t CHUNK=3, size_t MAX=100> struct FreeList{
       cout<<" :) Lucky to find a head node with a live follower :)\n";
     }
     assert (head != nullptr);
-    void * const ret = this->head->payload;    
+    void * const ret = this->head->payload;   
+    assert (ret != nullptr);    
     head = head->next;
-    cout<<this->head<<" = the new free list head, after returning "<<ret<<" from fmalloc()\n";
+    cout<<head<<" = the new free list head, after returning "<<ret<<" from fmalloc()\n";
     return ret;
+  }
+  bool isNullHead() const {
+    return this->head == nullptr;
   }
 private:
   Node * head;
@@ -67,16 +72,20 @@ int main(){
   FreeList<chunk> flist;
   void * 
   newAddr = flist.fmalloc(2);
+  assert (flist.isNullHead());  
   Trade * trade2 = new (newAddr) Trade(-22);
 
   void * 
   newAddrX = flist.fmalloc(1);
+  assert (flist.isNullHead());  
   newAddr = flist.fmalloc(4);
+  assert (flist.isNullHead());
   Trade * trade4 = new (newAddr) Trade(-44);
   flist.ffree(newAddrX);
   flist.ffree(newAddr);
   
   newAddr = flist.fmalloc(3);
+  assert (!flist.isNullHead());
   Trade * trade3 = new (newAddr) Trade(-33);
   assert (trade2->id == -22);
 }/*Req: https://bintanvictor.wordpress.com/wp-admin/post.php?post=33040&action=edit
