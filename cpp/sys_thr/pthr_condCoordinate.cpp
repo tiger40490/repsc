@@ -50,7 +50,7 @@ void *functionCount2(void*dummy)
        if( count < COUNT_HALT1 || count > COUNT_HALT2 )
        {
           // Condition of if statement has been met. 
-          // Signal to free waiting thread by freeing the mutex.
+          // Send signal to set free the waiting thread by releasing the mutex.
           // Note: functionCount1() is now permitted to modify "count".
           pthread_cond_signal( &condition_var );
           //cout<<"f2 done notifying, still holding lock"<<endl;
@@ -66,7 +66,7 @@ void *functionCount2(void*dummy)
        cout<<"f2 released:) but this log msg may show up late"<<endl;
        sched_yield();
 
-       if(count >= COUNT_DONE) return(NULL);
+       if(count >= COUNT_DONE) return NULL;
     }
 }
 
