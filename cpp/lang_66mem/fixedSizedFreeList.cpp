@@ -32,9 +32,9 @@ template <size_t CHUNK=3, size_t MAX=100> struct FreeList{
     assert (!this->isNullHead());
   }
   /* 
-  returns the current head node
-  updates this->head, possibly null
-  updates this->base iFF allocating from the raw array
+  Returns the current head node
+  Updates this->head. Possibly null, since we are lazy setting up next Node. We delay it until needed.
+  Updates this->base iFF allocating from the raw array
   */
   void * fmalloc(size_t sz){
     assert(sz <= CHUNK);
