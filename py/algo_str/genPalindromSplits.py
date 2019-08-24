@@ -12,7 +12,7 @@ def isPal(t):
     if t[i] != t[j]:  return False
 
 def compare(s):
-  buOutput = bu(s)
+  buOutput = botup(s)
   buUniq=verifyResult(buOutput, s)
   tdOutput = list(gen(s))
   tdUniq=verifyResult(tdOutput, s)
@@ -45,7 +45,7 @@ def gen(s):  #top-down recursive DP
     for newTuple in gen(s[:i]):
       yield newTuple + (tail,)
 
-def bu(s): #bottom-up DP
+def botup(s): #bottom-up DP
   di=defaultdict(lambda:[]) # head substring -> list of splits
   di['']=[()]
   for i in xrange(1,1+len(s)):
