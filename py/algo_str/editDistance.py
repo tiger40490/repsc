@@ -1,7 +1,7 @@
 '''
 Between the 2 solutions, topDown is easier to remember. From topDown, I can write bottomUp
 
-Note when aa[-1]==bb[-1], it's harmless to also look at 1+topDown(a,bb) and (aa,b) and get the minimum. The extra cost has no O() impact. It took me a lot of thinking to convince myself there's no need to compute minimum. The thinking time is a killer in speed coding.
+Note when aa[-1]==bb[-1], it's harmless to also look at 1+topDown(a,bb), then get the minimum. The extra cost has no O() impact. It took me a lot of thinking to convince myself there's no need to compute minimum. The thinking time is a killer in speed coding.
 '''
 import sys
 from pprint import pprint
@@ -33,13 +33,14 @@ def topDown(aa,bb):
   if tu in memo: return memo[tu]
   #print aa+' > '+bb  
   a,b = aa[:-1],bb[:-1] # truncated strings
-  min2 = min(topDown(a,bb), topDown(aa,b))
   
+  min1 = topDown(a,b)
   if aa[-1] == bb[-1]: 
-    ret = topDown(a,b) #2 identical asserts:
+    ret = min1 #2 identical asserts:
+    min2 = min(topDown(a,bb), topDown(aa,b)) # for assertion only
     assert ret-min2 < 2
-    assert ret == min(topDown(a,b), 1+min2)
-  else: ret = 1 + min(topDown(a,b), min2) 
+    assert ret == min(min1, 1+min2)
+  else: ret = 1 + min(min1, topDown(a,bb), topDown(aa,b)) 
   
   memo[tu]=ret
   print aa+' > '+bb, ret
