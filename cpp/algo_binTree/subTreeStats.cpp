@@ -40,9 +40,12 @@ void postOrder(Node<> * n){
   cout<<n->data<<"\tmax_path_sum_fromMe= "<<vo.maxPathSum<<"  height= "<<vo.height<<" size= "<<vo.size<<" d2root= "<<vo.d2root<<endl;
   testing[n->id]=vo;
 }
+void showExtra(Node<> const * n){
+  cout<<"\t\t rank_from_lowest=..."; //I only have some idea how to use the vo.size to compute this during the tree walk !
+}
 int main(){
-    dumpSubTree(root);
     postOrder(root);
+    dumpSubTree4(root, showExtra);
     assert(testing[1].maxPathSum==-3.1);
     assert(testing[3].maxPathSum==3.3);
     assert(testing[3].size==5);
