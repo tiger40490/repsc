@@ -2,7 +2,7 @@
 Top-down is unable to use memoization due to yield. I assume the bottom-up DP is more efficient but less intuitive
 
 showcase: lambda + defaultdict
-showcase: yield
+showcase: yield (s,)
 '''
 from collections import defaultdict
 def isPal(t):
@@ -12,36 +12,36 @@ def isPal(t):
     if t[i] != t[j]:  return False
 
 def compare(s):
-  buOutput = botup(s)
-  buUniq=verifyResult(buOutput, s)
-  tdOutput = list(gen(s))
-  tdUniq=verifyResult(tdOutput, s)
-  if (len(tdUniq) < 9):
-    print 'buttom-up allSplits:', buOutput
-    print 'top-down allSplits:', tdOutput
-  assert buUniq == tdUniq
+  botupOutput = botup(s)
+  botupUniq=verifyResult(botupOutput, s)
+  topdnOutput = list(gen(s))
+  topdnUniq=verifyResult(topdnOutput, s)
+  if (len(topdnUniq) < 9):
+    print 'buttom-up allSplits:', botupOutput
+    print 'top-down allSplits:', topdnOutput
+  assert botupUniq == topdnUniq
   
 def verifyResult(allSplits, s): 
   for Split in allSplits:
     assert ''.join(Split) == s, 'each Split must be the original string'
     for pal in Split: assert isPal(pal)
   
-  for k in sorted(count.keys(), key=(lambda x: count[x]), reverse=True):
-    print count[k], 'revisits:',  k #top-down
+  for k in sorted(revisits.keys(), key=(lambda x: revisits[x]), reverse=True):
+    print revisits[k], 'revisits:',  k #top-down
   unique = set(allSplits); cnt=len(allSplits)
   print cnt, 'splits found'
   assert len(unique) == cnt, 'duplicate Split found'
   return unique
 
-count=defaultdict(int)
+revisits=defaultdict(int)
 def gen(s):  #top-down recursive DP
   # due to yield, this is tough for memoization
   if len(s) == 0: yield (); return
   if len(s) == 1: yield (s,); return
-  count[s] +=1
-  for i in reversed(xrange(len(s))):
+  revisits[s] +=1
+  for i in reversed(xrange(len(s))): # i starts from len(s)-1
     tail = s[i:]
-    if not isPal(tail): continue
+    if not isPal(tail): continue # s[:i] unusable!
     for newTuple in gen(s[:i]):
       yield newTuple + (tail,)
 
