@@ -16,6 +16,7 @@ def f0(a,b):
   for i in range(len(a)):
     if a[i] != b[i]: 
       return a[i+1:]==b[i+1:]    
+  assert a==b
   return False
 
 def OneEditApart(a,b):
