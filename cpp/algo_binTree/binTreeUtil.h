@@ -1,5 +1,7 @@
 /*
 todo: rename ValType to PayloadType for clarity? too long?
+
+showcase: optional param "callback" to dumpSubTree(). I don't know how to specify a default arg for a func ptr param, so I have to provide a new wrapper function instead.
 */
 #include <vector>
 #include <iostream>
@@ -44,20 +46,27 @@ struct Node {
       return root;
     }
 };
-template<typename T>
-void dumpSubTree(T const * n, size_t const indent=4, size_t const depth=0){
+template<typename T> //4-param function
+void dumpSubTree4(T const * n, void(*callback)(T const*), size_t const indent=4, size_t const depth=0){
   if (n == nullptr) return;
   if (depth==0){
     std::cout<<"\n       ============  v v v v\n";
   }
-  dumpSubTree(n->ri, indent, depth+1);
+  dumpSubTree4(n->ri, callback, indent, depth+1);
   if (depth==1) std::cout<<std::endl;
-  std::cout<<std::string(indent* depth, ' ')<<std::left<< n->data <<std::endl;
+  std::cout<<std::string(indent* depth, ' ')<<std::left<< n->data ;
+  if (callback) callback(n);
+  std::cout<<std::endl;
   if (depth==1) std::cout<<std::endl;
-  dumpSubTree(n->le,  indent, depth+1);
+  dumpSubTree4(n->le, callback, indent, depth+1);
   if (depth==0){
     std::cout<<  "       ============  ^ ^ ^ ^\n";
   }
+}
+template<typename T>
+void dumpSubTree(T const * n){
+  auto nullFuncPtr = static_cast<void(*)(T const*)> (nullptr);
+  dumpSubTree4(n, nullFuncPtr);
 }/*Based on P458 [[data structure and other objects using c++]]
 Can this function serialize/deserialize a binary tree? I think it can.
 */
