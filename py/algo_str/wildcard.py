@@ -41,13 +41,14 @@ class Solution(object):
    if len(regex) - regex.count('*') > len(haystack): return False #minor optimization
    if regex == '': return '' == haystack
    if haystack == '': return '' == regex.replace('*','')
+   #### trivial cases done
    c=regex[0]; a=haystack[0]
    if c=='?': return          self.isMatch(haystack[1:], regex[1:])
    if c!='*': return c==a and self.isMatch(haystack[1:], regex[1:])
    assert c=='*'
    if regex[-1] != '*': #always prefer to avoid this loop
-     return self.isMatch(haystack[::-1], regex[::-1])
-   
+     return self.isMatch(haystack[::-1], regex[::-1]) #reverse str ?
+    
    sz=len(haystack)
    #print '-- starting * loop --'
    for i in range(sz+1):
