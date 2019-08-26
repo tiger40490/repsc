@@ -66,13 +66,14 @@ def sol1_canBePreOrderBST(li):
   return True
 def sol8_geeksForGeeks(li):
     s = [] # all the nodes able to take a right child
-    root = -2**32
+    root = -2**32 # root:=top@stack if non-empty, but frozen once stack wiped out
     for value in li: 
         if value < root : 
           print 'Failed to insert', value
           return False     
         while(len(s) > 0 and s[-1] < value) :
           root = s.pop()
+          print 'new root =' ,root
           print s
         s.append(value) 
         print s
@@ -92,6 +93,7 @@ def main():
   assert (not canBePreOrderBST([1,3,4,2]))
   assert (not canBePreOrderBST([3,4,5,1,2]))
   assert (    canBePreOrderBST([5,2,1,3,7,6,8,9])) # diagram above
+  assert (    canBePreOrderBST([5,2,1,3,7,6,5.5])) # 
   assert (not canBePreOrderBST([77,22,11,44,33,40,37,42,39]))
   assert (    canBePreOrderBST([77,22,11,44,33,40,37,42,41]))  
 main()
