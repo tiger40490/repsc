@@ -21,13 +21,15 @@ struct Fibonacci<1>{
 };
 
 ////// formula method
-long double const phi = 0.5 + 0.5*sqrt(5);
+typedef long double long_double_t;
+long_double_t const phi = 0.5 + 0.5*sqrt(5);
 unsigned long long Fib(int N){
-  long double ret = ( pow(phi,N) - pow(-phi, -N) )/sqrt(5);
-  cout<<round(ret)<<" from formula\n";
-  return round(ret);
+  long_double_t b4rounding = ( pow(phi,N) - pow(-phi, -N) )/sqrt(5);
+  unsigned long long ret = round(b4rounding);
+  cout<<ret<<" from formula\n";
+  return ret;
 }
-int const N=70;
+int const N=70; // beyond this value, the long double precision is no longer enough
 int main(){
 	//Fibonacci Sequence is caluclated at Compile time 
   unsigned long long resultT = Fibonacci<N>::Val;
