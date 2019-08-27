@@ -1,5 +1,5 @@
 '''
-showcase simplified iteration range check
+showcase elegant iteration range check
 '''
 from collections import defaultdict
 #from pprint import pprint
@@ -16,8 +16,7 @@ def slidingWindowSol(pat, hay):
     c = hay[front]
     if c in tgtFrq: # and windowFrq[c] < tgtFrq[c]:
       windowFrq[hay[front]] += 1
-      if windowFrq[c] <= tgtFrq[c]:
-        deficit -= 1
+      if windowFrq[c] <= tgtFrq[c]: deficit -= 1
   if deficit == 0: return 0 
   #print 'now initial window is populated, without successful match. deficit =', deficit, windowFrq
     
@@ -25,17 +24,17 @@ def slidingWindowSol(pat, hay):
     front = back+sz # back:=char to remove; front:=char to add into windowFrq
     
     #print 'checking', back, front, hay[back:front+1], 'deficit =',deficit, windowFrq
-    if front == len(hay): return -1 #elegant
+    if front == len(hay): return -1 # ELEGANT 
     
     c=hay[back]
-    if c in tgtFrq:
+    if c == hay[front]: continue
+    if c in tgtFrq: # and windowFrq[c] <= tgtFrq[c]:
       windowFrq[c] -= 1 
       assert windowFrq[c] >= 0
-      if windowFrq[c] < tgtFrq[c]:
-        deficit += 1
+      if windowFrq[c] < tgtFrq[c]: deficit += 1
     
     c=hay[front]
-    if c in tgtFrq:
+    if c in tgtFrq: # and windowFrq[c] < tgtFrq[c]:
       windowFrq[c] += 1
       if windowFrq[c] <= tgtFrq[c]:
         deficit -= 1
