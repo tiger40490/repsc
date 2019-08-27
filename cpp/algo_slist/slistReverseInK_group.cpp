@@ -75,11 +75,11 @@ void iterative(){
     if (cnt % K ==0){
       cout<<"end of a group\n";
 
-      if (head == oldHead){ head = b; }
+      if (head == oldHead){ head = b; } //special handling of first node
       tailFar->next = b; 
       tailFar = tailNear;
       //cout<<(char)tailFar->data<<" === tailFar\n";
-      if (cnt == sz/K*K){ //all remaining nodes are kept as is
+      if (cnt == sz/K*K){ //Stub: all remaining nodes are kept as is
         tailNear->next = c;
         return;
       }
