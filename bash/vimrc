@@ -1,3 +1,5 @@
+"Note on some systems vi is used instead of vim, so this file is ignored.
+
 set nu
 set bg=dark
 
