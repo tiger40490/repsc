@@ -1,10 +1,11 @@
 /*
 todo: add more tests
 showcase placement-new
+showcase local class in a function
 
 Realistic app Should check the MAX before placement-new
 
-Note: placement-new should be minimized inside the free list 
+Note: placement-new should be used sparingly, and only inside the free list 
 */
 #include <iostream>
 #include <cassert>
@@ -33,10 +34,11 @@ template <size_t CHUNK=3, size_t MAX=100> struct FreeList{
     char * const tmp = (char*) ptr_arg - PTR_SZ;
     //We will assume ptr_arg was originally from a Node
     Node * node = static_cast<Node*> ((void*)tmp);
-    node->next = this->head; this->head = node;
+    node->next = this->head; // possibly nullptr
+    this->head = node;
     cout<<ptr_arg<<" passed into ffree(). New free list head = "<<node<<endl;
     assert ( this->head != ptr_arg);
-    assert (!this->isNullHead());
+    assert (!this->hasNullHead());
   }
   /* 
   Returns the current head node
@@ -64,7 +66,7 @@ template <size_t CHUNK=3, size_t MAX=100> struct FreeList{
     cout<<head<<" = the new free list head, after returning "<<ret<<" from fmalloc()\n";
     return ret;
   }
-  bool isNullHead() const {
+  bool hasNullHead() const {
     return this->head == nullptr;
   }
 private:
@@ -72,33 +74,33 @@ private:
   void * base;
 };
 int main(){
-  struct Trade{
+  struct Trade{ // local class
     int id;
     Trade(int i): id(i){
       cout<<"   New Trade @ "<<this<<" with id = "<<id<<endl;
     }
   };
-  size_t const chunk=4;
-  FreeList<chunk> flist;
+  size_t const chunk=4; FreeList<chunk> flist;
+  
   void * 
   newAddr = flist.fmalloc(9999);  assert (newAddr == nullptr);
   newAddr = flist.fmalloc(sizeof(Trade));
-  assert (flist.isNullHead());  
+  assert (flist.hasNullHead());  
   Trade * trade2 = new (newAddr) Trade(-22);
 
   void * 
   newAddrX = flist.fmalloc(1);
-  assert (flist.isNullHead());  
+  assert (flist.hasNullHead());  
 
   newAddr = flist.fmalloc(4);
-  assert (flist.isNullHead());
+  assert (flist.hasNullHead());
   Trade * trade4 = new (newAddr) Trade(-44);
 
   flist.ffree(newAddrX);
   flist.ffree(trade4);
   
   newAddr = flist.fmalloc(3);
-  assert (!flist.isNullHead());
+  assert (!flist.hasNullHead());
   Trade * trade3 = new (newAddr) Trade(-33);
 
   assert (trade2->id == -22);
