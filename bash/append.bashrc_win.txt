@@ -2,7 +2,7 @@ alias nn='git commit -a --amend --no-edit; df -h --output=avail / ' #useful whil
 alias py='winpty python.exe'
 alias python='echo python command breaks in git-bash.. Disable this alias if you must.'
 alias s-='  source  $HOME/.bashrc  '
-alias s+='vi append.bashrc_win.txt '
+alias s+='vi $HOME/append.bashrc_win.txt '
 alias ..='cd .. ; ls1page'
 alias
 
