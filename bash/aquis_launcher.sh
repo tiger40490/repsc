@@ -42,7 +42,7 @@ fi
 echo "jobs:"
 jobs -l
 printf "\nContinue? [ y /any_other_key to quit] "
-unset REPLY; read $REPLY
+unset REPLY; read # $REPLY
 [ "$REPLY" = "y" ] || return
 unset REPLY
 
