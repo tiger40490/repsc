@@ -9,7 +9,10 @@ ______________end_of_comment_1________________
 #     << var assignment >> should be first
 #
 # # # # # # # # # # # # # # # # # # # # # #
-export PS1='\n\s!\! \u@\h [ \t \d ] \w/ \n\$ '
+git_ps1(){
+  [ -d .git ] && git rev-parse --abbrev-ref HEAD 2>/dev/null
+}
+export PS1='\n\s!\! \u@\h [ \t \d ] \w/ $(git_ps1) \n\$ '
 export EDITOR=vi # primarily for sqlplus
 #export VIMINIT=":se nu | :map v :w!" # superceded by .vimrc
 export EXINIT=$VIMINIT # ignored if .vimrc found!
