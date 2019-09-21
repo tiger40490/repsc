@@ -1,3 +1,6 @@
+#### a simple bash function showing many reusable features
+# showcase: 
+
 add_path(){
   dir=`echo $1|perl -pe 's|/$||'`
   [ -r $dir ] || return
