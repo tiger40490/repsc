@@ -1,10 +1,10 @@
 #### a simple bash function showing many reusable features
 # showcase: repeating a command N times or until successful, showing (set -x) the commands in first iteration only
-# showcase: perl one-liner to using double-quote inside double-quote
 # showcase: count number of matching filenames, saving the number in a shell variable
 # showcase: using string test on integers
 # showcase: overwrite if-newer and with prompt
 # showcase: capitalize a string
+# the perl one-liner is currently buggy !
 
 rerun(){ 
   adn=${1^^}
