@@ -1,5 +1,5 @@
-#### a simple bash function showing many reusable features
-# showcase: 
+#### a useful yet simple bash function 
+# showcase: boolean variable assign and check. This function can be simplified to get rid of the boolean variable.
 
 add_path(){
   dir=`echo $1|perl -pe 's|/$||'`
