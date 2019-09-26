@@ -3,9 +3,17 @@
 set nu
 set bg=dark
 
-"map the 'v' keystroke to mean 'save file unconditionally', very useful when
-"my files become readonly frequently
+"map the 'v' keystroke to mean 'save file unconditionally', very useful when my files become readonly frequently 
 map v :w!
+
+"my experimental feature -- use Ctrl-V (in either Insert or Command mode) to paste from the Windows clipboard. Note Mouse is irrelevant here!
+:vmap <C-V> "+p
+
+set mouse=a
+
+:vmap <C-C> "+y
+"You can use mouse to select within vim, then Ctrl-C i.e. <C-C> to copy into Windows clipboard
+
 
 "doesn't work:( Suggested on stackoverflow
 map <F3> :%!xxd<CR>
