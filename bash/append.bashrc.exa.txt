@@ -15,16 +15,13 @@ exa(){
   [ $# == "0" ] && return
 
   if [ $# == "1" ]; then
-    if [ ${#1} -ge 5 ] && [ -x $1 ]; then
+    if [ ${#1} -ge 5 ]; then
       fullpath=$1
       shortname=`echo $1|perl -pe 's|/$||;s|^.*/||'   `
     elif [ ${#1} -le 2 ]; then
       fullpath=`pwd`
       shortname=$1
       printf "creating shortname $1 for pwd\n"
-    else
-      printf "invalid arg: $1\n"
-      return
     fi
   else
     fullpath=$2
