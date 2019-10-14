@@ -4,6 +4,8 @@ alias python='echo python command breaks in git-bash.. Disable this alias if you
 alias s-='source $HOME/.bashrc  '
 alias s+='    vi $HOME/append.bashrc_win.txt '
 alias ..='cd .. ; ls1page'
+alias l=ls1page
+alias t='ls1page -t'
 alias
 
 ls1page(){
@@ -14,7 +16,7 @@ run(){
 }
 
 exa(){ #testing: exa -t ss ~/.ssh
-# proven since 2010
+# proven in git-bash since 2019
   local ops
   while is_opt=`echo $1 |perl -ne 'print if /^-/'  ` && [ "$is_opt" ]; do
     ops="$ops $1"; shift
