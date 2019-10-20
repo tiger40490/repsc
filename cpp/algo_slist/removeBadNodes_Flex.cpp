@@ -56,15 +56,15 @@ Node* solution1(Node* listHead, int x){ //submitted to hackerrank
     }
     return listHead;
 }
-Node* solution2(Node* listHead, int x){ //showcase dummy node to simplify head-hunting
+Node* solution2(Node* listHead, int x){ //showcase FakeHead to simplify head-hunting
   Node FakeHead(INT_MIN, listHead);
-  Node * p=&FakeHead;
+  Node * p=&FakeHead;  // invariant: p is always a Good node i.e. not to be removed
   for (Node * q=p->next; q!=nullptr; q=q->next){
     if (q->data > x)continue;
     p->next=q;
     p=q;
   }
-  p->next = nullptr;
+  p->next = nullptr; // p is now the last Good node. Special case: p==FakeHead if all original nodes are bad
   return FakeHead.next;
 }
 Node* removeNodes(Node* listHead, int x){ //return head of modified list
