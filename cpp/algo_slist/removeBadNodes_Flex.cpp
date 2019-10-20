@@ -22,6 +22,9 @@ struct Node{
   _1(110, &_2);
 Node * head = &_1;
 size_t dump(Node *h){
+  if (h == nullptr){
+    cout<<"input node is a nullptr\n";
+  }
   size_t ret = 0;
   for (; h; h=h->next){
     cout<<h->data<<"->";
