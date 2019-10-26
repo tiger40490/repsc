@@ -28,10 +28,10 @@ void fun(vector<int> arr, int sum, int count, vector<int> v){
 }
 
 int main(){
-    int NUMBER=9, SUM=18, COUNT=4;
+    int TOTAL_CNT=9, SUM=18, REQ_CNT=4;
     vector<int> arr, v;
-    for (int j=1; j<=NUMBER; j++) arr.push_back(j);
-    cout <<"\nnumber of card=" << NUMBER << ", SUM=" << SUM << ", COUNT=" << COUNT << endl;
-    fun(arr, SUM, COUNT, v);
+    for (int j=1; j<=TOTAL_CNT; j++) arr.push_back(j);
+    cout <<"\n number of card=" << TOTAL_CNT << ", SUM=" << SUM << ", REQ_CNT=" << REQ_CNT << endl;
+    fun(arr, SUM, REQ_CNT, v);
 }
 //Req: https://bintanvictor.wordpress.com/2015/11/22/algo-problem-ashish-array-sum/
