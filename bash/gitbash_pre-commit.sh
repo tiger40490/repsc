@@ -1,27 +1,27 @@
 #!/bin/sh
+# The hook should Use q[exit] with non-zero status after issuing an appropriate message if it wants to stop the commit.
+# The --no-verify option to git commit bypasses the pre-commit hook when committing
+
 # Based on https://stackoverflow.com/questions/19387073/how-to-detect-commit-amend-by-pre-commit-hook
-# An example hook script to verify what is about to be committed.
-# The hook should
+# If head is ahead of $upstream, everything fine.
+# if head is same as $upstream, then --amend of a regular append are indistinguishable
 
-# Use q[exit] with non-zero status after issuing an appropriate message if it wants to stop the commit.
-
-# the --no-verify option to git commit bypasses the pre-commit hook when committing
-
-# If initial commit, don't object
-git rev-parse -q --verify HEAD >/dev/null || exit 0
-
+############################
 # Are we on a branch?  If not, don't object
 localBranch=$(git symbolic-ref -q --short HEAD) || exit 0
 
-# Does the branch have an upstream?  If not, don't object
-# https://stackoverflow.com/questions/19474577/what-does-the-argument-u-mean-in-git explains @{u}
-upstream=$(git rev-parse -q --verify @{u}) || exit 0
+# If initial commit, don't object
+head=$(git rev-parse -q --verify HEAD) || exit 0
 
-# If HEAD is contained within upstream, object.
+# upstream is the hash of remote tip
+#https://stackoverflow.com/questions/19474577/what-does-the-argument-u-mean-in-git explains @{u}
+upstream=$(git rev-parse -q --verify @{u}) || exit 0
+printf "FYI\n $upstream = upstream\n $head = head\n"
+
 if git merge-base --is-ancestor HEAD $upstream; then
-  printf "Apparently amending $localBranch branch while original commit is on remote upstream..\n Continue? [ Y / any_other_key to quit] "
-  exec < /dev/tty # without this pre-commit hook ignores stdin
+  printf "Amending || appending on $localBranch branch-tip while original commit is on remote upstream?\n( Tip 1: Once inside commit-msg editor, you will have one more chance to cancel this commit via :cq )\n( Tip 2: Successful commit always print details to console. If you don't see them then nothing committed. )\n Continue? [ y / any_other_key to quit] "
+  exec < /dev/tty # without this, pre-commit hook ignores stdin :(
   read $REPLY
-  [ "$REPLY" = "Y" ] || exit 40490
+  [ "$REPLY" = "y" ] || exit 40490
 fi
 exit 0
