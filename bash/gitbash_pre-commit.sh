@@ -3,8 +3,10 @@
 # The --no-verify option to git commit bypasses the pre-commit hook when committing
 
 # Based on https://stackoverflow.com/questions/19387073/how-to-detect-commit-amend-by-pre-commit-hook
-# If head is ahead of $upstream, everything fine.
-# if head is same as $upstream, then --amend of a regular append are indistinguishable
+# If head is strictly ahead (eg: child) of $upstream, this hook is quiet.
+# if head is strictly behind (eg: parent of) $upstream, this hook would complain, correctly.
+# if head is same as $upstream, then --amend vs regular append are indistinguishable so this hook has to prompt user to confirm.
+# Risk in "amend" scenario is too high, much higher than the inconvenience of "append" scenario.
 
 ############################
 # Are we on a branch?  If not, don't object
