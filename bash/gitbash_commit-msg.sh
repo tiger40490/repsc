@@ -9,10 +9,11 @@
 hn=`hostname`
 [[ $hn == 'LAPTOP-3U2UKQPB' ]] && prefix='hp '
 [[ $hn == 'MAXIMUSIII' ]]      && prefix='116'
+[[ $hn == 'DSIOTE10077' ]]     && prefix='mlp'
 # prefix should be space-saving, fairly unique
 orig=`cat $1`
 [[ $orig == "$prefix"* ]] && {
- echo Warning from $0: q[$prefix] is already a prefix in the user-supplied commit msg >&2
+ printf "vvv-- commit-msg --> q[$prefix] is already a prefix in the user-supplied commit msg\n" >&2
  exit 0
 } 
 printf "$prefix $orig" > $1
