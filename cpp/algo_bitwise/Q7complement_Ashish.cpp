@@ -13,7 +13,7 @@ int solve(int orig){
   //string binary = bset.to_string(); //to binary
   cout<<bset.to_string()<<"\n";
   int i=SZ-1;
-  for (; i>=0; --i){
+  for (; i>=0; --i){ //scan from highest bit to bit #0
     cout<<bset[i]<<endl;
     if (bset[i]){ 
       cout<<i<<" <-- is highest 1-bit position\n";
@@ -38,5 +38,5 @@ int main(){
 
   unsigned long decimal = bitset<SZ>(binary).to_ulong();
   cout<<decimal<<"\n";
-}/* req: given a non-negative int, flip all bits starting from its highest 1-bit. Return the new int.
+}/* req (FlowTrader): given a non-negative int, flip all bits starting from its highest 1-bit. Return the new int.
 */
