@@ -38,5 +38,5 @@ int main(){
 
   unsigned long decimal = bitset<SZ>(binary).to_ulong();
   cout<<decimal<<"\n";
-}/* req (FlowTrader): given a non-negative int, flip all bits starting from its highest 1-bit. Return the new int.
+}/* req (FlowTrader): given a five-digit unsigned int, flip all the bits starting from its highest 1-bit. Return the new int.
 */
