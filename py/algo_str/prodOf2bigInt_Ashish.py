@@ -38,3 +38,7 @@ def test():
   multiply2unlimitedInts('24', '18')
   multiply2unlimitedInts('4', '18446744073709551613')
 test()
+
+'''Req: given two valie but superlong strings represent unsigned ints, mutiply them using only 32-bit int multiplication
+
+'''
