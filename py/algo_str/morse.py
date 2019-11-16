@@ -1,7 +1,4 @@
 '''
-For a given Morse encoded msg,
-* A translation is a sequence of English letters using up entire Morse msg
-* A solution is full set of translations
 '''
 from collections import deque
 lO='---'
@@ -64,3 +61,9 @@ def decodeMorse(msg, expected): #return sorted list of translations, as a soluti
   return sorted(ret)
 
 decodeMorse('.-...-', 6)
+'''Req (~punctuating continuousSentenceBBG): Given a Morse-encoded string, return all valid translations.
+
+For a given Morse encoded msg,
+* A translation is a sequence of English letters using up entire Morse msg
+* A solution is full set of translations
+'''
