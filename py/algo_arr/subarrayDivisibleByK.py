@@ -1,4 +1,7 @@
 '''Another int-array problem, involving some math
+
+todo: try the solution in leetcode #974 and #560
+
 My solution below passed 6 tests and timed out on some tests without giving wrong answers.
 
 I won't spend much time as this problem is not a practical or popular.
