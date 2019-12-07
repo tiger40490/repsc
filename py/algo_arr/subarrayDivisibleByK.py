@@ -1,6 +1,8 @@
 '''Another int-array problem, involving some math
+showcase sum(list slice)
+showcase defaultdict(list)
 
-todo: try the solution in leetcode #974 and #560
+todo: try the solution in leetcode #560
 
 '''
 import sys, inspect
@@ -54,5 +56,7 @@ assert 10==kSub(5, [5,10,11,9,5])
 assert 4 ==kSub(3, [1,2,3,4,1])
 assert 5 ==kSub(4, [2,3,5,6,7,4,3])
 assert 6 ==kSub(15, [45, 15, 7, 8, 10])
+assert 7 ==kSub(5, [4,5,0,-2,-3,1])
+
 '''2019 Hackerrank problem: given a natural number array nums and a divisor k, find all subarrays whose sum is divisible by k
 '''
