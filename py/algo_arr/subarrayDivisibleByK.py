@@ -33,19 +33,19 @@ def kSubBruteForce(k, nums):
  print inspect.stack()[0][3], "returning", ret
  return ret
 def kSub2(k, nums):
-  ''' Linear time solution, based on Leetcode discussion 
+  ''' Linear time solution, based on Leetcode discussion #974
   '''
   cumsum=0; cnt=0;  
-  frq=defaultdict(list) #list of positions
+  frq=defaultdict(list) #list of positions where a given cumsum occurs
   frq[0].append(-1)
   for i in xrange(len(nums)): 
     a = nums[i]
     cumsum = (cumsum+a)%k
     club = frq[cumsum]
     print a, club
-    for pos in club:
-      tmp = sum(nums[pos+1:i+1])
-      print 'checking', pos, i, tmp
+    for pos in club: # optional visualization
+      tmp = sum( nums[pos+1:i+1] )
+      print 'verifying', pos, i, tmp
       assert tmp%k == 0
     cnt += len(club)
     club.append(i)
@@ -58,5 +58,5 @@ assert 5 ==kSub(4, [2,3,5,6,7,4,3])
 assert 6 ==kSub(15, [45, 15, 7, 8, 10])
 assert 7 ==kSub(5, [4,5,0,-2,-3,1])
 
-'''2019 Hackerrank problem: given a natural number array nums and a divisor k, find all subarrays whose sum is divisible by k
+'''2019 Hackerrank problem: given an signed int array nums and a divisor k, find all subarrays whose sum is divisible by k
 '''
