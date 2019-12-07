@@ -9,7 +9,8 @@ import sys, inspect
 from collections import defaultdict
 def kSub(k, nums):
  print nums
- ret =  kSub2(k, nums)
+ ret =  kSub3(k, nums)
+ assert kSub2(k, nums) == ret
  assert kSubBruteForce(k, nums) == ret
  return ret 
 def kSubBruteForce(k, nums):
@@ -32,10 +33,10 @@ def kSubBruteForce(k, nums):
  assert ranges == sz*(sz+1)/2  
  print inspect.stack()[0][3], "returning", ret
  return ret
-def kSub2(k, nums):
-  ''' Linear time solution, based on Leetcode discussion #974
+def kSub3(k, nums):
+  ''' Linear time tow-pass solution, my own invention, showing insight 
   '''
-  cumsum=0; cnt=0;  
+  cumsum=0
   frq=defaultdict(list) #list of positions where a given cumsum occurs
   frq[0].append(-1)
   for i in xrange(len(nums)): 
@@ -43,13 +44,34 @@ def kSub2(k, nums):
     cumsum = (cumsum+a)%k
     club = frq[cumsum]
     print a, club
+    club.append(i)
+  print frq
+  cnt=0
+  for club in frq.values():
+    v=len(club)
+    if v == 0: continue
+    cnt += v*(v-1)/2 # V-choose-2 pairs
+  return cnt
+  
+def kSub2(k, nums):
+  ''' Linear time solution, based on Leetcode #974 discussion
+  '''
+  cumsum=0; cnt=0;
+  frq=defaultdict(list) #list of positions where a given cumsum occurs
+  frq[0].append(-1)
+  for i in xrange(len(nums)): 
+    a = nums[i]
+    cumsum = (cumsum+a)%k
+    club = frq[cumsum]
+    # print a, club
     for pos in club: # optional visualization
       tmp = sum( nums[pos+1:i+1] )
-      print 'verifying', pos, i, tmp
+      # print 'verifying', pos, i, tmp
       assert tmp%k == 0
     cnt += len(club)
     club.append(i)
-  print frq
+  # print frq
+  print inspect.stack()[0][3], "returning", cnt 
   return cnt
 assert 10==kSub(5, [5,10,11,9,5])
 #sys.exit()
