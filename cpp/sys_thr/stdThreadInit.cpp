@@ -4,7 +4,10 @@
 using namespace std;
 struct Runner{
   thread thr;
-  Runner(){
+  thread const const_thr;
+  Runner(): 
+    const_thr{thread{}} //can't move into ctor boy
+  {
     thr = thread{}; //temp object
     cout<<"no-arg ctor\n";
   }
