@@ -1,9 +1,10 @@
 '''
+showcase: convert from integer ordinal to ASCII character
 showcase: python set
 showcase: dump string with indices below
 idea: 2-pointer moving in?
 '''
-def solve(ss, k, charValue):
+def solve(ss, k, charValue): # sliding expanding window in O(N)
   badChars = set()
   assert len(charValue) == 26
   for i in xrange(26):
@@ -51,6 +52,7 @@ def test():
   assert (6,3)== solve('abcdeabcde', 2, '10101111111111111111111111')
   assert (6,2)== solve('abbcdefg', 2, '10101111111111111111111111')
   assert (5,2)== solve('abcde', 2, '10101111111111111111111111')
+  assert (14,2)== solve('abcdeb----------', 2, '10101111111111111111111111')
 test()
-'''Req: Given a readonly string input and a dictionary/set of bad characters, find the longest substring containing at most k bad characters.
+'''Req: Given a readonly string input and a dictionary or set of bad characters, find the longest substring containing at most k bad characters.
 '''
