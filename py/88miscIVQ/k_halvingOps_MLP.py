@@ -33,19 +33,17 @@ def solve(k, aa):
   ret = sum(aa)
   print ret, '=initial sum; max heap=', heap
   cuts = 0
-  fat = -heapq.heappop(heap)
   while True:
-    assert len(heap) == k-1
-    top = -heap[0]
+    if len(heap) == k: 
+      fat = -heapq.heappop(heap)
     half = int(math.ceil(fat/2.0)); assert half > 0
     ret -= fat - half; assert ret > 0
-    print ret, 'is the updated sum'
+    print ret, 'is the updated sum, after cutting up', fat
     cuts += 1; 
     if cuts == k: return ret
     fat = half
-    if fat < top: 
+    if fat < -heap[0]: # cutting too much into the fat
       heapq.heappush(heap, -fat)
-      fat = -heapq.heappop(heap)
   
 def test():
   global k
