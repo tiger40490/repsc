@@ -1,8 +1,6 @@
 '''
 showcase max_item_pos(list)
 showcase max heap using neg ints
-
-todo: reduce code dup on heappop
 '''
 import math
 import heapq
