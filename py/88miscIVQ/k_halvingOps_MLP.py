@@ -18,10 +18,11 @@ def brute(k):
   print ret, 'returned from brute()'
   return ret
     
-def solve(k, aa):
+def lowTouchSolution(k, aa): # minimize pop/push on the heap as pop() is expensive at O(log k)
   global arr; arr=aa
   assert min(arr) > 0
-  # build max heap
+  
+  ## O(N logK) build max heap
   heap=aa[0:k]
   heapq.heapify(heap)
   print 'min-heap is', heap
@@ -32,6 +33,8 @@ def solve(k, aa):
   heapq.heapify(heap)
   ret = sum(aa)
   print ret, '=initial sum; max heap=', heap
+  
+  ## O(K logK) now use the heap only, and discard the rest of the collection
   cuts = 0
   while True:
     if len(heap) == k: 
@@ -48,14 +51,11 @@ def solve(k, aa):
 def test():
   global k
   k=5
-  assert solve(k, [39,11,19,62,4,31,22,52,2,4,15,13]) == brute(k)
-  assert solve(k, [11,9,6,7,4,3,2,5,12,4,15,13]) == brute(k)
-  assert solve(k, [1,3,9,16,4,31,12,5,2,4,5,3]) == brute(k)
+  assert lowTouchSolution(k, [39,11,19,962,4,31,22,52,2,4,15,13]) == brute(k)
+  assert lowTouchSolution(k, [11,9,6,7,4,3,2,5,12,4,15,13]) == brute(k)
+  assert lowTouchSolution(k, [1,3,9,16,4,31,12,5,2,4,5,3]) == brute(k)
 if __name__ == "__main__":
   test()
 '''Req: given a collection of N positive integers, you perform K operations like "half the biggest element and replace it with its own ceiling". Find the collection sum afterwards.
 https://bintanvictor.wordpress.com/wp-admin/post.php?post=35955&action=edit
-
-k_halvingOp.py
-
 '''
