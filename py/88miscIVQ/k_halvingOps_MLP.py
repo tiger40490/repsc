@@ -48,6 +48,8 @@ def lowTouchSolution(k, aa): # minimize pop/push on the heap as pop() is expensi
   
 def test():
   global k
+  k=9
+  assert lowTouchSolution(k, [249,11,1,512,4,1,2,4,5,1]) == brute(k)
   k=5
   assert lowTouchSolution(k, [39,11,19,962,4,31,22,52,2,4,15,13]) == brute(k)
   assert lowTouchSolution(k, [11,9,6,7,4,3,2,5,12,4,15,13]) == brute(k)
