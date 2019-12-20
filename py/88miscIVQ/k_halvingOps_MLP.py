@@ -1,9 +1,10 @@
 '''
 showcase max_item_pos(list)
 showcase max heap using neg ints
+
+Even though heapreplace() and heappushpop() are more efficient, I can't use them in this solution.
 '''
-import math
-import heapq
+import math, heapq
 arr=list()
 
 def brute(k):
@@ -16,7 +17,7 @@ def brute(k):
   print ret, 'returned from brute()'
   return ret
     
-def lowTouchSolution(k, aa): # minimize pop/push on the heap as pop() is expensive at O(log k)
+def lowTouchSolution(k, aa): # minimize pop/push on the heap since pop() is expensive at O(log k)
   global arr; arr=aa
   assert min(arr) > 0
   
