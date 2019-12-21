@@ -21,7 +21,7 @@ def lowTouchSolution(k, aa): # minimize pop/push on the heap since pop() is expe
   global arr; arr=aa
   assert min(arr) > 0
   
-  ## O(N logK) build max heap
+  ## O(N logK) build max heap. There are alterative O(N) solutions based on quickselect.
   heap=aa[0:k]
   heapq.heapify(heap)
   print 'min-heap is', heap
