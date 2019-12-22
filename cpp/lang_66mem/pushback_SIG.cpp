@@ -29,24 +29,26 @@ template<typename T> struct MyVec{
 	T* alloc1(size_t const newcap){
 		assert(this->mode == AllocMode::DC); //DC = DefaultConstruct
 		unique_ptr<T[]> newArr //need to ensure delete[] is called
-		  = make_unique<T[]>(newcap); //default-construct this many instances of T
-		std::copy(arr, arr+sz, newArr.get()); //copy from original arr to new array
+		  = make_unique<T[]>(newcap); //Step 1: default-construct this many instances of T
+    
+		std::copy(arr, arr+sz, newArr.get()); //Step 2: one-by-one assign from original arr to new array
 		cout<<"Returning from alloc11111\n";
 		return newArr.release();
 	}
-/*Above (inefficient) uses default ctor on raw memory, followed by op=()
-Below (efficient) uses placement new to copy-construct.
+/*Above (inefficient) uses default ctor on raw memory, followed by op=(). For simple types of int, this inefficiency is tolerable.
+Below (efficient) uses placement new followed by copy-construct.
 */
 	T* alloc2(size_t const newcap){//tested
 		assert(this->mode == AllocMode::PN);	//PlacementNew
 		
-		/*cast to char ptr, to support raw+1
-		but why reinterpret_cast not needed?
+		/* Step 1: allocate raw memory.
+        cast to char ptr, to support raw+1 but why reinterpret_cast not needed?
 		*/
 		unique_ptr<char> raw(
 			static_cast<char*>(   malloc(sizeof(T)*newcap)   )
 		);
-		for(int i=0; i<sz; ++i){
+    
+		for(int i=0; i<sz; ++i){ //Step 2: in-place copy-construct
 			new (raw.get()+i*sizeof(T)) T( *(arr+i) ); //what if throws? unique_ptr should free all memory
 		}
 		cout<<"Returning from alloc22222\n";
