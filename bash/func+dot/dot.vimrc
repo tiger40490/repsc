@@ -18,7 +18,7 @@ set mouse=a
 "doesn't work:( Suggested on stackoverflow
 map <F3> :%!xxd<CR>
 
-" needed to make vim remember last edit location
+" needed to make vim remember last edit location, but I think file ownerId need to match current userId
 if has("autocmd")
   au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
