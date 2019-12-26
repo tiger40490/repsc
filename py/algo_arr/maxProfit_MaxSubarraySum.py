@@ -7,7 +7,7 @@ def maxProf_maxSubSum(deltas):
 def maxByDeltaOld(mode, deltas):
   print deltas, 'are deltas; mode is', mode
   levels = list() # in profit mode, level starts at delta[0]
-  if mode.startswith('s'):
+  if mode=='segSum':
     levels=[0] # in the subarray-sum mode, level starts at 0 always 
   
   currentLevel=0
