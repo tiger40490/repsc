@@ -1,3 +1,4 @@
+# incomplete
 
 def trade1day(li, verbose=1):
   s2=s1=0; b2=b1=-999999
