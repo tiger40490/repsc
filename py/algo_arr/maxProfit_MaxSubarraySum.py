@@ -27,13 +27,13 @@ def byDeltaByLevel(mode, deltas): # This wrapper uses byLevel algos internally
 def byLevel(levels):
   return dp(levels)
   return watermark(levels)
-def dp(levels): #Qihao's idea
+def dp(levels): #Qihao's idea, incomplete
   debt=pnl=float('-inf')
   for i,v in enumerate(levels):
     pnl = max(pnl, v+debt)
     debt = max(debt, -v) #
-  ret = (pnl, debt)
-  print 'returning', ret
+  ret = (pnl, -debt)
+  print 'DP returning', ret
   return ret
 def scanFrom2ends(levels): # this algo assumes inaction is permitted
   sz = len(levels)
