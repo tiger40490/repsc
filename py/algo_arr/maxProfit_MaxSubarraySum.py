@@ -1,3 +1,6 @@
+'''
+todo: debt to become positive
+'''
 from maxSubSum import watermark1pass, disposableCurSubarr
 
 def maxProf_maxSubSum(deltas):
@@ -22,8 +25,16 @@ def byDeltaByLevel(mode, deltas): # This wrapper uses byLevel algos internally
   assert len(levels)
   return byLevel(levels)
 def byLevel(levels):
-  #return scanFrom2ends(levels)
+  return dp(levels)
   return watermark(levels)
+def dp(levels): #Qihao's idea
+  debt=pnl=float('-inf')
+  for i,v in enumerate(levels):
+    pnl = max(pnl, v+debt)
+    debt = max(debt, -v) #
+  ret = (pnl, debt)
+  print 'returning', ret
+  return ret
 def scanFrom2ends(levels): # this algo assumes inaction is permitted
   sz = len(levels)
   fromLe = [0] * sz
