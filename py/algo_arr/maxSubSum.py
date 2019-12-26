@@ -1,5 +1,7 @@
-# a module to be imported
-
+''' a module to be imported
+Q: is empty subarray permitted?
+A: not allow. If the best subarray sum is negative, then it's easy to determine that empty subarray has is better if permitted.
+'''
 def watermark1pass(deltas): # watermark -- my intuitive algo on list of deltas
   level = 0; maxSubsum = deltas[0]
   lowWaterMark = 0
