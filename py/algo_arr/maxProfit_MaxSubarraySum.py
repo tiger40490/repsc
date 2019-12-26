@@ -22,9 +22,9 @@ def byDeltaByLevel(mode, deltas): # This wrapper uses byLevel algos internally
   assert len(levels)
   return byLevel(levels)
 def byLevel(levels):
-  #return scan2way(levels)
+  #return scanFrom2ends(levels)
   return watermark(levels)
-def scan2way(levels): # this algo incorrectly assumes inaction is permitted :(
+def scanFrom2ends(levels): # this algo assumes inaction is permitted
   sz = len(levels)
   fromLe = [0] * sz
   fromRi = fromLe[:] #clone
@@ -46,7 +46,7 @@ def scan2way(levels): # this algo incorrectly assumes inaction is permitted :(
   for i in xrange(sz):
     diff[i] = fromRi[i] - fromLe[i]
   print 'diff ', diff
-  ret = max(diff), min(fromLe)
+  ret = max(diff)
   print 'returning', ret
   return ret
 def watermark(levels): # one-buy-then-one-sell exactly.
@@ -67,9 +67,8 @@ def watermark(levels): # one-buy-then-one-sell exactly.
 ################
 
 def test():
-  assert (7, 1) == scan2way([4, 5, 9, 2, 3, 1,8, 7])
-
-  #assert (-1,-21) == scan2way([-2, -5, -9, -10, -12, -13, -18, -21]);  return
+  assert 7 == scanFrom2ends([4, 5, 9, 2, 3, 1,8, 7])
+  assert 0 == scanFrom2ends([-2, -5, -9, -10, -12, -13, -18, -21]);
   a=((-2, -3, 4, -1, -2, 1, 5, -3))
   assert (7,-5)==watermark1pass(a)
   assert(7,2,6)==disposableCurSubarr(a)
