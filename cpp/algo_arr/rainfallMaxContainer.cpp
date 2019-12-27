@@ -1,4 +1,5 @@
-/*todo: 
+/*
+todo: understand CSY solution
 */
 #include <iostream>
 #include <iomanip>
@@ -25,7 +26,6 @@ int maxAreaMyAlgo(vector<int>& height) {
       cout<<"returning "<<ret<<endl;
       return ret;
     }
-    int area=0;
     
     //We can have more granular cases than these two. For some problems like trapping rain water, we might need them. Overkill for this case. Overall, the more granular technique is reusable and valuable.
     if (height[le] <= height[ri]){
@@ -41,26 +41,26 @@ int maxAreaMyAlgo(vector<int>& height) {
       ri = rim;
     }
     assert(ri==rim && le==lem);
-    area = (ri-le)*min(height[le], height[ri]);
+    int area = (ri-le)*min(height[le], height[ri]);
     cout<<area<<" = new area computed\n";
     if (ret < area) ret = area;
   }
 }
-int maxAreaCSY(vector<int> const & height) {
+int maxAreaCSY(vector<int> const & height) { //cryptic
   cout<<height;
   for (int ret=0, left=0, right=height.size()-1;;){    
     if (left == right) return ret; //must go all the way till here since between last two (adjacent) walls vol could be highest
     ret = std::max(ret, (right-left)*min( height[left], height[right] ));
     //if (vol > ret){      ret = vol;}      //leftBest=left; rightBest=right;
     
-    //if we move the higher wall, we could miss a better "pair"
-    if (height[left] >= height[right]) 
+    //if (height[left] > height[right]) //if we move the higher wall, we could miss a better "pair"
+    if (height[left] < height[right]) 
 		       left++;
     else right--;
   }
 }
 void test1(int expected, vector<int> v){
-//  assert(expected == maxAreaMyAlgo(v));
+  //assert(expected == maxAreaMyAlgo(v));
   assert(expected == maxAreaCSY(v));  
 }
 int main(){
