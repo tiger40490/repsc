@@ -36,23 +36,29 @@ def dp(levels): #Qihao's idea, incomplete
   print 'DP returning', ret
   return ret
 def scanFrom2ends(levels): # this algo assumes inaction is permitted
+  print 'levels =', levels
   sz = len(levels)
   fromLe = [0] * sz
   fromRi = fromLe[:] #clone
   diff = fromLe[:]
-  print 'level', levels
   
   fromRi[-1] = levels[-1]
   for i, v in reversed(list(enumerate(levels))):
-    if i == sz-1: continue
+    if i == sz-1: continue # last element already initialized before loop
     fromRi[i] = max(fromRi[i+1], v)
-  print 'maxRe', fromRi  
+  print 'maximums From Right are', fromRi #from right end, strictly non-decreasing
   
   fromLe[0] = levels[0]
   for i,v in enumerate(levels):
     if i == 0: continue
     fromLe[i] = min(fromLe[i-1], v)
-  print 'minLe', fromLe
+    ''' if fromLe[55] == $8.2, then we know that at time#55 the algo is able to buy $8.2 at time#55 or an earlier time!
+    
+    If fromRi[55] == $9.4, then we also know that at #55 the algo is able to sell $9.4 at time#55 or a later time.
+    
+    Therefore, diff[55] is an achievable profit
+    '''
+  print 'minimums From Left are', fromLe #strictly non-increasing
 
   for i in xrange(sz):
     diff[i] = fromRi[i] - fromLe[i]
