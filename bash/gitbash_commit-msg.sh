@@ -8,7 +8,7 @@
 
 hn=`hostname`
 [[ $hn == 'LAPTOP-3U2UKQPB' ]] && prefix='hp '
-[[ $hn == 'LAPTOP-P4DGS530' ]] && prefix='399' #lenovo 
+[[ $hn == 'DESKTOP-3V5I3UV' ]] && prefix='299' #Acer$299 
 [[ $hn == 'MAXIMUSIII' ]]      && prefix='116'
 [[ $hn == 'DSIOTE10077' ]]     && prefix='mlp'
 # prefix should be space-saving, fairly unique
