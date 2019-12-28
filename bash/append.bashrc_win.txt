@@ -58,4 +58,4 @@ sav(){
 git config core.whitespace -trailing-space # complains if not in a git repo directory
 g++ --version |grep g++.exe
 py --version
-printf "done sourcing append.bashrc_win.txt\n"
+printf "done sourcing append.bashrc_win.txt at SHLVL = $SHLVL\n"
