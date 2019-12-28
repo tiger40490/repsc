@@ -46,7 +46,9 @@ int maxAreaMyAlgo(vector<int>& height) {
     if (ret < area) ret = area;
   }
 }
-int maxAreaCSY(vector<int> const & height) { //cryptic
+/*The most cryptic and insightful part of this algo is the final if/else 
+*/
+int maxAreaCSY(vector<int> const & height) { 
   cout<<height;
   for (int ret=0, left=0, right=height.size()-1;;){    
     if (left == right) return ret; //must go all the way till here since between last two (adjacent) walls vol could be highest
@@ -54,7 +56,10 @@ int maxAreaCSY(vector<int> const & height) { //cryptic
     //if (vol > ret){      ret = vol;}      //leftBest=left; rightBest=right;
     
     //if (height[left] > height[right]) //if we move the higher wall, we could miss a better "pair"
-    if (height[left] < height[right]) 
+    if (height[left] < height[right])/* If there's a better pair of walls, 
+    then its left wall can't be the current left  -- Aha. Therefore, we can move the left marker inside.
+    Its right wall could be the current right.
+    */
 		       left++;
     else right--;
   }
