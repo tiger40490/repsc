@@ -2,13 +2,14 @@
 showcase: check file existence
 showcase: check file size 
 
-tested for 20/100/500/1024 MB
+tested for 20/100/500/1024/2000/2048 MB
+5GB tested unsuccessfully.
 */
 #include <iostream>
 #include <fstream>
 using namespace std;
 int main(){
-  size_t const mb = 500;
+  size_t const mb = 2048;
   string fullpath= "./" + to_string(mb) + "MB_diskHogMade]cpp.dat";
   if (ifstream(fullpath)){
     cout<<fullpath<<" will be overwritten ..\n";
