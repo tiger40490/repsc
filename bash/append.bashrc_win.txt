@@ -1,10 +1,12 @@
+alias ..='cd .. ; ls1page'
+alias cp='cp -i'  # defuse
+alias l=ls1page
+alias mv='mv -i'  # defuse
 alias nn='git commit -a --amend --no-edit; gg 1 ' #useful while standing in train
 alias py='winpty python.exe'
 alias python='echo python command breaks in git-bash.. Disable this alias if you must.'
 alias s-='source $HOME/.bashrc  '
 alias s+='    vi $HOME/append.bashrc_win.txt '
-alias ..='cd .. ; ls1page'
-alias l=ls1page
 alias t='ls1page -t'
 alias
 
