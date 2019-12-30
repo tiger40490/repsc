@@ -1,8 +1,0 @@
-source ~/append.bashrc_win.txt
-### code below is Not part of append.bashrc_win
-exa /c/0/repo1
-exa /c/0/repo1/blog
-type gg #showcase
-pwd | grep repo1 
-[[ "$?" == "0" ]] || cd $prj
-df -h --output=avail /
