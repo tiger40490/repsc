@@ -1,4 +1,4 @@
-alias nn='git commit -a --amend --no-edit; df -h --output=avail / ' #useful while standing in train
+alias nn='git commit -a --amend --no-edit; gg 1 ' #useful while standing in train
 alias py='winpty python.exe'
 alias python='echo python command breaks in git-bash.. Disable this alias if you must.'
 alias s-='source $HOME/.bashrc  '
@@ -49,6 +49,7 @@ pp(){ #by default does a  traditiona pp
  done
  git pull;  git push --all -v
  set +x
+ df -h --output=avail / 
 }
 sav(){
   fn=$1
