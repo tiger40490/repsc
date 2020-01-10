@@ -64,9 +64,9 @@ void dumpSubTree4(T const * n, void(*callback)(T const*), size_t const indent=4,
   }
 }
 template<typename T>
-void dumpSubTree(T const * n){
+void dumpSubTree(T const * n, size_t indent=4){
   auto nullFuncPtr = static_cast<void(*)(T const*)> (nullptr);
-  dumpSubTree4(n, nullFuncPtr);
+  dumpSubTree4(n, nullFuncPtr, indent);
 }/*Based on P458 [[data structure and other objects using c++]]
 Can this function serialize/deserialize a binary tree? I think it can.
 */

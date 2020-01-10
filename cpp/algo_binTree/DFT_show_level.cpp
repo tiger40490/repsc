@@ -20,6 +20,7 @@ int maxDepth(){
     recur(root);
     cout<<maxD;
     dumpSubTree(root, 5);
+	return 0;
 }
 int main(){
    maxDepth();
