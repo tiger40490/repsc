@@ -1,6 +1,7 @@
 //todo: use enable_if or something else to disallow std::string
 //showcase: templ-templ param
 //Showcase: non-dummy-type template param min_width.
+//showcase conditional compilation based on -std=c++17
 #include <map>
 #include <unordered_map>
 #include <set>
