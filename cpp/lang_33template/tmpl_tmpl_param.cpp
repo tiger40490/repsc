@@ -18,7 +18,7 @@ public:
     cout<<this->size()<<endl;
   }
 };
-//compiler erros out only when you use this object !
+//compiler erros out only when you USE this object !
 StackSimple<string, list<int>> compilerFail;
 StackSimple<double, list<int>> badInst; // bad instantiation but compiles fine
 
