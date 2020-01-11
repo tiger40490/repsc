@@ -1,5 +1,6 @@
 #include <vector>
 #include <cstdlib>
+#include <cassert>
 #include<string>
 //
 // Note body of map ^ vector dumpers are identical, except some optional features.
@@ -34,5 +35,6 @@ string solution(int ax, int ay, int bx, int by){
 
 int main(){
   //cout<<gcd(-2,4)<<endl;
-  cout<<solution(-1,3,3,1);
+  assert("2,-1" == solution(-1,3,3,1)); //orig should return 
+  assert("-2,1" == solution(3,1,-1,-1)); //-1-1, -1+2
 }
