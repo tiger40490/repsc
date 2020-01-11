@@ -11,7 +11,7 @@ int sgn(int v) {
 }
 unsigned int gcd(int u, int v){
   u = abs(u); v=abs(v);
-    return (v != 0) ? gcd(v, u % v) : u;
+  return (v != 0) ? gcd(v, u % v) : u;
 }
 string solution(int ax, int ay, int bx, int by){
   int dy=by-ay, dx=bx-ax;
@@ -27,7 +27,6 @@ string solution(int ax, int ay, int bx, int by){
       cout<<dy<<"/"<<dx<<" when vertical\n";
     }
   }else{  
-    //simplfy ratio ,,, actually can find a point closer to B
     size_t tmp=gcd(dy, dx);
     dy /= tmp; 
     dx /= tmp;
@@ -43,4 +42,5 @@ int main(){
   assert("1,-3" == solution(2,2,2,-3)); //orig 
   assert("2,-1" == solution(-1,3,3,1)); //orig 
   assert("-2,1" == solution(3,1,-1,-1)); //-1-1, -1+2
-}
+}/*Req: given a 2D grid with all points having signed integer coordinates, starting from point A(ax,ay) to point B(bx,by), and turning 90 degrees, what's the first point encountered?
+*/
