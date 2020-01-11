@@ -1,3 +1,4 @@
+// showcase integer-ratio simplication using GreatestCommonDenominator algo.
 #include <cstdlib>
 #include <cassert>
 #include <string>
@@ -6,11 +7,11 @@ using namespace std;
 
 int sgn(int v) {
   if (v==0) return 0;
-  return abs(v)/v;
+  return abs(v)/v; // less efficient but easy to remember in speed coding
 }
 unsigned int gcd(int u, int v){
-  u = abs(u); v=abs(v);
-  return (v != 0) ? gcd(v, u % v) : u;
+  u=abs(u); v=abs(v);
+  return (v == 0) ? u : gcd(v, u % v);
 }
 string solution(int ax, int ay, int bx, int by){
   int dy=by-ay, dx=bx-ax;
