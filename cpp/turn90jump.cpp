@@ -5,9 +5,8 @@
 using namespace std;
 
 int sgn(int v) {
-  if (v < 0) return -1;
-  if (v > 0) return 1;
-  return 0;
+  if (v==0) return 0;
+  return abs(v)/v;
 }
 unsigned int gcd(int u, int v){
   u = abs(u); v=abs(v);
@@ -17,14 +16,11 @@ string solution(int ax, int ay, int bx, int by){
   int dy=by-ay, dx=bx-ax;
   if (dy*dx ==0){
     if (dy==0){
-      //by +/- 1
-      //bx is the nex x
       dy = -sgn(dx);     
       dx=0;
     }else {
       dx = sgn(dy);
-      dy=0; //by is the new y
-      cout<<dy<<"/"<<dx<<" when vertical\n";
+      dy=0; 
     }
   }else{  
     size_t tmp=gcd(dy, dx);
