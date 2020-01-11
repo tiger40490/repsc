@@ -44,6 +44,8 @@ std::ostream& operator<<(std::ostream& os, Container<V, Alloc> const& c){
    os<<endl;
    return os;
 }
+template<> std::ostream& operator<< <std::__cxx11::basic_string, char, char_traits<char> >(std::ostream& os, string const&) = delete; //Not effective :( because even deleted template-specialization can cause ambiguous overload under c++17
+
 int main(){
   list<double> li={3.1, 5,2,9};
   Set<short> myset={1, 2, 42, 5};
