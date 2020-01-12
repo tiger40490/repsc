@@ -58,11 +58,37 @@ int linearSolution(string const & str){
 
   return ret;
 }
+int min_swap(const string& s) {//broken solution from leetcode
+  int red_count = 0;
+  for (char c : s) {
+    if (c == 'R') ++red_count;
+  }
+  int i = 0, j = s.size() - 1, res = 0;
+  while (i < j) {
+    if (s[i] == 'R' && s[j] == 'R') {
+      red_count -= 2;
+      res += j - i - 1 - red_count;
+      ++i;
+      --j;
+    } else if (s[i] != 'R') {
+      ++i;
+    } else {
+      --j;
+    }
+  }
+  cout<<res<<" = res from min_swap()\n";
+  return res;
+}
+int test(const string& s){
+  int ret = linearSolution(s);
+  //assert(ret == min_swap(s));
+  return ret;
+}
 int main(){
-  assert(6==linearSolution("rwrwrwrwrw"));
-  assert(3==linearSolution("rwrwrrrrw"));
-  assert(2==linearSolution("wwrrwwrwwww"));
-  assert(3==linearSolution("wwwrrwrrrwrwww"));
+  assert(2==test("wwrrwwrwwww"));
+  assert(6==test("rwrwrwrwrw"));
+  assert(3==test("rwrwrrrrw"));
+  assert(3==test("wwwrrwrrrwrwww"));
 }/*Req: 
 https://leetcode.com/discuss/interview-question/414660/microsoft-oa-2019-min-swaps-to-group-red-balls
 */
