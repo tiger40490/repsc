@@ -43,7 +43,7 @@ size_t linearTime2pass(vector<Height> const & orig){
 }
 int main(){
   linearTime2pass({7,5,2,3,6,4});
-}/*Req: given a line-up of trees, the gardener wants them to look like short,tall,short,tall (or tall,short,tall,,). What's the minimum number of trees to shorten?
+}/*Req: given a line-up of trees, the gardener wants them to look like short,tall,short,tall (or tall,short,tall,,). What's the minimum count of trees to shorten?
 
 Each tree height is [2,1000], but if all the trees are initially 2m, then we can shorten some to 1m.
 */
