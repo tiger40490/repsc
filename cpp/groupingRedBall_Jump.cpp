@@ -13,7 +13,7 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    return os;
 }
 int linearSolution(string const & str){
-  deque<char> arr(str.begin(), str.end()); //make a deque for front/back trimming
+  deque<char> arr(str.begin(), str.end()); //make a deque for efficient front/back trimming
   while(arr.size()){
     if (arr.front()=='w'){
       arr.pop_front();
@@ -31,7 +31,7 @@ int linearSolution(string const & str){
   if (arr.empty()) return 0; //all same color
   cout<<arr; //after removing all leading/trailing whites
   Idx le=0, ri=arr.size()-1;
-  deque<Idx> wh2remove; 
+  deque<Idx> wh2remove; // the positions of white balls to remove
   for (Idx i=0; i<=ri; ++i){
     if (arr[i] == 'w') wh2remove.push_back(i);
   }
@@ -42,12 +42,12 @@ int linearSolution(string const & str){
     cout<<wh2remove;
     Idx front=wh2remove.front(), back=wh2remove.back();
     size_t d1=front-le, d2=ri-back;
-    if (d1 <= d2){ //move front out
+    if (d1 <= d2){ //move front white ball out bit by bit
       ret += d1;
       wh2remove.pop_front();
       ++le;
       cout<<le<<" = le\n";
-    }else{
+    }else{ // move back white ball out
       ret += d2;
       wh2remove.pop_back();
       --ri;
