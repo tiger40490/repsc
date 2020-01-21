@@ -1,3 +1,4 @@
+// not sure if my solution is correct or optimal
 #include <cassert>
 #include <deque>
 #include <iostream>
@@ -12,7 +13,7 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    return os;
 }
 int linearSolution(string const & str){
-  deque<char> arr(str.begin(), str.end());
+  deque<char> arr(str.begin(), str.end()); //make a deque for front/back trimming
   while(arr.size()){
     if (arr.front()=='w'){
       arr.pop_front();
