@@ -42,12 +42,12 @@ int linearSolution(string const & str){
     cout<<wh2remove;
     Idx front=wh2remove.front(), back=wh2remove.back();
     size_t d1=front-le, d2=ri-back;
-    if (d1 <= d2){ //move front white ball out bit by bit
+    if (d1 <= d2){ //shift the front white ball out bit by bit
       ret += d1;
       wh2remove.pop_front();
       ++le;
       cout<<le<<" = le\n";
-    }else{ // move back white ball out
+    }else{ // shift the back white ball out
       ret += d2;
       wh2remove.pop_back();
       --ri;
