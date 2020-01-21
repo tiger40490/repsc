@@ -18,10 +18,11 @@ std::ostream& operator<<(std::ostream& os, Container<V, Alloc> const& c){
    return os;
 }
 
-/*first pass, try a rising line-up i.e. short,tall,short,tall
-2nd pass, try a falling line-up, i.e. tall,short,tall,short
+/*first pass, try a rising-start line-up i.e. short,tall,short,tall
 
-In each case, shorten a tree to minimum height (i.e. 1 meter)
+2nd pass, try a falling-start line-up, i.e. tall,short,tall,short
+
+In each case, shorten a tree to minimum height i.e. 1 meter
 
 Note the mutable clone "arr" is needed only for illustration and visualization. Can be commented out without affecting algorithm.
 */
