@@ -9,7 +9,7 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    for(auto it = c.begin(); it != c.end(); ++it){ os<<setw(min_width)<<*it<<" "; }
    os<<endl;
    for(int i=0; i<c.size(); ++i){ os<<setw(min_width)<<i<<" "; }
-   os<<endl;
+   ///os<<endl;
    return os;
 }
 int linearSolution(string const & str){
@@ -29,17 +29,17 @@ int linearSolution(string const & str){
     }
   }
   if (arr.empty()) return 0; //all same color
-  cout<<arr; //after removing all leading/trailing whites
-  Idx le=0, ri=arr.size()-1;
+  cout<<arr<<" <-- after trimming\n"; //after removing all leading/trailing whites
+  Idx le=0, ri=arr.size()-1; //shrinking window boundaries
   deque<Idx> wh2remove; // the positions of white balls to remove
   for (Idx i=0; i<=ri; ++i){
     if (arr[i] == 'w') wh2remove.push_back(i);
   }
   if (wh2remove.empty()) return 0;
-  cout<<wh2remove;
+  
   int ret=0;
   do{
-    cout<<wh2remove;
+    cout<<wh2remove<<" <------ the wh2remove\n";
     Idx front=wh2remove.front(), back=wh2remove.back();
     size_t d1=front-le, d2=ri-back;
     if (d1 <= d2){ //shift the front white ball out bit by bit
