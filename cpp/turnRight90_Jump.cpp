@@ -8,9 +8,9 @@ using namespace std;
 
 int sgn(int v) {
   if (v==0) return 0;
-  return abs(v)/v; // less efficient but easy to remember in speed coding
+  return abs(v)/v; // less efficient but easy to reproduce in speed coding
 }
-unsigned int gcd(int u, int v){
+unsigned int gcd(int u, int v){//recursive
   u=abs(u); v=abs(v);
   return (v == 0) ? u : gcd(v, u % v);
 }
@@ -39,5 +39,5 @@ int main(){
   assert("1,-3" == solution(2,2,2,-3)); //orig 
   assert("2,-1" == solution(-1,3,3,1)); //orig 
   assert("-2,1" == solution(3,1,-1,-1)); //-1-1, -1+2
-}/*Req: given a 2D grid (i.e. all intersection having signed integer coordinates), starting from intersection A(ax,ay) moving to intersection B(bx,by), and turning 90 degrees, what's the first intersection encountered?
+}/*Req: given a 2D grid (i.e. all intersection having signed integer coordinates), starting from intersection A(ax,ay) moving to intersection B(bx,by), and turning right 90 degrees, what's the first intersection encountered?
 */
