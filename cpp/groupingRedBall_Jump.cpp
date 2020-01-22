@@ -1,4 +1,4 @@
-// not sure if my solution is correct or optimal
+// not sure if my solution is 100% correct or optimal but no bug found so far
 #include <cassert>
 #include <deque>
 #include <iostream>
@@ -12,7 +12,7 @@ template<typename T,             int min_width=2> ostream & operator<<(ostream &
    ///os<<endl;
    return os;
 }
-int linearSolution(string const & str){
+int linearSolution(string const & str){ //linear greedy algo
   deque<char> arr(str.begin(), str.end()); //make a deque for efficient front/back trimming
   while(arr.size()){
     if (arr.front()=='w'){
@@ -29,9 +29,9 @@ int linearSolution(string const & str){
     }
   }
   if (arr.empty()) return 0; //all same color
-  cout<<arr<<" <-- after trimming\n"; //after removing all leading/trailing whites
+  cout<<arr<<" <-- after trimming all leading/trailing whites\n";
   Idx le=0, ri=arr.size()-1; //shrinking window boundaries
-  deque<Idx> wh2remove; // the positions of white balls to remove
+  deque<Idx> wh2remove; // the original positions of white balls to remove
   for (Idx i=0; i<=ri; ++i){
     if (arr[i] == 'w') wh2remove.push_back(i);
   }
