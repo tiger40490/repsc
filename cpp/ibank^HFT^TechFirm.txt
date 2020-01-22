@@ -4,5 +4,5 @@ Tech firms never test your language or system (socket, thr..) skills.
 
 ibanks don't test tough algos and seldom speed-coding.
 
-HFT? More like tech firms, but I don't want to spend too much analyzing HFT types since I don't want to join them.
+HFT? More like tech firms, but I don't want to spend too much effort analyzing HFT types since I don't want to join them.
 * SIG questions are 50/50.
