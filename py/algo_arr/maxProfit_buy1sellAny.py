@@ -1,5 +1,9 @@
 '''
 Avoid 32-bit integers, which would fail some HackerRank tests. Prefer long integers.
+
+Note that other max profit problems can often get simplified by removing all non-turning points, leaving only peaks and troughs in the array. This problem cannot !
+
+My algo below is a greedy algo (a subset of dynamic programming techniques). In the reverse scan, Capture the profit as soon as we see it. A global perspective is not needed.
 '''
 def trade1day(li, verbose=1):
   profit = 0
