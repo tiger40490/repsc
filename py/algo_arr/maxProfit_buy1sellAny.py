@@ -1,6 +1,5 @@
 '''
-Avoid 32-bit integers. Prefer long integers.
-
+Avoid 32-bit integers, which would fail some HackerRank tests. Prefer long integers.
 '''
 def trade1day(li, verbose=1):
   profit = 0
