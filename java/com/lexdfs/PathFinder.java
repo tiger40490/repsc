@@ -12,9 +12,25 @@ import java.util.*;
 import java.util.Map.Entry;
 public class PathFinder {
 	public static void main(String[] args) {
+		test2();
+	}
+	static void test0() {
 		Graph inst = new Graph();
 		inst.build1graph(Arrays.asList(11,22,33), Arrays.asList(22,33,11));
-		inst.findPath1pair(33,22);
+		inst.findPath1pair(33,11);		
+	}
+	static void test1() {
+		Graph inst = new Graph();
+		inst.build1graph(Arrays.asList(0,1,2,3), Arrays.asList(1,2,3,0));
+		inst.findPath1pair(0,2);		
+	}
+	static void test2() {
+		Graph inst = new Graph();
+		inst.build1graph(Arrays.asList(0,3,1,0,1,2), Arrays.asList(3,4,2,1,3,4));
+		//assert(1==inst.findPath1pair(0,1));		
+		//assert(4==inst.findPath1pair(3,4));		
+		//assert(4==inst.findPath1pair(2,4));		
+		assert(4==inst.findPath1pair(1,2));		
 	}
 }
 class Graph{
