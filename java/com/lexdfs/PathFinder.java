@@ -1,12 +1,15 @@
+/* todo: more tests
+ * todo: efficiency improvement
+ * todo: simplify data structures
+ * showcase: linkedHashSet as dynamic sorted collection with O(1) remove but without insert. Not available in other languages.
+ * showcase: as much as possible, all collections store integers rather than node references. Simplifies instrumentation greatly.
+ * showcase: Arrays.asList(1,22,33)
+ * Priority is time-efficiency of findPath(), not build1graph(). The latter is an one-time pre-processing.
+ */
 package com.lexdfs;
 
 import java.util.*;
 import java.util.Map.Entry;
-/* todo: more tests
- * todo: efficiency improvement
- * showcase: as much as possible, all collections store integers rather than node references
- * Priority is time-efficiency of findPath(), not build1graph()
- */
 public class PathFinder {
 	public static void main(String[] args) {
 		Graph inst = new Graph();
