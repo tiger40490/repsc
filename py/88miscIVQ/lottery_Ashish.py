@@ -14,14 +14,14 @@ def calcCoupon(tic):
 def solve(lo, hi):
   maxClubSize = 0; 
   sameCouponTickets=defaultdict(list) #each dict Value is a club of tickets, having the same coupon code
-  for tic in xrange(lo, hi+1):
+  for tic in xrange(lo, hi+1): # O(N) loop for N tickets
     coupon = calcCoupon(tic)
     sameCouponTickets[coupon].append(tic) # ticket joins the correct club
     maxClubSize = max(maxClubSize, len(sameCouponTickets[coupon]))
   pprint(sameCouponTickets)
   
   howManyMaxClubs = 0; #count of clubs have the same max membership
-  for coupon, li in sameCouponTickets.iteritems():
+  for coupon, li in sameCouponTickets.iteritems(): #O(C) loop for C unique coupon codes
     if maxClubSize == len(li):
       howManyMaxClubs += 1
   return howManyMaxClubs, maxClubSize
