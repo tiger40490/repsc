@@ -1,10 +1,13 @@
+'''
+showcase operator //
+'''
 from collections import defaultdict
 from pprint import pprint
 def calcCoupon(tic):
   ret = 0
   while tic > 0:
     ret += tic%10
-    tic /= 10
+    tic //= 10
   #print ret
   return ret
   
@@ -25,6 +28,7 @@ def solve(lo, hi):
 def main():  
   assert (1,2) == solve(1,10)
   assert (5,1) == solve(1,5)
+  assert (1,2) == solve(3,12)
 main()
 '''Req: in a lottery each ticket has a positive int tic. It has a (non-unique) coupon code equal to the sum of its digits.
 
