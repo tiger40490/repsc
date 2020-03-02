@@ -2,6 +2,7 @@
 
 A "place" or "occurrence" or "position" is represented by an index. A place can be 4 meaning 3rd position in the input array. At each position there's a "payload" or "item".
 
+All online test cases passed:)
 '''
 from collections import defaultdict
 def solve(arr):
