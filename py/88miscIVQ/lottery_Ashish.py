@@ -18,7 +18,6 @@ def calcCoupon(tic):
     print '   '*cnt,
   print "%2d"%ret,
   return ret
-
 def solveInLinearTime(lo, hi):
   maxClubSize = 0; 
   sameCouponTickets=defaultdict(list) #each dict Value is a club of tickets, having the same coupon code
@@ -34,6 +33,20 @@ def solveInLinearTime(lo, hi):
     if maxClubSize == len(li):
       howManyMaxClubs += 1
   return howManyMaxClubs, maxClubSize
+
+'''
+First bulid frq table like {coupon: frq} for 0 to 99. Call it F2 i.e. table for 2-digit tickets
+If we need 301~309, then the frq table for this range be built using F2. 
+For coupon 5, frq(5)=F2[5-3]. 
+For coupon 3, frq(3)=0
+For coupon 3+9+9, frq(22) = F2[22-3]
+
+Therefore, we can build F3 frq table in 10 x len(F2)
+
+'''
+def solveDP(lo,hi):
+  pass  
+  
 def solve(lo,hi):
   return solveInLinearTime(lo, hi)
 def main():  
@@ -42,7 +55,7 @@ def main():
   assert (1,2) == solve(3,12)
   solve(79,1141)
 main()
-'''Req: in a lottery each ticket has a positive int tic. It has a (non-unique) coupon code equal to the sum of its digits.
+'''Req: in a lottery each ticket has a positive int ID. It has a (non-unique) hashcode equal to the sum of its digits.
 
-For a range of ticket IDs, find the coupon code with the largest population of tickets
+For a range of ticket IDs, find the ("hottest") hashcode with the largest population of tickets.
 '''
