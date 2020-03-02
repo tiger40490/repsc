@@ -1,8 +1,8 @@
 '''
 showcase operator //
 
-todo: build the support for creating a frqtbl(300,399)
-todo: build support for creating buildingBlock(3)
+todo: build the support for creating a FrqTable(300,399)
+todo: build support for creating Block(3)
 rename to ...
 '''
 from collections import defaultdict, Counter 
@@ -47,17 +47,16 @@ Therefore, we can build F3 frq table in 10 x len(F2)
 
 '''
 block=[0]*18 # the building blocks
-class frqtbl:
+class FrqTable:
   def __init__(self,lo,hi):
     self.lo=lo
     self.hi=hi
     self.table=defaultdict(int)
   def addtic(self,tic):
     self.table[calcCoupon(tic)] += 1
-    
   def checkCompletion(self):
     totalFrq = 0
-    self.table = dict(self.table)
+    self.table = dict(self.table) # avoid defaultdict
     for k,v in self.table.iteritems():
       totalFrq += v
     assert totalFrq == self.hi+1 - self.lo
@@ -66,16 +65,16 @@ class frqtbl:
     ret = '%d..%d: %d ' % (self.lo, self.hi, self.checkCompletion())
     ret += str(self.table)
     return ret
-class buildingBlock(frqtbl):
+class Block(FrqTable):
   def __init__(self,digits):
     hi = -1+10**(digits) #3-digit .. 999
-    frqtbl.__init__(self, 0, hi)
+    FrqTable.__init__(self, 0, hi)
     self.digits = digits
-  def clone(self, offset): # creates a new frqtble (not a buildingBlock) based on self.table
+  def clone(self, offset): # create a new frqtble (not a Block) based on self.table
       i = offset
       assert 0 < i and i < 10, 'offset must be a single digit'
       scaling = 10**self.digits
-      newtbl = frqtbl(i*scaling, i*scaling+99)
+      newtbl = FrqTable(i*scaling, i*scaling+99)
       for coupon, frq in block[self.digits].table.iteritems():
         newtbl.table[coupon+i]=frq
       #print tbl
@@ -89,24 +88,21 @@ class buildingBlock(frqtbl):
       print tbl
       self.table = dict(Counter(tbl.table) + Counter(self.table))
       #print self.table
-    # now merge the tables
     print self
+    return self
     
 def test():
-  tbl = frqtbl(300,399)
+  tbl = FrqTable(300,399)
   b2 = block[2]
   for coupon, frq in b2.table.iteritems():
     tbl.table[coupon-3]=frq
-  #print tbl
-    
 def solveDP(lo,hi):
-  block[2] = buildingBlock(2)
+  block[2] = Block(2)
   for i in xrange(100):
     block[2].addtic(i)
   print block[2]
 
-  block[3] = buildingBlock(3)
-  block[3].build()
+  block[3] = Block(3).build()
   
 def solve(lo,hi):
   return solveInLinearTime(lo, hi)
