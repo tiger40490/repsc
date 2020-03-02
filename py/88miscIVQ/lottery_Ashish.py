@@ -5,7 +5,7 @@ todo: build the support for creating a frqtbl(300,399)
 todo: build support for creating buildingBlock(3)
 rename to ...
 '''
-from collections import defaultdict
+from collections import defaultdict, Counter 
 from pprint import pprint
 def calcCoupon(tic):
   orig = tic # for debugging
@@ -57,6 +57,7 @@ class frqtbl:
     
   def checkCompletion(self):
     totalFrq = 0
+    self.table = dict(self.table)
     for k,v in self.table.iteritems():
       totalFrq += v
     assert totalFrq == self.hi+1 - self.lo
@@ -81,11 +82,16 @@ class buildingBlock(frqtbl):
       return newtbl
   def build(self):
     pre = self.digits-1 
-    assert block[pre]  
+    assert block[pre]
+    self.table = dict(block[pre].table)
     for i in xrange(1,10):
       tbl = block[pre].clone(i)
       print tbl
-  
+      self.table = dict(Counter(tbl.table) + Counter(self.table))
+      #print self.table
+    # now merge the tables
+    print self
+    
 def test():
   tbl = frqtbl(300,399)
   b2 = block[2]
