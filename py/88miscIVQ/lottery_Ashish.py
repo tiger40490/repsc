@@ -70,7 +70,7 @@ class Block(FrqTable):
     hi = -1+10**(digits) #3-digit .. 999
     FrqTable.__init__(self, 0, hi)
     self.digits = digits
-  def clone(self, offset): # create a new frqtble (not a Block) based on self.table
+  def clone(self, offset): # create a new frqtble (not a Block) of same size as self.table
       i = offset
       assert 0 < i and i < 10, 'offset must be a single digit'
       scaling = 10**self.digits
@@ -95,7 +95,12 @@ def test():
   tbl = FrqTable(300,399)
   b2 = block[2]
   for coupon, frq in b2.table.iteritems():
-    tbl.table[coupon-3]=frq
+    tbl.table[coupon+3]=frq
+  print tbl  
+  tBl = block[2].clone(3)
+  print tBl
+  assert sorted(tbl.table.keys()) == sorted(tBl.table.keys())
+  assert sorted(tbl.table.values()) == sorted(tBl.table.values())
 def solveDP(lo,hi):
   block[2] = Block(2)
   for i in xrange(100):
@@ -108,6 +113,7 @@ def solve(lo,hi):
   return solveInLinearTime(lo, hi)
 def main():
   solveDP(0,321)  
+  test()
   return
   assert (1,2) == solve(1,10)
   assert (5,1) == solve(1,5)
