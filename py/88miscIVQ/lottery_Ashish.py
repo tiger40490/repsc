@@ -54,6 +54,7 @@ class frqtbl:
     self.table=defaultdict(int)
   def addtic(self,tic):
     self.table[calcCoupon(tic)] += 1
+    
   def checkCompletion(self):
     totalFrq = 0
     for k,v in self.table.iteritems():
@@ -68,26 +69,39 @@ class buildingBlock(frqtbl):
   def __init__(self,digits):
     hi = -1+10**(digits) #3-digit .. 999
     frqtbl.__init__(self, 0, hi)
+    self.digits = digits
+  def clone(self, offset): # creates a new frqtble (not a buildingBlock) based on self.table
+      i = offset
+      assert 0 < i and i < 10, 'offset must be a single digit'
+      scaling = 10**self.digits
+      newtbl = frqtbl(i*scaling, i*scaling+99)
+      for coupon, frq in block[self.digits].table.iteritems():
+        newtbl.table[coupon+i]=frq
+      #print tbl
+      return newtbl
+  def build(self):
+    pre = self.digits-1 
+    assert block[pre]  
+    for i in xrange(1,10):
+      tbl = block[pre].clone(i)
+      print tbl
+  
+def test():
+  tbl = frqtbl(300,399)
+  b2 = block[2]
+  for coupon, frq in b2.table.iteritems():
+    tbl.table[coupon-3]=frq
+  #print tbl
     
 def solveDP(lo,hi):
   block[2] = buildingBlock(2)
   for i in xrange(100):
     block[2].addtic(i)
   print block[2]
+
+  block[3] = buildingBlock(3)
+  block[3].build()
   
-  tbl = frqtbl(300,399)
-  b2 = block[2]
-  for coupon, frq in b2.table.iteritems():
-    tbl.table[coupon-3]=frq
-  #print tbl
-  
-  for i in xrange(1,10):
-    tbl = frqtbl(i*100, i*100+99)
-    b2 = block[2]
-    for coupon, frq in b2.table.iteritems():
-      tbl.table[coupon-i]=frq
-    print tbl
-      
 def solve(lo,hi):
   return solveInLinearTime(lo, hi)
 def main():
