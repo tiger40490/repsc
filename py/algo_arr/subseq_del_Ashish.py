@@ -37,8 +37,10 @@ def solve(arr):
   return final
 
 def main():
+  assert [2,100] == solve([100,2,4,6,2,100])
   assert [11,11] == solve([11,11,11,33])
   assert [11,11,33] == solve([22,11,33,11,44,11,33])
+  
   assert ['a', 'b'] == solve('abbac')
   
 main()
