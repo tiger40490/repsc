@@ -1,6 +1,8 @@
 '''
 showcase operator //
 
+todo: build the support for creating a frqtbl(300,399)
+todo: build support for creating buildingBlock(3)
 rename to ...
 '''
 from collections import defaultdict
@@ -12,11 +14,11 @@ def calcCoupon(tic):
     ret += tic%10
     tic //= 10
   #print orig, '->', 
-  if orig%10 ==0: 
+  if False and orig%10 ==0: 
     cnt=ret-1 #(orig/10)%10
     print '  (%d..%d)\n' % (orig-10,orig-1),
     print '   '*cnt,
-  print "%2d"%ret,
+  #print "%2d"%ret,
   return ret
 def solveInLinearTime(lo, hi):
   maxClubSize = 0; 
@@ -36,26 +38,67 @@ def solveInLinearTime(lo, hi):
 
 '''
 First bulid frq table like {coupon: frq} for 0 to 99. Call it F2 i.e. table for 2-digit tickets
-If we need 301~309, then the frq table for this range be built using F2. 
-For coupon 5, frq(5)=F2[5-3]. 
-For coupon 3, frq(3)=0
-For coupon 3+9+9, frq(22) = F2[22-3]
+If we need tickets 300~309, then the frq table for this range can be built using F2. 
+For hashcode 5, frq(5)=F2[5-3]. 
+For hashcode 3, frq(3)=1
+For hashcode 3+9+9, frq(22) = F2[22-3]
 
 Therefore, we can build F3 frq table in 10 x len(F2)
 
 '''
+block=[0]*18 # the building blocks
+class frqtbl:
+  def __init__(self,lo,hi):
+    self.lo=lo
+    self.hi=hi
+    self.table=defaultdict(int)
+  def addtic(self,tic):
+    self.table[calcCoupon(tic)] += 1
+  def checkCompletion(self):
+    totalFrq = 0
+    for k,v in self.table.iteritems():
+      totalFrq += v
+    assert totalFrq == self.hi+1 - self.lo
+    return totalFrq
+  def __str__(self):
+    ret = '%d..%d: %d ' % (self.lo, self.hi, self.checkCompletion())
+    ret += str(self.table)
+    return ret
+class buildingBlock(frqtbl):
+  def __init__(self,digits):
+    hi = -1+10**(digits) #3-digit .. 999
+    frqtbl.__init__(self, 0, hi)
+    
 def solveDP(lo,hi):
-  pass  
+  block[2] = buildingBlock(2)
+  for i in xrange(100):
+    block[2].addtic(i)
+  print block[2]
   
+  tbl = frqtbl(300,399)
+  b2 = block[2]
+  for coupon, frq in b2.table.iteritems():
+    tbl.table[coupon-3]=frq
+  #print tbl
+  
+  for i in xrange(1,10):
+    tbl = frqtbl(i*100, i*100+99)
+    b2 = block[2]
+    for coupon, frq in b2.table.iteritems():
+      tbl.table[coupon-i]=frq
+    print tbl
+      
 def solve(lo,hi):
   return solveInLinearTime(lo, hi)
-def main():  
+def main():
+  solveDP(0,321)  
+  return
   assert (1,2) == solve(1,10)
   assert (5,1) == solve(1,5)
   assert (1,2) == solve(3,12)
   solve(79,1141)
 main()
-'''Req: in a lottery each ticket has a positive int ID. It has a (non-unique) hashcode equal to the sum of its digits.
+'''Req: in a lottery each ticket has a positive int ID. It has a (non-unique) hashcode equal to the sum of its digits. The hashcode is also known as the coupon code.
 
 For a range of ticket IDs, find the ("hottest") hashcode with the largest population of tickets.
 '''
