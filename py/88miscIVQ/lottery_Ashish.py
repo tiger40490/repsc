@@ -1,14 +1,20 @@
 '''
 showcase operator //
+
+rename to ...
 '''
 from collections import defaultdict
 from pprint import pprint
 def calcCoupon(tic):
+  orig = tic # for debugging
   ret = 0
   while tic > 0:
     ret += tic%10
     tic //= 10
-  #print ret
+  #print orig, '->', 
+  if orig%10 ==0: 
+    print '\n', '   '*(orig/10-10),
+  print "%2d"%ret,
   return ret
   
 def solve(lo, hi):
@@ -18,6 +24,7 @@ def solve(lo, hi):
     coupon = calcCoupon(tic)
     sameCouponTickets[coupon].append(tic) # ticket joins the correct club
     maxClubSize = max(maxClubSize, len(sameCouponTickets[coupon]))
+  print
   pprint(sameCouponTickets)
   
   howManyMaxClubs = 0; #count of clubs have the same max membership
@@ -26,7 +33,9 @@ def solve(lo, hi):
       howManyMaxClubs += 1
   return howManyMaxClubs, maxClubSize
 def main():  
-  assert (1,2) == solve(1,10)
+  #assert (1,2) == 
+  solve(99,151)
+  return
   assert (5,1) == solve(1,5)
   assert (1,2) == solve(3,12)
 main()
