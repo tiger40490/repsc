@@ -22,13 +22,14 @@ def solve(arr):
   for k in badKeys[1:]:
     myPlaces = places[k]    
     lastAdded=ret[-1]
-    print ret
-    if lastAdded <= myPlaces[0]: 
+    #print ret
+    if lastAdded <= myPlaces[0]: # happy path
       ret.extend(myPlaces[:-1])
       continue
-    # now we know first occurence of k is too lower
+      
+    # now we know first occurence of k is too early
     if myPlaces[1] < lastAdded:
-      return -1 # first two myPlaces are too low:(
+      return -1 # first two occurences are too early..give up :(
     ret.extend(myPlaces[1:])
 
   final = [arr[pos] for pos in ret]
@@ -36,7 +37,10 @@ def solve(arr):
   return final
 
 def main():
+  assert [11,11] == solve([11,11,11,33])
   assert [11,11,33] == solve([22,11,33,11,44,11,33])
+  assert ['a', 'b'] == solve('abbac')
+  
 main()
 '''req: given array AA of non-unique natural numbers, find the shortest subsequence (no need subarray) whose elements are non-descending, such that after removing this subsequence, remaining AA elements are unique.
 
