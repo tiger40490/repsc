@@ -1,9 +1,10 @@
 '''
 showcase operator //
-
-todo: build the support for creating a FrqTable(300,399)
-todo: build support for creating Block(3)
 rename to ...
+
+Q: after building the 000-999 block, how do I build 1000-1099 block?
+A: need to start with the 00-99 block and adjust the frq table therein
+
 '''
 from collections import defaultdict, Counter 
 from pprint import pprint
@@ -52,12 +53,19 @@ class FrqTable:
     self.lo=lo
     self.hi=hi
     self.table=defaultdict(int)
-  def addtic(self,tic):
+  def do1ticket(self,tic):
     self.table[calcCoupon(tic)] += 1
+  def extend(self, otherTable): # untested
+    assert self.hi + 1 == otherTable.lo
+    self.hi = otherTable.hi
+    self.table = dict(Counter(self.table) + Counter(otherTable.table))
+  def subtract(self, otherTable):
+    pass
   def checkCompletion(self):
     totalFrq = 0
     self.table = dict(self.table) # avoid defaultdict
     for k,v in self.table.iteritems():
+      assert k >= 0 and v > 0
       totalFrq += v
     assert totalFrq == self.hi+1 - self.lo
     return totalFrq
@@ -70,9 +78,9 @@ class Block(FrqTable):
     hi = -1+10**(digits) #3-digit .. 999
     FrqTable.__init__(self, 0, hi)
     self.digits = digits
-  def clone(self, offset): # create a new frqtble (not a Block) of same size as self.table
+  def clone(self, offset=0): # create a new frqtble (not a Block) of same size as self.table
       i = offset
-      assert 0 < i and i < 10, 'offset must be a single digit'
+      assert 0 <= i and i < 10, 'offset must be a single digit'
       scaling = 10**self.digits
       newtbl = FrqTable(i*scaling, i*scaling+99)
       for coupon, frq in block[self.digits].table.iteritems():
@@ -92,23 +100,25 @@ class Block(FrqTable):
     return self
     
 def test():
-  tbl = FrqTable(300,399)
+  tbl = FrqTable(100,199)
   b2 = block[2]
   for coupon, frq in b2.table.iteritems():
-    tbl.table[coupon+3]=frq
-  print tbl  
-  tBl = block[2].clone(3)
+    tbl.table[coupon+1]=frq
+  print tbl
+  tBl = block[2].clone(1)
   print tBl
   assert sorted(tbl.table.keys()) == sorted(tBl.table.keys())
   assert sorted(tbl.table.values()) == sorted(tBl.table.values())
+  b3 = block[3].clone()
+  #b3.subtract(b2)
 def solveDP(lo,hi):
   block[2] = Block(2)
   for i in xrange(100):
-    block[2].addtic(i)
+    block[2].do1ticket(i)
   print block[2]
 
   block[3] = Block(3).build()
-  
+  # build as many blocks as the num of digits in hi  
 def solve(lo,hi):
   return solveInLinearTime(lo, hi)
 def main():
