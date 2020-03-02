@@ -30,6 +30,7 @@ def solve(arr):
       
     # now we know first occurrence of k is too early
     if myPlaces[1] < lastAdded:
+      print -11111111
       return -1 # first two occurrences are too early..give up :(
     ret.extend(myPlaces[1:])
 
@@ -41,8 +42,9 @@ def main():
   assert [2,100] == solve([100,2,4,6,2,100])
   assert [11,11] == solve([11,11,11,33])
   assert [11,11,33] == solve([22,11,33,11,44,11,33])  
+  assert -1 == solve('ddcbaa')
   assert ['a', 'b'] == solve('abbac')
-  assert [] == solve('axybc')
+  assert [] == solve('axybc') # no removal needed
 main()
 '''req: given array AA of non-unique natural numbers, find the shortest subsequence (no need subarray) whose elements are non-descending, such that after removing this subsequence, remaining AA elements are unique.
 
