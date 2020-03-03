@@ -1,6 +1,9 @@
 '''
 showcase operator //
+
 rename to ...
+
+I decided to create classes to /cope/ with the potential increase in complexity. I may overestimate this increase and find a simpler solution, which doesn't need custom classes. Some programmers may dismiss the OO design as unnecessary and complicated, but at this moment, I don't know of any simple solution and OO should NOT complicate the situation.
 
 Q: after building the 000-999 block, how do I build 1000-1099 block?
 A: need to start with the 00-99 block and adjust the frq table therein
