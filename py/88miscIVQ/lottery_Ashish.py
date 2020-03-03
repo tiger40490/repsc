@@ -112,13 +112,10 @@ def test():
   b2 = block[2]
   for coupon, frq in b2.table.iteritems():
     tbl.table[coupon+1]=frq
-  print tbl
+  #print tbl
   tBl = block[2].clone(1)
-  print tBl
-  assert sorted(tbl.table.keys()) == sorted(tBl.table.keys())
-  assert sorted(tbl.table.values()) == sorted(tBl.table.values())
-  b3 = block[3].clone()
-  #b3.subtract(b2)
+  #print tBl
+  assert tbl.table == tBl.table
 def solveDP(lo,hi):
   block[2] = Block(2)
   for i in xrange(100):
