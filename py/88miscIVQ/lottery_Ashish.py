@@ -3,14 +3,8 @@ showcase operator //
 
 rename to hashCollide.py
 
-I decided to create classes to /cope/ with the potential increase in complexity. I may overestimate this increase and find a simpler solution, which doesn't need custom classes. Some programmers may dismiss the OO design as unnecessary and complicated, but at this moment, I don't know of any simple solution and OO should NOT complicate the situation.
-
-Q: after building the 000-999 block, how do I build 1000-1099 block?
-A: need to start with the 00-99 block and generate the 1000-1099 TicRange.
-
-For 0-28500, I would build the 00-99 block, then 0-499 TicRange, then 8000-8499 TicRange.
-then combine with the 0-7999 TicRange to create the 0-8499 TicRange
-then shift it to become the 20000-28499 TicRange
+Is it possible that the winner for range 0-12345 is same as a simpler range?
+Can we eliminate a big chunk of the range?
 
 '''
 from collections import defaultdict, Counter 
@@ -45,14 +39,14 @@ def solveInLinearTime(lo, hi):
   return howManyMaxClubs, maxClubSize
 
 '''
-First bulid frq table like {coupon: frq} for 0 to 99. Call it F2 i.e. table for 2-digit tickets
-If we need tickets 300~309, then the frq table for this range can be built using F2. 
-For hashcode 5, frq(5)=F2[5-3]. 
-For hashcode 3, frq(3)=1
-For hashcode 3+9+9, frq(22) = F2[22-3]
+I decided to create classes to /cope/ with the potential increase in complexity. I may overestimate this increase and find a simpler solution, which doesn't need custom classes. Some programmers may dismiss the OO design as unnecessary and complicated, but at this moment, I don't know of any simple solution and OO should NOT complicate the situation.
 
-Therefore, we can build F3 frq table in 10 x len(F2)
+Q: after building the 000-999 block, how do I build 1000-1099 block?
+A: need to start with the 00-99 block and generate the 1000-1099 TicRange.
 
+For 0-28500, I would build the 00-99 block, then 0-499 TicRange, then 8000-8499 TicRange.
+then combine (ez) with the 0-7999 TicRange to create the 0-8499 TicRange
+then shift it to become the 20000-28499 TicRange
 '''
 block=[0]*18 # the building blocks
 class TicRange:
@@ -62,8 +56,13 @@ class TicRange:
     self.table=defaultdict(int)
   def do1ticket(self,tic):
     self.table[calcCoupon(tic)] += 1
-  def shift(self, prefixDigit): # untested
-    assert 0 < prefixDigit and prefixDigit < 10
+  def shift(self, prefix): # untested
+    # eg: prefix 20 to 500 ->20500
+    tmp = prefix
+    while tmp > 9:
+      assert tmp % 10 > 0
+      tmp /= 10
+    assert tmp < 10, 'prefix must be a single digit followed by optional zeros'
     #self.lo += offset
     #self.hi += offset 
     #self.table = dict(Counter(self.table) + Counter(otherTable.table))
@@ -138,4 +137,6 @@ main()
 '''Req: in a lottery each ticket has a positive int ID. It has a (non-unique) hashcode equal to the sum of its digits. The hashcode is also known as the coupon code of the ticket.
 
 For a range of ticket IDs, find the ("hottest") hashcode with the largest population of tickets.
+
+If the hottest hashcode has 55 colliding tickets, and there are 33 such hottest hashcodes, then return [33,55]. No need to return the actual hashcodes.
 '''
