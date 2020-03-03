@@ -1,12 +1,16 @@
 '''
 showcase operator //
 
-rename to ...
+rename to hashCollide.py
 
 I decided to create classes to /cope/ with the potential increase in complexity. I may overestimate this increase and find a simpler solution, which doesn't need custom classes. Some programmers may dismiss the OO design as unnecessary and complicated, but at this moment, I don't know of any simple solution and OO should NOT complicate the situation.
 
 Q: after building the 000-999 block, how do I build 1000-1099 block?
-A: need to start with the 00-99 block and adjust the frq table therein
+A: need to start with the 00-99 block and generate the 1000-1099 TicRange.
+
+For 0-28500, I would build the 00-99 block, then 0-499 TicRange, then 8000-8499 TicRange.
+then combine with the 0-7999 TicRange to create the 0-8499 TicRange
+then shift it to become the 20000-28499 TicRange
 
 '''
 from collections import defaultdict, Counter 
@@ -51,17 +55,18 @@ Therefore, we can build F3 frq table in 10 x len(F2)
 
 '''
 block=[0]*18 # the building blocks
-class FrqTable:
+class TicRange:
   def __init__(self,lo,hi):
     self.lo=lo
     self.hi=hi
     self.table=defaultdict(int)
   def do1ticket(self,tic):
     self.table[calcCoupon(tic)] += 1
-  def extend(self, otherTable): # untested
-    assert self.hi + 1 == otherTable.lo
-    self.hi = otherTable.hi
-    self.table = dict(Counter(self.table) + Counter(otherTable.table))
+  def shift(self, prefixDigit): # untested
+    assert 0 < prefixDigit and prefixDigit < 10
+    #self.lo += offset
+    #self.hi += offset 
+    #self.table = dict(Counter(self.table) + Counter(otherTable.table))
   def subtract(self, otherTable):
     pass
   def checkCompletion(self):
@@ -76,16 +81,16 @@ class FrqTable:
     ret = '%d..%d: %d ' % (self.lo, self.hi, self.checkCompletion())
     ret += str(self.table)
     return ret
-class Block(FrqTable):
+class Block(TicRange):
   def __init__(self,digits):
     hi = -1+10**(digits) #3-digit .. 999
-    FrqTable.__init__(self, 0, hi)
+    TicRange.__init__(self, 0, hi)
     self.digits = digits
   def clone(self, offset=0): # create a new frqtble (not a Block) of same size as self.table
       i = offset
       assert 0 <= i and i < 10, 'offset must be a single digit'
       scaling = 10**self.digits
-      newtbl = FrqTable(i*scaling, i*scaling+99)
+      newtbl = TicRange(i*scaling, i*scaling+99)
       for coupon, frq in block[self.digits].table.iteritems():
         newtbl.table[coupon+i]=frq
       #print tbl
@@ -103,7 +108,7 @@ class Block(FrqTable):
     return self
     
 def test():
-  tbl = FrqTable(100,199)
+  tbl = TicRange(100,199)
   b2 = block[2]
   for coupon, frq in b2.table.iteritems():
     tbl.table[coupon+1]=frq
@@ -133,7 +138,7 @@ def main():
   assert (1,2) == solve(3,12)
   solve(79,1141)
 main()
-'''Req: in a lottery each ticket has a positive int ID. It has a (non-unique) hashcode equal to the sum of its digits. The hashcode is also known as the coupon code.
+'''Req: in a lottery each ticket has a positive int ID. It has a (non-unique) hashcode equal to the sum of its digits. The hashcode is also known as the coupon code of the ticket.
 
 For a range of ticket IDs, find the ("hottest") hashcode with the largest population of tickets.
 '''
