@@ -1,5 +1,6 @@
 '''
 showcase inspect.stack() to get current function name
+showcase calling superclass constructor
 showcase operator //
 
 rename to hashCollide.py
@@ -131,11 +132,17 @@ def precomputeMatrix():
   for i in xrange(10):
     block[1][0].calc1ticket(i)
   #print block[1][0]
-  for i in xrange(2,5):
-    block[i][0] = Block(i).build()
+  for i in xrange(1,5):
     for j in xrange(1,10):
       block[i][j]=block[i][0].clone(j)
+    block[i+1][0] = Block(i+1).build()
       
+  for i in xrange(1,5):
+    for j in xrange(10):
+      blk = block[i][j]
+      cnt = len(blk.table)
+      print 'checking [', i,j, ']: club size=',cnt, blk.lo, '..', blk.hi
+      assert cnt      
 def test():
   tbl = TicRange(100,199)
   b2 = block[2]
