@@ -27,7 +27,7 @@ def calcCoupon(tic):
   return ret
 def solveInLinearTime(lo, hi):
   print inspect.stack()[0][3]
-  sameCouponTickets, maxClubSize = buildFrqTable(lo,hi)
+  sameCouponTickets, maxClubSize,_ = buildFrqTable(lo,hi)
   howManyMaxClubs = 0; #count of clubs have the same max membership
   for coupon, li in sameCouponTickets.iteritems(): #O(C) loop for C unique coupon codes
     if maxClubSize == len(li):
@@ -55,11 +55,11 @@ Based on input range, we have pre-computed enough building blocks (Worry about t
 bb99   bb199    bb299 ..
 bb999  bb1999   bb2999 ..
 bb9999 bb19999  bb29999 ..
-Now for 0-28512, I already have bb19999 and need 20000-28512 
+Now for 0-28512, I already have bb19999 and need 20000-28512
 For 28000-28512, I expand bb499 to R512, then prefix the string '28'. So the frq table for 28000-20512 can be generated
 For (easier) 20000-27999, I already have bb7999, so I prefix '2' to generate its frq table
 '''
-block=[[0 for x in range(10)] for y in range(18)]# the building blocks
+block=[[0 for x in range(10)] for y in range(19)]# the building blocks
 class TicRange:
   def __init__(self,lo,hi):
     self.lo=lo
@@ -80,9 +80,13 @@ class TicRange:
   def subtract(self, otherTable):
     pass
   def verify(self):
+    print '(' + inspect.stack()[0][3],
+    if self.hi > 99999: 
+      print 'skippped)'
+      return
     _, _, reference=buildFrqTable(self.lo, self.hi)
     assert reference == self.table
-    print '(' + inspect.stack()[0][3] + ' OK:)'
+    print 'OK :)'
   def checkCompletion(self):
     totalFrq = 0
     self.table = dict(self.table) # avoid defaultdict
@@ -120,12 +124,13 @@ class Block(TicRange):
       #print self.table
     print self
     return self
-def buildMatrix():
-  block[2] = Block(2)
-  for i in xrange(100):
-    block[2].do1ticket(i)
-  print block[2]
-  block[3] = Block(3).build()
+def precomputeMatrix():
+  block[1] = Block(1)
+  for i in xrange(10):
+    block[1].do1ticket(i)
+  print block[1]
+  for i in xrange(2,8):
+    block[i] = Block(i).build()
   
 def test():
   tbl = TicRange(100,199)
@@ -143,13 +148,12 @@ def solve(lo,hi):
   print lo,hi,'->',
   return solveInLinearTime(lo, hi)
 def main():
-  buildMatrix()
+  precomputeMatrix()
   #test(); 
   return
   assert (1,2) == solve(1,10)
   assert (5,1) == solve(1,5)
   assert (1,2) == solve(3,12)
-  solve(79,1141)
 main()
 '''Req: in a lottery each ticket has a positive int ID. It has a (non-unique) hashcode equal to the sum of its digits. The hashcode is also known as the coupon code of the ticket.
 
