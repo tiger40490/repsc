@@ -133,10 +133,9 @@ def precomputeMatrix():
   #print block[1][0]
   for i in xrange(2,5):
     block[i][0] = Block(i).build()
-    for j in xrange(1,2):
-      pass #block[i][j]=block[i][0].clone(j)
+    for j in xrange(1,10):
+      block[i][j]=block[i][0].clone(j)
       
-  
 def test():
   tbl = TicRange(100,199)
   b2 = block[2]
