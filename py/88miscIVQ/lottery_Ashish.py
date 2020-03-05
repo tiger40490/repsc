@@ -24,6 +24,13 @@ def calcCoupon(tic):
     print '   '*cnt,
   #print "%2d"%ret,
   return ret
+def solveInLinearTime(lo, hi):
+  sameCouponTickets, maxClubSize = buildFrqTable(lo,hi)
+  howManyMaxClubs = 0; #count of clubs have the same max membership
+  for coupon, li in sameCouponTickets.iteritems(): #O(C) loop for C unique coupon codes
+    if maxClubSize == len(li):
+      howManyMaxClubs += 1
+  return howManyMaxClubs, maxClubSize
 def buildFrqTable(lo, hi):
   maxClubSize = 0; 
   sameCouponTickets=defaultdict(list) #each dict Value is a club of tickets, having the same coupon code
@@ -34,13 +41,6 @@ def buildFrqTable(lo, hi):
   #print
   #pprint(sameCouponTickets)
   return sameCouponTickets, maxClubSize
-def solveInLinearTime(lo, hi):
-  sameCouponTickets, maxClubSize = buildFrqTable(lo,hi)
-  howManyMaxClubs = 0; #count of clubs have the same max membership
-  for coupon, li in sameCouponTickets.iteritems(): #O(C) loop for C unique coupon codes
-    if maxClubSize == len(li):
-      howManyMaxClubs += 1
-  return howManyMaxClubs, maxClubSize
 '''
 I decided to create classes to /cope/ with the potential increase in complexity. I may overestimate this increase and find a simpler solution, which doesn't need custom classes. Some programmers may dismiss the OO design as unnecessary and complicated, but at this moment, I don't know of any simple solution and OO should NOT complicate the situation.
 
