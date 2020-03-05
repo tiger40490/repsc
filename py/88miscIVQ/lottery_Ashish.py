@@ -110,27 +110,26 @@ class Block(TicRange):
       assert 0 <= i and i < 10, 'offset must be a single digit'
       scaling = 10**self.digits
       newtbl = TicRange(i*scaling, i*scaling+99)
-      for coupon, frq in block[self.digits].table.iteritems():
+      for coupon, frq in block[self.digits][0].table.iteritems():
         newtbl.table[coupon+i]=frq
       #print tbl
       return newtbl
   def build(self): #buildFromPrevBlock
     pre = self.digits-1 
-    assert block[pre]
-    self.table = dict(block[pre].table)
+    assert block[pre][0]
+    self.table = dict(block[pre][0].table)
     for i in xrange(1,10):
-      tbl = block[pre].clone(i)
+      tbl = block[pre][0].clone(i)
       self.table = dict(Counter(tbl.table) + Counter(self.table))
       #print self.table
     print self
     return self
 def precomputeMatrix():
-  block[1] = Block(1)
+  block[1][0] = Block(1)
   for i in xrange(10):
-    block[1].do1ticket(i)
-  print block[1]
+    block[1][0].do1ticket(i)
   for i in xrange(2,8):
-    block[i] = Block(i).build()
+    block[i][0] = Block(i).build()
   
 def test():
   tbl = TicRange(100,199)
