@@ -24,22 +24,23 @@ def calcCoupon(tic):
     print '   '*cnt,
   #print "%2d"%ret,
   return ret
-def solveInLinearTime(lo, hi):
+def buildFrqTable(lo, hi):
   maxClubSize = 0; 
   sameCouponTickets=defaultdict(list) #each dict Value is a club of tickets, having the same coupon code
   for tic in xrange(lo, hi+1): # O(N) loop for N tickets
     coupon = calcCoupon(tic)
     sameCouponTickets[coupon].append(tic) # ticket joins the correct club
     maxClubSize = max(maxClubSize, len(sameCouponTickets[coupon]))
-  print
+  #print
   #pprint(sameCouponTickets)
-  
+  return sameCouponTickets, maxClubSize
+def solveInLinearTime(lo, hi):
+  sameCouponTickets, maxClubSize = buildFrqTable(lo,hi)
   howManyMaxClubs = 0; #count of clubs have the same max membership
   for coupon, li in sameCouponTickets.iteritems(): #O(C) loop for C unique coupon codes
     if maxClubSize == len(li):
       howManyMaxClubs += 1
   return howManyMaxClubs, maxClubSize
-
 '''
 I decided to create classes to /cope/ with the potential increase in complexity. I may overestimate this increase and find a simpler solution, which doesn't need custom classes. Some programmers may dismiss the OO design as unnecessary and complicated, but at this moment, I don't know of any simple solution and OO should NOT complicate the situation.
 
@@ -132,9 +133,7 @@ def solveDP(lo,hi):
 def solve(lo,hi):
   return solveInLinearTime(lo, hi)
 def main():
-  solveDP(0,321)  
-  test()
-  return
+#  solveDP(0,321); test(); return
   assert (1,2) == solve(1,10)
   assert (5,1) == solve(1,5)
   assert (1,2) == solve(3,12)
