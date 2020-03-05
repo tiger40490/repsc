@@ -52,7 +52,7 @@ I decided to create classes to /cope/ with the potential increase in complexity.
 Basic operation: join two ranges - adjacent non-overlapping ranges
 Basic operation: shift a range up with prefix
 
-Based on input range, we have pre-computed enough building blocks (Worry about the pre-compute later.)
+Based on input range, we have pre-computed enough building blocks
 bb99   bb199    bb299 ..
 bb999  bb1999   bb2999 ..
 bb9999 bb19999  bb29999 ..
@@ -111,8 +111,8 @@ class Block(TicRange):
   def clone(self, offset): # create a new frqtble (not a Block) of same size as self.table
       i = offset
       assert 0 <= i and i < 10, 'offset must be a single digit'
-      scaling = 10**self.digits 
-      newtbl = TicRange(i*scaling, i*scaling+self.hi) #
+      hi = int(str(i)+str(self.hi)) if self.hi else i
+      newtbl = TicRange(hi-self.hi, hi)
       for coupon, frq in block[self.digits][0].table.iteritems():
         newtbl.table[coupon+i]=frq
       print newtbl
