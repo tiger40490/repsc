@@ -1,16 +1,17 @@
 '''
+showcase inspect.stack() to get current function name
 showcase operator //
 
 rename to hashCollide.py
 
-Q: Is it possible that the winner for range 0-12345 is same as a simpler range?
-Can we eliminate a big chunk of the range?
-
 Q: once I build R8500, how best to build R28500? So far I need to shift R8500 to 20000-28500 first.
 
+(If we aim at the original smaller challenge) Q: Is it possible that the winner for range 0-12345 is same as a simpler range?
+Can we eliminate a big chunk of the range?
 '''
 from collections import defaultdict, Counter 
 from pprint import pprint
+import inspect
 def calcCoupon(tic):
   orig = tic # for debugging
   ret = 0
@@ -25,6 +26,7 @@ def calcCoupon(tic):
   #print "%2d"%ret,
   return ret
 def solveInLinearTime(lo, hi):
+  print inspect.stack()[0][3]
   sameCouponTickets, maxClubSize = buildFrqTable(lo,hi)
   howManyMaxClubs = 0; #count of clubs have the same max membership
   for coupon, li in sameCouponTickets.iteritems(): #O(C) loop for C unique coupon codes
@@ -131,6 +133,7 @@ def solveDP(lo,hi):
   block[3] = Block(3).build()
   # build as many blocks as the num of digits in hi  
 def solve(lo,hi):
+  print lo,hi,'->',
   return solveInLinearTime(lo, hi)
 def main():
 #  solveDP(0,321); test(); return
@@ -144,4 +147,6 @@ main()
 For a range of ticket IDs, find the ("hottest") hashcode with the largest population of tickets.
 
 If the hottest hashcode has 55 colliding tickets, and there are 33 such hottest hashcodes, then return [33,55]. No need to return the actual hashcodes.
+
+For a bigger challenge, try to generate the full histogram of all hashcodes.
 '''
