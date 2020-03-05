@@ -65,7 +65,7 @@ class TicRange:
     self.lo=lo
     self.hi=hi
     self.table=defaultdict(int)
-  def do1ticket(self,tic):
+  def calc1ticket(self,tic):
     self.table[calcCoupon(tic)] += 1
   def shift(self, prefix): # untested
     # eg: prefix 20 to 500 ->20500
@@ -107,7 +107,7 @@ class Block(TicRange):
     hi = -1+10**(digits) #3-digit .. 999
     TicRange.__init__(self, 0, hi)
     self.digits = digits
-  def clone(self, offset=0): # create a new frqtble (not a Block) of same size as self.table
+  def clone(self, offset): # create a new frqtble (not a Block) of same size as self.table
       i = offset
       assert 0 <= i and i < 10, 'offset must be a single digit'
       scaling = 10**self.digits 
@@ -129,7 +129,7 @@ class Block(TicRange):
 def precomputeMatrix():
   block[1][0] = Block(1)
   for i in xrange(10):
-    block[1][0].do1ticket(i)
+    block[1][0].calc1ticket(i)
   #print block[1][0]
   for i in xrange(2,5):
     block[i][0] = Block(i).build()
