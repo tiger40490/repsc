@@ -128,30 +128,20 @@ class Block(TicRange):
     print self
     return self
 def precomputeMatrix():
-  block[1][0] = Block(1)
-  for i in xrange(10):
-    block[1][0].calc1ticket(i)
-  #print block[1][0]
-  for i in xrange(1,5):
+  block[0][0] = Block(0)
+  block[0][0].calc1ticket(0)
+  hiWaterMark=5
+  for i in xrange(hiWaterMark):
     for j in xrange(1,10):
       block[i][j]=block[i][0].clone(j)
     block[i+1][0] = Block(i+1).build()
       
-  for i in xrange(1,5):
+  for i in xrange(hiWaterMark):
     for j in xrange(10):
       blk = block[i][j]
       cnt = len(blk.table)
-      print 'checking [', i,j, ']: club size=',cnt, blk.lo, '..', blk.hi
+      print 'size-checking [', i,j, ']: club size=',cnt, blk.lo, '..', blk.hi
       assert cnt      
-def test():
-  tbl = TicRange(100,199)
-  b2 = block[2]
-  for coupon, frq in b2.table.iteritems():
-    tbl.table[coupon+1]=frq
-  #print tbl
-  tBl = block[2].clone(1)
-  #print tBl
-  assert tbl.table == tBl.table
 def solveDP(lo,hi): #incomplete
   pass
   # build as many blocks as the num of digits in hi  
