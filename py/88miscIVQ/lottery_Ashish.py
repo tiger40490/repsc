@@ -91,8 +91,10 @@ class TicRange:
     totalFrq = 0
     self.table = dict(self.table) # avoid defaultdict
     for k,v in self.table.iteritems():
+      #print k,v
       assert k >= 0 and v > 0
       totalFrq += v
+    #print totalFrq, self.hi, self.lo
     assert totalFrq == self.hi+1 - self.lo
     self.verify()
     return totalFrq
@@ -108,11 +110,11 @@ class Block(TicRange):
   def clone(self, offset=0): # create a new frqtble (not a Block) of same size as self.table
       i = offset
       assert 0 <= i and i < 10, 'offset must be a single digit'
-      scaling = 10**self.digits
-      newtbl = TicRange(i*scaling, i*scaling+99)
+      scaling = 10**self.digits 
+      newtbl = TicRange(i*scaling, i*scaling+self.hi) #
       for coupon, frq in block[self.digits][0].table.iteritems():
         newtbl.table[coupon+i]=frq
-      #print tbl
+      print newtbl
       return newtbl
   def build(self): #buildFromPrevBlock
     pre = self.digits-1 
@@ -128,8 +130,12 @@ def precomputeMatrix():
   block[1][0] = Block(1)
   for i in xrange(10):
     block[1][0].do1ticket(i)
-  for i in xrange(2,8):
+  #print block[1][0]
+  for i in xrange(2,5):
     block[i][0] = Block(i).build()
+    for j in xrange(1,2):
+      pass #block[i][j]=block[i][0].clone(j)
+      
   
 def test():
   tbl = TicRange(100,199)
