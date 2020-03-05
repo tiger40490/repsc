@@ -68,25 +68,14 @@ class TicRange:
     self.table=defaultdict(int)
   def calc1ticket(self,tic):
     self.table[calcCoupon(tic)] += 1
-  def shift(self, prefix): # untested
-    # eg: prefix 20 to 500 ->20500
-    tmp = prefix
-    while tmp > 9:
-      assert tmp % 10 > 0
-      tmp /= 10
-    assert tmp < 10, 'prefix must be a single digit followed by optional zeros'
-    #self.lo += offset
-    #self.hi += offset 
-    #self.table = dict(Counter(self.table) + Counter(otherTable.table))
   def subtract(self, otherTable):
     pass
-  def clone(self, offset): # create a new frqtble (not a Block) of same size as self.table
-      i = offset
-      assert 0 <= i and i < 10, 'offset must be a single digit'
-      hi = int(str(i)+str(self.hi)) if self.hi else i
+  def clone(self, prefix): # create a new frqtble (not a Block) of same size as self.table
+      assert 0 <= prefix and prefix < 10, 'prefix must be a single digit'
+      hi = int(str(prefix)+str(self.hi)) if self.hi else prefix
       newtbl = TicRange(hi-self.hi, hi)
       for coupon, frq in block[self.digits][0].table.iteritems():
-        newtbl.table[coupon+i]=frq
+        newtbl.table[coupon+prefix]=frq
       print newtbl
       return newtbl
   def verify(self):
