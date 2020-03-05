@@ -71,12 +71,14 @@ class TicRange:
   def subtract(self, otherTable):
     pass
   def clone(self, prefix): # create a new frqtble (not a Block) of same size as self.table
-      assert 0 <= prefix and prefix < 10, 'prefix must be a single digit'
+      assert 0 < prefix
       hi = int(str(prefix)+str(self.hi)) if self.hi else prefix
       newtbl = TicRange(hi-self.hi+self.lo, hi)
+      
+      prefixCoupon=calcCoupon(prefix)
       for coupon, frq in self.table.iteritems():
-        newtbl.table[coupon+prefix]=frq
-      print newtbl
+        newtbl.table[coupon+prefixCoupon]=frq
+      newtbl.checkCompletion()
       return newtbl
   def verify(self):
     print '(' + inspect.stack()[0][3],
@@ -141,7 +143,7 @@ def main():
   precomputeMatrix()
   blk = block[2][3]
   print '\n',blk
-  blk.clone(5)
+  blk.clone(50)
   #test(); 
   return
   assert (1,2) == solve(1,10)
