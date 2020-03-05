@@ -73,8 +73,8 @@ class TicRange:
   def clone(self, prefix): # create a new frqtble (not a Block) of same size as self.table
       assert 0 <= prefix and prefix < 10, 'prefix must be a single digit'
       hi = int(str(prefix)+str(self.hi)) if self.hi else prefix
-      newtbl = TicRange(hi-self.hi, hi)
-      for coupon, frq in block[self.digits][0].table.iteritems():
+      newtbl = TicRange(hi-self.hi+self.lo, hi)
+      for coupon, frq in self.table.iteritems():
         newtbl.table[coupon+prefix]=frq
       print newtbl
       return newtbl
@@ -119,7 +119,7 @@ class Block(TicRange):
 def precomputeMatrix():
   block[0][0] = Block(0)
   block[0][0].calc1ticket(0)
-  hiWaterMark=5
+  hiWaterMark=4
   for i in xrange(hiWaterMark):
     for j in xrange(1,10):
       block[i][j]=block[i][0].clone(j)
@@ -139,6 +139,9 @@ def solve(lo,hi):
   return solveInLinearTime(lo, hi)
 def main():
   precomputeMatrix()
+  blk = block[2][3]
+  print '\n',blk
+  blk.clone(5)
   #test(); 
   return
   assert (1,2) == solve(1,10)
