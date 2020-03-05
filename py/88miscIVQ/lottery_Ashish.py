@@ -80,6 +80,15 @@ class TicRange:
     #self.table = dict(Counter(self.table) + Counter(otherTable.table))
   def subtract(self, otherTable):
     pass
+  def clone(self, offset): # create a new frqtble (not a Block) of same size as self.table
+      i = offset
+      assert 0 <= i and i < 10, 'offset must be a single digit'
+      hi = int(str(i)+str(self.hi)) if self.hi else i
+      newtbl = TicRange(hi-self.hi, hi)
+      for coupon, frq in block[self.digits][0].table.iteritems():
+        newtbl.table[coupon+i]=frq
+      print newtbl
+      return newtbl
   def verify(self):
     print '(' + inspect.stack()[0][3],
     if self.hi > 99999: 
@@ -108,15 +117,6 @@ class Block(TicRange):
     hi = -1+10**(digits) #3-digit .. 999
     TicRange.__init__(self, 0, hi)
     self.digits = digits
-  def clone(self, offset): # create a new frqtble (not a Block) of same size as self.table
-      i = offset
-      assert 0 <= i and i < 10, 'offset must be a single digit'
-      hi = int(str(i)+str(self.hi)) if self.hi else i
-      newtbl = TicRange(hi-self.hi, hi)
-      for coupon, frq in block[self.digits][0].table.iteritems():
-        newtbl.table[coupon+i]=frq
-      print newtbl
-      return newtbl
   def build(self): #buildFromPrevBlock
     pre = self.digits-1 
     assert block[pre][0]
