@@ -35,14 +35,16 @@ def solveInLinearTime(lo, hi):
   return howManyMaxClubs, maxClubSize
 def buildFrqTable(lo, hi):
   maxClubSize = 0; 
+  frqTable=defaultdict(int)
   sameCouponTickets=defaultdict(list) #each dict Value is a club of tickets, having the same coupon code
   for tic in xrange(lo, hi+1): # O(N) loop for N tickets
     coupon = calcCoupon(tic)
+    frqTable[coupon] += 1
     sameCouponTickets[coupon].append(tic) # ticket joins the correct club
     maxClubSize = max(maxClubSize, len(sameCouponTickets[coupon]))
   #print
   #pprint(sameCouponTickets)
-  return sameCouponTickets, maxClubSize
+  return sameCouponTickets, maxClubSize,frqTable
 '''
 I decided to create classes to /cope/ with the potential increase in complexity. I may overestimate this increase and find a simpler solution, which doesn't need custom classes. Some programmers may dismiss the OO design as unnecessary and complicated, but at this moment, I don't know of any simple solution and OO should NOT complicate the situation.
 
@@ -57,7 +59,7 @@ Now for 0-28512, I already have bb19999 and need 20000-28512
 For 28000-28512, I expand bb499 to R512, then prefix the string '28'. So the frq table for 28000-20512 can be generated
 For (easier) 20000-27999, I already have bb7999, so I prefix '2' to generate its frq table
 '''
-block=[0]*18 # the building blocks
+block=[[0 for x in range(10)] for y in range(18)]# the building blocks
 class TicRange:
   def __init__(self,lo,hi):
     self.lo=lo
@@ -77,6 +79,10 @@ class TicRange:
     #self.table = dict(Counter(self.table) + Counter(otherTable.table))
   def subtract(self, otherTable):
     pass
+  def verify(self):
+    _, _, reference=buildFrqTable(self.lo, self.hi)
+    assert reference == self.table
+    print '(' + inspect.stack()[0][3] + ' OK:)'
   def checkCompletion(self):
     totalFrq = 0
     self.table = dict(self.table) # avoid defaultdict
@@ -84,6 +90,7 @@ class TicRange:
       assert k >= 0 and v > 0
       totalFrq += v
     assert totalFrq == self.hi+1 - self.lo
+    self.verify()
     return totalFrq
   def __str__(self):
     ret = '%d..%d: %d ' % (self.lo, self.hi, self.checkCompletion())
@@ -103,18 +110,23 @@ class Block(TicRange):
         newtbl.table[coupon+i]=frq
       #print tbl
       return newtbl
-  def build(self):
+  def build(self): #buildFromPrevBlock
     pre = self.digits-1 
     assert block[pre]
     self.table = dict(block[pre].table)
     for i in xrange(1,10):
       tbl = block[pre].clone(i)
-      print tbl
       self.table = dict(Counter(tbl.table) + Counter(self.table))
       #print self.table
     print self
     return self
-    
+def buildMatrix():
+  block[2] = Block(2)
+  for i in xrange(100):
+    block[2].do1ticket(i)
+  print block[2]
+  block[3] = Block(3).build()
+  
 def test():
   tbl = TicRange(100,199)
   b2 = block[2]
@@ -124,19 +136,16 @@ def test():
   tBl = block[2].clone(1)
   #print tBl
   assert tbl.table == tBl.table
-def solveDP(lo,hi):
-  block[2] = Block(2)
-  for i in xrange(100):
-    block[2].do1ticket(i)
-  print block[2]
-
-  block[3] = Block(3).build()
+def solveDP(lo,hi): #incomplete
+  pass
   # build as many blocks as the num of digits in hi  
 def solve(lo,hi):
   print lo,hi,'->',
   return solveInLinearTime(lo, hi)
 def main():
-#  solveDP(0,321); test(); return
+  buildMatrix()
+  #test(); 
+  return
   assert (1,2) == solve(1,10)
   assert (5,1) == solve(1,5)
   assert (1,2) == solve(3,12)
