@@ -3,8 +3,10 @@ showcase operator //
 
 rename to hashCollide.py
 
-Is it possible that the winner for range 0-12345 is same as a simpler range?
+Q: Is it possible that the winner for range 0-12345 is same as a simpler range?
 Can we eliminate a big chunk of the range?
+
+Q: once I build R8500, how best to build R28500? So far I need to shift R8500 to 20000-28500 first.
 
 '''
 from collections import defaultdict, Counter 
@@ -41,12 +43,16 @@ def solveInLinearTime(lo, hi):
 '''
 I decided to create classes to /cope/ with the potential increase in complexity. I may overestimate this increase and find a simpler solution, which doesn't need custom classes. Some programmers may dismiss the OO design as unnecessary and complicated, but at this moment, I don't know of any simple solution and OO should NOT complicate the situation.
 
-Q: after building the 000-999 block, how do I build 1000-1099 block?
-A: need to start with the 00-99 block and generate the 1000-1099 TicRange.
+Basic operation: join two ranges - adjacent non-overlapping ranges
+Basic operation: shift a range up with prefix
 
-For 0-28500, I would build the 00-99 block, then 0-499 TicRange, then 8000-8499 TicRange.
-then combine (ez) with the 0-7999 TicRange to create the 0-8499 TicRange
-then shift it to become the 20000-28499 TicRange
+Based on input range, we have pre-computed enough building blocks (Worry about the pre-compute later.)
+bb99   bb199    bb299 ..
+bb999  bb1999   bb2999 ..
+bb9999 bb19999  bb29999 ..
+Now for 0-28512, I already have bb19999 and need 20000-28512 
+For 28000-28512, I expand bb499 to R512, then prefix the string '28'. So the frq table for 28000-20512 can be generated
+For (easier) 20000-27999, I already have bb7999, so I prefix '2' to generate its frq table
 '''
 block=[0]*18 # the building blocks
 class TicRange:
