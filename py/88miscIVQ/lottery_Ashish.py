@@ -141,17 +141,26 @@ def precomputeMatrix():
       assert cnt      
 def solveDP(lo,hi): #incomplete
   pass
-  # build as many blocks as the num of digits in hi  
+def do1end(hi):
+  precomputeMatrix()
+  digits=list(str(hi))
+  for w in range(1, 1+len(digits)):
+    digit=digits[-w]
+    blk = block[w-1][int(digit)]
+    prefix=digits[:-w]
+    print digit,'=digit, wei=', w, prefix, '=prefix',blk
+  '''lowest digit is 2: block[0][2] clone(restOfDigits)
+  '''
+  print digits
 def solve(lo,hi):
   print lo,hi,'->',
   return solveInLinearTime(lo, hi)
 def testAll():
-  precomputeMatrix()
+  do1end(38512)
+  return
   blk = block[2][3]
   print '\n',blk
   print blk.clone(50)
-  #test(); 
-  return
   assert (1,2) == solve(1,10)
   assert (5,1) == solve(1,5)
   assert (1,2) == solve(3,12)
