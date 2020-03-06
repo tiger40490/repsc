@@ -131,15 +131,13 @@ class Block(TicRange):
   def cloneBigger(self, prefix1_9): #create a bigger clone of self
     assert 0 < prefix1_9 and prefix1_9 <= 9
     prevRange = dict(block[self.digitCnt][prefix1_9].table)
-    tmp = block[self.digitCnt][1].clone(prefix1_9)
-    newTbl = dict(Counter(tmp.table) + Counter(prevRange))
-    if log >= 3: print newTbl
-    
     hi = int(str(prefix1_9)+str(self.hi)) if self.hi else prefix1_9
-    ret = TicRange(0, hi)
-    ret.table = newTbl
+    ret = block[self.digitCnt][prefix1_9+1] = TicRange(0, hi)
+
+    tmp = block[self.digitCnt][1].clone(prefix1_9)
+    ret.table = dict(Counter(tmp.table) + Counter(prevRange))
+        
     if log > 1: print inspect.stack()[0][3] + "() returning", ret
-    block[self.digitCnt][prefix1_9+1] = ret
     return ret
 def precomputeMatrix():
   block[0][1] = Block(0)
