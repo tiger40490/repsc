@@ -126,7 +126,7 @@ class Block(TicRange):
 def precomputeMatrix():
   block[0][0] = Block(0)
   block[0][0].calc1ticket(0)
-  hiWaterMark=4
+  hiWaterMark=5
   for i in xrange(hiWaterMark):
     for j in xrange(1,10):
       block[i][j]=block[i][0].clone(j)
@@ -145,10 +145,11 @@ def do1end(hi):
   precomputeMatrix()
   digits=list(str(hi))
   for w in range(1, 1+len(digits)):
-    digit=digits[-w]
-    blk = block[w-1][int(digit)]
-    prefix=digits[:-w]
-    print digit,'=digit, wei=', w, prefix, '=prefix',blk
+    theDigit=digits[-w]
+    blk = block[w-1][int(theDigit)-1]
+    prefix=''.join(digits[:-w])
+    clone=blk.clone(int(prefix)) if prefix else blk
+    print theDigit+'=theDigit, wei=', w, prefix, '=prefix',clone
   '''lowest digit is 2: block[0][2] clone(restOfDigits)
   '''
   print digits
