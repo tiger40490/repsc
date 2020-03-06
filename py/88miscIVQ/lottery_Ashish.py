@@ -123,13 +123,26 @@ class Block(TicRange):
       if log >= 3: print self.table
     if log >=2: print self
     return self
+  def createBigger(self, prefix):
+    assert 0 < prefix and prefix <= 9
+    pre = self.digits
+    assert block[pre][0]
+    table = dict(block[pre][0].table)
+    for i in xrange(1,prefix+1):
+      tbl = block[pre][0].clone(i)
+      table = dict(Counter(tbl.table) + Counter(table))
+      if log >= 3: print table
+    hi = int(str(prefix)+str(self.hi)) if self.hi else prefix
+    ret = TicRange(0, hi)
+    ret.table = table
+    return ret
 def precomputeMatrix():
   block[0][0] = Block(0)
   block[0][0].calc1ticket(0)
   hiWaterMark=5
   for i in xrange(hiWaterMark):
     for j in xrange(1,10):
-      block[i][j]=block[i][0].clone(j)
+      block[i][j]=block[i][0].createBigger(j)
     block[i+1][0] = Block(i+1).build()
       
   for i in xrange(hiWaterMark):
