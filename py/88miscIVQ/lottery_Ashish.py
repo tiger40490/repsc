@@ -3,6 +3,7 @@ showcase Counter to merge two dictionaries
 showcase inspect.stack() to get current function name
 showcase calling superclass constructor
 showcase operator //
+showcase: The global matrix of TicRange objects greatly simplifies implementation, though global variables are considered a code smell. I feel this is a legitimate design choice.
 
 todo: simplify
 todo: more sanity checks
