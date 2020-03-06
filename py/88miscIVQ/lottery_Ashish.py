@@ -5,6 +5,7 @@ showcase calling superclass constructor
 showcase operator //
 
 todo: simplify
+todo: build() can create all the biggerClones !
 todo: add more sanity checks
 todo: highest ticket 
 
@@ -126,26 +127,20 @@ class Block(TicRange):
       tbl = block[pre][1].clone(i)
       self.table = dict(Counter(tbl.table) + Counter(self.table))
       if log >= 3: print self.table
+      hi2 = '9'*(self.digitCnt-1)
+      hi2 = str(i)+hi2
+      block[pre][i+1] = tmp2 = TicRange(0, int(hi2))
+      tmp2.table = dict(self.table)
+      if log: print tmp2
+      
     if log >=2: print self
     block[self.digitCnt][1]=self
-  def cloneBigger(self, prefix1_9): #create a bigger clone of self
-    assert 0 < prefix1_9 and prefix1_9 <= 9
-    prevRange = dict(block[self.digitCnt][prefix1_9].table)
-    hi = int(str(prefix1_9)+str(self.hi)) if self.hi else prefix1_9
-    ret = block[self.digitCnt][prefix1_9+1] = TicRange(0, hi)
-
-    tmp = block[self.digitCnt][1].clone(prefix1_9)
-    ret.table = dict(Counter(tmp.table) + Counter(prevRange))
-        
-    if log > 1: print inspect.stack()[0][3] + "() returning", ret
-    return ret
 def precomputeMatrix():
   block[0][1] = Block(0)
   block[0][1].calc1ticket(0)
   hiWaterMark=5
   for i in xrange(hiWaterMark):
-    for j in xrange(1,10):
-      block[i][1].cloneBigger(j)
+    #for j in xrange(1,10): block[i][1].cloneBigger(j)
     Block(i+1).build()
       
   for i in xrange(hiWaterMark):
