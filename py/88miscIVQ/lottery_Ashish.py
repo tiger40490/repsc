@@ -3,7 +3,9 @@ showcase inspect.stack() to get current function name
 showcase calling superclass constructor
 showcase operator //
 
-rename to hashCollide.py
+todo: memoization during createBigger
+
+rename to hashCollide_Ashish.py
 
 Q: once I build R8500, how best to build R28500? So far I need to shift R8500 to 20000-28500 first.
 
@@ -74,7 +76,7 @@ class TicRange:
   def subtract(self, otherTable):
     pass
   def clone(self, prefix): # create a new frqtble (not a Block) of same size as self.table
-      assert 0 < prefix
+      assert 0 < prefix and prefix < 99999999999
       hi = int(str(prefix)+str(self.hi)) if self.hi else prefix
       newtbl = TicRange(hi-self.hi+self.lo, hi) # Shift-up logic !
       
@@ -127,14 +129,15 @@ class Block(TicRange):
     assert 0 < prefix and prefix <= 9
     pre = self.digits
     assert block[pre][0]
-    table = dict(block[pre][0].table)
-    for i in xrange(1,prefix+1):
-      tbl = block[pre][0].clone(i)
-      table = dict(Counter(tbl.table) + Counter(table))
-      if log >= 3: print table
+    table = dict(block[pre][prefix-1].table)
+    tbl = block[pre][0].clone(prefix)
+    table = dict(Counter(tbl.table) + Counter(table))
+    if log >= 3: print table
     hi = int(str(prefix)+str(self.hi)) if self.hi else prefix
     ret = TicRange(0, hi)
     ret.table = table
+    if log > 0: print inspect.stack()[0][3] + "() returning", ret
+    block[pre][prefix] = ret
     return ret
 def precomputeMatrix():
   block[0][0] = Block(0)
@@ -142,7 +145,7 @@ def precomputeMatrix():
   hiWaterMark=5
   for i in xrange(hiWaterMark):
     for j in xrange(1,10):
-      block[i][j]=block[i][0].createBigger(j)
+      block[i][0].createBigger(j)
     block[i+1][0] = Block(i+1).build()
       
   for i in xrange(hiWaterMark):
@@ -160,7 +163,10 @@ def do1end(hi):
   for w in range(1, 1+len(digits)):
     theDigit=digits[-w]
     blk = block[w-1][int(theDigit)-1]
+    if log > 1: print 'blk=', blk
     prefix=''.join(digits[:-w])
+    if theDigit=='0':
+       prefix +='0'
     clone=blk.clone(int(prefix)) if prefix else blk
     print theDigit+'=theDigit, wei=', w, prefix, '=prefix',clone
   '''lowest digit is 2: block[0][2] clone(restOfDigits)
@@ -170,7 +176,7 @@ def solve(lo,hi):
   print lo,hi,'->',
   return solveInLinearTime(lo, hi)
 def testAll():
-  do1end(38512)
+  do1end(38512) #512 has bug
   return
   blk = block[2][3]
   print '\n',blk
