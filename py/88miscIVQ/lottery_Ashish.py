@@ -85,7 +85,7 @@ class TicRange:
       
       prefixCoupon=calcHash(prefix)
       for coupon, frq in self.table.iteritems():
-        newtbl.table[coupon+prefixCoupon]=frq
+        newtbl.table[coupon + prefixCoupon]=frq
       if log >= 2: 
         print newtbl
       else: 
@@ -114,12 +114,12 @@ class TicRange:
     ret += str(self.table)
     return ret
 class Block(TicRange):
-  def __init__(self,digits):
-    hi = -1+10**(digits) #3-digit .. 999
+  def __init__(self,digitCnt):
+    hi = -1+10**(digitCnt) #3-digit .. 999
     TicRange.__init__(self, 0, hi)
-    self.digits = digits
-  def build(self): #buildFromPrevBlock
-    pre = self.digits-1 
+    self.digitCnt = digitCnt
+  def build(self): #buildTbl
+    pre = self.digitCnt-1 
     assert block[pre][1]
     self.table = dict(block[pre][1].table)
     for i in xrange(1,10):
@@ -128,17 +128,18 @@ class Block(TicRange):
       if log >= 3: print self.table
     if log >=2: print self
     return self
-  def cloneBigger(self, prefix1_9):
+  def cloneBigger(self, prefix1_9): #create a bigger clone of self
     assert 0 < prefix1_9 and prefix1_9 <= 9
-    table = dict(block[self.digits][prefix1_9].table)
-    tbl = block[self.digits][1].clone(prefix1_9)
-    table = dict(Counter(tbl.table) + Counter(table))
-    if log >= 3: print table
+    prevRange = dict(block[self.digitCnt][prefix1_9].table)
+    tmp = block[self.digitCnt][1].clone(prefix1_9)
+    newTbl = dict(Counter(tmp.table) + Counter(prevRange))
+    if log >= 3: print newTbl
+    
     hi = int(str(prefix1_9)+str(self.hi)) if self.hi else prefix1_9
     ret = TicRange(0, hi)
-    ret.table = table
+    ret.table = newTbl
     if log > 1: print inspect.stack()[0][3] + "() returning", ret
-    block[self.digits][prefix1_9+1] = ret
+    block[self.digitCnt][prefix1_9+1] = ret
     return ret
 def precomputeMatrix():
   block[0][1] = Block(0)
