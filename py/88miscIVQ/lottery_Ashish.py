@@ -4,7 +4,7 @@ showcase inspect.stack() to get current function name
 showcase calling superclass constructor
 showcase operator //
 
-todo: memoization during cloneBigger
+todo: do1end last ticket 
 
 rename to hashCollide_Ashish.py
 
@@ -66,7 +66,7 @@ Now for 0-28512, I already have bb19999 and need 20000-28512
 For 28000-28512, I expand bb499 to R512, then prefix the string '28'. So the frq table for 28000-20512 can be generated
 For (easier) 20000-27999, I already have bb7999, so I prefix '2' to generate its frq table
 '''
-block=[[0 for x in range(10)] for y in range(19)]# the building blocks
+block=[[0 for x in range(11)] for y in range(19)]# the building blocks
 class TicRange:
   def __init__(self,lo,hi):
     self.lo=lo
@@ -118,39 +118,37 @@ class Block(TicRange):
     self.digits = digits
   def build(self): #buildFromPrevBlock
     pre = self.digits-1 
-    assert block[pre][0]
-    self.table = dict(block[pre][0].table)
+    assert block[pre][1]
+    self.table = dict(block[pre][1].table)
     for i in xrange(1,10):
-      tbl = block[pre][0].clone(i)
+      tbl = block[pre][1].clone(i)
       self.table = dict(Counter(tbl.table) + Counter(self.table))
       if log >= 3: print self.table
     if log >=2: print self
     return self
   def cloneBigger(self, prefix1_9):
     assert 0 < prefix1_9 and prefix1_9 <= 9
-    pre = self.digits
-    assert block[pre][0]
-    table = dict(block[pre][prefix1_9-1].table)
-    tbl = block[pre][0].clone(prefix1_9)
+    table = dict(block[self.digits][prefix1_9].table)
+    tbl = block[self.digits][1].clone(prefix1_9)
     table = dict(Counter(tbl.table) + Counter(table))
     if log >= 3: print table
     hi = int(str(prefix1_9)+str(self.hi)) if self.hi else prefix1_9
     ret = TicRange(0, hi)
     ret.table = table
     if log > 0: print inspect.stack()[0][3] + "() returning", ret
-    block[pre][prefix1_9] = ret
+    block[self.digits][prefix1_9+1] = ret
     return ret
 def precomputeMatrix():
-  block[0][0] = Block(0)
-  block[0][0].calc1ticket(0)
+  block[0][1] = Block(0)
+  block[0][1].calc1ticket(0)
   hiWaterMark=5
   for i in xrange(hiWaterMark):
     for j in xrange(1,10):
-      block[i][0].cloneBigger(j)
-    block[i+1][0] = Block(i+1).build()
+      block[i][1].cloneBigger(j)
+    block[i+1][1] = Block(i+1).build()
       
   for i in xrange(hiWaterMark):
-    for j in xrange(10):
+    for j in xrange(1,10):
       blk = block[i][j]
       cnt = len(blk.table)
       if log >= 1:
@@ -163,7 +161,7 @@ def do1end(hi):
   digits=list(str(hi))
   for w in range(1, 1+len(digits)):
     theDigit=digits[-w]
-    blk = block[w-1][int(theDigit)-1]
+    blk = block[w-1][int(theDigit)]
     if log > 1: print 'blk=', blk
     prefix=''.join(digits[:-w])
     if theDigit=='0':
