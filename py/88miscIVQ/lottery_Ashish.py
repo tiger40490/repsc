@@ -4,7 +4,8 @@ showcase inspect.stack() to get current function name
 showcase calling superclass constructor
 showcase operator //
 
-todo: do1end last ticket 
+todo: highest ticket 
+todo: simplify
 
 rename to hashCollide_Ashish.py
 
@@ -161,11 +162,13 @@ def do1end(hi):
   digits=list(str(hi))
   for w in range(1, 1+len(digits)):
     theDigit=digits[-w]
+    if theDigit == '0': continue      
+    
     blk = block[w-1][int(theDigit)]
-    if log > 1: print 'blk=', blk
     prefix=''.join(digits[:-w])
-    if theDigit=='0':
+    if theDigit=='1':
        prefix +='0'
+    if log >1: print prefix, '=prefix, blk=', blk
     clone=blk.clone(int(prefix)) if prefix else blk
     print theDigit+'=theDigit, wei=', w, prefix, '=prefix',clone
   '''lowest digit is 2: block[0][2] clone(restOfDigits)
@@ -175,11 +178,8 @@ def solve(lo,hi):
   print lo,hi,'->',
   return solveInLinearTime(lo, hi)
 def testAll():
-  do1end(38512) #512 has bug
+  do1end(38011)
   return
-  blk = block[2][3]
-  print '\n',blk
-  print blk.clone(50)
   assert (1,2) == solve(1,10)
   assert (5,1) == solve(1,5)
   assert (1,2) == solve(3,12)
