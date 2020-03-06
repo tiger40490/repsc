@@ -4,8 +4,9 @@ showcase inspect.stack() to get current function name
 showcase calling superclass constructor
 showcase operator //
 
-todo: highest ticket 
 todo: simplify
+todo: add more sanity checks
+todo: highest ticket 
 
 rename to hashCollide_Ashish.py
 
@@ -18,7 +19,7 @@ from collections import defaultdict, Counter
 from pprint import pprint
 import inspect
 log=1 # 0 means minimal; 1 means normal; 2 means verbose
-def calcCoupon(tic):
+def calcHash(tic):
   orig = tic # for debugging
   ret = 0
   while tic > 0:
@@ -44,7 +45,7 @@ def buildFrqTable(lo, hi):
   frqTable=defaultdict(int)
   sameCouponTickets=defaultdict(list) #each dict Value is a club of tickets, having the same coupon code
   for tic in xrange(lo, hi+1): # O(N) loop for N tickets
-    coupon = calcCoupon(tic)
+    coupon = calcHash(tic)
     frqTable[coupon] += 1
     sameCouponTickets[coupon].append(tic) # ticket joins the correct club
     maxClubSize = max(maxClubSize, len(sameCouponTickets[coupon]))
@@ -74,15 +75,15 @@ class TicRange:
     self.hi=hi
     self.table=defaultdict(int)
   def calc1ticket(self,tic):
-    self.table[calcCoupon(tic)] += 1
+    self.table[calcHash(tic)] += 1
   def subtract(self, otherTable):
     pass
   def clone(self, prefix): # create a new frqtble (not a Block) of same size as self.table
       assert 0 < prefix and prefix < 99999999999
-      hi = int(str(prefix)+str(self.hi)) if self.hi else prefix
-      newtbl = TicRange(hi-self.hi+self.lo, hi) # Shift-up logic !
+      high = int(str(prefix)+str(self.hi)) if self.hi else prefix
+      newtbl = TicRange(high-self.hi+self.lo, high) # Shift-up logic !
       
-      prefixCoupon=calcCoupon(prefix)
+      prefixCoupon=calcHash(prefix)
       for coupon, frq in self.table.iteritems():
         newtbl.table[coupon+prefixCoupon]=frq
       if log >= 2: 
@@ -136,7 +137,7 @@ class Block(TicRange):
     hi = int(str(prefix1_9)+str(self.hi)) if self.hi else prefix1_9
     ret = TicRange(0, hi)
     ret.table = table
-    if log > 0: print inspect.stack()[0][3] + "() returning", ret
+    if log > 1: print inspect.stack()[0][3] + "() returning", ret
     block[self.digits][prefix1_9+1] = ret
     return ret
 def precomputeMatrix():
@@ -160,8 +161,9 @@ def solveDP(lo,hi): #incomplete
 def do1end(hi):
   precomputeMatrix()
   digits=list(str(hi))
-  for w in range(1, 1+len(digits)):
-    theDigit=digits[-w]
+  clones=list()
+  for w in range(1, 1+len(digits)): 
+    theDigit=digits[-w] #w means radix position
     if theDigit == '0': continue      
     
     blk = block[w-1][int(theDigit)]
@@ -170,10 +172,12 @@ def do1end(hi):
        prefix +='0'
     if log >1: print prefix, '=prefix, blk=', blk
     clone=blk.clone(int(prefix)) if prefix else blk
-    print theDigit+'=theDigit, wei=', w, prefix, '=prefix',clone
-  '''lowest digit is 2: block[0][2] clone(restOfDigits)
-  '''
+    clones.insert(0,clone)
+    if log: print theDigit+'=theDigit, wei=', w, prefix, '=prefix',clone
+  
   print digits
+  for c in xrange(1,len(clones)):
+     assert clones[c-1].hi +1 == clones[c].lo, '%d+1!=%d' %(clones[c-1].hi +1, clones[c].lo)
 def solve(lo,hi):
   print lo,hi,'->',
   return solveInLinearTime(lo, hi)
