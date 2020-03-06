@@ -50,9 +50,11 @@ def buildFrqTable(lo, hi):
 I decided to create classes to /cope/ with the potential increase in complexity. I may overestimate this increase and find a simpler solution, which doesn't need custom classes. Some programmers may dismiss the OO design as unnecessary and complicated, but at this moment, I don't know of any simple solution and OO should NOT complicate the situation.
 
 Basic operation: join two ranges - adjacent non-overlapping ranges
-Basic operation: shift a range up with prefix
+Basic operation: shift a range up with prefix.
 
-Based on input range, we have pre-computed enough building blocks
+These are hidden "constraints".
+
+Based on input range, we pre-compute enough building blocks
 bb99   bb199    bb299 ..
 bb999  bb1999   bb2999 ..
 bb9999 bb19999  bb29999 ..
@@ -73,7 +75,7 @@ class TicRange:
   def clone(self, prefix): # create a new frqtble (not a Block) of same size as self.table
       assert 0 < prefix
       hi = int(str(prefix)+str(self.hi)) if self.hi else prefix
-      newtbl = TicRange(hi-self.hi+self.lo, hi)
+      newtbl = TicRange(hi-self.hi+self.lo, hi) # Shift-up logic !
       
       prefixCoupon=calcCoupon(prefix)
       for coupon, frq in self.table.iteritems():
