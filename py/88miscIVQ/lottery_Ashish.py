@@ -127,7 +127,7 @@ class Block(TicRange):
       self.table = dict(Counter(tbl.table) + Counter(self.table))
       if log >= 3: print self.table
     if log >=2: print self
-    return self
+    block[self.digitCnt][1]=self
   def cloneBigger(self, prefix1_9): #create a bigger clone of self
     assert 0 < prefix1_9 and prefix1_9 <= 9
     prevRange = dict(block[self.digitCnt][prefix1_9].table)
@@ -146,7 +146,7 @@ def precomputeMatrix():
   for i in xrange(hiWaterMark):
     for j in xrange(1,10):
       block[i][1].cloneBigger(j)
-    block[i+1][1] = Block(i+1).build()
+    Block(i+1).build()
       
   for i in xrange(hiWaterMark):
     for j in xrange(1,10):
