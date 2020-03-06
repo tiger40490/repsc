@@ -78,12 +78,12 @@ class TicRange:
     self.table[calcHash(tic)] += 1
   def subtract(self, otherTable):
     pass
-  def clone(self, prefix): # create a new TicRange (not a Block) of same size as self
-      assert 0 < prefix and prefix < 99999999999999
-      high = int(str(prefix)+str(self.hi)) if self.hi else prefix
+  def clone(self, longPrefix): # create a new TicRange (not a Block) of same size as self
+      assert 0 < longPrefix and longPrefix < 99999999999999
+      high = int(str(longPrefix)+str(self.hi)) if self.hi else longPrefix
       newtbl = TicRange(high-self.hi+self.lo, high) # Shift-up logic !
       
-      prefixCoupon=calcHash(prefix)
+      prefixCoupon=calcHash(longPrefix)
       for coupon, frq in self.table.iteritems():
         newtbl.table[coupon + prefixCoupon]=frq
       if log >= 2: 
