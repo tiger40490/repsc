@@ -1,9 +1,10 @@
 '''
+showcase Counter to merge two dictionaries
 showcase inspect.stack() to get current function name
 showcase calling superclass constructor
 showcase operator //
 
-todo: memoization during createBigger
+todo: memoization during cloneBigger
 
 rename to hashCollide_Ashish.py
 
@@ -125,19 +126,19 @@ class Block(TicRange):
       if log >= 3: print self.table
     if log >=2: print self
     return self
-  def createBigger(self, prefix):
-    assert 0 < prefix and prefix <= 9
+  def cloneBigger(self, prefix1_9):
+    assert 0 < prefix1_9 and prefix1_9 <= 9
     pre = self.digits
     assert block[pre][0]
-    table = dict(block[pre][prefix-1].table)
-    tbl = block[pre][0].clone(prefix)
+    table = dict(block[pre][prefix1_9-1].table)
+    tbl = block[pre][0].clone(prefix1_9)
     table = dict(Counter(tbl.table) + Counter(table))
     if log >= 3: print table
-    hi = int(str(prefix)+str(self.hi)) if self.hi else prefix
+    hi = int(str(prefix1_9)+str(self.hi)) if self.hi else prefix1_9
     ret = TicRange(0, hi)
     ret.table = table
     if log > 0: print inspect.stack()[0][3] + "() returning", ret
-    block[pre][prefix] = ret
+    block[pre][prefix1_9] = ret
     return ret
 def precomputeMatrix():
   block[0][0] = Block(0)
@@ -145,7 +146,7 @@ def precomputeMatrix():
   hiWaterMark=5
   for i in xrange(hiWaterMark):
     for j in xrange(1,10):
-      block[i][0].createBigger(j)
+      block[i][0].cloneBigger(j)
     block[i+1][0] = Block(i+1).build()
       
   for i in xrange(hiWaterMark):
