@@ -13,6 +13,7 @@ Can we eliminate a big chunk of the range?
 from collections import defaultdict, Counter 
 from pprint import pprint
 import inspect
+log=1 # 0 means minimal; 1 means normal; 2 means verbose
 def calcCoupon(tic):
   orig = tic # for debugging
   ret = 0
@@ -20,7 +21,7 @@ def calcCoupon(tic):
     ret += tic%10
     tic //= 10
   #print orig, '->', 
-  if False and orig%10 ==0: 
+  if log >=2 and orig%10 ==0: 
     cnt=ret-1 #(orig/10)%10
     print '  (%d..%d)\n' % (orig-10,orig-1),
     print '   '*cnt,
@@ -80,26 +81,28 @@ class TicRange:
       prefixCoupon=calcCoupon(prefix)
       for coupon, frq in self.table.iteritems():
         newtbl.table[coupon+prefixCoupon]=frq
-      newtbl.checkCompletion()
+      if log >= 2: 
+        print newtbl
+      else: 
+        newtbl.checkCompletion()
       return newtbl
-  def verify(self):
-    print '(' + inspect.stack()[0][3],
+  def reconcile(self):
+    if log > 0: print '('+str(self.lo)+'..'+str(self.hi), inspect.stack()[0][3],
     if self.hi > 99999: 
-      print 'skippped)'
+      if log > 0: print 'skippped)'
       return
     _, _, reference=buildFrqTable(self.lo, self.hi)
     assert reference == self.table
-    print 'OK :)'
+    if log > 0: print 'OK :)'
   def checkCompletion(self):
     totalFrq = 0
     self.table = dict(self.table) # avoid defaultdict
     for k,v in self.table.iteritems():
-      #print k,v
+      if log >=3: print k,v
       assert k >= 0 and v > 0
       totalFrq += v
-    #print totalFrq, self.hi, self.lo
-    assert totalFrq == self.hi+1 - self.lo
-    self.verify()
+    assert (totalFrq == self.hi+1 - self.lo) , '%d..%d do not contain %d tickets'%(self.lo, self.hi, totalFrq) #valuable check!
+    self.reconcile()
     return totalFrq
   def __str__(self):
     ret = '%d..%d: %d ' % (self.lo, self.hi, self.checkCompletion())
@@ -117,8 +120,8 @@ class Block(TicRange):
     for i in xrange(1,10):
       tbl = block[pre][0].clone(i)
       self.table = dict(Counter(tbl.table) + Counter(self.table))
-      #print self.table
-    print self
+      if log >= 3: print self.table
+    if log >=2: print self
     return self
 def precomputeMatrix():
   block[0][0] = Block(0)
@@ -133,7 +136,8 @@ def precomputeMatrix():
     for j in xrange(10):
       blk = block[i][j]
       cnt = len(blk.table)
-      print 'size-checking [', i,j, ']: club size=',cnt, blk.lo, '..', blk.hi
+      if log >= 1:
+        print 'size-checking Mat[', i,j, ']: club size=',cnt, blk.lo, '..', blk.hi
       assert cnt      
 def solveDP(lo,hi): #incomplete
   pass
@@ -141,17 +145,17 @@ def solveDP(lo,hi): #incomplete
 def solve(lo,hi):
   print lo,hi,'->',
   return solveInLinearTime(lo, hi)
-def main():
+def testAll():
   precomputeMatrix()
   blk = block[2][3]
   print '\n',blk
-  blk.clone(50)
+  print blk.clone(50)
   #test(); 
   return
   assert (1,2) == solve(1,10)
   assert (5,1) == solve(1,5)
   assert (1,2) == solve(3,12)
-main()
+testAll()
 '''Req: in a lottery each ticket has a positive int ID. It has a (non-unique) hashcode equal to the sum of its digits. The hashcode is also known as the coupon code of the ticket.
 
 For a range of ticket IDs, find the ("hottest") hashcode with the largest population of tickets.
