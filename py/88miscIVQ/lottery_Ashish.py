@@ -5,9 +5,7 @@ showcase calling superclass constructor
 showcase operator //
 
 todo: simplify
-todo: build() can create all the biggerClones !
-todo: add more sanity checks
-todo: highest ticket 
+todo: more sanity checks
 
 rename to hashCollide_Ashish.py
 
@@ -73,7 +71,7 @@ block=[[0 for x in range(11)] for y in range(19)]# the building blocks
 class TicRange:
   def __init__(self,lo,hi):
     self.lo=lo
-    self.hi=hi
+    self.hi=int(hi)
     self.table=defaultdict(int)
   def calc1ticket(self,tic):
     self.table[calcHash(tic)] += 1
@@ -87,10 +85,9 @@ class TicRange:
       prefixCoupon=calcHash(longPrefix)
       for coupon, frq in self.table.iteritems():
         newtbl.table[coupon + prefixCoupon]=frq
-      if log >= 2: 
-        print newtbl
-      else: 
-        newtbl.checkCompletion()
+      
+      if log >= 2: print newtbl
+      else: newtbl.checkCompletion()
       return newtbl
   def reconcile(self):
     if log > 0: print '('+str(self.lo)+'..'+str(self.hi), inspect.stack()[0][3],
@@ -125,24 +122,22 @@ class Block(TicRange):
     self.table = dict(block[pre][1].table)
     for i in xrange(1,10):
       tbl = block[pre][1].clone(i)
-      self.table = dict(Counter(tbl.table) + Counter(self.table))
-      if log >= 3: print self.table
       hi2 = '9'*(self.digitCnt-1)
-      hi2 = str(i)+hi2
-      block[pre][i+1] = tmp2 = TicRange(0, int(hi2))
-      tmp2.table = dict(self.table)
-      if log: print tmp2
+      block[pre][i+1] = tmp2 = TicRange(0, str(i)+hi2)
+      self.table = tmp2.table = dict(Counter(tbl.table) + Counter(self.table))
+      if log > 1: print tmp2
       
     if log >=2: print self
     block[self.digitCnt][1]=self
 def precomputeMatrix():
+  if block[2][10]: return
   block[0][1] = Block(0)
   block[0][1].calc1ticket(0)
   hiWaterMark=5
-  for i in xrange(hiWaterMark):
-    #for j in xrange(1,10): block[i][1].cloneBigger(j)
-    Block(i+1).build()
+  for i in xrange(1, hiWaterMark+1):
+    Block(i).build()
       
+  # verify
   for i in xrange(hiWaterMark):
     for j in xrange(1,10):
       blk = block[i][j]
@@ -169,6 +164,12 @@ def do1end(hi):
     clones.insert(0,clone)
     if log: print theDigit+'=theDigit, wei=', w, prefix, '=prefix',clone
   
+  last=clones[-1] # add the highest ticket
+  last.table = defaultdict(int, last.table)
+  last.hi=hi
+  last.calc1ticket(hi)
+  if log: print last
+
   print digits
   for c in xrange(1,len(clones)):
      assert clones[c-1].hi +1 == clones[c].lo, '%d+1!=%d' %(clones[c-1].hi +1, clones[c].lo)
@@ -177,6 +178,8 @@ def solve(lo,hi):
   return solveInLinearTime(lo, hi)
 def testAll():
   do1end(38011)
+  do1end(38001)
+  do1end(3800)
   return
   assert (1,2) == solve(1,10)
   assert (5,1) == solve(1,5)
