@@ -8,7 +8,7 @@ def solve(orig, roll):
   for i in range(len(roll)-1,-1,-1):
     if roll[i] == 0: roll.pop()
   roll.reverse()
-  print roll
+  print 'sorted ascending with zeros removed:', roll
   sz = len(orig); rollCnt=len(roll)
   ret = list()
   for pos in xrange(sz):
