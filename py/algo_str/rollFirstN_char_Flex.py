@@ -12,7 +12,6 @@ def solve(orig, roll):
   sz = len(orig); rollCnt=len(roll)
   ret = list()
   for pos in xrange(sz):
-    # compute how many rolls affect this position. use bisect to find pos within roll
     howManyMissMe = bisect_right(roll, pos)
     ch = orig[pos]
     print howManyMissMe,'=howManyMissMe; ch=',ch
@@ -28,5 +27,5 @@ def main():
   assert 'aaaaa' == solve('vwxyz', [1,2,3,4,5])
 #  solve('abc', [0,0,1,1,2,2,2,3,3])
 main()
-'''Req: 
+'''Req: See Deepak email 7 Mar 2019
 '''
