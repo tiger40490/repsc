@@ -77,7 +77,7 @@ class TicRange:
   def subtract(self, otherTable):
     pass
   def clone(self, longPrefix): # create a new TicRange (not a Block) of same size as self
-      assert 0 < longPrefix and longPrefix < 99999999999999
+      assert 0 < longPrefix and longPrefix < 99999999999999, '%d'%longPrefix
       high = int(str(longPrefix)+str(self.hi)) if self.hi else longPrefix
       newtbl = TicRange(high-self.hi+self.lo, high) # Shift-up logic !
       
@@ -145,8 +145,12 @@ def precomputeMatrix():
         print 'size-checking Mat[', i,j, ']: club size=',cnt, blk.lo, '..', blk.hi
       assert cnt      
 def solveDP(lo,hi): #incomplete
-  pass
-def do1end(hi):
+  _,_,expected = buildFrqTable(lo,hi)
+  diff = doOneSide(hi) - doOneSide(lo-1)
+  print 'doOneSide() - doOneSide() =', diff
+  print 'buildFrqTable() returned', expected
+  assert expected == diff
+def doOneSide(hi):
   precomputeMatrix()
   digits=list(str(hi))
   segments=list()
@@ -158,10 +162,12 @@ def do1end(hi):
     prefix=''.join(digits[:-w])
     if theDigit=='1':
        prefix +='0'
-    if log >1: print prefix, '=prefix, blk=', blk
-    clone=blk.clone(int(prefix)) if prefix else blk
+    if log >0: print prefix, '=prefix, blk=', blk,'-end-'
+    clone = blk
+    if prefix and prefix != '0':
+      clone=blk.clone(int(prefix))
     segments.insert(0,clone)
-    if log: print theDigit+'=theDigit, wei=', w, prefix, '=prefix',clone
+    if log: print theDigit+'=theDigit, wei=', w, prefix, '=prefix',clone, '--end--'
   
   last=segments[-1] # add the highest ticket
   last.table = defaultdict(int, last.table)
@@ -183,14 +189,16 @@ def do1end(hi):
   print 'buildFrqTable() returned', expected
   print 'allSeg =',allSeg
   assert allSeg == expected
-  
+  return allSeg
 def solve(lo,hi):
   print lo,hi,'->',
   return solveInLinearTime(lo, hi)
 def testAll():
-  do1end(38011)
-  do1end(38001)
-  do1end(3800)
+  doOneSide(11)
+  doOneSide(38011)
+  doOneSide(38001)
+  doOneSide(3800)
+  solveDP(8011,38011)
   return
   assert (1,2) == solve(1,10)
   assert (5,1) == solve(1,5)
