@@ -1,3 +1,9 @@
+'''
+showcase idiom: reverse-iterate a list using the index values last, last-1, ...0
+
+showcase: character relacement by position in a string is not allowed in python, so I populate a list of chars one by one. I think this is efficient and clean. Note str.replace() creates a copy anywah. No in-place replacement.
+
+'''
 from bisect import *
 def rollBy(ch, increment):
   old = ord(ch)-ord('a')
@@ -5,19 +11,20 @@ def rollBy(ch, increment):
   return chr(new)
 def solve(orig, roll):
   roll.sort(reverse=True)
-  for i in range(len(roll)-1,-1,-1):
-    if roll[i] == 0: roll.pop()
-  roll.reverse()
+  arrSize=len(roll)
+  for i in xrange(arrSize-1, -1, -1):
+    if roll[i] == 0: roll.pop() # remove zeros from back of the vector
+  roll.reverse() # asending order
   print 'sorted ascending with zeros removed:', roll
-  sz = len(orig); rollCnt=len(roll)
-  ret = list()
-  for pos in xrange(sz):
+  
+  strSize = len(orig); rollCnt=len(roll); ret = list()
+  for pos in xrange(strSize):
     howManyMissMe = bisect_right(roll, pos)
     ch = orig[pos]
     print howManyMissMe,'=howManyMissMe; ch=',ch
     
     newCh = rollBy(ch, rollCnt-howManyMissMe)
-    print ch, newCh
+    print ch, 'rolls to', newCh
     ret.append(newCh)
   print ret
   return ''.join(ret)
@@ -28,4 +35,5 @@ def main():
 #  solve('abc', [0,0,1,1,2,2,2,3,3])
 main()
 '''Req: See Deepak email 7 Mar 2019
+All hackerrank tests passed
 '''
