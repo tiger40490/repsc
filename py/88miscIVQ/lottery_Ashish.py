@@ -121,10 +121,10 @@ class Block(TicRange):
     assert block[pre][1]
     self.table = dict(block[pre][1].table)
     for i in xrange(1,10):
-      tbl = block[pre][1].clone(i)
-      hi2 = '9'*(self.digitCnt-1)
-      block[pre][i+1] = tmp2 = TicRange(0, str(i)+hi2)
-      self.table = tmp2.table = dict(Counter(tbl.table) + Counter(self.table))
+      tmpTbl = block[pre][1].clone(i)
+      tmpHi = '9'*(self.digitCnt-1)
+      block[pre][i+1] = tmp2 = TicRange(0, str(i)+tmpHi)
+      self.table = tmp2.table = dict(Counter(tmpTbl.table) + Counter(self.table))
       if log > 1: print tmp2
       
     if log >=2: print self
@@ -153,14 +153,14 @@ def solveDP(lo,hi): #incomplete
   assert expected == diff
 def doOneSide(hi):
   precomputeMatrix()
-  digits=list(str(hi))
+  digitLi=list(str(hi))
   segments=list()
-  for w in range(1, 1+len(digits)): 
-    theDigit=digits[-w] #w means radix position
+  for w in range(1, 1+len(digitLi)): 
+    theDigit=digitLi[-w] #w means radix position
     if theDigit == '0': continue      
     
     blk = block[w-1][int(theDigit)]
-    prefix=''.join(digits[:-w])
+    prefix=''.join(digitLi[:-w])
     if theDigit=='1':
        prefix +='0'
     if log >0: print prefix, '=prefix, blk=', blk,'-end-'
@@ -176,12 +176,12 @@ def doOneSide(hi):
   last.calc1ticket(hi)
   if log: print last
 
-  # verify
-  print digits
+  # verify count
+  print digitLi
   for c in xrange(1,len(segments)):
      assert segments[c-1].hi +1 == segments[c].lo, '%d+1!=%d' %(segments[c-1].hi +1, segments[c].lo)
   
-  # add up
+  # add up all segments
   allSeg = Counter()
   for seg in segments:
     allSeg += Counter(seg.table)
