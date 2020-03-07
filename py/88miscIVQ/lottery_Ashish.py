@@ -5,7 +5,7 @@ showcase calling superclass constructor
 showcase operator //
 showcase: The global matrix of TicRange objects greatly simplifies implementation, though global variables are considered a code smell. I feel this is a legitimate design choice.
 
-todo: simplify. Still feels too complicated but this is a lot better than the initial versions.
+todo: simplify clone(), build() and doOneSide(). Still feels too complicated but this is a lot better than the initial versions.
 todo: more sanity checks
 
 rename to hashCollide_Ashish.py
@@ -77,7 +77,7 @@ class TicRange:
   def subtract(self, otherTable):
     pass
   def clone(self, longPrefix): # create a new TicRange (not a Block) of same size as self
-      assert 0 < longPrefix and longPrefix < 99999999999999, '%d'%longPrefix
+      assert 0 < longPrefix and longPrefix < 99999999999999, '%d is out of range'%longPrefix
       high = int(str(longPrefix)+str(self.hi)) if self.hi else longPrefix
       newtbl = TicRange(high-self.hi+self.lo, high) # Shift-up logic !
       
@@ -85,6 +85,7 @@ class TicRange:
       for coupon, frq in self.table.iteritems():
         newtbl.table[coupon + prefixCoupon]=frq
       
+      # logging:
       if log >= 2: print newtbl
       else: newtbl.checkCompletion()
       return newtbl
