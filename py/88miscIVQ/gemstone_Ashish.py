@@ -1,5 +1,5 @@
 '''
-showcase set(aString), as Ashish taught me. However better avoid hashtable as the keys are a-z. Perfect hashing would use a 26-element array
+showcase set(aString), as Ashish taught me. However for time/space efficiency, better avoid hashtable when the keys are a-z. Perfect hashing would use a 26-element array.
 '''
 from collections import defaultdict
 
