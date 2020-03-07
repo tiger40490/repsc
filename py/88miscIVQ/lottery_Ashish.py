@@ -1,16 +1,14 @@
 '''
-showcase Counter to merge two dictionaries
+showcase collections.Counter to merge two dictionaries
 showcase inspect.stack() to get current function name
 showcase calling superclass constructor
 showcase operator //
 showcase: The global matrix of TicRange objects greatly simplifies implementation, though global variables are considered a code smell. I feel this is a legitimate design choice.
 
-todo: simplify
+todo: simplify. Still feels too complicated but this is a lot better than the initial versions.
 todo: more sanity checks
 
 rename to hashCollide_Ashish.py
-
-Q: once I build R8500, how best to build R28500? So far I need to shift R8500 to 20000-28500 first.
 
 (If we aim at the original smaller challenge) Q: Is it possible that the winner for range 0-12345 is same as a simpler range?
 Can we eliminate a big chunk of the range?
@@ -151,7 +149,7 @@ def solveDP(lo,hi): #incomplete
 def do1end(hi):
   precomputeMatrix()
   digits=list(str(hi))
-  clones=list()
+  segments=list()
   for w in range(1, 1+len(digits)): 
     theDigit=digits[-w] #w means radix position
     if theDigit == '0': continue      
@@ -162,18 +160,30 @@ def do1end(hi):
        prefix +='0'
     if log >1: print prefix, '=prefix, blk=', blk
     clone=blk.clone(int(prefix)) if prefix else blk
-    clones.insert(0,clone)
+    segments.insert(0,clone)
     if log: print theDigit+'=theDigit, wei=', w, prefix, '=prefix',clone
   
-  last=clones[-1] # add the highest ticket
+  last=segments[-1] # add the highest ticket
   last.table = defaultdict(int, last.table)
   last.hi=hi
   last.calc1ticket(hi)
   if log: print last
 
+  # verify
   print digits
-  for c in xrange(1,len(clones)):
-     assert clones[c-1].hi +1 == clones[c].lo, '%d+1!=%d' %(clones[c-1].hi +1, clones[c].lo)
+  for c in xrange(1,len(segments)):
+     assert segments[c-1].hi +1 == segments[c].lo, '%d+1!=%d' %(segments[c-1].hi +1, segments[c].lo)
+  
+  # add up
+  allSeg = Counter()
+  for seg in segments:
+    allSeg += Counter(seg.table)
+  # reconcile
+  _,_,expected = buildFrqTable(0,hi)
+  print 'buildFrqTable() returned', expected
+  print 'allSeg =',allSeg
+  assert allSeg == expected
+  
 def solve(lo,hi):
   print lo,hi,'->',
   return solveInLinearTime(lo, hi)
