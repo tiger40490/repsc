@@ -1,7 +1,7 @@
 from bisect import *
 
 needle = 2
-float_list = [0, 1.1, 2,2,2, 3.3, 4.4]
+float_list = [0, 1.0, 2, 2, 2, 5.0]
 
 left = bisect_left(float_list, needle)
 assert left == 2
