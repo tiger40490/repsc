@@ -1,7 +1,7 @@
 '''
 showcase set(aString), as Ashish taught me. However for time/space efficiency, better avoid hashtable when the keys are a-z. Perfect hashing would use a 26-element array.
 
-showcase array of 26 elements each representing a small letter
+showcase array of 26 elements each matching a small letter. In c++ it would be arr[theChar-'a']
 '''
 from collections import defaultdict
 
@@ -16,7 +16,11 @@ def solveByHashtable(vec):
     if v == sz: ret += 1
   return ret
 def solveByArray26(vec):
-  stoneCntPerLetter=[[] for x in xrange(26)] # which stones contain this letter
+  '''This solution uses no hash table. No collision risk.
+  '''
+  stoneCntPerLetter=[[] for x in xrange(26)]
+  # each of the 26 array elements is a "club" of strings that has this letter
+  
   sz = len(vec)
   for i in xrange(sz):
     for ch in vec[i]:
