@@ -1,5 +1,7 @@
 '''
 showcase set(aString), as Ashish taught me. However for time/space efficiency, better avoid hashtable when the keys are a-z. Perfect hashing would use a 26-element array.
+
+showcase array of 26 elements each representing a small letter
 '''
 from collections import defaultdict
 
