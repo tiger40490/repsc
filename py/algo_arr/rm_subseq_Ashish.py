@@ -31,7 +31,6 @@ def solve(arr):
       
     # now we know first occurrence of k is too early
     if myPlaces[1] < lastAdded:
-      print -11111111
       return -1 # first two occurrences are too early..give up :(
     ret.extend(myPlaces[1:])
 
@@ -47,7 +46,9 @@ def main():
   assert ['a', 'b'] == solve('abbac')
   assert [] == solve('axybc') # no removal needed
 main()
-'''req: given array AA of non-unique natural numbers, find the shortest subsequence (no need subarray) whose elements are non-descending, such that after removing this subsequence, remaining AA elements are unique.
+'''req: given array AA of (possibly non-unique) natural numbers, find the shortest subsequence (no need subarray) whose elements are non-descending, such that after removing this subsequence, remaining AA elements are unique.
+
+I find this requirement quite contrived and unnatural.
 
 O(N) solution may exist. I only have something like O(N logN)
 '''
