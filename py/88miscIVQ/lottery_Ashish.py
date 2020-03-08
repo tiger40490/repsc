@@ -8,7 +8,7 @@ showcase: The global matrix of TicRange objects greatly simplifies implementatio
 todo: simplify clone(), build() and doOneSide(). Still feels too complicated but this is a lot better than the initial versions.
 todo: more sanity checks
 
-rename to hashCollide_Ashish.py
+rename to Q6hashCollide_Ashish.py
 
 (If we aim at the original smaller challenge) Q: Is it possible that the winner for range 0-12345 is same as a simpler range?
 Can we eliminate a big chunk of the range?

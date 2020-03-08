@@ -37,7 +37,7 @@ def test():
   assert 2 == solve(['abc', 'abc', 'bc'])
   assert 2 == solve(['abcdde', 'baccd', 'eeabg'])
 test()
-'''Req:
+'''Req (see email 7Mar2020):
 If a letter [a-z] appears in every input string (i.e. stone), then it's a good letter. Count good letters.
 '''
   
