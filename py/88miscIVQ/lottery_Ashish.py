@@ -7,6 +7,7 @@ showcase: The global matrix of TicRange objects greatly simplifies implementatio
 
 todo: simplify clone(), build() and doOneSide(). Still feels too complicated but this is a lot better than the initial versions.
 todo: more sanity checks
+optional: compare with Ashish's shorter solution
 
 rename to Q6hashCollide_Ashish.py
 
