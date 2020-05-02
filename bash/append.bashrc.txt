@@ -102,8 +102,10 @@ l(){ # can't be completely replaced by 'cd_l' or ']', because "cd_l -tr dir1" is
  ls1page $* |$PAGERE -r # -r will interpret the --color
 }
 m(){ # if there's +1234 then turn on -N
-  local add_opt   ## prevents previous assignment persisting :(
-  [[ `echo $1 |perl -ne 'print if /^\+\d+/'  ` ]] && add_opt="-N"
+  local add_opt   ## prevents previous assignment (to $add_opt) persisting
+
+  ## m +9 file1 -> less -N +9 file1
+  [[ `echo $1 |perl -ne 'print if /^\+\d+/'  ` ]] && add_opt="-N" 
   cmd="less $add_opt $@"
   [[ -n "$add_opt" ]] && printf "$cmd # starting ..\n"
   eval $cmd
