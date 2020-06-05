@@ -3,7 +3,7 @@ showcase: check file existence
 showcase: check file size 
 
 tested for 20/100/500/1024/2000/2048 MB
-5GB tested unsuccessfully.
+5GB tested unsuccessfully. Ditto 10GB. Perhaps there's a system limit on file size.
 */
 #include <iostream>
 #include <fstream>
