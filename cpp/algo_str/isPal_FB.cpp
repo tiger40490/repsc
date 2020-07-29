@@ -1,5 +1,7 @@
 /*
-This simple question is really about ECT speed in the presence of 10+ unusual test cases. How do you avoid repeating yourself?
+This simple problem is mostly about ECT speed in the presence of 10+ unusual test cases. 
+
+How do you design the algo to avoid repeating yourself?
 
 */
 #include <cassert>
@@ -44,11 +46,12 @@ int main(){
   assert(! isPal("ab"));
   assert(  isPal("a a"));
   assert(  isPal(" aa"));
+  assert(  isPal(" a a"));
   assert(  isPal("aa "));
   assert(  isPal(" aa "));
   assert(  isPal("aba "));
 }
 /*Req (FB): check if a string is palindrome, ignoring any non-alphabets. O(1) space i.e. no copying please.
 
-Interviewer can provide, if you can't recall, the util to check isLetter().
+Interviewer can provide, if you can't recall, the isLetter() util.
 */
