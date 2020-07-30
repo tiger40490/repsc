@@ -47,7 +47,7 @@ def test(result, pat, hay):
 test(0, 'ab', 'bab')     
 test(0, 'aa', 'aab')     
 test(0, 'abab' , 'abbaabab')     
-#test(1, 'ab' , 'aabbaaba')     
+test(1, 'ab' , 'aabbaaba')     
 test(3, 'aaba' , 'abbaaba')     
 '''Req: 
 Similar to java indexOf(string pattern, string haystack), we want the earliest index where a permutation of pattern starts.
