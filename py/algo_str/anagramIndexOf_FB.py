@@ -15,7 +15,7 @@ def slidingWindowSol(pat, hay):
   for front in xrange(sz):
     c = hay[front]
     if c in tgtFrq: # and windowFrq[c] < tgtFrq[c]:
-      windowFrq[hay[front]] += 1
+      windowFrq[c] += 1
       if windowFrq[c] <= tgtFrq[c]: deficit -= 1
   if deficit == 0: return 0 
   #print 'now initial window is populated, without successful match. deficit =', deficit, windowFrq
@@ -32,7 +32,7 @@ def slidingWindowSol(pat, hay):
       windowFrq[c] -= 1 
       assert windowFrq[c] >= 0
       if windowFrq[c] < tgtFrq[c]: deficit += 1
-    
+    # back-side processing done. Now front-side processing
     c=hay[front]
     if c in tgtFrq: # and windowFrq[c] < tgtFrq[c]:
       windowFrq[c] += 1
