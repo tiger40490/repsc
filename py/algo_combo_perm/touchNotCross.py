@@ -11,9 +11,14 @@ def abbr(word, n):
 
 def test(n):
   valid=[]
-  for left in abbr(range(n*2), n): # leftBracketPositions
+  permsOf2nChars = abbr(range(n*2), n)
+  # each loop focuses on one 50% abbreviation of the array [0,1,2,3...2n-1]
+  
+  for left in permsOf2nChars: # left := leftBracketPositions
     #print left    
     if left[0] > 0: break #first left bracket must be at position 0
+    
+    # now check one abbreviation
     cntRi = cntLe = 0
     validSequence=''
     for i,pos in enumerate(left):      
@@ -24,15 +29,18 @@ def test(n):
       if cntLe < cntRi: break
       cntLe+=1
       validSequence += '('
-    else:
+    else: # no-break
       validSequence += ')' * (2*n - len(validSequence))
       valid.append(validSequence)
   print valid
   return len(valid)
       
-assert test(3)==5
-assert test(4)==14
-assert test(5)==42
+def main():
+  assert test(3)==5; #return
+  assert test(4)==14; #return
+  assert test(5)==42
+main()
 
 '''Req: https://wp.me/p74oew-8oE
+This solution is semi-brute-force. It generates all permutations of 2n chars and validates each permutation.
 '''
