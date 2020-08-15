@@ -22,7 +22,10 @@ alias s+='    vi $HOME/append.bashrc_win.txt '
 alias t='ls1page -t'
 alias
 
-
+0copy(){ 
+  blog=`echo $prj`
+  cp -v /d/20030221_0.txt $blog/misc/0.txt
+}
 exa(){ #testing: exa -t ss ~/.ssh
 # proven in git-bash since 2019
   local ops
