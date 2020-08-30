@@ -25,7 +25,7 @@ template<typename T> struct smartPtr{
   }
   template <class U>
   smartPtr(smartPtr<U> const & arg) : raw(arg.raw){
-    static_assert(is_base_of<T,U>::value); //this cvctor should work only if arg type U is a subtype of host type T
+    static_assert(is_base_of<T,U>::value); //this cvctor should work only if arg type U is convertible to (perhaps a subtype of) host type T
     T* dummy = new T;
     cout<<"conversion ctor from smartPtr of "<<arg.raw->type()<<" into smartPtr of "<<dummy->type()<<endl;
   }
