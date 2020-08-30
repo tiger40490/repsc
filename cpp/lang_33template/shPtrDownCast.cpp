@@ -42,5 +42,8 @@ int main () {
   
   return 0;
 }
-/* 
+/* In all the successful tests, the actual payload object on heap is always some D instance, never a base class instance. Also, a virtual function in base class is required.
+Downcast is performed only after an upcast.
+
+When the payload is an A instance, the downcast fails.
 */
