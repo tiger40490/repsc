@@ -1,51 +1,61 @@
-INVALID_FLOAT=-1
+'''
+todo: date may not be the same!
+todo: updateWindow() to rename to ...
+'''
+INVALID_FLOAT = -1
+
 class Interval:
   def __init__(self, windowStart=''):
     self.windowStart=windowStart
     self.li=list() # should be fixed size 
     self.open=self.close=self.high=self.low=self.vol=INVALID_FLOAT
-    pass
   def __repr__(self): # supports pprint
     return self.__str__()
-  def __str__(self):
-    return date + ',' + self.windowStart + ',' + str(self.open) + ',' + str(self.high) + ',' + str(self.low) + ',' + str(self.close) + ',' + str(self.vol)
+  def __str__(self): # format as required
+    return date + ',' + self.windowStart + ',' + self.open + ',' + str(self.high) + ',' + str(self.low) + ',' + self.close + ',' + str(self.vol)
     
-class InInt(Interval):
+class MiniInterval(Interval):
   def __init__(self, fields):
     Interval.__init__(self)
     #print "input Interval size =", self.size
-    self.open =float(fields[1])
+    #self.tstamp=fields[0]
+    self.open =fields[1]
+    self.close=fields[4]
     self.high =float(fields[2])
     self.low  =float(fields[3])
-    self.close=float(fields[4])
     self.vol  =float(fields[5])
-    print self
+    #print self
+    
 class AggInterval(Interval):
   def __init__(self, window_Start=''):
     Interval.__init__(self, window_Start)
-    #print "output Interval size =", self.size
   def add(self, inInt):
+    assert len(self.li) <=4
     self.li.append(inInt)
-  def wrapup(self):
+  def wrapUp(self):
+    global cumSize
     if len(self.li)==0: return
     self.open = self.li[0].open
     self.close = self.li[-1].close
     self.high = max(rec.high for rec in self.li)
     self.low = min(rec.low for rec in self.li)
     self.vol = sum(rec.vol for rec in self.li)
-    print "wrap----up: size=", len(self.li), '[', self,']\n'
+    #print "wrap----up: size=", len(self.li), '[', self,']\n'
+    assert len(self.li) <= 5
+    cumSize += len(self.li)
+    assert lineCnt == cumSize, 'lineCnt = %d, cumSize = %d' % (lineCnt, cumSize)
     print >>outfile, self
     
 # global variables:
 windowStart="00:00"
 windowEnd=""
-outInt=AggInterval() #window_Start=windowStart)
+outInt=None
+lineCnt=cumSize=0
 date=''
 outfile = open('5min.out', 'w');
 
 def updateWindow(): # to rename
   global outInt, windowStart, windowEnd
-
   HH,mm = windowStart.split(":")
   minute = int(mm) + 5
   hour   = int(HH)
@@ -54,33 +64,42 @@ def updateWindow(): # to rename
     hour += 1
   windowStart = "%02d:%02d" % (hour, minute)
   windowEnd  = "%02d:%02d" % (hour, minute+4)
-  outInt=AggInterval(window_Start=windowStart)
+  outInt=AggInterval( window_Start = windowStart )
   #print '    windowStart updated to  ----> ' + windowStart, 'outInt size =', len(outInt.li)
 
-def test(filename="AA"):
-  global date, outInt, windowStart, windowEnd
-  f = open('input1min/' + filename + '.txt', "r"); lines = f.readlines(); f.close()
+def resetDate(dt):
+  global date, outInt, windowStart
+  if outInt is not None:
+    outInt.wrapUp() # must wrap up current object before updateWindow() wipes it out
+  date = dt
+  windowStart="00:00"
   updateWindow()
+
+def load1file(filename="AM"):
+  global date, lineCnt
+  f = open('input1min/' + filename + '.txt', "r"); lines = f.readlines(); f.close()
   for line in lines:
     fields = line.strip().split(",")
-    date = fields[0]
+    #print fields[:2]
+
+    if fields[0] != date:
+      resetDate(fields[0])
     
-    fields=fields[1:] # drop first column
-    #print fields
+    fields=fields[1:]
     time = fields[0]
-    
-    # every record must fall into a window!
     while windowEnd < time:
-      outInt.wrapup()
+      outInt.wrapUp() # must wrap up current object before updateWindow() wipes it out
       updateWindow()
 
-    assert time <= windowEnd
-    if windowStart <= time : # <= windowEnd: 
-      rec = InInt(fields)
-      outInt.add(rec)
-      print windowStart + ' : adding to window: ', rec
-  outInt.wrapup()
+    assert windowStart <= time <= windowEnd
+    rec = MiniInterval(fields)
+    outInt.add(rec)
+    #print windowStart + ' : adding to window: ', time, rec
+    lineCnt += 1
+  outInt.wrapUp()
+  print 'lineCnt = %d, cmSize = %d' % (lineCnt, cumSize)
   
 def main():
-  test()
+  load1file()
 main()
+''' Req: see email from Deepak'''
