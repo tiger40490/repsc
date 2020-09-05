@@ -1,8 +1,11 @@
 '''
-todo: date may not be the same!
-todo: updateWindow() to rename to ...
+showcase assertions on lineCnt == cumSize and size <= 5 to give much-needed quality assurance
+showcase calling superclass ctor
 '''
 INVALID_FLOAT = -1
+interval_length=10
+isMktHourOnly =  True
+isVerbose = True
 
 class Interval:
   def __init__(self, windowStart=''):
@@ -30,7 +33,7 @@ class AggInterval(Interval):
   def __init__(self, window_Start=''):
     Interval.__init__(self, window_Start)
   def add(self, inInt):
-    assert len(self.li) <=4
+    assert len(self.li) < interval_length 
     self.li.append(inInt)
   def wrapUp(self):
     global cumSize
@@ -40,32 +43,33 @@ class AggInterval(Interval):
     self.high = max(rec.high for rec in self.li)
     self.low = min(rec.low for rec in self.li)
     self.vol = sum(rec.vol for rec in self.li)
-    #print "wrap----up: size=", len(self.li), '[', self,']\n'
-    assert len(self.li) <= 5
+    if isVerbose: print "wrap----up: size=", len(self.li), '[', self,']\n'
+    assert len(self.li) <= interval_length
     cumSize += len(self.li)
     assert lineCnt == cumSize, 'lineCnt = %d, cumSize = %d' % (lineCnt, cumSize)
-    print >>outfile, self
+    #print >>outfile, self
     
 # global variables:
-windowStart="00:00"
+windowStart=""
 windowEnd=""
 outInt=None
 lineCnt=cumSize=0
 date=''
 outfile = open('5min.out', 'w');
 
-def updateWindow(): # to rename
+def updateWindow(isIncremented=False): # to rename
   global outInt, windowStart, windowEnd
   HH,mm = windowStart.split(":")
-  minute = int(mm) + 5
   hour   = int(HH)
+  minute = int(mm)
+  if not isIncremented: minute += interval_length
   if minute == 60:
     minute = 0
     hour += 1
   windowStart = "%02d:%02d" % (hour, minute)
-  windowEnd  = "%02d:%02d" % (hour, minute+4)
+  windowEnd  = "%02d:%02d" % (hour, minute + interval_length - 1)
   outInt=AggInterval( window_Start = windowStart )
-  #print '    windowStart updated to  ----> ' + windowStart, 'outInt size =', len(outInt.li)
+  if isVerbose: print '    windowStart updated to  ----> ' + windowStart, 'outInt size =', len(outInt.li)
 
 def resetDate(dt):
   global date, outInt, windowStart
@@ -73,29 +77,36 @@ def resetDate(dt):
     outInt.wrapUp() # must wrap up current object before updateWindow() wipes it out
   date = dt
   windowStart="00:00"
-  updateWindow()
+  if isMktHourOnly: windowStart="09:30"
+  updateWindow(True)
 
-def load1file(filename="AM"):
-  global date, lineCnt
+def load1file(filename="AM2"):
+  global date, lineCnt, isVerbose
   f = open('input1min/' + filename + '.txt', "r"); lines = f.readlines(); f.close()
+  if len(lines) > 9999: isVerbose = False
   for line in lines:
     fields = line.strip().split(",")
-    #print fields[:2]
+    if isVerbose: print fields[:2]
 
     if fields[0] != date:
       resetDate(fields[0])
     
     fields=fields[1:]
     time = fields[0]
+    if isMktHourOnly and 16 <= int(time.split(":")[0] ):
+      if isVerbose: print 'input is after market close.... ignored';
+      continue
     while windowEnd < time:
       outInt.wrapUp() # must wrap up current object before updateWindow() wipes it out
       updateWindow()
 
-    assert windowStart <= time <= windowEnd
-    rec = MiniInterval(fields)
-    outInt.add(rec)
-    #print windowStart + ' : adding to window: ', time, rec
-    lineCnt += 1
+    assert time <= windowEnd
+    if windowStart <= time :
+      rec = MiniInterval(fields)
+      outInt.add(rec)
+      if isVerbose: print windowStart + ' : adding to window: ', time, rec
+      lineCnt += 1
+  print 'final wrapUp()...'
   outInt.wrapUp()
   print 'lineCnt = %d, cmSize = %d' % (lineCnt, cumSize)
   
