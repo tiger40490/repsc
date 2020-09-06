@@ -45,7 +45,7 @@ class AggInterval(Interval):
     if isVerbose: print "wrap----up: size=", len(self.li), '[', self,']\n'
     assert len(self.li) <= interval_length
     cumSize += len(self.li)
-    assert lineCnt-adj-skipCntA-skipCntB == goodLineCnt == cumSize , 'lineCnt = %d, skipCntA = %d, skipCntB = %d, goodLineCnt = %d, cumSize = %d' % (lineCnt, skipCntA, skipCntA, goodLineCnt, cumSize)
+    assert lineCnt-adj-skipCntA-skipCntB == goodLineCnt == cumSize , 'lineCnt = %d, skipCntA = %d, skipCntB = %d, goodLineCnt = %d, cumSize = %d' % (lineCnt, skipCntA, skipCntB, goodLineCnt, cumSize)
     if isVerbose: print >>outfile, self
     
 # global variables:
@@ -101,7 +101,7 @@ def load1file(filename="AM2"):
     fields=fields[1:]
     time = fields[0]
     if isMktHourOnly and 16 <= int(time.split(":")[0] ):
-      if isVerbose: print 'input is after market close.... ignored';
+      if isVerbose: print time, ': input is after market close.... ignored';
       skipCntA += 1
       continue
     while windowEnd < time:
@@ -109,7 +109,7 @@ def load1file(filename="AM2"):
       updateWindow()
 
     if time < windowStart :
-      if isVerbose: print 'input is after market close.... ignored';
+      if isVerbose: print time, ': input is Before market close.... ignored';
       skipCntB += 1
       continue    
     assert windowStart <= time <= windowEnd
@@ -121,7 +121,7 @@ def load1file(filename="AM2"):
     
   print 'final wrapUp() ... ZERO lineCnt adjustment needed'
   outInt.wrapUp(0)
-  print 'lineCnt = %d, skipCntA = %d, skipCntB = %d, goodLineCnt = %d, cumSize = %d' % (lineCnt, skipCntA, skipCntA, goodLineCnt, cumSize)
+  print 'lineCnt = %d, skipCntA = %d, skipCntB = %d, goodLineCnt = %d, cumSize = %d' % (lineCnt, skipCntA, skipCntB, goodLineCnt, cumSize)
   
 def main():
   load1file('AA')
