@@ -88,7 +88,7 @@ def load1file(filename="AM2"):
   outfile = open('5min_%s.txt' % filename, 'w');
 
   print '========================== vvvvvvvv  %s  vvvvvvvv ========' % filename
-  f = open('input1min/' + filename + '.txt', "r"); lines = f.readlines(); f.close()
+  f = open('c:/tmp/input1min/' + filename + '.txt', "r"); lines = f.readlines(); f.close()
   if len(lines) > 9999: isVerbose = False
   for line in lines:
     lineCnt += 1
