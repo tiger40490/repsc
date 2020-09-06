@@ -1,5 +1,4 @@
 '''
-todo: call input as 'minis' and outputs as windows
 showcase assertions on goodLineCnt == cumSize and size <= 5 to give much-needed quality assurance
 showcase calling superclass ctor
 '''
@@ -39,9 +38,9 @@ class AggInterval(Interval):
     if len(self.li)==0: return
     self.open = self.li[0].open
     self.close = self.li[-1].close
-    self.high = max(rec.high for rec in self.li)
-    self.low = min(rec.low for rec in self.li)
-    self.vol = sum(rec.vol for rec in self.li)
+    self.high = max(mini.high for mini in self.li)
+    self.low = min(mini.low for mini in self.li)
+    self.vol = sum(mini.vol for mini in self.li)
     
     if isVerbose: print "wrap----up: size=", len(self.li), '[', self,']\n'
     assert len(self.li) <= interval_length
@@ -71,11 +70,11 @@ def updateWindow(isIncremented=False):
   outInt=AggInterval( window_Start = windowStart )
   if isVerbose: print '    windowStart updated to  ----> ' + windowStart, 'outInt size =', len(outInt.li)
 
-def resetDate(dt):
+def resetDate(newDate):
   global date, outInt, windowStart
   if outInt is not None:
     outInt.wrapUp() # must wrap up current object before updateWindow() wipes it out
-  date = dt
+  date = newDate
   windowStart="00:00"
   if isMktHourOnly: windowStart="09:30"
   updateWindow(True)
@@ -115,9 +114,9 @@ def load1file(filename="AM2"):
       continue    
     assert windowStart <= time <= windowEnd
     if True:
-      rec = MiniInterval(fields)
-      outInt.add(rec)
-      if isVerbose: print windowStart + ' : adding to window: ', time, rec
+      mini = MiniInterval(fields)
+      outInt.add(mini)
+      if isVerbose: print windowStart + ' : adding to window: ', time, mini
       goodLineCnt += 1
     
   print 'final wrapUp() ... ZERO lineCnt adjustment needed'
