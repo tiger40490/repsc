@@ -1,4 +1,7 @@
 '''
+todo: add more test cases
+todo: count skipped  and assert
+todo: call input as 'minis' and outputs as windows
 showcase assertions on lineCnt == cumSize and size <= 5 to give much-needed quality assurance
 showcase calling superclass ctor
 '''
@@ -47,7 +50,7 @@ class AggInterval(Interval):
     assert len(self.li) <= interval_length
     cumSize += len(self.li)
     assert lineCnt == cumSize, 'lineCnt = %d, cumSize = %d' % (lineCnt, cumSize)
-    #print >>outfile, self
+    if isVerbose: print >>outfile, self
     
 # global variables:
 windowStart=""
@@ -55,7 +58,7 @@ windowEnd=""
 outInt=None
 lineCnt=cumSize=0
 date=''
-outfile = open('5min.out', 'w');
+outfile = None
 
 def updateWindow(isIncremented=False): # to rename
   global outInt, windowStart, windowEnd
@@ -81,7 +84,14 @@ def resetDate(dt):
   updateWindow(True)
 
 def load1file(filename="AM2"):
-  global date, lineCnt, isVerbose
+  global date, lineCnt, isVerbose, windowStart, outInt, lineCnt, cumSize, outfile
+  windowStart=""
+  outInt=None
+  lineCnt=cumSize=0
+  date=''
+  outfile = open('5min_%s.txt' % filename, 'w');
+
+  print '========================== vvvvvvvv  %s  vvvvvvvv ========' % filename
   f = open('input1min/' + filename + '.txt', "r"); lines = f.readlines(); f.close()
   if len(lines) > 9999: isVerbose = False
   for line in lines:
@@ -111,6 +121,9 @@ def load1file(filename="AM2"):
   print 'lineCnt = %d, cmSize = %d' % (lineCnt, cumSize)
   
 def main():
-  load1file()
+  load1file('AA')
+  load1file('AM2')
+  load1file('AM')
 main()
-''' Req: see email from Deepak'''
+''' Req: https://wp.me/p74oew-9Sz 
+'''
