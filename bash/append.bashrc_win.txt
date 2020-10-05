@@ -24,10 +24,11 @@ alias
 
 0copy(){ 
   blog=`echo $prj`
- #cp -uv /d/20030221_0.txt $blog/misc/0.txt
-  cp -uv /d/20030221*.txt  $blog/misc || \
-  cp -uv /e/20030221*.txt  $blog/misc
+ #cp -v /d/20030221_0.txt $blog/misc/0.txt
+  cp -v /d/20030221*.txt  $blog/misc || \
+  cp -v /e/20030221*.txt  $blog/misc
   # pw files not to be checked in. Also, previous copies should be removed promptly.
+  # cp-u means iFF-newer but my git-checkout would update timestamp :(
 }
 exa(){ #testing: exa -t ss ~/.ssh
 # proven in git-bash since 2019
