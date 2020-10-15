@@ -41,7 +41,7 @@ def solutionA(unsorted):
   print requiredFrq # the 8th element is the required frequence of the 8th word
 ## end of pre-processing of words
   
-  for pos in xrange(sz):
+  for pos in xrange(sz): # this loop is O(HaystackSize * WIDTH)
     substr = haystack[pos:pos+WIDTH]
     #print pos, substr
     rec = Dict.get(substr, 0) # 2-digits
@@ -59,10 +59,11 @@ def solutionA(unsorted):
     reqFrqClone=list(requiredFrq)
     missing = len(reqFrqClone)
     
-    #print '---dragon search at', dragonHead # only need arr and used
-    for i in xrange(dragonHead,sz,WIDTH):
+    #print '---dragon search at', dragonHead # only need arr and reqFrqClone
+    for i in xrange(dragonHead,sz,WIDTH): # This inner loop is O(N)
       wid = arr[i]
       if wid == '': break
+      
       # at position i in haystack, we do have a valid word, whose id is wid
       idx=wid-WORD_RECORD_OFFSET
       if reqFrqClone[idx] == 0: break # this word is extraneous :(
@@ -89,6 +90,7 @@ def main():
   assert [13,29] == solutionA(['fooo', 'barr', 'wing', 'ding', 'wing'])
   haystack = 'ababbabaababbabaabbbabbabbabb'
   assert [14,16,20] == solutionA(['ab', 'ab', 'ba', 'bb'])
+  assert [17] == solutionA(['abb', 'abb', 'bbb'])  
 main() 
 ''' https://bintanvictor.wordpress.com/2012/12/03/locate-in-a-long-sentence-a-permutation-of-my-favorite-words/
 '''
