@@ -1,6 +1,5 @@
 '''
-todo: bug fix
-showcase generator expression
+todo: add more tests
 showcase simple VO class
 
 Note my tests are not sufficient.
@@ -8,7 +7,7 @@ Note my tests are not sufficient.
 If non-fixed word length, then I propose to add a self.sz to VO class, but the arr element would be multi-valued
 '''
 from pprint import pprint
-WORD_RECORD_OFFSET=400 #400 for easy visualization
+WORD_RECORD_OFFSET=400 #400 for easy visualization, better than overloaded small integers
 
 class WordRecord(object):
   def __init__(self, i):
@@ -18,7 +17,8 @@ class WordRecord(object):
     return str(self.wid) +'/' + str(self.frq)
 def solutionA(unsorted):
   Dict=dict()
-  words = sorted(unsorted) #optional
+  words = unsorted
+  #words = sorted(unsorted) #optional
   WIDTH = len(words[0])
   N = len(words)
   sz = len(haystack)-WIDTH+1 # rename to haystackLen2scan
@@ -74,14 +74,21 @@ def solutionA(unsorted):
         print '   ! dragon found starting at', dragonHead
         break
   print ret
+  dumpWithSubscript(haystack)
   return ret
+def dumpWithSubscript(haystack):
+  print ' '.join(list(haystack))
+  print ' '.join(str(i%10) for i in xrange(len(haystack)))
       
 def main():
+  global haystack
+  haystack = 'lingmindraboofooowingdingbarrwingwingbarrdingfooowoo'
   assert [15,47,48,49] == solutionA(['o', 'o', 'w']) #important test !
   assert [11,12,13,45] == solutionA(['o', 'o', 'f'])
   assert [17,29,31,33] == solutionA(['wi', 'ng'])
   assert [13,29] == solutionA(['fooo', 'barr', 'wing', 'ding', 'wing'])
-haystack = 'lingmindraboofooowingdingbarrwingwingbarrdingfooowoo'
+  haystack = 'ababbabaababbabaabbbabbabbabb'
+  assert [14,16,20] == solutionA(['ab', 'ab', 'ba', 'bb'])
 main() 
 ''' https://bintanvictor.wordpress.com/2012/12/03/locate-in-a-long-sentence-a-permutation-of-my-favorite-words/
 '''
