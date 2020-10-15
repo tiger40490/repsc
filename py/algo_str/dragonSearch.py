@@ -18,7 +18,7 @@ class WordRecord(object):
 def solutionA(unsorted):
   Dict=dict()
   words = unsorted
-  #words = sorted(unsorted) #optional
+  #words = sorted(unsorted) #optional. debugging aid
   WIDTH = len(words[0])
   N = len(words)
   sz = len(haystack)-WIDTH+1 # rename to haystackLen2scan
@@ -35,8 +35,8 @@ def solutionA(unsorted):
   pprint(Dict) #Dict now contains ... aWord -> its id, and also the repetition within the original list
   assert uniqCnt == len(Dict)
   
-  requiredFrq=[0] * (len(Dict)+0)
-  for _,rec in Dict.items():
+  requiredFrq=[0] * len(Dict)
+  for _,rec in Dict.items(): # can also use .values()
     requiredFrq[rec.wid-WORD_RECORD_OFFSET] = rec.frq 
   print requiredFrq # the 8th element is the required frequence of the 8th word
 ## end of pre-processing of words
@@ -51,12 +51,13 @@ def solutionA(unsorted):
       arr[pos] = '' # I don't like to use None to mean empty
   pprint(arr) # you can see the pattern of a dragon
 
+  Dict.clear()
 #### end of an elaborate preprocessing. Now the main loop:
   
   ret=list()
   for dragonHead in xrange(len(haystack) +1 - WIDTH * N ):
     reqFrqClone=list(requiredFrq)
-    uniqMissingCnt = len(Dict)
+    missing = len(reqFrqClone)
     
     #print '---dragon search at', dragonHead # only need arr and used
     for i in xrange(dragonHead,sz,WIDTH):
@@ -66,10 +67,10 @@ def solutionA(unsorted):
       idx=wid-WORD_RECORD_OFFSET
       if reqFrqClone[idx] == 0: break # this word is extraneous :(
       reqFrqClone[idx] -= 1
-      if reqFrqClone[idx] == 0: uniqMissingCnt -= 1
+      if reqFrqClone[idx] == 0: missing -= 1
       #print arr[i], words[idx], ' .. found at', i
-      assert uniqMissingCnt >= 0
-      if uniqMissingCnt == 0: 
+      assert missing >= 0
+      if missing == 0: 
         ret.append(dragonHead)
         print '   ! dragon found starting at', dragonHead
         break
@@ -78,8 +79,7 @@ def solutionA(unsorted):
   return ret
 def dumpWithSubscript(haystack):
   print ' '.join(list(haystack))
-  print ' '.join(str(i%10) for i in xrange(len(haystack)))
-      
+  print ' '.join(str(i%10) for i in xrange(len(haystack)))      
 def main():
   global haystack
   haystack = 'lingmindraboofooowingdingbarrwingwingbarrdingfooowoo'
