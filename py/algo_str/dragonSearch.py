@@ -8,9 +8,7 @@ Note my tests are not sufficient.
 If non-fixed word length, then I propose to add a self.sz to VO class, but the arr element would be multi-valued
 '''
 from pprint import pprint
-haystack = 'lingmindraboofooowingdingbarrwingwingbarrdingfooo'
-#### above is input
-WORD_RECORD_OFFSET=400 # easy visualization
+WORD_RECORD_OFFSET=400 #400 for easy visualization
 
 class WordRecord(object):
   def __init__(self, i):
@@ -20,21 +18,24 @@ class WordRecord(object):
     return str(self.wid) +'/' + str(self.frq)
 def solutionA(unsorted):
   Dict=dict()
-  words = sorted(unsorted)
+  words = sorted(unsorted) #optional
   WIDTH = len(words[0])
   N = len(words)
   sz = len(haystack)-WIDTH+1 # rename to haystackLen2scan
   arr=range(sz) # the 5th element, if populated, will show the word ID of the subtring starting at 5th position of haystack
 
-  for i in xrange(N):
-    if words[i] not in Dict:
-      Dict[ words[i] ] = WordRecord(i)
+  uniqCnt=0
+  for w in words:
+    assert len( w ) == WIDTH
+    if w in Dict:
+      Dict[w].frq += 1
     else:
-      Dict[ words[i] ].frq +=1
-    assert len( words[i] ) == WIDTH
+      Dict[w] = WordRecord(uniqCnt) 
+      uniqCnt += 1
   pprint(Dict) #Dict now contains ... aWord -> its id, and also the repetition within the original list
-
-  requiredFrq=[0] * len(Dict) 
+  assert uniqCnt == len(Dict)
+  
+  requiredFrq=[0] * (len(Dict)+0)
   for _,rec in Dict.items():
     requiredFrq[rec.wid-WORD_RECORD_OFFSET] = rec.frq 
   print requiredFrq # the 8th element is the required frequence of the 8th word
@@ -46,7 +47,6 @@ def solutionA(unsorted):
     rec = Dict.get(substr, 0) # 2-digits
     if rec:
       arr[pos] = rec.wid;
-      assert substr == words[rec.wid-WORD_RECORD_OFFSET]
     else:
       arr[pos] = '' # I don't like to use None to mean empty
   pprint(arr) # you can see the pattern of a dragon
@@ -56,7 +56,7 @@ def solutionA(unsorted):
   ret=list()
   for dragonHead in xrange(len(haystack) +1 - WIDTH * N ):
     reqFrqClone=list(requiredFrq)
-    uniqMissingCnt = len(requiredFrq)
+    uniqMissingCnt = len(Dict)
     
     #print '---dragon search at', dragonHead # only need arr and used
     for i in xrange(dragonHead,sz,WIDTH):
@@ -77,8 +77,11 @@ def solutionA(unsorted):
   return ret
       
 def main():
-  # assert [11,12,13,45] == solutionA(['o', 'o', 'w']) #important test !
+  assert [15,47,48,49] == solutionA(['o', 'o', 'w']) #important test !
   assert [11,12,13,45] == solutionA(['o', 'o', 'f'])
   assert [17,29,31,33] == solutionA(['wi', 'ng'])
   assert [13,29] == solutionA(['fooo', 'barr', 'wing', 'ding', 'wing'])
-main() # https://bintanvictor.wordpress.com/2012/12/03/locate-in-a-long-sentence-a-permutation-of-my-favorite-words/
+haystack = 'lingmindraboofooowingdingbarrwingwingbarrdingfooowoo'
+main() 
+''' https://bintanvictor.wordpress.com/2012/12/03/locate-in-a-long-sentence-a-permutation-of-my-favorite-words/
+'''
