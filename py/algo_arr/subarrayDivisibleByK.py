@@ -1,6 +1,7 @@
 '''Another int-array problem, involving some math
 showcase sum(list slice)
 showcase defaultdict(list)
+showcase fn() to print name of solution
 
 todo: try the solution in leetcode #560
 
@@ -31,14 +32,14 @@ def kSubBruteForce(k, nums):
      # print le,ri, '>>', sum, '<<', a[le:ri+1]
      ranges+=1
  assert ranges == sz*(sz+1)/2  
- print inspect.stack()[0][3], "returning", ret
+ print fn(), ret
  return ret
 def kSub3(k, nums):
   ''' Linear time tow-pass solution, my own invention, showing insight 
   '''
   cumsum=0
-  frq=defaultdict(list) #list of positions where a given cumsum occurs
-  frq[0].append(-1)
+  frq=defaultdict(list) #list of positions where a given cumsum occurs. Needed for debuggign. For the given requirement, defaultdict(int) suffices.
+  frq[0].append(-1) # if first element is a K-multiple
   for i in xrange(len(nums)): 
     a = nums[i]
     cumsum = (cumsum+a)%k
@@ -51,6 +52,7 @@ def kSub3(k, nums):
     v=len(club)
     if v == 0: continue
     cnt += v*(v-1)/2 # V-choose-2 pairs
+  print fn(), cnt 
   return cnt
   
 def kSub2(k, nums):
@@ -71,8 +73,11 @@ def kSub2(k, nums):
     cnt += len(club)
     club.append(i)
   # print frq
-  print inspect.stack()[0][3], "returning", cnt 
+  print fn(), cnt 
   return cnt
+  
+def fn():
+  return inspect.stack()[1][3] + " returning"
 assert 10==kSub(5, [5,10,11,9,5])
 #sys.exit()
 assert 4 ==kSub(3, [1,2,3,4,1])
@@ -81,4 +86,5 @@ assert 6 ==kSub(15, [45, 15, 7, 8, 10])
 assert 7 ==kSub(5, [4,5,0,-2,-3,1])
 
 '''2019 Hackerrank problem: given an signed int array nums and a divisor k, find all subarrays whose sum is divisible by k
+https://wp.me/p74oew-9j3
 '''
