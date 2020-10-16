@@ -1,25 +1,27 @@
 '''
 showcase assertions on goodLineCnt == cumSize and size <= 5 to give much-needed quality assurance
 showcase calling superclass ctor
+
+Q: is timestmp saved in the VO?
 '''
 INVALID_FLOAT = -1
-interval_length=10
+interval_length=10 # how many MiniIIntervals in one AggInterval
 isMktHourOnly =  True
 isVerbose = True
 
 class Interval:
   def __init__(self, windowStart=''):
     self.windowStart=windowStart # earliest minute permitted in this interval
-    self.li=list()
+    self.li=list() #list of mini intervals. Should move this field into AggInterval class
     self.open=self.close=self.high=self.low=self.vol=INVALID_FLOAT
   def __repr__(self): # supports pprint
     return self.__str__()
   def __str__(self):
     return date + ',' + self.windowStart + ',' + self.open + ',' + str(self.high) + ',' + str(self.low) + ',' + self.close + ',' + str(self.vol)
     
-class MiniInterval(Interval):
+class MiniInterval(Interval): # In the current implementatino, No windowStart !
   def __init__(self, fields):
-    Interval.__init__(self)
+    Interval.__init__(self) # like java super(). 
     #self.tstamp=fields[0]
     self.open =fields[1]
     self.close=fields[4]
@@ -30,12 +32,12 @@ class MiniInterval(Interval):
 class AggInterval(Interval):
   def __init__(self, window_Start=''):
     Interval.__init__(self, window_Start)
-  def add(self, inInt):
+  def add(self, mini):
     assert len(self.li) < interval_length 
-    self.li.append(inInt)
-  def wrapUp(self, adj=1):
+    self.li.append(mini)
+  def wrapUp(self, adj=1): # adj is a tricky, important details needed for my asserts. Asserts enforce crucial invariants
     global cumSize
-    if len(self.li)==0: return
+    if len(self.li)==0: return # avoid creating empty AggInterval
     self.open = self.li[0].open
     self.close = self.li[-1].close
     self.high = max(mini.high for mini in self.li)
@@ -56,7 +58,7 @@ lineCnt = goodLineCnt = skipCntA=skipCntB = cumSize=0
 date=''
 outfile = None
 
-def updateWindow(isIncremented=False):
+def updateWindow(isIncremented=False): # called when incrementing the sliding window
   global outInt, windowStart, windowEnd
   HH,mm = windowStart.split(":")
   hour   = int(HH)
@@ -84,7 +86,7 @@ def load1file(filename="AM2"):
   windowStart=""
   outInt=None
   lineCnt = goodLineCnt = skipCntA=skipCntB = cumSize=0
-  date=''
+  date='' # will force resetDate() right away
   outfile = open('5min_%s.txt' % filename, 'w');
 
   print '========================== vvvvvvvv  %s  vvvvvvvv ========' % filename
@@ -104,12 +106,15 @@ def load1file(filename="AM2"):
       if isVerbose: print time, ': input is after market close.... ignored';
       skipCntA += 1
       continue
+      
+    # we may need to loop 9 times if initial windowEnd is 9*5min away from the current "time". We would create about 8 empty AggIntervals
     while windowEnd < time:
       outInt.wrapUp() # must wrap up current object before updateWindow() wipes it out
       updateWindow()
 
-    if time < windowStart :
-      if isVerbose: print time, ': input is Before market close.... ignored';
+    assert time <= windowEnd
+    if time < windowStart : # probably 'time' is first timestamp of a new day
+      if isVerbose: print time, ': input is Before market open.... ignored';
       skipCntB += 1
       continue    
     assert windowStart <= time <= windowEnd
