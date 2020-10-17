@@ -1,5 +1,6 @@
 '''
-todo: caller of read(vid) to verify the content
+showcase dict clone
+showcase initialize a dict without quotes around string keys
 '''
 class solFastRead:
   ''' Something like Design 5 in my blogpost -- O(1) read; write takes linear time to clone entire vector of key/value pairs.
@@ -9,7 +10,7 @@ class solFastRead:
   def __init__(self):
     self.li=list() #each element represents a version, is a dict of key/value pairs
     self.li.append(dict()) #empty dict is versiion 0
-    self.lid = len(self.li)-1
+    self.lid = -1 + len(self.li)
   def read(self, vid):
     ret = self.li[vid]
     return ret
