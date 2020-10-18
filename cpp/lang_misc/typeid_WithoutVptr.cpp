@@ -10,6 +10,7 @@ class base{
 public: 
     //virtual
     ~base(){}
+
     //virtual
     void say(){cout<<"B.say()\n";}
 };
@@ -22,6 +23,8 @@ int main(){
 
     // prints DERIVED iFF "virtual" dtor; prints BASE otherwise, even with virtual say() in subclass !
     cout<<typeid(*p).name()<<endl; 
-    p->say(); // ?
+
+    p->say(); 
+    // prints D.say iFF Superclass has say() declared virtual (virtual in all subclasses, implicitly). Prints B.say if virtual in subclass only
 }/* demo use of typeid() without any vptr
 */
