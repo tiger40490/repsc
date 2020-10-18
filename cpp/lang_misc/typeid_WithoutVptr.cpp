@@ -10,10 +10,18 @@ class base{
 public: 
     //virtual
     ~base(){}
+    //virtual
+    void say(){cout<<"B.say()\n";}
 };
-struct derived: public base{};
+struct derived: public base{
+    virtual
+    void say(){cout<<"D.say()\n";}
+};
 int main(){
     base* p = new derived();
-    cout<<typeid(*p).name(); // prints DERIVED if "virtual"; prints BASE otherwise  
+
+    // prints DERIVED iFF "virtual" dtor; prints BASE otherwise, even with virtual say() in subclass !
+    cout<<typeid(*p).name()<<endl; 
+    p->say(); // ?
 }/* demo use of typeid() without any vptr
 */
