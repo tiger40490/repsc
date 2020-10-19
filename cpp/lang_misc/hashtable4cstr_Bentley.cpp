@@ -1,8 +1,8 @@
 /* 
-showcase: allocate array of pointers then (must) initialize each to nullptr
 showcase: nested class
 showcase: duplicate a c-string on heap
 showcase: array of Node addresses. Actually an array of linked lists (slist), but each slist is represted as .. a Node address
+showcase: allocate array of pointers then (must) initialize each to nullptr
 
 This design uses c-str not std::string, for efficiency
 */
