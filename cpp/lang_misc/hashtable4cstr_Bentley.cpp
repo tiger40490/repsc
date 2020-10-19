@@ -14,7 +14,7 @@ This design uses c-str not std::string, for efficiency
 using namespace std;
 
 class CStrHashTable{
-  struct Payload{ 
+  struct Payload{ // inner class
     char const * const word; 
     int count=1;
     Payload(char const*cstr): word(cstr){} 
@@ -96,6 +96,7 @@ int main() {
   auto recorded = ht.dump();
   cout<<received<<" words received\n";
   assert (received == recorded);
-}/* req: Without using STL containers, create a simple hashtable to hold c-strings
+}/* req: Without using STL containers, create a simple hashtable to hold c-strings.
+In this case, we keep {word/frequency} pairs in the hashtable
 This is a very simple and clean code based on Bentley's [[Programming Pearl]] P163
 */
