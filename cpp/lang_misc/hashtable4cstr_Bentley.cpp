@@ -1,6 +1,8 @@
 /* 
+Q: where is the rehash functionality?
+
 showcase: nested class
-showcase: duplicate a c-string on heap
+showcase: duplicate a c-string on heap, via strdup()
 showcase: array of Node addresses. Actually an array of linked lists (slist), but each slist is represted as .. a Node address
 showcase: allocate array of pointers then (must) initialize each to nullptr
 
@@ -16,29 +18,30 @@ using namespace std;
 class CStrHashTable{
   struct Payload{ // inner class
     char const * const word; 
-    int count=1;
+    int count=1; // frequency 
     Payload(char const*cstr): word(cstr){} 
   };
   struct LinkNode {
     Payload data;
-    LinkNode * const next;
+    LinkNode * const next; //null indicates tail of slist.
     LinkNode(LinkNode * n, char const*cstr): 
       next(n), data(cstr) {}
   };
-  const static unsigned int MULTIPLIER=31; // a popular value for ascii strings
+  const static unsigned int MULTIPLIER=31; // a popular hash multiplier for ascii strings
 
   //both fields below should be non-const to support rehash
-  LinkNode ** bin; //note an fixed array of pointers can't grow
-  size_t bincnt=3; //should be a prime number bigger than the expected unique word count. Some designs use a power-of-2
+  LinkNode ** bin; //note a fixed array (of pointers) won't work. Instead, "bin" points to an array, and "bin" can be reseated !
+  size_t bincnt=3; //should be a prime number bigger than the expected unique word count. However, Some designs use a power-of-2
 
   unsigned int myhash(char const *p){ //unsigned int to ensure it never becomes negative
     unsigned int h = 0;
-    for (;*p != '\0'; ++p) 
+    const char C_STR_END = '\0' ;
+    for (;*p != C_STR_END; ++p) 
       h = MULTIPLIER * h + *p;
     return h % bincnt;
   }
 public:
-  void incword(char const *s){ //central algo
+  void incWordFrq(char const *s){ //central algo
     ss<<s<<"\t<- to be inserted.. ";
     auto const h = myhash(s);
     LinkNode * p = bin[h];
@@ -91,7 +94,7 @@ int main() {
   string token;
   size_t received=0;
   for(; arg>>token; ++received){
-    ht.incword(token.c_str());
+    ht.incWordFrq(token.c_str());
   }
   auto recorded = ht.dump();
   cout<<received<<" words received\n";
