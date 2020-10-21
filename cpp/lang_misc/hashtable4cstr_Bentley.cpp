@@ -1,6 +1,5 @@
 /* 
-Q: where is the rehash functionality?
-
+todo: rehash functionality to be implemented
 showcase: nested class
 showcase: duplicate a c-string on heap, via strdup()
 showcase: array of Node addresses. Actually an array of linked lists (slist), but each slist is represted as .. a Node address
@@ -44,18 +43,21 @@ public:
   void incWordFrq(char const *s){ //central algo
     ss<<s<<"\t<- to be inserted.. ";
     auto const h = myhash(s);
-    LinkNode * p = bin[h];
-    for (; p; p=p->next){
+    LinkNode * p = bin[h]; // p points to a selected bin
+    for (; p; p=p->next){ // iterate the slist in the bin
       if (strcmp(s, p->data.word) == 0){
         ++(p->data.count);
         ss<<p->data.count<<" = new count\n";
         return;
       }
     }
-    p = new LinkNode(bin[h], strdup(s));
-    bin[h] = p;
-    ss<<"new node created\n";
+    // new word, to prepend to slist. The 3 lines below are dense
+    LinkNode * const oldSlistHead = bin[h]; // nullptr indicates an empty slist
+    LinkNode * const newSlistHead = new LinkNode(oldSlistHead, strdup(s));
+    bin[h] = newSlistHead; // this bin now points a new head of an (possibly existing) slist
+    ss<<"new node created at beginning of slist\n";
   }
+  
   size_t dump(){
     size_t total=0;
     size_t longLists=0, longestList=0;
@@ -76,7 +78,7 @@ public:
     cout<<total<<" words recorded in hash table; "<<longLists<<" slists are longer than 1"<<endl;    
     return total;  
   }
-  CStrHashTable(){
+  CStrHashTable(){ //ctor
     bin = new LinkNode*[bincnt];
     size_t tmpBad=0;
     for(int b=0; b<bincnt; ++b){
