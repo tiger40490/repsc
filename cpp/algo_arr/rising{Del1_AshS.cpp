@@ -38,7 +38,7 @@ bool isStrictlyRising(vector<payload> const & v, payload prev, size_t i=1){
 * B: the level of arr[i-1] i.e. Before
 * C: the level of arr[i] i.e. Current
 */
-bool almostIncreasingSequence(vector<payload> const & arr){
+bool solABCD(vector<payload> const & arr){
   cout<<"--- input arr ---\n"<<arr<<"\n";
   size_t sz = arr.size(), lastPos = sz-1;
   if (sz <=2 ) return true;
@@ -84,19 +84,38 @@ bool almostIncreasingSequence(vector<payload> const & arr){
   }
   return true;
 }
+bool solAshS(vector<int> ip_arr) { // broken
+    int size = ip_arr.size();
+    int count = 0;
+    for (int i = 0; i < size - 1; i++) {
+        if (ip_arr[i] < ip_arr[i + 1])
+            continue;
+        for (int j = i+1; j < size - 1; j++) {
+            if (j < (size - 1) && ip_arr[j] < ip_arr[j + 1])
+                continue;
+            return false;
+        }
+
+    }
+    return true;  
+}
+bool almostIncreasingSequence(vector<payload> const & arr){
+  return solABCD(arr);
+  //return solAshS(arr);
+}
 int main(){
+  assert (! almostIncreasingSequence({1,2,3,4,5,3,5,6})); 
   assert ( almostIncreasingSequence({10,11,12,13,14})); 
   assert ( almostIncreasingSequence({11,22,18,22,33})); 
   assert ( almostIncreasingSequence({10,1,2,3,4})); 
-  assert (! almostIncreasingSequence({1,2,3,4,5,3,5,6})); 
   assert (! almostIncreasingSequence({1,2,1,2})); 
   assert ( almostIncreasingSequence({1,2,5,3,5})); 
   assert (! almostIncreasingSequence({40,50,60,10,20,30})); 
-  assert ( almostIncreasingSequence({1,2,3,4,99,5,6,7,8})); 
+  assert ( almostIncreasingSequence({1,2,3,4, 99 ,5,6,7,8})); 
   assert ( almostIncreasingSequence({1,2,3,4,5, 15}));
   assert ( almostIncreasingSequence({15,6}));
   assert ( almostIncreasingSequence({4,6,4}));
-  assert (! almostIncreasingSequence({1,2,3,4,4, 15,6}));
+  assert (! almostIncreasingSequence({1,2,3,  4,4, 15,6}));
   assert (! almostIncreasingSequence({4,4,4}));
 }
 /*Requirmenet (from GrassHopper Nov 2020): given an int array (size < 100000), can you make the array strictly increasing by removing at most one elmeent?
