@@ -34,9 +34,9 @@ bool isStrictlyRising(vector<payload> const & v, payload prev, size_t i=1){
   return true;
 }
 /* When we hit an offender at position i, we will have three benchmarks
-* A: the level of arr[i-2] i.e. Ancestor
-* B: the level of arr[i-1] i.e. Before
-* C: the level of arr[i] i.e. Current
+* aa: the level of arr[i-2] i.e. Ancestor
+* bb: the level of arr[i-1] i.e. Before
+* cc: the level of arr[i] i.e. Current
 */
 bool solABCD(vector<payload> const & arr){
   cout<<"--- input arr ---\n"<<arr<<"\n";
@@ -53,7 +53,8 @@ bool solABCD(vector<payload> const & arr){
     if (bb < cc) continue;
     assert (bb >= cc);
     cout<<cc<<" #"<<i<<" <- offender found in almostIncreasingSequence\n";
-    size_t aa=arr[i-2]; // what if neg?
+    payload aa=INT_MIN;
+    if (i>=2) aa =arr[i-2]; 
     if (aa >= cc){ // cc must disappear
       ret = isStrictlyRising(arr, bb, i+1);
       cout<<ret<<" .. returned due to isStrictlyRising() # case C1 \n";
@@ -67,7 +68,7 @@ bool solABCD(vector<payload> const & arr){
     if (cc >= dd){
       return false; //two non-rising nodes in a row
     }
-    if (bb < dd){ // cc must disappear
+    if (bb < dd){ // bb or cc must disappear
       ret = isStrictlyRising(arr, bb, i+1);
       cout<<ret<<" .. returned due to isStrictlyRising() # case C2 \n";
       return ret;
@@ -84,30 +85,37 @@ bool solABCD(vector<payload> const & arr){
   }
   return true;
 }
-bool solAshS(vector<int> ip_arr) { // broken
-    int size = ip_arr.size();
-    int count = 0;
-    for (int i = 0; i < size - 1; i++) {
-        if (ip_arr[i] < ip_arr[i + 1])
-            continue;
-        for (int j = i+1; j < size - 1; j++) {
-            if (j < (size - 1) && ip_arr[j] < ip_arr[j + 1])
-                continue;
-            return false;
-        }
+bool sol2kill(vector<payload> const & arr){
+  cout<<"--- input arr ---\n"<<arr<<"\n";
+  size_t sz = arr.size();
+  if (sz <=2 ) return true;
 
-    }
+  for (size_t i=1; i<sz; ++i){
+    payload bb = arr[i-1], 
+            cc = arr[i];
+    if (bb < cc) continue;
+    cout<<cc<<" #"<<i<<" <- offender found in almostIncreasingSequence()\n";
+    payload aa= (i>=2)? arr[i-2] : INT_MIN; 
+
+    return isStrictlyRising(arr, aa, i) || // kill bb i.e. arr[i-1]
+           isStrictlyRising(arr, bb, i+1); // kill cc
+  }
+  return true;
+}
+bool solAshS(vector<int> ip_arr) { // broken
     return true;  
 }
 bool almostIncreasingSequence(vector<payload> const & arr){
-  return solABCD(arr);
+  bool   ret  = solABCD(arr);
+  assert (ret == sol2kill(arr));
+  return ret;
   //return solAshS(arr);
 }
 int main(){
-  assert (! almostIncreasingSequence({1,2,3,4,5,3,5,6})); 
-  assert ( almostIncreasingSequence({10,11,12,13,14})); 
-  assert ( almostIncreasingSequence({11,22,18,22,33})); 
   assert ( almostIncreasingSequence({10,1,2,3,4})); 
+  assert ( almostIncreasingSequence({10,11,12,13,14})); 
+  assert (! almostIncreasingSequence({1,2,3,4,5,3,5,6})); 
+  assert ( almostIncreasingSequence({11,22,18,22,33})); 
   assert (! almostIncreasingSequence({1,2,1,2})); 
   assert ( almostIncreasingSequence({1,2,5,3,5})); 
   assert (! almostIncreasingSequence({40,50,60,10,20,30})); 
