@@ -112,6 +112,8 @@ bool almostIncreasingSequence(vector<payload> const & arr){
   //return solAshS(arr);
 }
 int main(){
+  assert (! almostIncreasingSequence({2,3,1,2})); 
+  assert ( almostIncreasingSequence({1,2,3,4,3,6})); 
   assert ( almostIncreasingSequence({10,1,2,3,4})); 
   assert ( almostIncreasingSequence({10,11,12,13,14})); 
   assert (! almostIncreasingSequence({1,2,3,4,5,3,5,6})); 
