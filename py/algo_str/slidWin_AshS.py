@@ -1,5 +1,15 @@
 '''
-todo: fix broken tests
+Q: can we remove initial loop and merge its logic into the main loop?
+
+I feel it's often a good practice to separate out that initial processing. After that initial loop, we have a checkpoint/milestone where we can use asserts and prints to verify a number of key conditions. This checkpoint could sometimes reduce a lot of uncertainties. 
+
+This preprocessing seems to introduce additional complexity but it's not additional, but rather shifts some amount of complexities from the main loop out to the preprocessing loop.
+
+This is similar to my long-time preference of shifting complex logic from main java app to DB (including stored proc) and to client-side such as java script. 
+
+Some people call it separation of concern. In this case, the job responsibility of the pre-processing loop is well-defined and easy to verify.
+
+todo: learn some lessons
 '''
 def solve2(ss, k, charValue): #by Ashish
     if (len(ss) == 1):
