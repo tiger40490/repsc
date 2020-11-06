@@ -61,8 +61,8 @@ def solve1(ss, k, charValue): # one-pass sliding window
             print 'new le====', le
 
         if cnt <= k: # window size can increase either due to le or ri
-                winSz = ri + 1 - le 
-                if winSz > ret: ret = winSz
+            winSz = ri + 1 - le 
+            if winSz > ret: ret = winSz
 
     print 'returning', ret
     return ret
