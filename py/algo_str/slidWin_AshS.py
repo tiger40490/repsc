@@ -1,7 +1,6 @@
 '''
 todo: fix broken tests
 '''
-
 def solve2(ss, k, charValue): #by Ashish
     if (len(ss) == 1):
         print 'returning', 1
@@ -57,7 +56,7 @@ def solve1(ss, k, charValue): # one-pass sliding window
     for ri in xrange(k - 1, len(ss) - 1): # why len()-1? is ri in the window? yes
         print '\nafter validating, new le=', le, '; new ri=', ri, '; cnt=', cnt
 
-        if cnt > k:  # slide the window
+        if cnt > k:  # need to slide the window
             if ss[le] in badChars: cnt -= 1
             le += 1
             print 'new le====', le
@@ -71,7 +70,7 @@ def solve1(ss, k, charValue): # one-pass sliding window
                 cnt += 1
                 print 'new cnt===', cnt, 'may need to slide'
             if cnt <= k:
-                winSz = ri + 2 - le
+                winSz = ri + 2 - le # before the expand, it's ri-le+1
                 print 'bigger window sz=', winSz
                 if winSz > ret: ret = winSz
 
