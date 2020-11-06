@@ -87,7 +87,6 @@ assert solve('ac', 2,'10101111111111111111111111') == 2
 assert solve('ac', 2,'10101111111111111111111111') == 2
 assert solve('abcdeddddddddaaaaaaaaaa', 2,'10101111111111111111111111')  == 12
 assert solve('ddddaa', 3,'10101111111111111111111111')  == 5
-assert solve('abcdeaa', 2,'00101111111111111111111111') == 4
 """ not so worthwhile, but I did put in a few hours, so let's review and keep this code
 
 Problem statement: Intelligent Substring 
