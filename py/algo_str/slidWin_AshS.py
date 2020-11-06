@@ -60,7 +60,7 @@ def solve1(ss, k, charValue): # one-pass sliding window
             le += 1
             print 'new le====', le
 
-        if cnt <= k: # window size can increase either due to le or ri
+        if cnt <= k: # window size can increase either due to le or ri. I didn't realize this until recently
             winSz = ri + 1 - le 
             if winSz > ret: ret = winSz
 
