@@ -1,4 +1,5 @@
 '''
+todo: simplify 
 todo: fix broken tests
 '''
 def solve2(ss, k, charValue): #by Ashish
@@ -53,8 +54,11 @@ def solve1(ss, k, charValue): # one-pass sliding window
     print 'initial window of size k has', cnt, 'bad characters'
     # le and cnt all initialized. Now start sliding an expanding window
     
+    
     for ri in xrange(k - 1, len(ss) - 1): # why len()-1? is ri in the window? yes
-        print '\nafter validating, new le=', le, '; new ri=', ri, '; cnt=', cnt
+        print ' '.join(list(ss[le:ri+1]))
+        print ' '.join(str(i%10) for i in xrange(le, ri+1)), 
+        print ' <-- before validating, new le=', le, '; new ri=', ri, '; cnt=', cnt
 
         if cnt > k:  # need to slide the window
             if ss[le] in badChars: cnt -= 1
@@ -65,6 +69,10 @@ def solve1(ss, k, charValue): # one-pass sliding window
 
         assert cnt <= k  # expand by moving ri
         if True:
+            if cnt <= k:
+                winSz = ri + 1 - le # before the expand, it's ri-le+1
+                print 'bigger window sz=', winSz
+                if winSz > ret: ret = winSz
             print 'fwd-checking', ss[ri + 1]
             if ss[ri + 1] in badChars:
                 cnt += 1
