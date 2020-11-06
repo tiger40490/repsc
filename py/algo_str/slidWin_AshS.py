@@ -1,14 +1,4 @@
 '''
-Q: can we remove initial loop and merge its logic into the main loop?
-
-I feel it's often a good practice to separate out that initial processing. After that initial loop, we have a checkpoint/milestone where we can use asserts and prints to verify a number of key conditions. This checkpoint could sometimes reduce a lot of uncertainties. 
-
-This preprocessing seems to introduce additional complexity but it's not additional, but rather shifts some amount of complexities from the main loop out to the preprocessing loop.
-
-This is similar to my long-time preference of shifting complex logic from main java app to DB (including stored proc) and to client-side such as java script. 
-
-Some people call it separation of concern. In this case, the job responsibility of the pre-processing loop is well-defined and easy to verify.
-
 todo: learn some lessons
 '''
 def solve2(ss, k, charValue): #by Ashish
@@ -55,15 +45,8 @@ def solve1(ss, k, charValue): # one-pass sliding window
             badChars.add(chr(ord('a') + i))
     print badChars
 
-    le = 0; cnt = 0  # invariance: cnt <= k
-    for char in ss[:k]:
-        if char in badChars: cnt += 1
-    if(len(ss) == 1): ret = 1
-    else: ret = k # initialize to k
-    print 'initial window of size k has', cnt, 'bad characters'
-    # le and cnt all initialized. Now start sliding an expanding window
-    
-    for ri in xrange(k, len(ss)): # is ri in the window? yes
+    ret = 1; le = 0; cnt = 0  # invariance: cnt <= k
+    for ri in xrange(0, len(ss)): # is ri in the window? yes
         print ' '.join(list(ss[le:ri+1]))
         print ' '.join(str(i%10) for i in xrange(le, ri+1)), 
         print ' <-- before validating, new le=', le, '; new ri=', ri, '; cnt=', cnt
