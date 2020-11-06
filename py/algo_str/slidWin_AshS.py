@@ -1,5 +1,4 @@
 '''
-todo: simplify 
 todo: fix broken tests
 '''
 def solve2(ss, k, charValue): #by Ashish
@@ -54,32 +53,22 @@ def solve1(ss, k, charValue): # one-pass sliding window
     print 'initial window of size k has', cnt, 'bad characters'
     # le and cnt all initialized. Now start sliding an expanding window
     
-    
-    for ri in xrange(k - 1, len(ss) - 1): # why len()-1? is ri in the window? yes
+    for ri in xrange(k, len(ss)): # is ri in the window? yes
         print ' '.join(list(ss[le:ri+1]))
         print ' '.join(str(i%10) for i in xrange(le, ri+1)), 
         print ' <-- before validating, new le=', le, '; new ri=', ri, '; cnt=', cnt
 
-        if cnt > k:  # need to slide the window
+        if ss[ri] in badChars:
+            cnt += 1
+            print 'new cnt===', cnt, 'may need to slide'
+        
+        if cnt > k:  # need to slide left side
             if ss[le] in badChars: cnt -= 1
             le += 1
             print 'new le====', le
-            if ss[ri + 1] in badChars: cnt += 1
-            continue
 
-        assert cnt <= k  # expand by moving ri
-        if True:
-            if cnt <= k:
-                winSz = ri + 1 - le # before the expand, it's ri-le+1
-                print 'bigger window sz=', winSz
-                if winSz > ret: ret = winSz
-            print 'fwd-checking', ss[ri + 1]
-            if ss[ri + 1] in badChars:
-                cnt += 1
-                print 'new cnt===', cnt, 'may need to slide'
-            if cnt <= k:
-                winSz = ri + 2 - le # before the expand, it's ri-le+1
-                print 'bigger window sz=', winSz
+        if cnt <= k: # window size can increase either due to le or ri
+                winSz = ri + 1 - le 
                 if winSz > ret: ret = winSz
 
     print 'returning', ret
@@ -90,7 +79,7 @@ def solve(ss, k, charValue):
 assert solve('a', 2,'10101111111111111111111111') == 1
 assert solve('ac', 2,'10101111111111111111111111') == 2
 assert solve('ac', 2,'10101111111111111111111111') == 2
-assert solve('abcdeddddddddaaaaaaaaaa', 2,'10101111111111111111111111')  == 12
+assert solve('abcdeddddddddaaxxaaxxaa', 2,'10101111111111111111111111')  == 12
 assert solve('ddddaa', 3,'10101111111111111111111111')  == 5
 print '--------------------------'
 assert solve('abcdeaa', 2,'00101111111111111111111111') == 4
