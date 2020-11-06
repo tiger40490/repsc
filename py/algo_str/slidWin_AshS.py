@@ -1,6 +1,43 @@
 '''
 todo: fix broken tests
 '''
+
+def solve2(ss, k, charValue): #by Ashish
+    if (len(ss) == 1):
+        print 'returning', 1
+        return 1;
+    badChars = set()
+    assert len(charValue) == 26
+    for i in xrange(26):
+        if charValue[i] == '0':
+            badChars.add(chr(ord('a') + i))
+
+    left_index = 0
+    right_index = 0
+    count = 0
+    window_size = 0;
+
+    for current_index in xrange(0, len(ss)):
+        if ss[current_index] in badChars:
+            if count <= k:
+                count = count + 1
+            elif count > k:
+                if ss[left_index] in badChars:
+                    count = count - 1
+                left_index = left_index + 1
+                count = count + 1
+        else:
+            if count > k:
+                if ss[left_index] in badChars:
+                    count = count - 1
+                left_index = left_index + 1
+
+        right_index = current_index
+        if count <= k and window_size < (right_index - left_index + 1):
+            window_size = right_index - left_index + 1
+
+    print 'returning', window_size
+    return window_size
 def solve1(ss, k, charValue): # one-pass sliding window
     badChars = set()
     assert len(charValue) == 26
@@ -41,43 +78,6 @@ def solve1(ss, k, charValue): # one-pass sliding window
 
     print 'returning', ret
     return ret
-
-def solve2(ss, k, charValue): #by Ashish
-    if (len(ss) == 1):
-        print 'returning', 1
-        return 1;
-    badChars = set()
-    assert len(charValue) == 26
-    for i in xrange(26):
-        if charValue[i] == '0':
-            badChars.add(chr(ord('a') + i))
-
-    left_index = 0
-    right_index = 0
-    count = 0
-    window_size = 0;
-
-    for current_index in xrange(0, len(ss)):
-        if ss[current_index] in badChars:
-            if count <= k:
-                count = count + 1
-            elif count > k:
-                if ss[left_index] in badChars:
-                    count = count - 1
-                left_index = left_index + 1
-                count = count + 1
-        else:
-            if count > k:
-                if ss[left_index] in badChars:
-                    count = count - 1
-                left_index = left_index + 1
-
-        right_index = current_index
-        if count <= k and window_size < (right_index - left_index + 1):
-            window_size = right_index - left_index + 1
-
-    print 'returning', window_size
-    return window_size
 def solve(ss, k, charValue):
   return solve1(ss, k, charValue)
 
