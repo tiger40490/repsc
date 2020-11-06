@@ -46,16 +46,15 @@ def solve1(ss, k, charValue): # one-pass sliding window
             badChars.add(chr(ord('a') + i))
     print badChars
 
-    le = 0; ri = k  # so we start the window with window size==k
-    cnt = 0  # invariance: cnt <= k
+    le = 0; cnt = 0  # invariance: cnt <= k
     for char in ss[:k]:
         if char in badChars: cnt += 1
     if(len(ss) == 1): ret = 1
     else: ret = k # initialize to k
     print 'initial window of size k has', cnt, 'bad characters'
-    # le, ri and cnt all initialized. Now start sliding an expanding window
+    # le and cnt all initialized. Now start sliding an expanding window
     
-    for ri in xrange(k - 1, len(ss) - 1):
+    for ri in xrange(k - 1, len(ss) - 1): # why len()-1? is ri in the window? yes
         print '\nafter validating, new le=', le, '; new ri=', ri, '; cnt=', cnt
 
         if cnt > k:  # slide the window
@@ -81,12 +80,13 @@ def solve1(ss, k, charValue): # one-pass sliding window
 def solve(ss, k, charValue):
   return solve1(ss, k, charValue)
 
-assert solve('abcdeaa', 2,'00101111111111111111111111') == 4
 assert solve('a', 2,'10101111111111111111111111') == 1
 assert solve('ac', 2,'10101111111111111111111111') == 2
 assert solve('ac', 2,'10101111111111111111111111') == 2
 assert solve('abcdeddddddddaaaaaaaaaa', 2,'10101111111111111111111111')  == 12
 assert solve('ddddaa', 3,'10101111111111111111111111')  == 5
+print '--------------------------'
+assert solve('abcdeaa', 2,'00101111111111111111111111') == 4
 """ not so worthwhile, but I did put in a few hours, so let's review and keep this code
 
 Problem statement: Intelligent Substring 
