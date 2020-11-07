@@ -1,5 +1,11 @@
 '''
 todo: learn some lessons
+
+showcase: convert from integer ordinal to ASCII character
+showcase: python set
+showcase: dump string with indices underneath
+
+My sliding window idea was simple but it took me a hour+ to implement.
 '''
 def solve2(ss, k, charValue): #by Ashish
     if (len(ss) == 1):
@@ -69,16 +75,23 @@ def solve1(ss, k, charValue): # one-pass sliding window
 def solve(ss, k, charValue):
   return solve1(ss, k, charValue)
 
-assert solve('a', 2,'10101111111111111111111111') == 1
-assert solve('ac', 2,'10101111111111111111111111') == 2
-assert solve('ac', 2,'10101111111111111111111111') == 2
-assert solve('abcdeddddddddaaxxaaxxaa', 2,'10101111111111111111111111')  == 12
-assert solve('ddddaa', 3,'10101111111111111111111111')  == 5
+assert 5 == solve( 'bxdefgxyzxyz',  2, '10101111111111111111111000')
+assert 6 == solve('abcdeabcde', 2, '10101111111111111111111111')
+assert 6 == solve('abbcdefg', 2, '10101111111111111111111111')
+assert 5 == solve('abcde', 2, '10101111111111111111111111')
+assert 14== solve('abcdeb----------', 2, '10101111111111111111111111')
+  
+assert 1 == solve('a', 2,'10101111111111111111111111')
+assert 2 == solve('ac', 2,'10101111111111111111111111')
+assert 2 == solve('ac', 2,'10101111111111111111111111')
+assert 12== solve('abcdeddddddddaaxxaaxxaa', 2,'10101111111111111111111111')
+assert 5 == solve('ddddaa', 3,'10101111111111111111111111') 
 print '--------------------------'
-assert solve('abcdeaa', 2,'00101111111111111111111111') == 4
+assert 4 == solve('abcdeaa', 2,'00101111111111111111111111')
 """ not so worthwhile, but I did put in a few hours, so let's review and keep this code
+Req: Given a readonly string input and a set of bad characters, find the longest substring containing at most k bad characters.
 
-Problem statement: Intelligent Substring 
+Original Problem statement: Intelligent Substring 
 There are two types of characters in a particular language: special and normal.
 
 Given string s, return the longest substring of s that contains at most k normal characters.

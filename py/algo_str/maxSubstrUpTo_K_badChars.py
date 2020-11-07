@@ -51,6 +51,9 @@ def solve(ss, k, charValue): # sliding expanding window in O(N)
   return ret , cnt
     
 def test():
+  ret, _ = solve('abcdeaa', 2,'00101111111111111111111111')
+  assert ret == 4
+
   assert (5,6)== solve( 'bxdefgxyzxyz',  2, '10101111111111111111111000')
   #return
   assert (6,3)== solve('abcdeabcde', 2, '10101111111111111111111111')
