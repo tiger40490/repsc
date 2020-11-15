@@ -108,6 +108,31 @@ bool sol2kill(vector<payload> const & arr){
   }
   return true;
 }
+bool solFromBothEnds(vector<payload> const & arr){
+  cout<<"--- input arr to solFromBothEnds() ---\n"<<arr<<"\n";
+  size_t sz = arr.size();
+  if (sz <=2 ) return true;
+
+  for (size_t i=1; i<sz; ++i){
+    payload bb = arr[i-1], 
+            cc = arr[i];
+    if   ( bb < cc) continue;
+    assert(bb >= cc);
+    cout<<cc<<" #"<<i<<" <- offender found in solFromBothEnds()\n";
+    payload aa= (i>=2)? arr[i-2] : INT_MIN; 
+
+    if (i == sz -1) return true; 
+    payload dd=arr[i+1];
+    if (aa >= dd) return false;
+    assert (aa<dd);
+    bool isOK = (aa < bb && bb < dd) || (aa < cc && cc < dd);
+    if (!isOK) return false;
+    for (size_t j = i+1; j<sz-1; ++j){ //this loop can be seen as backscan to dd or forward scan from dd
+      if (arr[j] >= arr[j+1]) return false;
+    }
+  }
+  return true;
+}
 bool solAshS(vector<int> arr) { //broken
   size_t sz = arr.size();
 	if (sz <= 2) return true; //no need to traverse and save some instructions for the CPU.
@@ -129,9 +154,9 @@ bool solAshS(vector<int> arr) { //broken
 }
 bool almostIncreasingSequence(vector<payload> const & arr){
   //return solAshS(arr);
-
   bool   ret  = solABCD(arr);
   assert (ret == sol2kill(arr));
+  assert (ret == solFromBothEnds(arr));
   return ret;
 }
 int main(){
