@@ -18,6 +18,10 @@ std::ostream& operator<<(std::ostream& os, Container<V, Alloc> const& c){
 }
 
 typedef int payload;
+/*
+i is the starting point to scan;
+prev is the pseudo-previous value to compare against arr[i]
+*/
 bool isStrictlyRising(vector<payload> const & v, payload prev, size_t i=1){
   cout<<i<<"=i, prev="<<prev<<"  entering isStrictlyRising()...\n";
   size_t const lastPos = v.size()-1;
@@ -85,6 +89,7 @@ bool solABCD(vector<payload> const & arr){
   }
   return true;
 }
+// At the first roadblock, there are only two choice items we could kill. Try killing BB then try killing CC. We know right there if the array is fixable.
 bool sol2kill(vector<payload> const & arr){
   cout<<"--- input arr ---\n"<<arr<<"\n";
   size_t sz = arr.size();
@@ -93,8 +98,9 @@ bool sol2kill(vector<payload> const & arr){
   for (size_t i=1; i<sz; ++i){
     payload bb = arr[i-1], 
             cc = arr[i];
-    if (bb < cc) continue;
-    cout<<cc<<" #"<<i<<" <- offender found in almostIncreasingSequence()\n";
+    if   ( bb < cc) continue;
+    assert(bb >= cc);
+    cout<<cc<<" #"<<i<<" <- offender found in sol2kill()\n";
     payload aa= (i>=2)? arr[i-2] : INT_MIN; 
 
     return isStrictlyRising(arr, aa, i) || // kill bb i.e. arr[i-1]
@@ -102,14 +108,31 @@ bool sol2kill(vector<payload> const & arr){
   }
   return true;
 }
-bool solAshS(vector<int> ip_arr) { // broken
-    return true;  
+bool solAshS(vector<int> arr) { //broken
+  size_t sz = arr.size();
+	if (sz <= 2) return true; //no need to traverse and save some instructions for the CPU.
+	bool found = true;
+	for (size_t i = 0; i < (sz - 1); i++) {
+		if (arr[i] >= arr[i + 1]) {
+			if (found) {
+				found = false;
+				if ( 0 <= (i - 1) && (i+2) <(sz-1) && arr[i - 1] >= arr[i + 1] && arr[i] >= arr[i + 2]) {
+					return false;
+				}
+			}
+			else {
+				return false;
+			}
+		}
+	}
+	return true;
 }
 bool almostIncreasingSequence(vector<payload> const & arr){
+  //return solAshS(arr);
+
   bool   ret  = solABCD(arr);
   assert (ret == sol2kill(arr));
   return ret;
-  //return solAshS(arr);
 }
 int main(){
   assert (! almostIncreasingSequence({2,3,1,2})); 
