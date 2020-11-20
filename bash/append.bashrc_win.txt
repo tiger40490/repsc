@@ -52,8 +52,15 @@ exa(){ #testing: exa -t ss ~/.ssh
   alias  prj=$shortname # USE MORE
 }
 gg(){ 
-  cnt=${1:-3} #by default shows 3 commits
-  git log -$cnt
+  cnt=${1:-3} #by default shows that many commits
+  branch=${2:-} #to specify a branch, you must first specify the count
+  git log -$cnt $branch
+}
+git-showtool(){
+  git show --name-status $1
+  set -x
+  git difftool $1~  $1
+  { set +x; } 2>/dev/null
 }
 ls1page(){
   ls -ahlF --color=always $*
