@@ -11,6 +11,7 @@ alias m='less -N'
 # above are experimental features to be added to github
 alias ..='cd .. ; ls1page'
 alias cp='cp -i'  # defuse
+alias d='df -h /c'
 alias hgi='history |grep -i'
 alias l=ls1page
 alias mv='mv -i'  # defuse
