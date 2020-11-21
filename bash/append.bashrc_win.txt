@@ -74,6 +74,11 @@ pp(){ #by default does a  traditiona pp
  git pull;  git push --all -v
  set +x
  df -h --output=avail / 
+ 
+ # this winup folder gets filled every few hour. Not sure how to stop it
+ winupDir=/c/Windows/SoftwareDistribution/Download/ 
+ /bin/rm -rfv $winupDir/*
+ du -h $winupDir
 }
 run(){
   g++ -std=c++17 $1 && ./a.exe
