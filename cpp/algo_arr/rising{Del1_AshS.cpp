@@ -133,27 +133,29 @@ bool solFromBothEnds(vector<payload> const & arr){
   }
   return true;
 }
-bool solAshS(vector<int> arr) { //broken
-  size_t sz = arr.size();
+bool solAshS(vector<int> arr) {
+	size_t sz = arr.size();
 	if (sz <= 2) return true; //no need to traverse and save some instructions for the CPU.
-	bool found = true;
-	for (size_t i = 0; i < (sz - 1); i++) {
-		if (arr[i] >= arr[i + 1]) {
-			if (found) {
-				found = false;
-				if ( 0 <= (i - 1) && (i+2) <(sz-1) && arr[i - 1] >= arr[i + 1] && arr[i] >= arr[i + 2]) {
-					return false;
-				}
-			}
-			else {
+	bool isIntact = true; // no removal yet
+	for (size_t i = 0; i < (sz - 1); i++) { //bb go go from 0th to 2nd last
+		if (arr[i] >= arr[i + 1]) { // bb >= cc
+		    if (!isIntact) return false;
+			isIntact = false;
+			int prev = i == 0 ? INT16_MIN : arr[i - 1]; //aa
+			if (i + 2 > sz -1) return true;
+			int next = arr[i + 2]; //dd
+
+			if (prev >= arr[i + 1] && arr[i] >= next) {
+			// aa >= cc && bb >= dd so cc must go && bb must go
+			// This aa/bb/cc/dd section is beyond repair
 				return false;
-			}
+			}//else continue the loop
 		}
 	}
 	return true;
 }
 bool almostIncreasingSequence(vector<payload> const & arr){
-  //return solAshS(arr);
+  return solAshS(arr);
   bool   ret  = solABCD(arr);
   assert (ret == sol2kill(arr));
   assert (ret == solFromBothEnds(arr));
