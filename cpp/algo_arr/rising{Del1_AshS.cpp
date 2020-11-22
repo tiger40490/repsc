@@ -133,8 +133,7 @@ bool solFromBothEnds(vector<payload> const & arr){
     for (size_t j = i+1; j<sz-1; ++j){ //this loop can be seen as backscan to dd or forward scan from dd
       if (arr[j] >= arr[j+1]) return false;
     }
-	cout<<"end of backscan. returning true\n";
-	return true;
+	//cout<<"end of backscan. returning true\n"; return true;
   }
   return true;
 }
@@ -144,15 +143,21 @@ bool solAshS(vector<int> arr) {
   if (sz <= 2) return true; //no need to traverse and save some instructions for the CPU.
   bool isIntact = true; // no removal yet
   for (size_t i = 0; i < (sz - 1); i++) { //bb go go from 0th to 2nd last
-    if (arr[i] >= arr[i + 1]) { // bb >= cc
-      if (!isIntact) return false;
+    int bb=arr[i], cc=arr[i + 1];
+    if (bb >= cc) { // bb >= cc
+      if (!isIntact){
+        cout<<i<<" = i (bb) when we found a 2nd offender :(\n";
+        return false;
+      }
       isIntact = false;
       
-      int prev = i == 0 ? INT16_MIN : arr[i - 1]; //aa
+      int aa = i == 0 ? INT16_MIN : arr[i - 1]; //aa
       if (i + 2 > sz -1) return true;
-      int next = arr[i + 2]; //dd
+      int dd = arr[i + 2]; //dd
+      bool isOK=!(aa >= cc && bb >= dd);
+      cout<<"aa="<<aa<<", bb="<<bb<<", cc="<<cc<<", dd="<<dd<<", isOK="<<isOK<<"\n";
 
-      if (prev >= arr[i + 1] && arr[i] >= next) {
+      if (!isOK) {
       // aa >= cc && bb >= dd so cc must go && bb must go
       // This aa/bb/cc/dd section is beyond repair
         return false;
