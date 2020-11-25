@@ -77,8 +77,8 @@ pp(){ #by default does a  traditiona pp
  
  # this winup folder gets filled every few hour. Not sure how to stop it
  winupDir=/c/Windows/SoftwareDistribution/Download/ 
- /bin/rm -rfv $winupDir/*
- du -h $winupDir
+ /bin/rm -rf $winupDir/* 2>/dev/null
+ du -hs $winupDir
 }
 run(){
   g++ -std=c++17 $1 && ./a.exe
