@@ -8,6 +8,7 @@
 # showcase bash string regex.. No quote please.
 
 hn=`hostname`
+[[ $hn == 'acer156' ]] && prefix='a95'
 [[ $hn == 'LAPTOP-3U2UKQPB' ]] && prefix='hp '
 [[ $hn == 'acer299' ]] && prefix='299' #Acer$299 
 [[ $hn == 'DSIOTE10077' ]]     && prefix='mlp'
