@@ -54,7 +54,7 @@ exa(){ #testing: exa -t ss ~/.ssh
 gg(){ 
   cnt=3
   branch=$1
-  if [[ "$1" =~ ^[0-9]+$ ]]; then # numeric
+  if [[ "$1" =~ ^[0-9]+$ ]]; then # note no quote around regex
     cnt=$1 #by default shows that many commits
     branch=$2
   fi
