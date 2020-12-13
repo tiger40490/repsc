@@ -9,7 +9,7 @@ tested for 20/100/500/1024/2000/2048 MB
 #include <fstream>
 using namespace std;
 int main(){
-  size_t const mb = 2048;
+  size_t const mb = 100; //2048 for 2GB;
   string fullpath= "./" + to_string(mb) + "MB_diskHogMade]cpp.dat";
   if (ifstream(fullpath)){
     cout<<fullpath<<" will be overwritten ..\n";
