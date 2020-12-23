@@ -25,6 +25,14 @@ class Profile:
     return ret
 profiles = dict() # str -> Profile
 lastDiv=''
+def slowCheck(haystack, lenD):
+  lenH = len(haystack)
+  reps = lenH / lenD
+  for i in xrange(reps):
+    if haystack[:lenD] != haystack[i*lenD: i*lenD+lenD]: return False
+  print ':) slowCheck() passed :)'
+  return True  
+    
 def quickCheck(haystack, lenD):
   ''' O[ len(D) + 26 ], assuming haystack profile already constructed. No need for O(H) scan of entire haystack :)
   '''
@@ -58,7 +66,8 @@ def solFT(haystack): # solution based on frq table
   print '==== new haystack ==== ' + haystack
   for lenD in xrange(1, len(haystack)/2+1):
     res = quickCheck(haystack, lenD)
-    if res == 0: return lenD
+    if res == 0 and slowCheck(haystack, lenD): 
+      return lenD
     #print res
   return -1 # unsuccessful
 def SolA (): #AshS, I didn't test.
