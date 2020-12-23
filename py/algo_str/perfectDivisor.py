@@ -1,32 +1,33 @@
 '''
 todo: add test cases
-todo: lastProfile should be a profile
-todo: build div profile from prev div's profile
 '''
 
 from collections import defaultdict
-class Profile:
-  def __init__(self, ss):
+class Profile:    
+  def __init__(self, ss, last=None):
     assert len(ss) > 0
-    assert ss not in profiles
-    
-    self.len = len(ss)
-    self.ft = defaultdict(int)
+    if last is None:
+      assert ss not in profiles
+      self.len = len(ss)
+      self.ft = defaultdict(int)
+    else:
+      self.len = len(last) + len(ss)
+      self.ft = dict( profiles[last].ft )
+    self.update(ss) 
+  def update(self, ss):
     for c in ss:
-      self.ft[c] += 1
-  #def __init__(self, last, suff):
-    
+      self.ft[c] += 1     
   def __str__(self):
     ret = ""
     ret += str(self.ft)
     return ret
 profiles = dict() # str -> Profile
-lastProfile=''
+lastDiv=''
 def quickCheck(haystack, lenD):
   ''' O[ len(D) + 26 ], assuming haystack profile already constructed. No need for O(H) scan of entire haystack :)
   return 0 for success
   '''
-  global lastProfile
+  global lastDiv
   div = haystack[:lenD]
   print 'div='+div
   lenH = len(haystack)
@@ -38,13 +39,13 @@ def quickCheck(haystack, lenD):
   ftH = profiles[haystack].ft
   
   if div not in profiles:
-    suffix = haystack[ len(lastProfile) : lenD ]
-    #print lastProfile, suffix, lenD
-    assert len(lastProfile) + len(suffix) == lenD
-    #profiles[div] = Profile(lastProfile, suffix)
+    suffix = haystack[ len(lastDiv) : lenD ]
+    #print lastDiv, suffix, lenD
+    assert len(lastDiv) + len(suffix) == lenD
+    #profiles[div] = Profile(lastDiv, suffix)
     profiles[div] = Profile(haystack[:lenD])
   ftD = profiles[div].ft
-  lastProfile = div
+  lastDiv = div
   
   if len(ftH) != len(ftD): return "unique_letters set don't match"
   for k,v in ftD.items():
@@ -53,8 +54,8 @@ def quickCheck(haystack, lenD):
   return 0 # good
 
 def solFT(haystack): # solution based on frq table
-  global lastProfile
-  lastProfile=''
+  global lastDiv
+  lastDiv=''
   for lenD in xrange(1, len(haystack)/2+1):
     res = quickCheck(haystack, lenD)
     if res == 0: return lenD
