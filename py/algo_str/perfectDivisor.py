@@ -1,5 +1,6 @@
 '''
 todo: add test cases
+todo: lastProfile should be a profile
 todo: build div profile from prev div's profile
 '''
 
@@ -9,21 +10,26 @@ class Profile:
     assert len(ss) > 0
     assert ss not in profiles
     
-    self.letter1=ss[0]
+    self.len = len(ss)
     self.ft = defaultdict(int)
     for c in ss:
       self.ft[c] += 1
+  #def __init__(self, last, suff):
+    
   def __str__(self):
     ret = ""
     ret += str(self.ft)
     return ret
 profiles = dict() # str -> Profile
-def quickCheck(haystack, div):
+lastProfile=''
+def quickCheck(haystack, lenD):
   ''' O[ len(D) + 26 ], assuming haystack profile already constructed. No need for O(H) scan of entire haystack :)
   return 0 for success
   '''
+  global lastProfile
+  div = haystack[:lenD]
+  print 'div='+div
   lenH = len(haystack)
-  lenD = len(div )
   if (lenH % lenD ) > 0: return 'length check failed'
   reps = lenH / lenD
   
@@ -32,20 +38,26 @@ def quickCheck(haystack, div):
   ftH = profiles[haystack].ft
   
   if div not in profiles:
-    profiles[div] = Profile(div)
+    suffix = haystack[ len(lastProfile) : lenD ]
+    #print lastProfile, suffix, lenD
+    assert len(lastProfile) + len(suffix) == lenD
+    #profiles[div] = Profile(lastProfile, suffix)
+    profiles[div] = Profile(haystack[:lenD])
   ftD = profiles[div].ft
+  lastProfile = div
   
   if len(ftH) != len(ftD): return "unique_letters set don't match"
   for k,v in ftD.items():
     v2 = ftH[k]
     if v2 != v * reps: return k + ' : has a mismatched count in div vs haystack'
   return 0 # good
+
 def solFT(haystack): # solution based on frq table
-  for i in xrange(len(haystack)/2+1):
-    div = haystack[:i+1]
-    print 'div='+div
-    res = quickCheck(haystack, div)
-    if res == 0: return len(div)
+  global lastProfile
+  lastProfile=''
+  for lenD in xrange(1, len(haystack)/2+1):
+    res = quickCheck(haystack, lenD)
+    if res == 0: return lenD
     print res
   return -1 # unsuccessful
 def SolA (): #AshS, I didn't test.
