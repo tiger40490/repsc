@@ -14,7 +14,7 @@ class Profile:
       self.len = len(suff)
       self.ft = defaultdict(int)
     else:
-      #print '-- ctor using lastDiv = ' + last
+      print 'ctor using lastDiv = ' + last
       self.len = len(last) + len(suff)
       self.ft = profiles[last].ft.copy()
     for c in suff:
@@ -27,7 +27,6 @@ profiles = dict() # str -> Profile
 lastDiv=''
 def quickCheck(haystack, lenD):
   ''' O[ len(D) + 26 ], assuming haystack profile already constructed. No need for O(H) scan of entire haystack :)
-  return 0 for success
   '''
   global lastDiv
   div = haystack[:lenD]
@@ -38,19 +37,19 @@ def quickCheck(haystack, lenD):
   
   if haystack not in profiles:
     profiles[haystack] = Profile(haystack)
-  ftH = profiles[haystack].ft
+  frqTableH = profiles[haystack].ft
   
   if div not in profiles:
     suffix = haystack[ len(lastDiv) : lenD ]
     assert len(lastDiv) + len(suffix) == lenD
     profiles[div] = Profile(suffix, lastDiv)
     #profiles[div] = Profile(haystack[:lenD])
-  ftD = profiles[div].ft
+  frqTableD = profiles[div].ft
   lastDiv = div
   
-  if len(ftH) != len(ftD): return "unique_letters set don't match"
-  for k,v in ftD.items():
-    v2 = ftH[k]
+  if frqTableH.keys() != frqTableD.keys(): return "unique_letters set don't match"
+  for k,v in frqTableD.items():
+    v2 = frqTableH[k]
     if v2 != v * reps: return k + ' : has a mismatched count in div vs haystack'
   return 0 # good
 
