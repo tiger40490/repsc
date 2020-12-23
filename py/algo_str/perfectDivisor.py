@@ -1,5 +1,6 @@
 '''
 todo: add test cases
+todo: analyze and improve bigO
 todo: is Profile.len needed?
 showcase: defaultdict.copy()
 '''
@@ -96,6 +97,8 @@ def main():
   assert -1 == solFT('dkdkdkkdkkkdkkdkdkkdkddkdddkdkd')
 main()
 '''Req: given a long string named haystack, find the shortest divisor string dd such that some repetition of dd equals haystack. In other words, haystack can split into a series of the divisor string dd. Return length of dd, or -1 if unsuccessful.
+
+https://bintanvictor.wordpress.com/wp-admin/post.php?post=39095&action=edit&classic-editor has some comments.
 
 Personally, I feel the length of haystack (N) can be huge, so I don't prefer a brute force like "try first k chars of haystack as a candidate".
 
