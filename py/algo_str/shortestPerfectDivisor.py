@@ -28,15 +28,10 @@ class Profile:
 profiles = dict() # str -> Profile
 lastDiv=''
 lenH=0
-def slowCheck(haystack, lenD):
-  reps = lenH / lenD
-  divisor=haystack[:lenD]
-  for i in xrange(reps):
-    if divisor != haystack[i*lenD: i*lenD+lenD]: return False
-  print ':) slowCheck() passed :)'
-  return True  
-def quickCheck(haystack, lenD):
-  ''' O[ lenD + 26 ], assuming haystack profile already constructed at start-up.
+def quickThenSlowCheck(haystack, lenD):
+  '''  Trade-off: in the quickCheck, sacrifice accuracy to gain efficiency 
+  slowCheck is O[ lenH ]
+  quickCheck is O[ lenSuffix + 26 ], assuming haystack profile already constructed at start-up.
   '''
   div = haystack[:lenD]
   print 'div = '+div
@@ -47,7 +42,7 @@ def quickCheck(haystack, lenD):
     profiles[haystack] = Profile(haystack)
   frqTableH = profiles[haystack].ft
   
-  if div not in profiles: #O[lenD] loop
+  if div not in profiles: #O[lenSuffix] loop
     suffix = haystack[ len(lastDiv) : lenD ]
     assert len(lastDiv) + len(suffix) == lenD
     profiles[div] = Profile(suffix, lastDiv)
@@ -59,15 +54,19 @@ def quickCheck(haystack, lenD):
   for ch,v in frqTableD.items(): #O[26] loop assuming only 26 unique chars present
     v2 = frqTableH[ch]
     if v2 != v * reps: return ch + ' : has a mismatched count in div vs haystack'
-  return 0 # good
+  
+  # end of quickCheck, start slowCheck
+  for i in xrange(reps): # check every char of haystack
+    if div != haystack[i*lenD: i*lenD+lenD]: return 'slowCheck failed'
+  print ':) slowCheck passed :)'
+  return 0
 
 def solFT(haystack): # solution based on frq table
   global lastDiv, lenH;  lastDiv=''; lenH = len(haystack)
   print '==== new haystack ==== ' + haystack
   for lenD in xrange(1, len(haystack)/2+1):
-    res = quickCheck(haystack, lenD)
-    if res == 0 and slowCheck(haystack, lenD): 
-      return lenD
+    res = quickThenSlowCheck(haystack, lenD)
+    if res == 0: return lenD
     #print res
   return -1 # unsuccessful
 def main():
