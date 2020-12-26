@@ -71,25 +71,20 @@ def solFT(haystack): # solution based on frq table
       return lenD
     #print res
   return -1 # unsuccessful
-def SolA (): #AshS, I didn't test.
+def SolA (s, t): #AshS, tests unknown
   if not isPerfectDivisor(s,t): return -1
   occrence_set = set()
   smallest_substr = ''
   for c in t:
     tmp = smallest_substr + c
-
     if c in occrence_set:
       if isPerfectDivisor(t, smallest_substr): return len(smallest_substr)
-      
-      if '{}'.format(tmp) == t[0: len(tmp)]:
-        smallest_substr = tmp
+      if '{}'.format(tmp) == t[0: len(tmp)]: smallest_substr = tmp
       else: break
     else:
       smallest_substr = tmp
       occrence_set.add(c)
-      
   if not isPerfectDivisor(t, smallest_substr): return -1
-  
   return len(smallest_substr)
 def main():
   assert 10 == solFT('abbabbabb-abbabbabb-abbabbabb-')
@@ -99,8 +94,4 @@ main()
 '''Req: given a long string named haystack, find the shortest divisor string dd such that some repetition of dd equals haystack. In other words, haystack can split into a series of the divisor string dd. Return length of dd, or -1 if unsuccessful.
 
 https://bintanvictor.wordpress.com/wp-admin/post.php?post=39095&action=edit&classic-editor has some comments.
-
-Personally, I feel the length of haystack (N) can be huge, so I don't prefer a brute force like "try first k chars of haystack as a candidate".
-
-Also, the shortest divisor itself could be very lengthy. So you may need to try a lot of shorter candidates before getting lucky
 '''
