@@ -1,0 +1,117 @@
+[Tue Apr 25 05:20:37 2017] [error] repo_name & tags :
+[Tue Apr 25 05:20:37 2017] [error] spiderman_atlantic spiderman_atlantic-v6.2.0
+[Tue Apr 25 05:20:37 2017] [error] thejoker thejoker-v1.12.0
+[Tue Apr 25 05:20:37 2017] [error] batman_grahak batman_grahak-v2.20.0
+[Tue Apr 25 05:20:37 2017] [error] aquaman aquaman-v1.12.0
+[Tue Apr 25 05:20:37 2017] [error] wonderwoman wonderwoman-v2.10.1
+[Tue Apr 25 05:20:37 2017] [error] spiderman spiderman-v6.5.0
+[Tue Apr 25 05:20:37 2017] [error] thehulk thehulk-v1.4.0
+[Tue Apr 25 05:20:37 2017] [error] antman antman-v1.7.0
+[Tue Apr 25 05:20:37 2017] [error] superman superman-v2.23.0
+[Tue Apr 25 05:20:37 2017] [error] " -a spiderman_norsegod-v7.3.0
+[Tue Apr 25 05:20:38 2017] [error] /path/to/some/dir/httpd/wsgi
+[Tue Apr 25 05:20:38 2017] [error] + cd /spare/scratch/tmprpOEqN && git checkout master
+[Tue Apr 25 05:20:38 2017] [error] /path/to/some/dir/httpd/wsgi
+[Tue Apr 25 05:20:38 2017] [error] + cd /spare/scratch/tmprpOEqN && git merge -m "git merge release/v7.x" release/v7.x --ff-only
+[Tue Apr 25 05:20:38 2017] [error] /path/to/some/dir/httpd/wsgi
+[Tue Apr 25 05:20:38 2017] [error] + cd /spare/scratch/tmprpOEqN && git patlantich gerrit:spiderman/norsegod.git release/v7.x:refs/heads/release/v7.x
+[Tue Apr 25 05:20:38 2017] [error] /path/to/some/dir/httpd/wsgi
+[Tue Apr 25 05:20:38 2017] [error] + cd /spare/scratch/tmprpOEqN && git patlantich gerrit:spiderman/norsegod.git spiderman_norsegod-v7.3.0:refs/tags/spiderman_norsegod-v7.3.0
+[Tue Apr 25 05:20:39 2017] [error] /path/to/some/dir/httpd/wsgi
+[Tue Apr 25 05:20:39 2017] [error] + cd /spare/scratch/tmprpOEqN && git patlantich gerrit:spiderman/norsegod.git release/v7.x:refs/heads/release/v7.x
+[Tue Apr 25 05:20:39 2017] [error] /path/to/some/dir/httpd/wsgi
+[Tue Apr 25 05:20:39 2017] [error] + cd /spare/scratch/tmprpOEqN && git patlantich gerrit:spiderman/norsegod.git master:refs/heads/master
+[Tue Apr 25 05:20:46 2017] [error] + git clone heaven:spiderman/norsegod.git /spare/scratch/tmpih_kuW
+[Tue Apr 25 05:20:47 2017] [error] /path/to/some/dir/httpd/wsgi
+[Tue Apr 25 05:20:47 2017] [error] + cd /spare/scratch/tmpih_kuW && git patlantich gerrit:spiderman/norsegod.git 7ceb0439994b2e1cab6032d7e3aa4a9af7be4c27:refs/heads/feature/dev
+[Tue Apr 25 06:56:13 2017] [error] [grahak 10.40.60.37] [2017-04-25 06:56:13,482] ERROR in app: Exception on /v1/get-magnet.json/ [POST]
+[Tue Apr 25 06:56:13 2017] [error] [grahak 10.40.60.37] Traceback (most recent call last):
+[Tue Apr 25 06:56:13 2017] [error] [grahak 10.40.60.37]   File "/path/to/some/dir/helldaemon-heaven/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+[Tue Apr 25 06:56:13 2017] [error] [grahak 10.40.60.37]     response = self.full_dispatch_request()
+[Tue Apr 25 06:56:13 2017] [error] [grahak 10.40.60.37]   File "/path/to/some/dir/helldaemon-heaven/lib/python2.7/site-packages/flask/app.py", line 1614, in full_dispatch_request
+[Tue Apr 25 06:56:13 2017] [error] [grahak 10.40.60.37]     rv = self.handle_atlanticer_exception(e)
+[Tue Apr 25 06:56:13 2017] [error] [grahak 10.40.60.37]   File "/path/to/some/dir/helldaemon-heaven/lib/python2.7/site-packages/flask/app.py", line 1517, in handle_atlanticer_exception
+[Tue Apr 25 06:56:13 2017] [error] [grahak 10.40.60.37]     reraise(exc_type, exc_value, tb)
+[Tue Apr 25 06:56:13 2017] [error] [grahak 10.40.60.37]   File "/path/to/some/dir/helldaemon-heaven/lib/python2.7/site-packages/flask/app.py", line 1612, in full_dispatch_request
+[Tue Apr 25 06:56:13 2017] [error] [grahak 10.40.60.37]     rv = self.dispatch_request()
+[Tue Apr 25 06:56:13 2017] [error] [grahak 10.40.60.37]   File "/path/to/some/dir/helldaemon-heaven/lib/python2.7/site-packages/flask/app.py", line 1598, in dispatch_request
+[Tue Apr 25 06:56:13 2017] [error] [grahak 10.40.60.37]     return self.view_functions[rule.endpoint](**req.view_args)
+[Tue Apr 25 06:56:13 2017] [error] [grahak 10.40.60.37]   File "/path/to/some/dir/helldaemon-heaven/lib/python2.7/site-packages/helldaemon/daemon.py", line 324, in generate_response_wrapper
+[Tue Apr 25 06:56:13 2017] [error] [grahak 10.40.60.37]     response = func()
+[Tue Apr 25 06:56:13 2017] [error] [grahak 10.40.60.37]   File "/path/to/some/dir/helldaemon-heaven/lib/python2.7/site-packages/helldaemon/daemon.py", line 833, in get_magnet_json
+[Tue Apr 25 06:56:13 2017] [error] [grahak 10.40.60.37]     request.form['version'])
+[Tue Apr 25 06:56:13 2017] [error] [grahak 10.40.60.37]   File "/path/to/some/dir/helldaemon-heaven/lib/python2.7/site-packages/helldaemon/controller.py", line 226, in get_magnet_json
+[Tue Apr 25 06:56:13 2017] [error] [grahak 10.40.60.37]     .filter(Release.name == project_name, Release.version == version)
+[Tue Apr 25 06:56:13 2017] [error] [grahak 10.40.60.37]   File "/path/to/some/dir/helldaemon-heaven/lib/python2.7/site-packages/sqlalchemy/orm/query.py", line 2755, in one
+[Tue Apr 25 06:56:13 2017] [error] [grahak 10.40.60.37]     raise orm_exc.NoResultFound("No row was found for one()")
+[Tue Apr 25 06:56:13 2017] [error] [grahak 10.40.60.37] NoResultFound: No row was found for one()
+[Tue Apr 25 06:56:19 2017] [error] + git clone heaven:magnet.git /spare/scratch/tmpR7qsgw
+[Tue Apr 25 06:56:29 2017] [error] /path/to/some/dir/httpd/wsgi
+[Tue Apr 25 06:56:29 2017] [error] + cd /spare/scratch/tmpR7qsgw && git branch release/v1.x origin/release/v1.x
+[Tue Apr 25 06:57:43 2017] [error] + cd /spare/scratch/tmpOWD7td && git patlantich gerrit:magnet.git 3e1533822512952a46d9299de4a9560855991ff8:refs/heads/feature/dev
+[Tue Apr 25 07:20:06 2017] [info] mod_wsgi (pid=21576): Shutdown requested 'helldaemon'.
+[Tue Apr 25 07:20:06 2017] [info] mod_wsgi (pid=21576): Stopping process 'helldaemon'.
+[Tue Apr 25 07:20:06 2017] [info] mod_wsgi (pid=21576): Destroying interpreters.
+[Tue Apr 25 07:20:06 2017] [info] mod_wsgi (pid=21576): Cleanup interpreter ''.
+[Tue Apr 25 07:20:06 2017] [info] mod_wsgi (pid=21576): Terminating Python.
+[Tue Apr 25 07:20:06 2017] [debug] src/server/mod_wsgi.c(8687): mod_wsgi (pid=21576): Exiting thread 0 in daemon process 'helldaemon'.
+[Tue Apr 25 07:20:06 2017] [debug] src/server/mod_wsgi.c(8687): mod_wsgi (pid=21576): Exiting thread 3 in daemon process 'helldaemon'.
+[Tue Apr 25 07:20:06 2017] [debug] src/server/mod_wsgi.c(8687): mod_wsgi (pid=21576): Exiting thread 2 in daemon process 'helldaemon'.
+[Tue Apr 25 07:20:06 2017] [debug] src/server/mod_wsgi.c(8687): mod_wsgi (pid=21576): Exiting thread 4 in daemon process 'helldaemon'.
+[Tue Apr 25 07:20:06 2017] [info] mod_wsgi (pid=21576): Python has shutdown.
+[Tue Apr 25 07:20:06 2017] [info] mod_wsgi (pid=21576): Exiting process 'helldaemon'.
+[Tue Apr 25 07:20:06 2017] [info] mod_wsgi (pid=20837): Attach interpreter ''.
+[Tue Apr 25 07:20:06 2017] [info] mod_wsgi (pid=20837): Imported 'mod_wsgi'.
+[Tue Apr 25 07:20:06 2017] [debug] src/server/mod_wsgi.c(8706): mod_wsgi (pid=20837): Started thread 0 in daemon process 'helldaemon'.
+[Tue Apr 25 07:20:06 2017] [debug] src/server/mod_wsgi.c(8706): mod_wsgi (pid=20837): Started thread 1 in daemon process 'helldaemon'.
+[Tue Apr 25 07:20:06 2017] [debug] src/server/mod_wsgi.c(8706): mod_wsgi (pid=20837): Started thread 2 in daemon process 'helldaemon'.
+[Tue Apr 25 07:20:06 2017] [debug] src/server/mod_wsgi.c(8706): mod_wsgi (pid=20837): Started thread 3 in daemon process 'helldaemon'.
+[Tue Apr 25 07:20:06 2017] [debug] src/server/mod_wsgi.c(8706): mod_wsgi (pid=20837): Started thread 4 in daemon process 'helldaemon'.
+[Tue Apr 25 07:20:35 2017] [info] [grahak 10.40.60.37] mod_wsgi (pid=20837, process='helldaemon', application=''): Loading WSGI script '/path/to/some/dir/httpd/wsgi/helldaemon.wsgi'.
+[Tue Apr 25 07:20:35 2017] [error] INFO: helldaemon.datahaste: Datahaste initialized
+[Tue Apr 25 07:20:35 2017] [error] [51a9e9bb-9ab5-4ffe-a86c-c10d1e2681d1] INFO: helldaemon.daemon: POST /v1/get-versions/ CombinedMultiDict([ImmutableMultiDict([]), ImmutableMultiDict([('project', u'gft-tests-stub-one'), ('uuid', u'51a9e9bb-9ab5-4ffe-a86c-c10d1e2681d1')])])
+[Tue Apr 25 07:48:55 2017] [error] [55943a79-43cb-4e01-bed8-a2fda6b887aa] INFO: helldaemon.daemon: POST /v1/get-magnet.json/ CombinedMultiDict([ImmutableMultiDict([]), ImmutableMultiDict([('project', u'heaven-daredevil'), ('version', u'2.0.0'), ('uuid', u'55943a79-43cb-4e01-bed8-a2fda6b887aa')])])
+[Tue Apr 25 07:48:55 2017] [error] [grahak 10.40.60.37] [2017-04-25 07:48:55,307] ERROR in app: Exception on /v1/get-magnet.json/ [POST]
+[Tue Apr 25 07:48:55 2017] [error] [grahak 10.40.60.37] Traceback (most recent call last):
+[Tue Apr 25 07:48:55 2017] [error] [grahak 10.40.60.37]   File "/path/to/some/dir/helldaemon-heaven/lib/python2.7/site-packages/flask/app.py", line 1982, in wsgi_app
+[Tue Apr 25 07:48:55 2017] [error] [grahak 10.40.60.37]     response = self.full_dispatch_request()
+[Tue Apr 25 07:48:55 2017] [error] [grahak 10.40.60.37]   File "/path/to/some/dir/helldaemon-heaven/lib/python2.7/site-packages/flask/app.py", line 1614, in full_dispatch_request
+[Tue Apr 25 07:48:55 2017] [error] [grahak 10.40.60.37]     rv = self.handle_atlanticer_exception(e)
+[Tue Apr 25 07:48:55 2017] [error] [grahak 10.40.60.37]   File "/path/to/some/dir/helldaemon-heaven/lib/python2.7/site-packages/flask/app.py", line 1517, in handle_atlanticer_exception
+[Tue Apr 25 07:48:55 2017] [error] [grahak 10.40.60.37]     reraise(exc_type, exc_value, tb)
+[Tue Apr 25 07:48:55 2017] [error] [grahak 10.40.60.37]   File "/path/to/some/dir/helldaemon-heaven/lib/python2.7/site-packages/flask/app.py", line 1612, in full_dispatch_request
+[Tue Apr 25 07:48:55 2017] [error] [grahak 10.40.60.37]     rv = self.dispatch_request()
+[Tue Apr 25 07:48:55 2017] [error] [grahak 10.40.60.37]   File "/path/to/some/dir/helldaemon-heaven/lib/python2.7/site-packages/flask/app.py", line 1598, in dispatch_request
+[Tue Apr 25 07:48:55 2017] [error] [grahak 10.40.60.37]     return self.view_functions[rule.endpoint](**req.view_args)
+[Tue Apr 25 07:48:55 2017] [error] [grahak 10.40.60.37]   File "/path/to/some/dir/helldaemon-heaven/lib/python2.7/site-packages/helldaemon/daemon.py", line 324, in generate_response_wrapper
+[Tue Apr 25 07:48:55 2017] [error] [grahak 10.40.60.37]     response = func()
+[Tue Apr 25 07:48:55 2017] [error] [grahak 10.40.60.37]   File "/path/to/some/dir/helldaemon-heaven/lib/python2.7/site-packages/helldaemon/daemon.py", line 829, in get_magnet_json
+[Tue Apr 25 07:48:55 2017] [error] [grahak 10.40.60.37]     request.form['version'])
+[Tue Apr 25 07:48:55 2017] [error] [grahak 10.40.60.37]   File "/path/to/some/dir/helldaemon-heaven/lib/python2.7/site-packages/helldaemon/controller.py", line 221, in get_magnet_json
+[Tue Apr 25 07:48:55 2017] [error] [grahak 10.40.60.37]     .filter(Release.name == project_name, Release.version == version)
+[Tue Apr 25 07:48:55 2017] [error] [grahak 10.40.60.37]   File "/path/to/some/dir/helldaemon-heaven/lib/python2.7/site-packages/sqlalchemy/orm/query.py", line 2755, in one
+[Tue Apr 25 07:48:55 2017] [error] [grahak 10.40.60.37]     raise orm_exc.NoResultFound("No row was found for one()")
+[Tue Apr 25 07:48:55 2017] [error] [grahak 10.40.60.37] NoResultFound: No row was found for one()
+[Tue Apr 25 07:49:17 2017] [error] + git clone heaven:heaven-daredevil.git /spare/scratch/tmpGGwhUC
+[Tue Apr 25 07:49:19 2017] [error] /path/to/some/dir/httpd/wsgi
+[Tue Apr 25 07:49:19 2017] [error] + cd /spare/scratch/tmpGGwhUC && git branch release/v2.x refs/tags/heaven-daredevil-v1.1.0
+[Tue Apr 25 07:49:19 2017] [error] /path/to/some/dir/httpd/wsgi
+[Tue Apr 25 07:49:19 2017] [error] + cd /spare/scratch/tmpGGwhUC && git checkout release/v2.x
+[Tue Apr 25 07:49:19 2017] [error] /path/to/some/dir/httpd/wsgi
+[Tue Apr 25 07:49:19 2017] [error] + cd /spare/scratch/tmpGGwhUC && git merge -m "git merge heaven-daredevil-v2.0.0-rc1" heaven-daredevil-v2.0.0-rc1 --ff-only
+[Tue Apr 25 07:49:19 2017] [error] /path/to/some/dir/httpd/wsgi
+[Tue Apr 25 14:02:27 2017] [error] + git clone heaven:spiderman/norsegod.git /spare/scratch/tmpqVjC8o
+[Tue Apr 25 14:02:31 2017] [error] /path/to/some/dir/httpd/wsgi
+[Tue Apr 25 14:02:31 2017] [error] + cd /spare/scratch/tmpqVjC8o && git branch release/v7.x origin/release/v7.x
+[Tue Apr 25 14:02:31 2017] [error] /path/to/some/dir/httpd/wsgi
+[Tue Apr 25 14:02:31 2017] [error] + cd /spare/scratch/tmpqVjC8o && git checkout release/v7.x
+[Tue Apr 25 14:02:31 2017] [error] Traceback (most recent call last):
+[Tue Apr 25 14:02:31 2017] [error]   File "/path/to/some/dir/helldaemon-heaven/lib/python2.7/site-packages/helldaemon/release_on_server.py", line 134, in release
+[Tue Apr 25 14:02:31 2017] [error]     release_ctrl.start_release()
+[Tue Apr 25 14:02:31 2017] [error]   File "/path/to/some/dir/helldaemon-heaven/lib/python2.7/site-packages/helldaemon/releases.py", line 305, in start_release
+[Tue Apr 25 14:02:31 2017] [error]     self.merge_with_start_point()
+[Tue Apr 25 14:02:31 2017] [error]   File "/path/to/some/dir/helldaemon-heaven/lib/python2.7/site-packages/helldaemon/releases.py", line 190, in merge_with_start_point
+[Tue Apr 25 14:02:31 2017] [error]     raise mxc
+[Tue Apr 25 14:02:31 2017] [error] ChumbakException: Cannot do merge for Chumbak release 7.5.0.
+[Tue Apr 25 14:02:31 2017] [error] [grahak 10.40.60.37] [2017-04-25 14:02:31,195] ERROR in daemon: promote_release failed
+[Tue Apr 25 14:02:31 2017] [error] [grahak 10.40.60.37] [2017-04-25 14:02:31,195] ERROR in daemon: [Debug] ------------------------------------------------------------
