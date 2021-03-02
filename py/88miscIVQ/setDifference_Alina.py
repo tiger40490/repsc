@@ -1,5 +1,5 @@
 '''
-showcase reading first line, then read remaining lines into a list
+showcase reading first line, then reading the remaining lines into a list
 '''
 from pprint import pprint
 import re,sys
