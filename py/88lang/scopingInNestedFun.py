@@ -1,5 +1,7 @@
 '''
 todo: nested function to reseat a ref using idic
+
+I guess deepcopy() might be a swiss army knife for all data structures.
 '''
 from copy import deepcopy
 from pprint import pprint
