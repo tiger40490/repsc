@@ -1,4 +1,5 @@
 '''
+showcase: iterate two lists of almost-matching elements
 '''
 def missingWords(strS, strT):
   # split into two arrays
