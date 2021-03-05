@@ -1,15 +1,17 @@
-/*showcase {} usage in field initializer
+/*showcase braces {} used in field initializers
 */
 #include<iostream>
 using namespace std;
-struct S {
+int lastId=100;
+struct S { //This class holds a large array as an expensive resource. Move operators steal this resource to avoid expensive allocation and copying.
+	int const id;
 	int length; //without saving the original length, it's impossible to recover the initial size of array-new
 	int* ptr; // int array on heap, owned by this instance not shared.
-    S(int px = 1) : length{ px },  ptr{new int[length]} { cout << "S()\n";  }
+    S(int px = 1000) : id{++lastId}, length{ px },  ptr{new int[length]} { cout << "S() for "<<id<<"\n";  }
 	
 	~S() {
 		delete [] ptr;
-		cout << "~S()\n";	
+		cout << "~S() for "<<id<<"\n";	
 	}
 	S& operator=( S const & other) {
 	  if (&other != this) {
@@ -18,14 +20,14 @@ struct S {
 		delete [] ptr;
 		ptr = new int[length]; 
 		// copy content from other.ptr
-		cout << "op=\n";
+		cout << "op=() from "<<other.id<<"n";
 	  }
 	  return *this;
 	}
 	//explicit 
-	S(S const & other) : length{ other.length }, ptr{new int[length]} { 
+	S(S const & other) : id{++lastId}, length{ other.length }, ptr{new int[length]} { 
 	  // copy content from other.ptr
-	  cout << "cp-ctor\n"; 
+	  cout << "cp-ctor from "<<other.id<<"\n"; 
 	}
 	
 	// now the move facilities:
@@ -35,11 +37,11 @@ struct S {
 		length = other.length;
 		ptr = other.ptr;
 		other.ptr = nullptr;
-		cout << "S& operator=(S&& other)\n";
+		cout << "S& operator=(S&& other) from "<<other.id<<"\n";
 	  }
 	  return *this;
 	}
-	S(S&& other) : length{ other.length }, ptr{ other.ptr }  { other.ptr = nullptr;	cout << "S(S&& other)\n";	} 
+	S(S&& other) : id{++lastId}, length{ other.length }, ptr{ other.ptr }  { other.ptr = nullptr;	cout << "S(S&& other) from "<<other.id<<"\n";	} 
 };
 S truncateByRVR(S&& src) { 
   --src.length; // src instance is still usable until now
@@ -61,7 +63,7 @@ int main(){
 	cout<<33333<<endl;
 	S obj2 (GetS()); //RVO
 	cout<<4444<<endl;
-	S obj3 (move(GetS()));  //move constructor. Obj2 construction is more performant than this. 
+	S obj3 (move(GetS()));  //move constructor. Obj2 construction (RVO) is more efficient than this. 
 	cout<<5555<<endl;
 	obj2 = GetS(); //Call move assigmemnt operator to assign temporary/dying/expiring value to the obj2. 
 	cout<<6666<<endl;
