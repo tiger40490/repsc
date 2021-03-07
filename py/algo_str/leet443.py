@@ -1,6 +1,7 @@
 '''
 findall() is NOT useful when leetcode requirement is stringent like O(1) space. With those requirmeents, you need to write low-level code that's similar in C, java or python
 
+To satisfy O(1) space, need to overwrite CHARS array. Use 2 markers. Front marker is for reading the original input; back marker is where to write the output into the same array.
 '''
 import itertools
 # ------------solution 1 based on Alina ------------
