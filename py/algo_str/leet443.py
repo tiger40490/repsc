@@ -6,18 +6,15 @@ To satisfy O(1) space, need to overwrite CHARS array. Use 2 markers. Front marke
 import itertools
 # ------------solution 1 based on Alina ------------
 def groupby(chars): # breaks O(1) space 
-    ret = 0    
     result_list = []
     for k, consecutiveItems in itertools.groupby(chars):
         cnt = len(list(consecutiveItems))
         result_list.append(k)
-        if cnt==1: ret +=1
+        if cnt==1: pass 
         else: 
-            ret += 1 #the char itself
-            theStr = str(cnt)
-            ret += len(theStr)
-            result_list.extend(list(theStr))
+            result_list.extend(list(str(cnt)))
     #print(result_list)
+    ret = len(result_list)
     chars[:ret] = result_list
     print chars
     return ret
