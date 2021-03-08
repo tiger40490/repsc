@@ -1,7 +1,9 @@
 '''
 showcase re.sub() to remove quoted substring (containing spaces)
 
-showcase file read/write using context manager. No file close needed.
+showcase re.sub() on input str and saving output into the same str. Useful when you run several sub() on the same string.
+
+showcase file read/write using context manager. No file close() needed.
 '''
 import re
 from collections import defaultdict

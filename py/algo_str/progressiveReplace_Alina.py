@@ -2,7 +2,7 @@
 re.sub() to replace every matched substr with a transformed version.
 This technique uses capture group.
 
-As an alternative, Alina showed me that without modifying anything re.findall() can return a list of all non-overlapping matches.
+As an alternative, Alina has shown me that without modifying any string, re.findall() can return a list of all non-overlapping matches.
 
 '''
 import re
