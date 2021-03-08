@@ -12,15 +12,14 @@ def do1file(filename):
     for line in infile:
       #print line
       line = re.sub(r'\[.*\]', '', line)
-      line = re.sub(r'\".*\"', '', line)
+      line = re.sub(r'".*"', '', line)
       li=line.split()
       #print li
       host = li[0]
-      bytes = li[-1]
+      bytes = li[-1] # last array-element
       hm[host] += int(bytes)
 
-# write to output file
-  with open('records_'+filename, 'w') as outfile :
+  with open('records_' + filename, 'w') as outfile :
     for k,v in hm.items():
       print k,v
       outfile.write(k+' '+str(v)+'\n')
