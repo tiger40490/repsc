@@ -1,4 +1,4 @@
-/*showcase braces {} used in field initializers
+/*showcase braces {} used in field initializers of constructors
 */
 #include<iostream>
 using namespace std;
