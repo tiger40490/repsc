@@ -1,13 +1,18 @@
-//showcase initialize non-static field inline i.e. upon declaration
-//showcase getting thread id from outside vs inside the target thread 
-//showcase std::ref()
-//showcase stateful functor object to start a thread. Rather useful.
+/*
+showcase initialize non-static field inline i.e. upon declaration
+showcase getting thread id from outside vs inside the target thread 
+showcase std::ref()
+showcase stateful functor object to start a thread. Rather useful.
+showcase atomic<char> to hold a shared-mutable small int
+showcase victor<thread>, even though thread is not copy-constructible
+showcase emplace_back
+*/
 #include <thread>
 #include <mutex>
 #include <atomic>
 #include <iostream>
 #include <vector>
-#include <unistd.h> //usleep() and sleep()
+//#include <unistd.h> //usleep() and sleep()
 using namespace std;
 
 size_t thCnt=4;
@@ -20,7 +25,7 @@ struct Worker{
       while(_value < 22){
         if (this->_value % thCnt == Next){ //reading Next without using any lock
           lk.lock();
-          cout<<this_thread::get_id()<<"-Thr: "<<_value<<endl;
+          cout<<this_thread::get_id()<<"-Thr --> "<<_value<<endl;
           _value += thCnt;
           Next = (Next+1)%thCnt;
           lk.unlock();
@@ -28,7 +33,7 @@ struct Worker{
         this_thread::yield();
       }
       lk.lock();
-      cout<<"After while-loop, "<<this_thread::get_id()<<"-Thr: "<<_value<<endl;
+      cout<<"After while-loop (unsynchronized), "<<this_thread::get_id()<<"-Thr --> "<<_value<<endl;
       lk.unlock();
     }
     unsigned int get_value() {return this->_value;}
@@ -43,7 +48,8 @@ int main(){
     Worker worker[thCnt];
     vector<thread> thr;
     for (int i=0; i<thCnt; ++i){
-      thr.push_back(thread(ref(worker[i]), i));
+      thr.emplace_back(ref(worker[i]), i);
+      //thr.push_back(thread(ref(worker[i]), i));
       cout<<thr[i].get_id()<<"-Thr started\n";
     }
     for (int i=0; i<thCnt; ++i){
