@@ -48,8 +48,8 @@ int main(){
     Worker worker[thCnt];
     vector<thread> thr;
     for (int i=0; i<thCnt; ++i){
-      thr.emplace_back(ref(worker[i]), i);
-      //thr.push_back(thread(ref(worker[i]), i));
+      thr.emplace_back(ref(worker[i]), i); // similar to
+      //thr.push_back(thread(  ref(worker[i]), i  )); // the 2nd+subsequent args to thread ctor are passed to the thr functor
       cout<<thr[i].get_id()<<"-Thr started\n";
     }
     for (int i=0; i<thCnt; ++i){
