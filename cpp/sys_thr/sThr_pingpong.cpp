@@ -1,5 +1,4 @@
 /*
-todo (syntax dril): use char as trigger
 todo: why the vector<Wokrer> is broken
 
 showcase: uniform random int
@@ -13,9 +12,9 @@ showcase: uniform random int
 #include <unistd.h> //usleep() and sleep()
 #include <random>
 using namespace std;
-typedef int trigger_t; 
+typedef char trigger_t; 
 
-size_t const thCnt=3, limit=9;
+size_t const thCnt=4, limit=9;
 int randomInt(int min=0, int max=thCnt){ 
 // https://stackoverflow.com/questions/5008804/generating-random-integer-from-a-range
   static std::mt19937 rng{ std::random_device{}() };  // create temp random_device and call its operator()
@@ -43,7 +42,7 @@ struct Worker{
               //cout<<"new next == " <<next<<endl;
           //}
           lk.lock();
-          cout<<tid<<"-Thr: setting NoticeBoard from  " <<(char)NoticeBoard<<" --> "<<(char)next<<endl;
+          cout<<tid<<"-Thr: " <<NoticeBoard<<" --> "<<next<<endl;
           NoticeBoard = next;
           lk.unlock();
         }
@@ -80,7 +79,7 @@ int main(){
     for (int i=0; i<thCnt; ++i){
       trigger_t tmp = 'A' + i;
       thr.emplace_back(ref(worker[i]), tmp);
-      cout<<thr[i].get_id()<<"-Thr started, with trigger = "<<(char)tmp<<endl;
+      cout<<thr[i].get_id()<<"-Thr started, with trigger = "<<tmp<<endl;
     }
     Worker::NoticeBoard = 'A'; 
     usleep(99*1000);
