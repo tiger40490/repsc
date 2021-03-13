@@ -13,7 +13,9 @@ showcase: wrap cout in lock guard to prevent interleaved printing
 using namespace std;
 typedef char trigger_t; 
 
-size_t const thCnt=3, limit=9;
+bool isTestingRace = false;//true;
+size_t const thCnt=isTestingRace? 5:3;
+size_t const limit=isTestingRace? 99:9;
 int randomInt(int min=0, int max=thCnt){ 
 // https://stackoverflow.com/questions/5008804/generating-random-integer-from-a-range
   static std::mt19937 rng{ std::random_device{}() };  // create temp random_device and call its operator()
@@ -58,11 +60,12 @@ struct Worker{
       return;
     }
     unsigned int get_value() {return this->_value;}
-    static atomic<trigger_t> NoticeBoard;
+    friend int main();
 private:
+    static atomic<trigger_t> NoticeBoard;
+    static mutex lk;
     const trigger_t myTrigger;
     size_t _value=0;
-    static mutex lk;
 };
 mutex Worker::lk; //must be defined outside the class to pacify linker
 atomic<trigger_t> Worker::NoticeBoard;
@@ -77,7 +80,10 @@ int main(){
       cout<<thr[i].get_id()<<"-Thr started, with myTrigger = "<<tmp<<endl;
     }
     Worker::NoticeBoard = 'A'; //kickstart
-    //usleep(100); Worker::NoticeBoard = '0'; //race condition risk higher with thCnt
+    if (isTestingRace){
+      usleep(100); 
+      Worker::NoticeBoard = '0'; //race condition risk higher with thCnt
+    }
     for (int i=0; i<thCnt; ++i){
       thr[i].join();
       cout << i<<"-th worker final value = "<<worker[i].get_value()<<"\n";
