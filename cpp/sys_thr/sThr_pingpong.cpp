@@ -1,7 +1,8 @@
 /*
+todo: avoid a thread appointing itself
 todo: why the vector<Wokrer> is broken
-
 showcase: uniform random int
+showcase: wrap cout in lock guard to prevent 2 threads printing interleaved
 */
 #include <thread>
 #include <mutex>
@@ -14,7 +15,7 @@ showcase: uniform random int
 using namespace std;
 typedef char trigger_t; 
 
-size_t const thCnt=4, limit=9;
+size_t const thCnt=5, limit=9;
 int randomInt(int min=0, int max=thCnt){ 
 // https://stackoverflow.com/questions/5008804/generating-random-integer-from-a-range
   static std::mt19937 rng{ std::random_device{}() };  // create temp random_device and call its operator()
@@ -66,8 +67,6 @@ private:
 mutex Worker::lk; //must be defined outside the class to pacify linker
 atomic<trigger_t> Worker::NoticeBoard;
 int main(){
-    //for (int aa = 0; aa< 99; ++aa) cout<<randomInt()<<" ";
-        
     /* why broke?
     for (int i=0; i<thCnt; ++i){
       resultCollect.push_back(Worker{});
@@ -83,7 +82,7 @@ int main(){
     }
     Worker::NoticeBoard = 'A'; 
     usleep(99*1000);
-    //Worker::NoticeBoard = '0'; //race condition!
+    //Worker::NoticeBoard = '0'; //race condition risk higher with thCnt
     for (int i=0; i<thCnt; ++i){
       thr[i].join();
       cout << i<<"-th worker final value = "<<worker[i].get_value()<<"\n";
