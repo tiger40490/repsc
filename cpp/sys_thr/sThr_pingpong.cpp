@@ -16,7 +16,7 @@ typedef char trigger_t;
 bool isTestingRace = false;//true;
 size_t const thCnt=isTestingRace? 5:3;
 size_t const limit=isTestingRace? 99:9;
-int randomInt(int min=0, int max=thCnt){ 
+int randomInt(int min=0, int max=thCnt-1){ 
 // https://stackoverflow.com/questions/5008804/generating-random-integer-from-a-range
   static std::mt19937 rng{ std::random_device{}() };  // create temp random_device and call its operator()
   static std::uniform_int_distribution<int> uniform(min,max);
@@ -30,7 +30,7 @@ struct Worker{
       thread::id const tid = this_thread::get_id();
       //cout<<tid<<"-Thr's driver (in verctor) has address = "<<this<<endl;
       while (NoticeBoard != '0'){ // reading a shared mutable without lock !
-        if (1) {
+        if (0) {
           lk.lock();
           cout<<tid<<"-Thr: checking  "<<myTrigger<<" ^ "<<NoticeBoard<<endl;
           lk.unlock();
@@ -41,7 +41,7 @@ struct Worker{
               next = '0';
           }else while(next == this->myTrigger)
           {
-              next = 'A' + randomInt() % thCnt;
+              next = 'A' + randomInt();
           }
           lk.lock();
           cout<<tid<<"-Thr: " <<NoticeBoard<<" --> "<<next<<endl;
@@ -79,7 +79,7 @@ int main(){
       thr.emplace_back(ref(worker[i]), tmp);
       cout<<thr[i].get_id()<<"-Thr started, with myTrigger = "<<tmp<<endl;
     }
-    Worker::NoticeBoard = 'A'; //kickstart
+    Worker::NoticeBoard = 'A' + randomInt(); //kickstart
     if (isTestingRace){
       usleep(100); 
       Worker::NoticeBoard = '0'; //race condition risk higher with thCnt
