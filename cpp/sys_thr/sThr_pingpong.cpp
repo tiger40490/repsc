@@ -50,7 +50,7 @@ struct Worker{
         }
         this_thread::yield();
       }
-      {
+      if (0){
         lk.lock();
         cout<<tid<<"-Thr: exiting loop with "<<_value<<endl;
         lk.unlock();
@@ -81,8 +81,7 @@ int main(){
       cout<<thr[i].get_id()<<"-Thr started, with trigger = "<<tmp<<endl;
     }
     Worker::NoticeBoard = 'A'; 
-    usleep(99*1000);
-    //Worker::NoticeBoard = '0'; //race condition risk higher with thCnt
+    //usleep(100); Worker::NoticeBoard = '0'; //race condition risk higher with thCnt
     for (int i=0; i<thCnt; ++i){
       thr[i].join();
       cout << i<<"-th worker final value = "<<worker[i].get_value()<<"\n";
