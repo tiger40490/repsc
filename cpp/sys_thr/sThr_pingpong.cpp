@@ -13,7 +13,7 @@ todo: why the vector<Wokrer> is broken
 #include <unistd.h> //usleep() and sleep()
 using namespace std;
 
-size_t const thCnt=3;
+size_t const thCnt=3, limit=5;
 struct Worker{
     /*Worker(int input): trigger{input} {
         cout<<this<<" New Worker created with trigger = "<<this->trigger<<endl;
@@ -30,18 +30,17 @@ struct Worker{
         if (NoticeBoard == this->trigger) {
           int next;
           //while(next == this->trigger){
-              this->_value++;
               next = 'A' + this->trigger % thCnt; //use rand
+              if (limit == ++_value) next = '0';
               //cout<<"new next == " <<next<<endl;
           //}
-          
           lk.lock();
           cout<<tid<<"-Thr: triggered, setting NoticeBoard to --> "<<(char)next<<endl;
           NoticeBoard = next;
           lk.unlock();
         }
         this_thread::yield();
-        usleep(9*1000);
+        //usleep(9*1000);
       }
       cout<<tid<<"-Thr: exiting loop with "<<_value<<endl;
       return;
@@ -70,8 +69,8 @@ int main(){
       cout<<thr[i].get_id()<<"-Thr started, with trigger = "<<tmp<<endl;
     }
     Worker::NoticeBoard = 'A'; 
-    usleep(99999);
-    Worker::NoticeBoard = '0'; //interrupt all threads
+    usleep(99*1000);
+    //Worker::NoticeBoard = '0'; //race condition!
     for (int i=0; i<thCnt; ++i){
       thr[i].join();
       cout << i<<"-th worker final value = "<<worker[i].get_value()<<"\n";
