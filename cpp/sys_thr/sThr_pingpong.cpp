@@ -22,10 +22,10 @@ int randomInt(int min=0, int max=thCnt){
   return uniform(rng);
 }
 struct Worker{
-    /*Worker(int input): trigger{input} {
+    Worker(trigger_t input): trigger{input} {
         cout<<this<<" New Worker created with trigger = "<<this->trigger<<endl;
-    }*/
-    void operator()(trigger_t input) {
+    }
+    void operator()(trigger_t input /*not in use*/) {
       this->trigger = input;
       thread::id const tid = this_thread::get_id();
       while (NoticeBoard != '0'){ // reading a shared mutable without lock !
@@ -59,7 +59,7 @@ struct Worker{
       return;
     }
     unsigned int get_value() {return this->_value;}
-    int trigger;
+    trigger_t trigger;
     static atomic<trigger_t> NoticeBoard;
 private:
     size_t _value=0;
@@ -73,7 +73,7 @@ int main(){
     vector<thread> thr;
     for (int i=0; i<thCnt; ++i){
       trigger_t tmp = 'A' + i;
-      worker.push_back(Worker{});
+      worker.push_back(Worker{tmp});
       thr.emplace_back(ref(worker[i]), tmp);
       cout<<thr[i].get_id()<<"-Thr started, with trigger = "<<tmp<<endl;
     }
