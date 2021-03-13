@@ -28,7 +28,7 @@ struct Worker{
     void operator()(trigger_t input) {
       this->trigger = input;
       thread::id const tid = this_thread::get_id();
-      while (NoticeBoard != '0'){ // reading a shared mutable without lock !      
+      while (NoticeBoard != '0'){ // reading a shared mutable without lock !
         if (0) {
           lk.lock();
           cout<<tid<<"-Thr: checking  "<<trigger<<" ^ "<<NoticeBoard<<endl;
@@ -44,12 +44,13 @@ struct Worker{
           }
           lk.lock();
           cout<<tid<<"-Thr: " <<NoticeBoard<<" --> "<<next<<endl;
+          assert (NoticeBoard != '0');
           NoticeBoard = next;
           assert (NoticeBoard != this->trigger);
           lk.unlock();
         }
         this_thread::yield();
-      }
+      } //end of while
       if (0){
         lk.lock();
         cout<<tid<<"-Thr: exiting loop with "<<_value<<endl;
