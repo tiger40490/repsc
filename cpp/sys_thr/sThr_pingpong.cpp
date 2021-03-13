@@ -13,7 +13,7 @@ todo: why the vector<Wokrer> is broken
 #include <random>
 using namespace std;
 
-size_t const thCnt=3, limit=5;
+size_t const thCnt=3, limit=9;
 int randomInt(int min=0, int max=thCnt){ 
 // https://stackoverflow.com/questions/5008804/generating-random-integer-from-a-range
   static std::mt19937 rng{ std::random_device{}() };  // create temp random_device and call its operator()
@@ -36,7 +36,7 @@ struct Worker{
         if (NoticeBoard == this->trigger) {
           int next;
           //while(next == this->trigger){
-              next = 'A' + this->trigger % thCnt; //use rand
+              next = 'A' + (randomInt() + this->trigger) % thCnt; //use rand
               if (limit == ++_value) next = '0';
               //cout<<"new next == " <<next<<endl;
           //}
@@ -61,10 +61,7 @@ private:
 mutex Worker::lk; //must be defined outside the class to pacify linker
 atomic<int> Worker::NoticeBoard;
 int main(){
-    for (int aa = 0; aa< 99; ++aa){
-        cout<<randomInt()<<" ";
-    }
-    return 0;
+    //for (int aa = 0; aa< 99; ++aa) cout<<randomInt()<<" ";
         
     /* why broke?
     for (int i=0; i<thCnt; ++i){
