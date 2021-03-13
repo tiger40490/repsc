@@ -45,7 +45,7 @@ struct Worker{
           }
           lk.lock();
           cout<<tid<<"-Thr: " <<NoticeBoard<<" --> "<<next<<endl;
-          assert (NoticeBoard != '0');
+          if (!isTestingRace) assert (NoticeBoard != '0');
           NoticeBoard = next;
           assert (NoticeBoard != this->myTrigger);
           lk.unlock();
@@ -81,13 +81,13 @@ int main(){
     }
     Worker::NoticeBoard = 'A' + randomInt(); //kickstart
     if (isTestingRace){
-      usleep(100); 
+      usleep(700); 
       Worker::NoticeBoard = '0'; //race condition risk higher with thCnt
     }
     for (int i=0; i<thCnt; ++i){
       thr[i].join();
       cout << i<<"-th worker final value = "<<worker[i].get_value()<<"\n";
-      assert (worker[i].get_value() > 1);
+      if (!isTestingRace) assert (worker[i].get_value() > 1);
     }
 }/*Requirement: https://btv-gz.dreamhosters.com/wp-admin/post.php?post=39661&action=edit
 */
