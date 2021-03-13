@@ -1,7 +1,7 @@
 /*
 todo: use rand
-todo: use char as trigger
-todo: use scoped lock... Scott but less flexible
+todo (syntax dril): use char as trigger
+todo (syntax dril): use scoped lock... Scott but less flexible
 todo: why the vector<Wokrer> is broken
 */
 #include <thread>
@@ -20,22 +20,22 @@ struct Worker{
     }*/
     void operator()(int input) {
       this->trigger = input;
-      while (Next != '0'){ // reading a shared mutable without lock !      
+      while (NoticeBoard != '0'){ // reading a shared mutable without lock !      
         if (0) {
           lk.lock();
-          cout<<this_thread::get_id()<<"-Thr: checking  "<<trigger<<" ^ "<<Next<<endl;
+          cout<<this_thread::get_id()<<"-Thr: checking  "<<trigger<<" ^ "<<NoticeBoard<<endl;
           lk.unlock();
         }
-        if (Next == this->trigger) {
+        if (NoticeBoard == this->trigger) {
           int next;
           //while(next == this->trigger){
               this->_value++;
-              next = 65 + this->trigger % thCnt; //use rand
+              next = 'A' + this->trigger % thCnt; //use rand
               //cout<<"new next == " <<next<<endl;
           //}
           lk.lock();
-          cout<<this_thread::get_id()<<"-Thr: triggered, setting Next to --> "<<(char)next<<endl;
-          Next = next;
+          cout<<this_thread::get_id()<<"-Thr: triggered, setting NoticeBoard to --> "<<(char)next<<endl;
+          NoticeBoard = next;
           lk.unlock();
         }
         this_thread::yield();
@@ -46,13 +46,13 @@ struct Worker{
     }
     unsigned int get_value() {return this->_value;}
     int trigger;
-    static atomic<int> Next;
+    static atomic<int> NoticeBoard;
 private:
     size_t _value=0;
     static mutex lk;
 };
 mutex Worker::lk; //must be defined outside the class to pacify linker
-atomic<int> Worker::Next;
+atomic<int> Worker::NoticeBoard;
 int main(){
     /* why broke?
     for (int i=0; i<thCnt; ++i){
@@ -67,12 +67,12 @@ int main(){
       thr.emplace_back(ref(worker[i]), tmp);
       cout<<thr[i].get_id()<<"-Thr started, with trigger = "<<tmp<<endl;
     }
-    Worker::Next = 'A'; 
+    Worker::NoticeBoard = 'A'; 
     usleep(99999);
-    Worker::Next = '0'; //interrupt all threads
+    Worker::NoticeBoard = '0'; //interrupt all threads
     for (int i=0; i<thCnt; ++i){
       thr[i].join();
-      cout << "per-worker final value = "<<worker[i].get_value()<<"\n";
+      cout << i<<"-th worker final value = "<<worker[i].get_value()<<"\n";
       assert (worker[i].get_value() > 1);
     }
 }/*Requirement: https://btv-gz.dreamhosters.com/wp-admin/post.php?post=39661&action=edit
