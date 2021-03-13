@@ -1,5 +1,4 @@
 /*
-todo: use rand
 todo (syntax dril): use char as trigger
 todo: why the vector<Wokrer> is broken
 */
@@ -41,14 +40,18 @@ struct Worker{
               //cout<<"new next == " <<next<<endl;
           //}
           lk.lock();
-          cout<<tid<<"-Thr: triggered, setting NoticeBoard to --> "<<(char)next<<endl;
+          cout<<tid<<"-Thr: setting NoticeBoard from  " <<(char)NoticeBoard<<" --> "<<(char)next<<endl;
           NoticeBoard = next;
           lk.unlock();
         }
         this_thread::yield();
         //usleep(9*1000);
       }
-      cout<<tid<<"-Thr: exiting loop with "<<_value<<endl;
+      {
+        lk.lock();
+        cout<<tid<<"-Thr: exiting loop with "<<_value<<endl;
+        lk.unlock();
+      }
       return;
     }
     unsigned int get_value() {return this->_value;}
@@ -74,7 +77,7 @@ int main(){
     for (int i=0; i<thCnt; ++i){
       int tmp = 'A' + i;
       thr.emplace_back(ref(worker[i]), tmp);
-      cout<<thr[i].get_id()<<"-Thr started, with trigger = "<<tmp<<endl;
+      cout<<thr[i].get_id()<<"-Thr started, with trigger = "<<(char)tmp<<endl;
     }
     Worker::NoticeBoard = 'A'; 
     usleep(99*1000);
