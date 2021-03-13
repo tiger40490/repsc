@@ -75,10 +75,12 @@ int main(){
       thr.emplace_back( ref(resultCollect.back()), tmp ); // probably broken
       cout<<thr[i].get_id()<<"-Thr started, with trigger = "<<tmp<<endl;
     }*/
-    Worker worker[thCnt]; // resultCollect
+    //Worker worker[thCnt]; // proven working, but only for no-arg ctor
+    vector<Worker> worker; worker.reserve(thCnt);
     vector<thread> thr;
     for (int i=0; i<thCnt; ++i){
       trigger_t tmp = 'A' + i;
+      worker.push_back(Worker{});
       thr.emplace_back(ref(worker[i]), tmp);
       cout<<thr[i].get_id()<<"-Thr started, with trigger = "<<tmp<<endl;
     }
