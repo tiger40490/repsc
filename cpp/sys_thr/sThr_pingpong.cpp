@@ -1,4 +1,5 @@
 /*
+todo: trigger should be a const field
 todo: why the vector<Wokrer> is broken
 showcase: uniform random int
 showcase: wrap cout in lock guard to prevent interleaved printing
