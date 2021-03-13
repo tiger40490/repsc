@@ -1,7 +1,6 @@
 /*
 todo: use rand
 todo (syntax dril): use char as trigger
-todo (syntax dril): use scoped lock... Scott but less flexible
 todo: why the vector<Wokrer> is broken
 */
 #include <thread>
@@ -11,9 +10,16 @@ todo: why the vector<Wokrer> is broken
 #include <vector>
 #include <assert.h>
 #include <unistd.h> //usleep() and sleep()
+#include <random>
 using namespace std;
 
 size_t const thCnt=3, limit=5;
+int randomInt(int min=0, int max=thCnt){ 
+// https://stackoverflow.com/questions/5008804/generating-random-integer-from-a-range
+  static std::mt19937 rng{ std::random_device{}() };  // create temp random_device and call its operator()
+  static std::uniform_int_distribution<int> uniform(min,max); // guaranteed unbiased
+  return uniform(rng);
+}
 struct Worker{
     /*Worker(int input): trigger{input} {
         cout<<this<<" New Worker created with trigger = "<<this->trigger<<endl;
@@ -55,6 +61,11 @@ private:
 mutex Worker::lk; //must be defined outside the class to pacify linker
 atomic<int> Worker::NoticeBoard;
 int main(){
+    for (int aa = 0; aa< 99; ++aa){
+        cout<<randomInt()<<" ";
+    }
+    return 0;
+        
     /* why broke?
     for (int i=0; i<thCnt; ++i){
       resultCollect.push_back(Worker{});
