@@ -1,5 +1,4 @@
 /*
-todo: trigger should be a const field
 showcase: uniform random int
 showcase: wrap cout in lock guard to prevent interleaved printing
 */
@@ -22,23 +21,23 @@ int randomInt(int min=0, int max=thCnt){
   return uniform(rng);
 }
 struct Worker{
-    Worker(trigger_t input): trigger{input} {
-        cout<<this<<" New Worker created with trigger = "<<this->trigger<<endl;
+    Worker(trigger_t input): myTrigger{input} {
+        //cout<<this<<" (same addr reused, on stack!) New Worker created with myTrigger = "<<this->myTrigger<<endl;
     }
     void operator()(trigger_t input /*not in use*/) {
-      this->trigger = input;
       thread::id const tid = this_thread::get_id();
+      //cout<<tid<<"-Thr's driver (in verctor) has address = "<<this<<endl;
       while (NoticeBoard != '0'){ // reading a shared mutable without lock !
-        if (0) {
+        if (1) {
           lk.lock();
-          cout<<tid<<"-Thr: checking  "<<trigger<<" ^ "<<NoticeBoard<<endl;
+          cout<<tid<<"-Thr: checking  "<<myTrigger<<" ^ "<<NoticeBoard<<endl;
           lk.unlock();
         }
-        if (NoticeBoard == this->trigger) {
-          trigger_t next=this->trigger;
+        if (NoticeBoard == this->myTrigger) {
+          trigger_t next=this->myTrigger;
           if (limit == ++_value) {
               next = '0';
-          }else while(next == this->trigger)
+          }else while(next == this->myTrigger)
           {
               next = 'A' + randomInt() % thCnt;
           }
@@ -46,7 +45,7 @@ struct Worker{
           cout<<tid<<"-Thr: " <<NoticeBoard<<" --> "<<next<<endl;
           assert (NoticeBoard != '0');
           NoticeBoard = next;
-          assert (NoticeBoard != this->trigger);
+          assert (NoticeBoard != this->myTrigger);
           lk.unlock();
         }
         this_thread::yield();
@@ -59,23 +58,23 @@ struct Worker{
       return;
     }
     unsigned int get_value() {return this->_value;}
-    trigger_t trigger;
     static atomic<trigger_t> NoticeBoard;
 private:
+    const trigger_t myTrigger;
     size_t _value=0;
     static mutex lk;
 };
 mutex Worker::lk; //must be defined outside the class to pacify linker
 atomic<trigger_t> Worker::NoticeBoard;
 int main(){
-    //Worker worker[thCnt]; // proven working, but only for no-arg ctor
+    //Worker worker[thCnt]; // proven working, but use no-arg ctor
     vector<Worker> worker; worker.reserve(thCnt);
     vector<thread> thr;
     for (int i=0; i<thCnt; ++i){
       trigger_t tmp = 'A' + i;
       worker.push_back(Worker{tmp});
       thr.emplace_back(ref(worker[i]), tmp);
-      cout<<thr[i].get_id()<<"-Thr started, with trigger = "<<tmp<<endl;
+      cout<<thr[i].get_id()<<"-Thr started, with myTrigger = "<<tmp<<endl;
     }
     Worker::NoticeBoard = 'A'; //kickstart
     //usleep(100); Worker::NoticeBoard = '0'; //race condition risk higher with thCnt
