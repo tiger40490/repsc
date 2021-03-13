@@ -1,7 +1,7 @@
 /*
 todo: why the vector<Wokrer> is broken
 showcase: uniform random int
-showcase: wrap cout in lock guard to prevent 2 threads printing interleaved
+showcase: wrap cout in lock guard to prevent interleaved printing
 */
 #include <thread>
 #include <mutex>
