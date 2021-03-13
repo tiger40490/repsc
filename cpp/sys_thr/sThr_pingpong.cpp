@@ -1,6 +1,8 @@
 /*
 todo (syntax dril): use char as trigger
 todo: why the vector<Wokrer> is broken
+
+showcase: uniform random int
 */
 #include <thread>
 #include <mutex>
@@ -11,19 +13,20 @@ todo: why the vector<Wokrer> is broken
 #include <unistd.h> //usleep() and sleep()
 #include <random>
 using namespace std;
+typedef int trigger_t; 
 
 size_t const thCnt=3, limit=9;
 int randomInt(int min=0, int max=thCnt){ 
 // https://stackoverflow.com/questions/5008804/generating-random-integer-from-a-range
   static std::mt19937 rng{ std::random_device{}() };  // create temp random_device and call its operator()
-  static std::uniform_int_distribution<int> uniform(min,max); // guaranteed unbiased
+  static std::uniform_int_distribution<int> uniform(min,max);
   return uniform(rng);
 }
 struct Worker{
     /*Worker(int input): trigger{input} {
         cout<<this<<" New Worker created with trigger = "<<this->trigger<<endl;
     }*/
-    void operator()(int input) {
+    void operator()(trigger_t input) {
       this->trigger = input;
       thread::id const tid = this_thread::get_id();
       while (NoticeBoard != '0'){ // reading a shared mutable without lock !      
@@ -33,7 +36,7 @@ struct Worker{
           lk.unlock();
         }
         if (NoticeBoard == this->trigger) {
-          int next;
+          trigger_t next;
           //while(next == this->trigger){
               next = 'A' + (randomInt() + this->trigger) % thCnt; //use rand
               if (limit == ++_value) next = '0';
@@ -56,13 +59,13 @@ struct Worker{
     }
     unsigned int get_value() {return this->_value;}
     int trigger;
-    static atomic<int> NoticeBoard;
+    static atomic<trigger_t> NoticeBoard;
 private:
     size_t _value=0;
     static mutex lk;
 };
 mutex Worker::lk; //must be defined outside the class to pacify linker
-atomic<int> Worker::NoticeBoard;
+atomic<trigger_t> Worker::NoticeBoard;
 int main(){
     //for (int aa = 0; aa< 99; ++aa) cout<<randomInt()<<" ";
         
@@ -75,7 +78,7 @@ int main(){
     Worker worker[thCnt]; // resultCollect
     vector<thread> thr;
     for (int i=0; i<thCnt; ++i){
-      int tmp = 'A' + i;
+      trigger_t tmp = 'A' + i;
       thr.emplace_back(ref(worker[i]), tmp);
       cout<<thr[i].get_id()<<"-Thr started, with trigger = "<<(char)tmp<<endl;
     }
