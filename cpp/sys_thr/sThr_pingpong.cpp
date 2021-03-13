@@ -1,6 +1,5 @@
 /*
 todo: trigger should be a const field
-todo: why the vector<Wokrer> is broken
 showcase: uniform random int
 showcase: wrap cout in lock guard to prevent interleaved printing
 */
@@ -69,12 +68,6 @@ private:
 mutex Worker::lk; //must be defined outside the class to pacify linker
 atomic<trigger_t> Worker::NoticeBoard;
 int main(){
-    /* why broke?
-    for (int i=0; i<thCnt; ++i){
-      resultCollect.push_back(Worker{});
-      thr.emplace_back( ref(resultCollect.back()), tmp ); // probably broken
-      cout<<thr[i].get_id()<<"-Thr started, with trigger = "<<tmp<<endl;
-    }*/
     //Worker worker[thCnt]; // proven working, but only for no-arg ctor
     vector<Worker> worker; worker.reserve(thCnt);
     vector<thread> thr;
@@ -84,7 +77,7 @@ int main(){
       thr.emplace_back(ref(worker[i]), tmp);
       cout<<thr[i].get_id()<<"-Thr started, with trigger = "<<tmp<<endl;
     }
-    Worker::NoticeBoard = 'A'; 
+    Worker::NoticeBoard = 'A'; //kickstart
     //usleep(100); Worker::NoticeBoard = '0'; //race condition risk higher with thCnt
     for (int i=0; i<thCnt; ++i){
       thr[i].join();
