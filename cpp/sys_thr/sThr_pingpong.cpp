@@ -1,5 +1,4 @@
 /*
-todo: avoid a thread appointing itself
 todo: why the vector<Wokrer> is broken
 showcase: uniform random int
 showcase: wrap cout in lock guard to prevent 2 threads printing interleaved
@@ -15,7 +14,7 @@ showcase: wrap cout in lock guard to prevent 2 threads printing interleaved
 using namespace std;
 typedef char trigger_t; 
 
-size_t const thCnt=5, limit=9;
+size_t const thCnt=3, limit=9;
 int randomInt(int min=0, int max=thCnt){ 
 // https://stackoverflow.com/questions/5008804/generating-random-integer-from-a-range
   static std::mt19937 rng{ std::random_device{}() };  // create temp random_device and call its operator()
@@ -36,19 +35,20 @@ struct Worker{
           lk.unlock();
         }
         if (NoticeBoard == this->trigger) {
-          trigger_t next;
-          //while(next == this->trigger){
-              next = 'A' + (randomInt() + this->trigger) % thCnt; //use rand
-              if (limit == ++_value) next = '0';
-              //cout<<"new next == " <<next<<endl;
-          //}
+          trigger_t next=this->trigger;
+          if (limit == ++_value) {
+              next = '0';
+          }else while(next == this->trigger)
+          {
+              next = 'A' + randomInt() % thCnt;
+          }
           lk.lock();
           cout<<tid<<"-Thr: " <<NoticeBoard<<" --> "<<next<<endl;
           NoticeBoard = next;
+          assert (NoticeBoard != this->trigger);
           lk.unlock();
         }
         this_thread::yield();
-        //usleep(9*1000);
       }
       {
         lk.lock();
