@@ -17,8 +17,6 @@ using namespace std;
 
 size_t thCnt=4;
 struct Worker{
-    Worker(){}
-    
     void operator()(unsigned int start) {
       cout<<this_thread::get_id()<<"-Thr: updating initial value from "<<_value<<" to "<<start<<endl;
       this->_value = start;
