@@ -20,10 +20,11 @@ struct Worker{
     }*/
     void operator()(int input) {
       this->trigger = input;
+      thread::id const tid = this_thread::get_id();
       while (NoticeBoard != '0'){ // reading a shared mutable without lock !      
         if (0) {
           lk.lock();
-          cout<<this_thread::get_id()<<"-Thr: checking  "<<trigger<<" ^ "<<NoticeBoard<<endl;
+          cout<<tid<<"-Thr: checking  "<<trigger<<" ^ "<<NoticeBoard<<endl;
           lk.unlock();
         }
         if (NoticeBoard == this->trigger) {
@@ -33,15 +34,16 @@ struct Worker{
               next = 'A' + this->trigger % thCnt; //use rand
               //cout<<"new next == " <<next<<endl;
           //}
+          
           lk.lock();
-          cout<<this_thread::get_id()<<"-Thr: triggered, setting NoticeBoard to --> "<<(char)next<<endl;
+          cout<<tid<<"-Thr: triggered, setting NoticeBoard to --> "<<(char)next<<endl;
           NoticeBoard = next;
           lk.unlock();
         }
         this_thread::yield();
         usleep(9*1000);
       }
-      cout<<this_thread::get_id()<<"-Thr: exiting loop with "<<_value<<endl;
+      cout<<tid<<"-Thr: exiting loop with "<<_value<<endl;
       return;
     }
     unsigned int get_value() {return this->_value;}
