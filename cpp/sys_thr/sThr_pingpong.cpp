@@ -1,6 +1,9 @@
 /*
+todo: after a set number of times, exit?
+todo: final value as cnt
+todo: 3 or more threads
 todo: use rand
-todo: cnt
+todo: use scoped lock... Scott
 todo: why the vector<Wokrer> is broken
 */
 #include <thread>
@@ -20,12 +23,15 @@ struct Worker{
       this->trigger = input;
       //cout<<this_thread::get_id()<<"-Thr: trigger == "<<this->trigger<<" this = "<< this<<endl;
       while (Next != '0'){ // reading a shared mutable without lock !      
-        //lk.lock();
-        cout<<this_thread::get_id()<<"-Thr: checking  "<<trigger<<" ^ "<<Next<<endl;
-        if (Next.load() == this->trigger) {
+        if (0) {
+          lk.lock();
+          cout<<this_thread::get_id()<<"-Thr: checking  "<<trigger<<" ^ "<<Next<<endl;
+          lk.unlock();
+        }
+        if (Next == this->trigger) {
           int next;
           //while(next == this->trigger){
-              //this->_value++;
+              this->_value++;
               next = 65 + this->trigger % thCnt; //use rand
               //cout<<"new next == " <<next<<endl;
           //}
@@ -69,7 +75,7 @@ int main(){
     Worker::Next = '0'; //interrupt all threads
     for (int i=0; i<thCnt; ++i){
       thr[i].join();
-      //cout << "per-worker final value = "<<resultCollect[i].get_value()<<"\n";
+      cout << "per-worker final value = "<<worker[i].get_value()<<"\n";
     }
 }/*Requirement: https://btv-gz.dreamhosters.com/wp-admin/post.php?post=39661&action=edit
 */
