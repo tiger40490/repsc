@@ -16,7 +16,7 @@ using namespace std;
 typedef char trigger_t; 
 
 bool isVerbose = true;
-bool isTestingRace = true;//true;
+bool isTestingRace = true;
 size_t const thCnt=isTestingRace? 5:3;
 size_t const limit=isTestingRace? 99:5;
 int randomInt(int min=0, int max=thCnt-1){ 
@@ -38,7 +38,7 @@ struct Worker{
       thread::id const tid = this_thread::get_id();
       //cout<<tid<<"-Thr's driver (in verctor) has address = "<<this<<endl;
       while (NoticeBoard != '0'){ // reading a shared mutable without lock !
-        if (isVerbose) {
+        if (isVerbose && !isTestingRace) {
           lk.lock();
           cout<<tid<<"-Thr: checking  "<<myTrigger<<" ^ "<<NoticeBoard<<endl;
           lk.unlock();
@@ -92,7 +92,8 @@ int main(){
     }
     Worker::NoticeBoard = 'A' + randomInt(); //kickstart
     if (isTestingRace){
-      usleep(700); 
+      usleep(1000); 
+      cout<<"inject 0..\n"<<endl;
       Worker::NoticeBoard = '0'; //Unsafe practice, deadlock-prone, esp. when thCnt is high
     }
     for (int i=0; i<thCnt; ++i){
