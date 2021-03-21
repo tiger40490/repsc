@@ -24,6 +24,7 @@ int randomInt(int min=0, int max=thCnt-1){
   static std::uniform_int_distribution<int> uniform(min,max);
   return uniform(rng);
 }
+
 struct Worker{
     Worker(trigger_t input): myTrigger{input} {
         //cout<<this<<" (same addr reused, on stack!) New Worker created with myTrigger = "<<this->myTrigger<<endl;
@@ -41,9 +42,8 @@ struct Worker{
           trigger_t next=this->myTrigger;
           if (limit == ++_value) {
               next = '0';
-          }else while(next == this->myTrigger)
-          {
-              next = 'A' + randomInt();
+          }else while(next == this->myTrigger)          {
+              next = 'A' + randomInt(); // a random character chosen from 'A' to the highest
           }
           lk.lock();
           cout<<tid<<"-Thr: " <<NoticeBoard<<" --> "<<next<<endl;
@@ -69,8 +69,10 @@ private:
     const trigger_t myTrigger;
     size_t _value=0;
 };
+
 mutex Worker::lk; //must be defined outside the class to pacify linker
 atomic<trigger_t> Worker::NoticeBoard;
+
 int main(){
     //Worker worker[thCnt]; // proven working, but use no-arg ctor
     vector<Worker> worker; worker.reserve(thCnt);
