@@ -98,7 +98,7 @@ void reset(int u, int v){
     uu = u;
     vv = v;
 }
-int test1(int u, int v){
+int test1(int u, int v){ //test one pair
     if (u == v) return u; //Leetcode guarantees both present
     reset(u,v);
     preorderDFT();
@@ -110,7 +110,7 @@ int test1(int u, int v){
     ss<<uu<<" in"<<pathU;
     ss<<vv<<" in"<<pathV;
     auto ret = pathU[0];
-    for (size_t idx=1; ;++idx){
+    for (size_t idx=1; ;++idx){ //scan both paths in lock steps
       if (pathU[idx] != pathV[idx]){ 
         //ss<<ret<<" = ret\n";
         return pathU[idx-1];
