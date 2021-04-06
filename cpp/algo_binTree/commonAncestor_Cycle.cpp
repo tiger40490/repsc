@@ -53,9 +53,9 @@ deque<int> samePathCheck;
 pair<bool, int> samePath; //both nodes are on the same path, i.e. one is a child
 void preorderDFT(Node * n=&root){
   if (samePath.first) return;
-  if (pathU.size() && pathV.size()) return;
+  if (pathU.size() && pathV.size()) return; // both pathU/pathV finalized .. terminate DFT
   if (path.end() != find(path.begin(), path.end(), n->data)){
-    cout<<"cycle\n";
+    cout<<"cycle\n"; // current "path" already contains the target node
     return;
   }
   path.push_back(n->data);
