@@ -61,9 +61,10 @@ gg(){
   git log -$cnt $branch
 }
 git-showtool(){
-  git show --name-status $1
+  ref=${1:-HEAD}
+  git show --name-status $ref
   set -x
-  git difftool $1~  $1
+  git difftool $ref~  $ref
   { set +x; } 2>/dev/null
 }
 ls1page(){
