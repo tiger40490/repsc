@@ -7,10 +7,8 @@ class PoisonPill{
 };
 
 struct FinalClassPreCpp11: virtual/*needed*/ PoisonPill{
-// "virtual" inheritance forces Derived to call PoisonPill ctor DIRECTLY, without FinalClassPreCpp11 as an agent
-  void show(){
-    cout<<"FinalClassPreCpp11"<<endl;
-  }
+// "virtual" inheritance forces Derived to call PoisonPill ctor DIRECTLY (short call stack), NOT using FinalClassPreCpp11 as an agent on a deeper call stack
+  void show(){ cout<<"FinalClassPreCpp11"<<endl; }
 };
 
 struct Derived: public FinalClassPreCpp11{
