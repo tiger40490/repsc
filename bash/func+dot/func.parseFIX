@@ -1,0 +1,16 @@
+nix(){
+  log22=$1
+  if [ -z "$1" ]; then
+    if [ `id -u -n` != "svc_prdmlpro" ]; then
+      echo not in PRODUCTION
+      log22=` ls -t /L/infra/apps/qa/mi/epa/$aDn/log/C*.$sessId.messages.log | head -1 `
+      [[ "$aDn" = *DROPCOPY* ]] && \
+      log22=`ls -t /L/infra/apps/qa/mi/epa/$aDn/log/202*-eod.dat | head -1`
+    fi
+
+    [[ -z "$log22" ]] && log22=` ls -t ../log/C202*.messages.log | head -1 `
+    printf "Locating latest messages.log ...  $log22\n"
+  fi
+  cleanFix.pl $log22 |less #-E to quit at the end
+  # echo "  cleanFix.pl $log22 | less"
+}
