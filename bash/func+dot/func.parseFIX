@@ -1,6 +1,7 @@
+nix(){
 # usage: nix fixLog1
 # usage: nix # no args
-nix(){
+# usage: zless fixLog2.gz | cleanFix.pl
   log22=$1
   if [ -z "$1" ]; then
     if [ `id -u -n` != "svc_prdmlpro" ]; then
