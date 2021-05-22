@@ -42,12 +42,14 @@ def solve(input):
       return ''.join(a)
 
     while True: #one of several round
-      sourcePos = newTenantIdAt[targetPos] # "targetPos -> sourcePos" inside the dict
-      if sourcePos == theHomeless.id: 
+      if newTenantIdAt[targetPos] == theHomeless.id: 
         a[targetPos] = theHomeless.val
         newTenantIdAt[targetPos] = FILLED
         dump()
         break
+      sourcePos = newTenantIdAt[targetPos]; assert newTenantIdAt[targetPos] == sourcePos
+      # "targetPos -> sourcePos" inside the dict
+      
       a[targetPos] = a[sourcePos] #copy the payload from sourcePos to targetPos
       dump()
       newTenantIdAt[targetPos] = FILLED # to indicate targetPos is filled
