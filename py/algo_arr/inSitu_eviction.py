@@ -5,7 +5,7 @@ todo: simplify
 showcase: global variable list don't need 'global' keyword. Instead, you can reassign entire list with slice assignment
 '''
 FILLED = -1 # indicates a target slot is not to be filled again
-newTenantIdAt=list()
+newTenentId4dump=list()
 a=list()
 
 class homeless(object):
@@ -18,14 +18,16 @@ class homeless(object):
 def dump():
   print '  '.join(a), '<-- a[]'
   print '  '.join(str(i%10) for i in xrange(sz))
-  print ' '.join( '%-2d' %p for p in newTenantIdAt), '<---- newTenantIdAt'
+  print ' '.join( '%-2d' %p for p in newTenentId4dump), '<---- newTenantIdAt'
 
 def solve(input):
   a[:]=list('ABCD')
-  newTenantIdAt[:]=input # to help dump()
   global sz; sz=len(a)
+  newTenantIdAt = {pos: newTenentId for pos, newTenentId in enumerate(input)}
+  # dict is slightly less confusing than array
   assert len(newTenantIdAt) == sz
-  assert reduce((lambda x,y: x+y*y), newTenantIdAt)==reduce((lambda x,y: x+y*y), xrange(sz))
+  assert reduce((lambda x,y: x+y*y), newTenantIdAt.values())==reduce((lambda x,y: x+y*y), xrange(sz))
+  newTenentId4dump[:]=input
   # initialization done
   
   while True:
@@ -40,7 +42,7 @@ def solve(input):
       return ''.join(a)
 
     while True: #one of several round
-      sourcePos = newTenantIdAt[targetPos] # evictedId ??
+      sourcePos = newTenantIdAt[targetPos] # 
       if sourcePos == shelter.id: 
         a[targetPos] = shelter.val
         newTenantIdAt[targetPos] = FILLED
