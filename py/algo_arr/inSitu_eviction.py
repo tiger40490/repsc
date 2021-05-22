@@ -15,10 +15,9 @@ class homeless(object):
     return str(self.id) + '=old_pos..payload='+ str(self.val)
 
 def dump():
-  print ' '.join(a)
-  print ' '.join(str(i%10) for i in xrange(sz)), '<-- a[]'
-  print ' '.join(str(p) for p in newTenantIdAt), '<-- newTenantIdAt'
+  print '  '.join(a), '<-- a[]'
   print '  '.join(str(i%10) for i in xrange(sz))
+  print ' '.join( '%-2d' %p for p in newTenantIdAt), '<---- newTenantIdAt'
 
 def solve(input):
   global newTenantIdAt; newTenantIdAt=input
