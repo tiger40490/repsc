@@ -1,12 +1,12 @@
 '''
-add asserts to tests
 todo: improve var naming
 todo: simplify
 
+showcase: global variable list don't need 'global' keyword. Instead, you can reassign entire list with slice assignment
 '''
 FILLED = -1 # indicates a target slot is not to be filled again
 newTenantIdAt=list()
-a=['A','B','C', 'D']
+a=list()
 
 class homeless(object):
   def __init__(self, id, payload):
@@ -21,33 +21,35 @@ def dump():
   print ' '.join( '%-2d' %p for p in newTenantIdAt), '<---- newTenantIdAt'
 
 def solve(input):
-  a[:]=['A','B','C', 'D']
+  a[:]=list('ABCD')
   newTenantIdAt[:]=input # to help dump()
   global sz; sz=len(a)
   assert len(newTenantIdAt) == sz
   assert reduce((lambda x,y: x+y*y), newTenantIdAt)==reduce((lambda x,y: x+y*y), xrange(sz))
+  # initialization done
   
   while True:
     for i in xrange(sz):
       if newTenantIdAt[i] == FILLED: continue
-      targetPos = i
-      shelter = homeless(targetPos, a[targetPos]) #only 1 homeless guy in shelter
-      print 'shelter has: ', shelter
+      targetPos = evictedId = i # first unfilled targetPos
+      shelter = homeless(evictedId, a[evictedId]) 
+      print 'shelter4homeless has: ', shelter #shelter takes only 1 homeless
       break
     else:
-      print 'All positions filled'
+      print ' '*30 + '^ ^ ^ ^   All positions filled   ^ ^ ^ ^'
       return ''.join(a)
-    while True: #one round
-        sourcePos = newTenantIdAt[targetPos] # evictedId ??
-        if sourcePos == shelter.id: 
-          a[targetPos] = shelter.val
-          newTenantIdAt[targetPos] = FILLED
-          dump()
-          break
-        a[targetPos] = a[sourcePos] #copy the payload from sourcePos to targetPos
+
+    while True: #one of several round
+      sourcePos = newTenantIdAt[targetPos] # evictedId ??
+      if sourcePos == shelter.id: 
+        a[targetPos] = shelter.val
+        newTenantIdAt[targetPos] = FILLED
         dump()
-        newTenantIdAt[targetPos] = FILLED # to indicate targetPos filled
-        targetPos = sourcePos
+        break
+      a[targetPos] = a[sourcePos] #copy the payload from sourcePos to targetPos
+      dump()
+      newTenantIdAt[targetPos] = FILLED # to indicate targetPos filled
+      targetPos = sourcePos
 def main():
   assert 'BCDA'==solve([1,2,3,0]) # one round enough
   assert 'BADC'==solve([1,0,3,2]) # two rounds
