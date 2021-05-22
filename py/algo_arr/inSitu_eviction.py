@@ -1,6 +1,5 @@
 '''
 todo: simplify
-todo: if target and source pos identical, mark it as filled
 
 showcase: global variable list don't need 'global' keyword. Instead, you can reassign entire list with slice assignment
 
@@ -35,10 +34,10 @@ def solve(input):
   
   scanStart = 0
   while True:
-    print 'sanning for first unfilled targetPos from ..', scanStart
+    print 'sanning for first unfilled curTargetHome from ..', scanStart
     for i in xrange(scanStart, sz):
       if newTenantIdAt[i] == FILLED: continue
-      targetPos = evictedId = scanStart = i # first unfilled targetPos
+      curTargetHome = evictedId = scanStart = i # first unfilled curTargetHome
       theHomeless = homeless(evictedId, a[evictedId]) 
       print 'theHomeless is ', theHomeless #only 1 homeless
       break
@@ -47,18 +46,18 @@ def solve(input):
       return ''.join(a)
 
     # Here's the main loop. Dense and hard to follow
-    while True: #one of several round
-      if newTenantIdAt[targetPos] == theHomeless.id: 
-        a[targetPos] = theHomeless.val
-        newTenantIdAt[targetPos] = FILLED
+    while True: #one round
+      if newTenantIdAt[curTargetHome] == theHomeless.id: 
+        a[curTargetHome] = theHomeless.val
+        newTenantIdAt[curTargetHome] = FILLED
         dump(newTenantIdAt)
         break
-      tenantOldPos = newTenantIdAt[targetPos]       
-      a[targetPos] = a[tenantOldPos] #copy the payload from tenantOldPos to targetPos
+      tenantOldHome = newTenantIdAt[curTargetHome]       
+      a[curTargetHome] = a[tenantOldHome] #copy the payload from tenantOldHome to curTargetHome
       dump(newTenantIdAt)
-      newTenantIdAt[targetPos] = FILLED # to indicate targetPos is filled
-      # Now tenantOldPos is vacant, so tenantOldPos becomes the new targetPos
-      targetPos = tenantOldPos 
+      newTenantIdAt[curTargetHome] = FILLED # to indicate curTargetHome is filled
+      # Now tenantOldHome is vacant, so tenantOldHome becomes the new curTargetHome
+      curTargetHome = tenantOldHome 
       
 def main():
   assert 'ACBD'==solve([0,2,1,3]) # one round enough
