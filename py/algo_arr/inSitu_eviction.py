@@ -34,24 +34,26 @@ def solve(input):
     for i in xrange(sz):
       if newTenantIdAt[i] == FILLED: continue
       targetPos = evictedId = i # first unfilled targetPos
-      shelter = homeless(evictedId, a[evictedId]) 
-      print 'shelter4homeless has: ', shelter #shelter takes only 1 homeless
+      theHomeless = homeless(evictedId, a[evictedId]) 
+      print 'theHomeless is ', theHomeless #only 1 homeless
       break
     else:
       print ' '*30 + '^ ^ ^ ^   All positions filled   ^ ^ ^ ^'
       return ''.join(a)
 
     while True: #one of several round
-      sourcePos = newTenantIdAt[targetPos] # 
-      if sourcePos == shelter.id: 
-        a[targetPos] = shelter.val
+      sourcePos = newTenantIdAt[targetPos] # "targetPos -> sourcePos" inside the dict
+      if sourcePos == theHomeless.id: 
+        a[targetPos] = theHomeless.val
         newTenantIdAt[targetPos] = FILLED
         dump()
         break
       a[targetPos] = a[sourcePos] #copy the payload from sourcePos to targetPos
       dump()
-      newTenantIdAt[targetPos] = FILLED # to indicate targetPos filled
-      targetPos = sourcePos
+      newTenantIdAt[targetPos] = FILLED # to indicate targetPos is filled
+      # Now the room at sourcePos is vacant, so sourcePos becomes the new targetPos
+      targetPos = sourcePos 
+      
 def main():
   assert 'BCDA'==solve([1,2,3,0]) # one round enough
   assert 'BADC'==solve([1,0,3,2]) # two rounds
