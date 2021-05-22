@@ -25,10 +25,13 @@ def solve(input):
   a[:]=list('ABCD')
   global sz; sz=len(a)
   newTenantIdAt = {pos: newTenentId for pos, newTenentId in enumerate(input)}
-  # dict is slightly less confusing than array
+  # dict is (slower but) slightly more intuitive than array
   assert len(newTenantIdAt) == sz
   assert range(sz) == sorted(newTenantIdAt.values())
-  # initialization done
+  
+  for k,v in newTenantIdAt.iteritems(): 
+    if k==v: newTenantIdAt[k] = FILLED # minor optimization .. avoid unnecessary work
+  ##### initialization done
   
   scanStart = 0
   while True:
@@ -43,6 +46,7 @@ def solve(input):
       print ' '*30 + '^ ^ ^ ^   All positions filled   ^ ^ ^ ^'
       return ''.join(a)
 
+    # Here's the main loop. Dense and hard to follow
     while True: #one of several round
       if newTenantIdAt[targetPos] == theHomeless.id: 
         a[targetPos] = theHomeless.val
@@ -58,6 +62,7 @@ def solve(input):
       
 def main():
   assert 'ACBD'==solve([0,2,1,3]) # one round enough
+  #return
   assert 'DCBA'==solve([3,2,1,0]) # two rounds
   assert 'BADC'==solve([1,0,3,2]) # two rounds
   assert 'BCDA'==solve([1,2,3,0]) # one round enough
