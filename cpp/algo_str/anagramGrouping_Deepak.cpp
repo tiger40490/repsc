@@ -5,31 +5,42 @@ todo: write an in-place solution
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <deque>
 #include <unordered_map> 
 #include <map> 
 using namespace std;
+typedef size_t Pos; //index into input
 
-vector<string> input{"abc", "xyz", "bac" , "zyx" , "msrd", "acb", "fdsa", "cba", "hlo", "rsdm"};
+vector<string> const input{"abc", "xyz", "bac" , "zyx" , "msrd", "acb", "fdsa", "cba", "hlo", "rsdm"}; // Treated as read-only
 
-void produceNew(vector<string> const & input, vector<string> & output){
-  typedef size_t pos; //index into input
-  unordered_multimap<string, pos> table;
-  for(pos i=0; i<input.size(); ++i){
+class TinyStrHolder{
+  Pos const idx2input; // index into input vector
+  string const * const addr;
+public: 
+  TinyStrHolder(Pos p): idx2input(p), addr(nullptr) {}
+  TinyStrHolder(string const * a): addr(a), idx2input(-1){}
+  string const& asStr() const { 
+    return addr?   *addr : input[idx2input]; 
+  }
+};
+
+void produceNew(vector<string> const & input, deque<TinyStrHolder> & output){
+  unordered_multimap<string, Pos> table;
+  for(Pos i=0; i<input.size(); ++i){
     string tmp = input[i];
     sort(tmp.begin(), tmp.end());
     table.insert({tmp,i});
   }
   for (auto const &it: table){ // output big anagram groups first
-    if ( 1 == table.count(it.first) ) continue;
-    cout<<it.first<<":"<<input[it.second]<<endl;
-    output.push_back(input[it.second]);
-  }
-  for (auto const &it: table){ // output singular groups last
-    if ( 1 <  table.count(it.first) ) continue;
-    cout<<it.first<<":"<<input[it.second]<<endl;
-    output.push_back(input[it.second]);
+    if ( 1 == table.count(it.first) ) {
+      output.push_back(  TinyStrHolder(it.second)); // testing the by-index ctor        
+    }else{
+      //cout<<it.first<<":"<<input[it.second]<<endl;
+      output.push_front( TinyStrHolder(&input[it.second])); // testing the by-addr ctor
+    }
   }
   assert (input.size() == output.size());
+  for (auto const &s: output) cout<<s.asStr()<<endl;
 }
 //Deepak's solution:
 std::vector<std::string> getanagrams( const std::vector<std::string> & sVec  )
@@ -77,9 +88,10 @@ std::vector<std::string> getanagrams( const std::vector<std::string> & sVec  )
 }
 
 int main(){
-  vector<string> output;
+  deque<TinyStrHolder> output;
   //getanagrams(input);
   produceNew(input, output);
 }
 /*Req: see email 19 May 2021
+Additional req: output the singular strings last.
 */
