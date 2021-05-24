@@ -31,10 +31,10 @@ void produceNew(vector<string> const & input, deque<TinyStrHolder> & output){
     sort(tmp.begin(), tmp.end());
     table.insert({tmp,i});
   }
-  for (auto const &it: table){ // output big anagram groups first
+  for (auto const &it: table){ 
     if ( 1 == table.count(it.first) ) {
       output.push_back(  TinyStrHolder(it.second)); // testing the by-index ctor        
-    }else{
+    }else{ // output big anagram groups first
       //cout<<it.first<<":"<<input[it.second]<<endl;
       output.push_front( TinyStrHolder(&input[it.second])); // testing the by-addr ctor
     }
