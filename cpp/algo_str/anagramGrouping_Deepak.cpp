@@ -1,5 +1,6 @@
 /*
 todo: write an in-place solution
+showcase operator-overload-conversion
 */
 #include <cassert>
 #include <iostream>
@@ -14,13 +15,14 @@ typedef size_t Pos; //index into input
 vector<string> const input{"abc", "xyz", "bac" , "zyx" , "msrd", "acb", "fdsa", "cba", "hlo", "rsdm"}; // Treated as read-only
 
 class TinyStrHolder{
-  Pos const idx2input; // index into input vector
   string const * const addr;
 public: 
-  TinyStrHolder(Pos p): idx2input(p), addr(nullptr) {}
-  TinyStrHolder(string const * a): addr(a), idx2input(-1){}
-  string const& asStr() const { 
-    return addr?   *addr : input[idx2input]; 
+  TinyStrHolder(string const * a): addr(a){}
+  operator string const&() const{ //last const required 
+    return *addr; 
+  }
+  operator char   const*() const{ //last const required 
+    return addr->c_str(); 
   }
 };
 
@@ -33,14 +35,15 @@ void produceNew(vector<string> const & input, deque<TinyStrHolder> & output){
   }
   for (auto const &it: table){ 
     if ( 1 == table.count(it.first) ) {
-      output.push_back(  TinyStrHolder(it.second)); // testing the by-index ctor        
+      output.push_back( TinyStrHolder(&input[it.second])); 
+      //output.push_back(  TinyStrHolder(it.second)); // testing the by-index ctor        
     }else{ // output big anagram groups first
       //cout<<it.first<<":"<<input[it.second]<<endl;
-      output.push_front( TinyStrHolder(&input[it.second])); // testing the by-addr ctor
+      output.push_front( TinyStrHolder(&input[it.second])); 
     }
   }
   assert (input.size() == output.size());
-  for (auto const &s: output) cout<<s.asStr()<<endl;
+  for (auto const &s: output) cout<<s<<endl;
 }
 //Deepak's solution:
 std::vector<std::string> getanagrams( const std::vector<std::string> & sVec  )
