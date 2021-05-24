@@ -92,8 +92,8 @@ std::vector<std::string> getanagrams( const std::vector<std::string> & sVec  )
 
 int main(){
   deque<TinyHolder4str> output;
-  //getanagrams(input);
   produceNew(input, output);
+  //getanagrams(input);
 }
 /*Req: see email 19 May 2021
 Additional req: output the singular strings last.
