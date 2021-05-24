@@ -14,19 +14,19 @@ typedef size_t Pos; //index into input
 
 vector<string> const input{"abc", "xyz", "bac" , "zyx" , "msrd", "acb", "fdsa", "cba", "hlo", "rsdm"}; // Treated as read-only
 
-class TinyStrHolder{
+class TinyHolder4str{
   string const * const addr;
 public: 
-  TinyStrHolder(string const * a): addr(a){}
+  TinyHolder4str(string const * a): addr(a){}
   operator string const&() const{ //last const required 
     return *addr; 
   }
   operator char   const*() const{ //last const required 
-    return addr->c_str(); 
+    return addr->c_str(); // This OOC is very handy for any string-wrapper
   }
 };
 
-void produceNew(vector<string> const & input, deque<TinyStrHolder> & output){
+void produceNew(vector<string> const & input, deque<TinyHolder4str> & output){
   unordered_multimap<string, Pos> table;
   for(Pos i=0; i<input.size(); ++i){
     string tmp = input[i];
@@ -35,11 +35,11 @@ void produceNew(vector<string> const & input, deque<TinyStrHolder> & output){
   }
   for (auto const &it: table){ 
     if ( 1 == table.count(it.first) ) {
-      output.push_back( TinyStrHolder(&input[it.second])); 
-      //output.push_back(  TinyStrHolder(it.second)); // testing the by-index ctor        
-    }else{ // output big anagram groups first
       //cout<<it.first<<":"<<input[it.second]<<endl;
-      output.push_front( TinyStrHolder(&input[it.second])); 
+      //output.push_back(  TinyHolder4str(it.second)); // testing the by-index ctor        
+      output.push_back( TinyHolder4str(&input[it.second])); 
+    }else{ // output big anagram groups first
+      output.push_front( TinyHolder4str(&input[it.second])); 
     }
   }
   assert (input.size() == output.size());
@@ -91,7 +91,7 @@ std::vector<std::string> getanagrams( const std::vector<std::string> & sVec  )
 }
 
 int main(){
-  deque<TinyStrHolder> output;
+  deque<TinyHolder4str> output;
   //getanagrams(input);
   produceNew(input, output);
 }
