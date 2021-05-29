@@ -1,5 +1,6 @@
 '''
 todo: simplify
+todo: add test case: given a long array of 52, reshuffle back to a-zA-Z. 
 
 showcase: global variable list don't need 'global' keyword. Instead, you can reassign entire list with slice assignment
 
@@ -38,7 +39,7 @@ def solve(input):
     theHomeless = homeless(evictedId, a[evictedId]) 
     print 'theHomeless is ', theHomeless #only 1 homeless
     
-    # Here's the main loop. Dense and hard to follow
+    # Here's the central algo, in an inner loop. Dense and hard to follow
     while True: #one round
       if newTenantIdAt[curTargetHome] == theHomeless.id: 
         a[curTargetHome] = theHomeless.val
