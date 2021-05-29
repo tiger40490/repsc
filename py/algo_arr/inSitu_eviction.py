@@ -1,10 +1,9 @@
 '''
-todo: simplify
-todo: add test case: given a long array of 52, reshuffle back to a-zA-Z. 
+todo: simplify the core algo
 
 showcase: global variable list don't need 'global' keyword. Instead, you can reassign entire list with slice assignment
 
-Variable naming reflects the metaphor, which is crucial to the comprehension of this algo.
+Variable naming reflects the metaphor, which is crucial to the comprehension of the core algo.
 '''
 import random, string
 FILLED = -1 # indicates a target slot is not to be filled again
@@ -39,7 +38,7 @@ def solve(newTenantIdAt, original='ABCD'):
     theHomeless = homeless(evictedId, a[evictedId]) 
     print 'theHomeless is ', theHomeless #only 1 homeless
     
-    # Here's the central algo, in an inner loop. Dense and hard to follow
+    # Here's the core algo, in an inner loop. Dense and hard to follow
     while True: #one round
       if newTenantIdAt[curTargetHome] == theHomeless.id: 
         a[curTargetHome] = theHomeless.val
