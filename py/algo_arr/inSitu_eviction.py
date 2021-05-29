@@ -10,7 +10,7 @@ a=list()
 
 class homeless(object):
   def __init__(self, id, payload):
-    self.id = id # original pos
+    self.id = id # original pos of this item
     self.val= payload
   def __str__(self):
     return str(self.id) + '=old_pos..payload='+ str(self.val)
@@ -18,18 +18,18 @@ class homeless(object):
 def dump(d):
   print '  '.join(a), '<-- a[]'
   print '  '.join(str(i%10) for i in xrange(sz))
-  print ' '.join( '%-2d' %p for key, p in sorted(d.iteritems())), '<---- newTenantIdAt'
+  print ' '.join( '%-2d' %p for p in sorted(d)), '<---- newTenantIdAt'
 
 def solve(input):
   a[:]=list('ABCD')
   global sz; sz=len(a)
-  newTenantIdAt = {pos: newTenentId for pos, newTenentId in enumerate(input)}
-  # dict is (slower but) slightly more intuitive than array
+  newTenantIdAt = input
+  ## {pos: newTenentId for pos, newTenentId in enumerate(input)} # dict is (slower but) slightly more intuitive than array
   assert len(newTenantIdAt) == sz
-  assert range(sz) == sorted(newTenantIdAt.values())
+  assert range(sz) == sorted(newTenantIdAt)
   
-  for k,v in newTenantIdAt.iteritems(): 
-    if k==v: newTenantIdAt[k] = FILLED # minor optimization .. avoid unnecessary work
+  for pos, newTenentId in enumerate(newTenantIdAt): 
+    if pos==newTenentId: newTenantIdAt[pos] = FILLED # minor optimization .. avoid unnecessary work
   ##### initialization done
   
   scanStart = 0
