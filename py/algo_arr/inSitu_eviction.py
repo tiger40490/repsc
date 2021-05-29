@@ -32,19 +32,12 @@ def solve(input):
     if pos==newTenentId: newTenantIdAt[pos] = FILLED # minor optimization .. avoid unnecessary work
   ##### initialization done
   
-  scanStart = 0
-  while True:
-    print 'sanning for first unfilled curTargetHome from ..', scanStart
-    for i in xrange(scanStart, sz):
-      if newTenantIdAt[i] == FILLED: continue
-      curTargetHome = evictedId = scanStart = i # first unfilled curTargetHome
-      theHomeless = homeless(evictedId, a[evictedId]) 
-      print 'theHomeless is ', theHomeless #only 1 homeless
-      break
-    else:
-      print ' '*30 + '^ ^ ^ ^   All positions filled   ^ ^ ^ ^'
-      return ''.join(a)
-
+  for ii, newTenentId in enumerate(newTenantIdAt): 
+    if newTenentId == FILLED: continue
+    curTargetHome = evictedId = ii# first unfilled curTargetHome
+    theHomeless = homeless(evictedId, a[evictedId]) 
+    print 'theHomeless is ', theHomeless #only 1 homeless
+    
     # Here's the main loop. Dense and hard to follow
     while True: #one round
       if newTenantIdAt[curTargetHome] == theHomeless.id: 
@@ -58,6 +51,9 @@ def solve(input):
       newTenantIdAt[curTargetHome] = FILLED # to indicate curTargetHome is filled
       # Now tenantOldHome is vacant, so tenantOldHome becomes the new curTargetHome
       curTargetHome = tenantOldHome 
+  print ' '*30 + '^ ^ ^ ^   All positions filled   ^ ^ ^ ^'
+  return ''.join(a)    
+  
       
 def main():
   assert 'ACBD'==solve([0,2,1,3]) # one round enough
