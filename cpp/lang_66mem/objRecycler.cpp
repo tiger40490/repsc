@@ -8,7 +8,7 @@ struct Trade{ //
 size_t const SZ=2;
 Trade * pool[SZ]={};
 int lastSlotUsed=-1; //for assert
-Trade * getInstance(){
+Trade * getShell(){
   for (size_t i=0; i<SZ; ++i){
     if (pool[i] == nullptr) continue;
     Trade * inst = pool[i];
@@ -26,7 +26,7 @@ Trade * getInstance(){
 
 Note this function won't care if you return the same ptr twice.
 */
-Trade * returnInstance(Trade * inst){
+Trade * returnShell(Trade * inst){
   assert (inst != nullptr) ;
   for (size_t i=0; i<SZ; ++i){
     if (pool[i] != nullptr) continue;
@@ -40,23 +40,39 @@ Trade * returnInstance(Trade * inst){
   free(inst);
   return nullptr;
 }
+void check(Trade * pos0, Trade * pos1){
+  assert(pos0 == pool[0]);
+  assert(pos1 == pool[1]);
+}
 int main(){
   assert(pool[SZ-1] == nullptr);
-  Trade * const t1 = getInstance();
-  Trade * const t2 = getInstance();
-  Trade * const t3 = getInstance();
+  Trade * const t1 = getShell();
+  Trade * const t2 = getShell();
+  Trade * const t3 = getShell();
   assert (lastSlotUsed == -1);
+  check(nullptr, nullptr);
   
-  assert(returnInstance(t1) != nullptr);
+  assert(returnShell(t1) != nullptr);
   assert (lastSlotUsed == 0);
-  assert(returnInstance(t2) != nullptr);
+  check(t1, nullptr);
+  assert(returnShell(t2) != nullptr);
   assert (lastSlotUsed == 1);
+  check(t1, t2);
   
-  assert(returnInstance(t3) == nullptr); // pool full
+  assert(returnShell(t3) == nullptr); // pool full
   assert(lastSlotUsed == -1);
   
-  assert(getInstance() == t1);
+  assert(getShell() == t1);
   assert(lastSlotUsed == 0);
+  check(nullptr, t2);
+  
+  assert(returnShell(t3) != nullptr);
+  assert (lastSlotUsed == 0);
+  check(t3, t2);
+  
+  assert(getShell() == t3);
+  assert(lastSlotUsed == 0);
+  check(nullptr, t2);
 }/*Req: https://btv-gz.dreamhosters.com/wp-admin/post.php?post=41152&action=edit
 Use C not c++
 */
