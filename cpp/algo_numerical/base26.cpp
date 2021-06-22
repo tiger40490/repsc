@@ -1,32 +1,29 @@
-/* showcase: 
-todo: print the first 999 base26 items
+/* showcase: strlen, strcmp, c-string manipulation
 */
 #include <assert.h>
 #include <stdio.h>  
 #include <string.h>
 using namespace std;
 
-// ord starts at 1, not zero
-char const * convertToBase26(size_t const ord, char * buf, char const * expected) {
+// ordinal starts at 1, not zero
+char const * convertToBase26(size_t const ordinal, char * buf, char const * expected) {
   size_t const bufSz = strlen(buf);
   assert(bufSz >= 8);
-  char * ret = buf + bufSz-1;
-  for (size_t cur=ord;;){
-    int quo = cur/26, rem = cur%26;
-    if (rem == 0){
-      rem = 26;
-      --quo;
+  char * lastWrite = buf + bufSz;
+  for (size_t cur=ordinal; cur;){
+    int quotient = cur/26, remainder = cur%26;
+    if (remainder == 0){
+      remainder = 26;
+      --quotient;
     }
-    *ret = 'a' + rem - 1;    
-    if (quo == 0) break;
-    --ret;
-    cur = quo;
+    *(--lastWrite) = 'a' + remainder - 1;
+    cur = quotient; // exit when quotient and cur become zero, 
   }
   if (expected){
-    assert(strcmp(ret, expected) == 0);
-    printf("%s\t~~ %d as expected\n", ret, ord);
+    assert(strcmp(lastWrite, expected) == 0);
+    printf("%s\t~~ %d as expected\n", lastWrite, ordinal);
   }
-  return ret;
+  return lastWrite;
 }
 
 int main(){
@@ -40,7 +37,10 @@ int main(){
   convertToBase26(3*26*26 + 1*26 +1, buf, "caa");
   convertToBase26(3*26*26 + 5*26 +24, buf, "cex");
   
-  for(int i = 1; i< 999; ++i){
+  for(int i = 1; i< 999; ++i){ //dump part of the sequence
+  // the last digit in a column are identical :)
+  // the 2nd last digit in a column are a-zer
+  // the 3rd last digit in a column are identical-so-far
     printf("%3d %2s ", i, convertToBase26(i, buf, nullptr));
     if (i%26==0) printf("\n");
   }
