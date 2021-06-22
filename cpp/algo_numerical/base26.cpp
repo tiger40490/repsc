@@ -39,7 +39,7 @@ int main(){
   
   for(int i = 1; i< 999; ++i){ //dump part of the sequence
   // the last digit in a column are identical :)
-  // the 2nd last digit in a column are a-zer
+  // the 2nd last digit in a column are a-z
   // the 3rd last digit in a column are identical-so-far
     printf("%3d %2s ", i, convertToBase26(i, buf, nullptr));
     if (i%26==0) printf("\n");
