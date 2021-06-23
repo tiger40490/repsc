@@ -2,7 +2,8 @@ fibNums=[0,1,1]
 def fib(num):
   if num < len(fibNums): return fibNums[num]
   print 'computing #', num
-  fibNums.append( fib(num-2)+fib(num-1) )
+  fibNums.append( fib(num-2)+fib(num-1) ) 
+  ''' if num-1 on the Left, then the call graph looks different '''
   print 'done #', num
   return fibNums[-1]
 

@@ -1,12 +1,12 @@
 '''
 '''
 class ProtocolBasedDict(object):
-  ''' In this demo, by default 'a' maps to 1 and 'z' maps to 26
+  ''' In this silly demo, by default 'a' maps to 1 and 'z' maps to 26
   any pair explicit set will override the default
   '''
   def __init__(self):
     self.override = dict()
-  def __contains__(self, key): #part of an implicit protocol
+  def __contains__(self, key): #part of an implicit protocol to support "in"
     ret = key in self.override or len(key) == 1 and 'a' <= key <= 'z'
     print key, 'in ?', ret
     return ret
@@ -14,7 +14,7 @@ class ProtocolBasedDict(object):
     print len(self.override), 'len@internal_dict',
     self.override[key] = val
     print len(self.override)
-  def __getitem__(self, key): #part of an implicit protocol
+  def __getitem__(self, key): #part of an implicit protocol to support []
     print 'probing with', key
     if key in self.override: return self.override[key]
     assert len(key) == 1
@@ -26,5 +26,8 @@ def test():
   if 'c'  in map: print map['c']
 test()    
 ''' Based on [[python for the busy java developer]] P43-44
+
 This technique is seldom needed in coding interviews, but illustrates the concept of protocol
+
+ContextManager is a practical _protocol_.
 '''
