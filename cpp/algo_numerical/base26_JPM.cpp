@@ -1,11 +1,17 @@
-/* showcase: strlen, strcmp, c-string manipulation
+/* 
+showcase: strlen, strcmp, c-string manipulation
+showcase passing a buffer to be initialized. This technique is fairly 
+stanard and described in P124 [[Understanding And Using C Pointers]].
+In fact, strcpy() does something similar.
 */
 #include <assert.h>
 #include <stdio.h>  
 #include <string.h>
 using namespace std;
 
-// ordinal starts at 1, not zero
+/* param ordinal starts at 1, not zero
+returns a pointer into the same buffer "buf". If we only populated the last 3 char in the buffer, then the return value is the address 3 chars before the null character.
+*/
 char const * convertToBase26(size_t const ordinal, char * buf, char const * expected) {
   size_t const bufSz = strlen(buf);
   assert(bufSz >= 8);
