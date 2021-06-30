@@ -47,15 +47,17 @@ Hard to understand; hard to memorize; need to reproduce from memory every few mo
 def abbr(word, n): #generates all abbreviations of length==n. 
 # if pool size==55, then 55-C-n abbreviations??
   def after_i_th_item(pool,pos):
+    ''' nested function, a pure function'''
     return pool[pos+1:]
   return _yield(after_i_th_item, word,n) #,True)
-def allAbbr(word):
+def allAbbr(word): # using the abbr() function above
   import itertools
   gen = itertools.chain()
  #for n in xrange(1+len(word)):
   for n in range(len(word),0,-1)+[0]: #longest first
     gen = itertools.chain(gen, abbr(word,n))
-  return gen
+  return gen # return a generator expression
+  
 def redrawP(pool, n): # permutations by n redraws from same pool. 
 # If pool size==55, then 55^n outcomes
   def keepAll(pool, unused): 

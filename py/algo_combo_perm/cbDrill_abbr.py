@@ -15,3 +15,6 @@ def main():
     
 # all abbr
 main()
+'''
+Based on cookbook.py, this script was written as a practice.
+'''
