@@ -1,7 +1,6 @@
 '''
-todo: genShortestFirst() need to return the set of sums. Let's build a hash table
-
 '''
+from pprint import pprint
 from collections import defaultdict
 subSum=defaultdict(int)
 def genShortestFirst(original):
@@ -11,12 +10,16 @@ def genShortestFirst(original):
   '''  
   print ' v ---  shortestFirst starting --  v'
   growing=[()] # start with a single empty string
-  for ch in original: # I would now avoid this in favor of the more common for i in range(len(original))
+  for elem in original: # I would now avoid this in favor of the more common for i in range(len(original))
       sz=len(growing)
       for abbr in growing[:sz] :
-        growing.append(abbr+(ch,))
+        newAbbr = abbr + (elem,)
+        growing.append(newAbbr)
+        if newAbbr not in subSum:
+          subSum[newAbbr] = subSum[abbr] + elem
       print str(len(growing))+'-element', growing
   assert len(growing) == 2**len(original)
+  print(subSum)
   return growing
 
 def main():
