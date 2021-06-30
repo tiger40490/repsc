@@ -7,11 +7,12 @@ def genShortestFirst(original):
   Join the lists into a list of 2N.
   '''  
   print ' v ---  shortestFirst starting --  v'
-  growing=[''] # start with a single empty string
+  growing=[[]] # start with a single empty string
   for ch in original: # I would now avoid this in favor of the more common for i in range(len(original))
       tmp = list()
       for abbr in growing:
-        tmp.append(abbr+ch)
+        #print abbr
+        tmp.append(abbr+[ch])
       growing.extend(tmp)
       print str(len(growing))+'-element', growing
   if len(original) == len(set(original)):
