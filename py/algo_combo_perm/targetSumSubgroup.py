@@ -8,9 +8,17 @@ import sys
 SUCCESS='... SUCCESS :)'
 mode=''
 def genSubGroupSums(original, tgt= -sys.maxint):
-  '''Supose we have scanned 3 elements in the original, and we have a collection of N abbreviations. 
-  For the next element 'j', we append 'j' to each existing abbr to generate N new abbreviations. 
-  Join the lists into a list of 2N elements.
+  ''' This function generates all subgroups of the original collection, and computes the sum for each subgroup. 
+  It returns a Set of those sums. For debugging, 
+  it also saves at least one subgroup for each unique sum. For example, 
+  if [3,1] and [1,1,2] and [2,1,0,1] each has group sum = 4, 
+  then at least one of these groups will be associated with the sum "4". 
+  We can trace back how we got to 4.
+  
+  The algorithm (the abbreviation algorithm): Supose we have scanned 3 elements in the original, 
+  and so far we have N abbreviations in a list. 
+  For the next element 'j', we append 'j' to each existing abbreviation to generate N new abbreviations. 
+  Join the two lists into a list of 2N elements.
   '''  
   print ' v -  genSubGroupSums for', original, ' - v'
   subsums={0:()} # start with a single empty string
@@ -22,7 +30,7 @@ def genSubGroupSums(original, tgt= -sys.maxint):
           print abbr+(elem,) , 'add up to target sum of', tgt, SUCCESS
           return None #special value
         elif mode=='NN' and newSum > tgt: 
-          continue # don't need to save newSum
+          continue # newSum is too high to be useful
         tmp[newSum] = abbr + (elem,)
       subsums.update(tmp)
       #print str(len(subsums))+'-element subgroup Sums:', subsums.keys()
