@@ -24,6 +24,6 @@ def allAbbr():
     
 allAbbr()
 '''
-Based on cookbook.py, this script was written as a practice.
+Based on cookbook.py, this script was written as a practice. It is a simpler rewrite.
 Now I think this way of generating 2^N -2 abbreviations is worse than O(2^N).
 '''
