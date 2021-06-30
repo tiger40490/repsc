@@ -27,17 +27,21 @@ def genSubGroupSums(original, tgt= -sys.maxint):
     print k, 'is a subgroup sum. One of the subgroup(s) is', v
   return subsums
 
+def splitSimple(nums):
+  sz=len(nums)
+  return nums[:sz/2],  nums[sz/2:]
 def solve(nums, tgt):
   print ' v v -----  solve for -->',tgt,' -----  v v'
-  sz=len(nums)
-  lowerHouse = genSubGroupSums(nums[:sz/2], tgt)
-  if lowerHouse is None: return True
-  higherHouse = genSubGroupSums(nums[sz/2:],tgt)
-  if higherHouse is None: return True
-  for subsum1, subGroup1 in higherHouse.iteritems():
+  lowerHouse,higherHouse=splitSimple(nums)
+  
+  database1 = genSubGroupSums(lowerHouse, tgt)
+  if database1 is None: return True
+  database2 = genSubGroupSums(higherHouse,tgt)
+  if database2 is None: return True
+  for subsum1, subGroup1 in database2.iteritems():
     subsum2 = tgt - subsum1
-    if subsum2 in lowerHouse:
-      subGroup2 = lowerHouse[subsum2]
+    if subsum2 in database1:
+      subGroup2 = database1[subsum2]
       print subsum1, subGroup1 
       print subsum2, subGroup2, SUCCESS
       return True
