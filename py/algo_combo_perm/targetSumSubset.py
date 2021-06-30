@@ -9,22 +9,15 @@ def genShortestFirst(original):
   print ' v ---  shortestFirst starting --  v'
   growing=[[]] # start with a single empty string
   for ch in original: # I would now avoid this in favor of the more common for i in range(len(original))
-      tmp = list()
-      for abbr in growing:
-        #print abbr
-        tmp.append(abbr+[ch])
-      growing.extend(tmp)
+      sz=len(growing)
+      for abbr in growing[:sz] :
+        growing.append(abbr+[ch])
       print str(len(growing))+'-element', growing
-  if len(original) == len(set(original)):
-    assert len(growing) == 2**len(original)
+  assert len(growing) == 2**len(original)
   return growing
 
 def main():
-  genShortestFirst('abcd')
-  return
-  genShortestFirst('aabb')
-  genShortestFirst('aaab')
-  genShortestFirst('abaa')
+  genShortestFirst([0,1,2,3])
 if __name__ == '__main__': main()
 '''Req: https://btv-gz.dreamhosters.com/wp-admin/post.php?post=41382&action=edit
 A subset is a part of the original objects, perhaps including 2 duplicate objects.
