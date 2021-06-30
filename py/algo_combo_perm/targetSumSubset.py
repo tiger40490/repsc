@@ -1,14 +1,13 @@
 '''
 
 '''
-
 def genShortestFirst(original):
   '''Supose we have scanned 3 chars in the original, and we have a collection of N abbreviations. 
   For the next char 'j', we append 'j' to each existing abbr to generate N new abbreviations. 
   Join the lists into a list of 2N.
   '''  
   print ' v ---  shortestFirst starting --  v'
-  growing=list(['']) # start with a single empty string
+  growing=[''] # start with a single empty string
   for ch in original: # I would now avoid this in favor of the more common for i in range(len(original))
       tmp = list()
       for abbr in growing:
@@ -21,6 +20,7 @@ def genShortestFirst(original):
 
 def main():
   genShortestFirst('abcd')
+  return
   genShortestFirst('aabb')
   genShortestFirst('aaab')
   genShortestFirst('abaa')
