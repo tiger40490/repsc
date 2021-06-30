@@ -10,7 +10,7 @@ def genSubGroupSums(original, tgt= -sys.maxint):
   For the next element 'j', we append 'j' to each existing abbr to generate N new abbreviations. 
   Join the lists into a list of 2N elements.
   '''  
-  print ' v ---  genSubGroupSums starting --  v'
+  print ' v -  genSubGroupSums for', original, ' - v'
   subsums={0:()} # start with a single empty string
   for elem in original: 
       tmp = dict()
@@ -21,18 +21,27 @@ def genSubGroupSums(original, tgt= -sys.maxint):
           return None #special value
         tmp[newSum] = abbr + (elem,)
       subsums.update(tmp)
-      print str(len(subsums))+'-element subgroup Sums:', subsums.keys()
+      #print str(len(subsums))+'-element subgroup Sums:', subsums.keys()
   assert len(subsums) <= 2**len(original)
   for k,v in subsums.items(): 
     print k, 'is a subgroup sum. One of the subgroup(s) is', v
   return subsums
 
 def splitSimple(nums):
+  ''' This split is good enough (possibly optimial) if original elements are signed. '''
   sz=len(nums)
   return nums[:sz/2],  nums[sz/2:]
+  
+def splitSorted(nums):
+  ''' This split is slightly more efficient if all the original elements are positive
+  '''
+  nums.sort()
+  sz=len(nums)
+  return nums[::2],  nums[1::2]
+  
 def solve(nums, tgt):
-  print ' v v -----  solve for -->',tgt,' -----  v v'
-  lowerHouse,higherHouse=splitSimple(nums)
+  print ' v v v ====== solve for ===>',tgt,' ====== v v v'
+  lowerHouse,higherHouse=splitSorted(nums)
   
   database1 = genSubGroupSums(lowerHouse, tgt)
   if database1 is None: return True
