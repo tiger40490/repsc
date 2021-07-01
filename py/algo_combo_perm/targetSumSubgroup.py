@@ -1,12 +1,19 @@
 '''
 showcase method selection using method reference splitAlgo
 '''
-#from pprint import pprint
-#from json import dumps
-#from collections import defaultdict
 import sys
 SUCCESS='... SUCCESS :)'
-mode=''
+class GlobalVO:
+    def __init__(self, payload=None):
+        self.payload = payload
+    def __eq__(self, tgt):
+        ret = (self.payload == tgt)
+        #print 'EQUAL' if ret else 'Not EQUAL'
+        return ret
+    def __ne__(self, tgt):
+        return not self==tgt
+mode=GlobalVO()
+
 def genSubGroupSums(original, tgt= -sys.maxint):
   ''' This function generates all subgroups of the original collection, and computes the sum for each subgroup. 
   It returns a Set of those sums. For debugging, 
@@ -65,18 +72,18 @@ def solve(nums, tgt):
     subsum2 = tgt - subsum1
     if subsum2 in database1:
       subGroup2 = database1[subsum2]
-      print subsum1, subGroup1 
-      print subsum2, subGroup2, SUCCESS
+      print subsum1, subGroup1, 'and', subsum2, subGroup2, SUCCESS
       return True
   return False
 def test(nums, tgt, expected):
   assert expected == solve(nums, tgt)
 def main():
+  test([1, 2, 2, 3, 3, -5, -5], -9, True)
   test([1, 2, 6, 9, 12, 21], 9, True)
   test([1, 2, 6, 9, 12, 21], 11, True)
   test([1, 2, 6, 9, 12, 21], 25, False)
   test([1, 2, 6, 9, 12, 21], 21, True)
-  global mode; mode='NN' # Meaning all original elements are non-negative
+  mode.payload='NN' # Meaning all original elements are non-negative
   test([1, 2, 6, 9, 12, 21], 5, False)
 if __name__ == '__main__': main()
 '''Req: https://btv-gz.dreamhosters.com/wp-admin/post.php?post=41382&action=edit
