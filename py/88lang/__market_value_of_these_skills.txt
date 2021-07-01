@@ -1,0 +1,17 @@
+Q: What's the market value of the skills demonstrated in this folder?
+
+-- GTD in a given project
+These skills .. seldom needed. 
+
+If a teammate has this skill, then other people could learn it, but they would often stick to what they know i.e. the common knowledge.
+
+-- zbs/expertise, as required in designs.
+These skills are minor expertise not ground-breaking expertise with a Wow! effect. 
+
+In this sense, my _PERL_ tricks are similar.
+
+Note some of the content in this folder is low-level zbs, not tricks per seldom
+
+-- IV: mostly not quizzed, but you could showcase them in your answer!
+
+Recall my _PERL_ skills
