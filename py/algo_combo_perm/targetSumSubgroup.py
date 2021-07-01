@@ -12,6 +12,23 @@ class GlobalVO: # from 88lang/overloadEqOperator.py
         return not self==tgt
 mode=GlobalVO()
 
+def splitSimple(arr):
+  ''' This split is good enough (possibly optimial) if original elements are signed. '''
+  sz=len(arr)
+  return arr[:sz/2],  arr[sz/2:]
+def splitSorted(arr):
+  ''' This split is slightly more efficient if all the original elements are positive. 
+  In such a case genSubGroupSums() should refuse to save a subsum above target sum.
+  '''
+  arr.sort()
+  sz=len(arr)
+  return arr[::2],  arr[1::2]
+def split2(arr):
+  ''' group the input elements into two arrays of similar size '''
+  if mode=='NN': return splitSorted(arr)
+  else         : return splitSimple(arr)
+########### end of minor util functions ###########
+  
 def genSubGroupSums(original, tgt= -sys.maxint):
   ''' This function generates all subgroups of the original collection, and computes the sum for each subgroup. 
   It returns a Set of those sums. For debugging, 
@@ -44,28 +61,15 @@ def genSubGroupSums(original, tgt= -sys.maxint):
     print k, 'is a subgroup sum. One of the subgroup(s) is', v
   return subsums
 
-def splitSimple(arr):
-  ''' This split is good enough (possibly optimial) if original elements are signed. '''
-  sz=len(arr)
-  return arr[:sz/2],  arr[sz/2:]
-def splitSorted(arr):
-  ''' This split is slightly more efficient if all the original elements are positive. 
-  In such a case genSubGroupSums() should refuse to save a subsum above target sum.
-  '''
-  arr.sort()
-  sz=len(arr)
-  return arr[::2],  arr[1::2]
-def split2(arr):
-  if mode=='NN': return splitSorted(arr)
-  else         : return splitSimple(arr)
-  
 def solve(arr, tgt):
   print ' v v v ====== solve for ===>',tgt,' ====== v v v'
   lowerHouse,higherHouse = split2(arr)
+  
   database1 = genSubGroupSums(lowerHouse, tgt)
   if database1 is None: return True
   database2 = genSubGroupSums(higherHouse,tgt)
   if database2 is None: return True
+  
   for subsum1, subGroup1 in database2.iteritems():
     subsum2 = tgt - subsum1
     if subsum2 in database1:
