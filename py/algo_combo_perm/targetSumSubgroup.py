@@ -1,14 +1,12 @@
 '''
-showcase method selection using method reference splitAlgo
 '''
 import sys
 SUCCESS='... SUCCESS :)'
-class GlobalVO:
+class GlobalVO: # from 88lang/overloadEqOperator.py
     def __init__(self, payload=None):
         self.payload = payload
     def __eq__(self, tgt):
         ret = (self.payload == tgt)
-        #print 'EQUAL' if ret else 'Not EQUAL'
         return ret
     def __ne__(self, tgt):
         return not self==tgt
@@ -46,24 +44,24 @@ def genSubGroupSums(original, tgt= -sys.maxint):
     print k, 'is a subgroup sum. One of the subgroup(s) is', v
   return subsums
 
-def splitSimple(nums):
+def splitSimple(arr):
   ''' This split is good enough (possibly optimial) if original elements are signed. '''
-  sz=len(nums)
-  return nums[:sz/2],  nums[sz/2:]
-def splitSorted(nums):
+  sz=len(arr)
+  return arr[:sz/2],  arr[sz/2:]
+def splitSorted(arr):
   ''' This split is slightly more efficient if all the original elements are positive. 
   In such a case genSubGroupSums() should refuse to save a subsum above target sum.
   '''
-  nums.sort()
-  sz=len(nums)
-  return nums[::2],  nums[1::2]
+  arr.sort()
+  sz=len(arr)
+  return arr[::2],  arr[1::2]
+def split2(arr):
+  if mode=='NN': return splitSorted(arr)
+  else         : return splitSimple(arr)
   
-def solve(nums, tgt):
+def solve(arr, tgt):
   print ' v v v ====== solve for ===>',tgt,' ====== v v v'
-  if mode=='NN': splitAlgo = splitSorted
-  else:          splitAlgo = splitSimple
-  lowerHouse,higherHouse=splitAlgo(nums)
-  
+  lowerHouse,higherHouse = split2(arr)
   database1 = genSubGroupSums(lowerHouse, tgt)
   if database1 is None: return True
   database2 = genSubGroupSums(higherHouse,tgt)
@@ -75,15 +73,15 @@ def solve(nums, tgt):
       print subsum1, subGroup1, 'and', subsum2, subGroup2, SUCCESS
       return True
   return False
-def test(nums, tgt, expected):
-  assert expected == solve(nums, tgt)
+def test(arr, tgt, expected):
+  assert expected == solve(arr, tgt)
 def main():
   test([1, 2, 2, 3, 3, -5, -5], -9, True)
   test([1, 2, 6, 9, 12, 21], 9, True)
   test([1, 2, 6, 9, 12, 21], 11, True)
   test([1, 2, 6, 9, 12, 21], 25, False)
   test([1, 2, 6, 9, 12, 21], 21, True)
-  mode.payload='NN' # Meaning all original elements are non-negative
+  mode.payload='NN' # NN Meaning all original elements are non-negative
   test([1, 2, 6, 9, 12, 21], 5, False)
 if __name__ == '__main__': main()
 '''Req: https://btv-gz.dreamhosters.com/wp-admin/post.php?post=41382&action=edit
