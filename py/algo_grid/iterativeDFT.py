@@ -1,6 +1,6 @@
 ''' 
 showcase sum of matrix
-showcase passing a function output into a method, where the function only updates a global variable and returns None
+showcase passing a function output into a method, where the function mat() only updates a global variable and implicitly returns None. The side effect of mat() is what we need.
 '''
 m=list()
 def mat():
@@ -46,6 +46,7 @@ def startIterative(_, expected):
   return seen
     
 startIterative(mat(),8)
-''' A simple demo of an iterative DFT. At the end of the scan, return the sequence of reachable and visible (non-zero) nodes
+''' A simple demo of an iterative DFT. 
+Req: At the end of the scan, return the sequence of reachable and   visible(i.e. non-zero) nodes
 
 '''
