@@ -31,25 +31,15 @@ alias
   # pw files not to be checked in. Also, previous copies should be removed promptly.
   # cp-u means iFF-newer but my git-checkout would update timestamp :(
 }
-exa(){ #testing: exa -t ss ~/.ssh
-# proven in git-bash since 2019
-  local ops
-  while is_opt=`echo $1 |perl -ne 'print if /^-/'  ` && [ "$is_opt" ]; do
-    ops="$ops $1"; shift
-  done
-  if [ $# -eq 1 ]; then
-    fullpath=$1
-    shortname=`echo $1|perl -pe 's|/$||;s|^.*/||'   `
-  else
-    fullpath=$2
-    shortname=$1
-  fi
-  [ -x $fullpath ] || return
-  eval $shortname="$fullpath" # create a shell variable with a dynamic name!
-  echo -e $shortname '\t' now set to $fullpath
-  prj="$fullpath"
-  alias  "$shortname"="cd $fullpath;ls1page $ops"
-  alias  prj=$shortname # USE MORE
+gd2(){ #mastered in repo1
+  cd $repo1
+  git checkout -q py || return
+  set -x
+  git rev-parse --verify --quiet master  > /dev/null && git branch -v -d master
+  git rev-parse --verify --quiet tmp2del > /dev/null && git branch -v -d tmp2del
+# the 2 branches susceptible to conflict
+  git branch
+  { set +x; } 2>/dev/null
 }
 gg(){ 
   cnt=3
