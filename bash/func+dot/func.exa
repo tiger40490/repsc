@@ -1,5 +1,8 @@
-# to be sourced in .bashrc
+# to be named like .func.exa.txt and sourced from .bashrc 
+# I extracted this function into a dedicated file for some forgotten reason. Perhaps because it is shared between append.bashrc_win and the unix versions.
+#
 # proven since 2010 mostly on linux but now need to test more on git-bash, then upload to github
+# 
 # usage: exa -t ss ~/.ssh
 # usage? exa /usr/bin # same as exa bin /usr/bin
 # usage: exa aa # same as exa aa `pwd`
