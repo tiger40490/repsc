@@ -16,16 +16,22 @@ def genAllPtf(table, budget):
     for p in newSubsets:
       p.IDs.append(i)
       p.sum[0] += val
-      if p.sum[0] > budget: continue
+      if p.sum[0] > budget: 
+        #print p.IDs, ' --> :('
+        continue
       yield p
     subsets.extend(newSubsets)
     #pprint(subsets)
   
-def testPortfolio(table, budget=99): 
-  for p in genAllPtf(table, budget): print 'a subset -----> ', p
+def testPortfolio(table, expCnt, budget=99):
+  cnt = 0 
+  for p in genAllPtf(table, budget): 
+    print 'a subset -----> ', p
+    cnt += 1
+  assert cnt == expCnt
 
 def main():
-  testPortfolio([77,11,22,33])
+  testPortfolio([77,11,22,33], expCnt=10)
 if __name__ == '__main__': main()
 ''' Req: generate all subsets of a fixed table of stock prices, subject to a budget
 Each table entry's subscript is the stock's ID.
