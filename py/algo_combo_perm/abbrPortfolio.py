@@ -7,7 +7,7 @@ from pprint import pprint
 from copy import deepcopy
 from collections import namedtuple
 
-Ptf = namedtuple('Ptf', ['sum', 'IDs']) #IDs is a vector of indices into original table of stocks
+Ptf = namedtuple('Ptf', ['sum', 'IDs']) #IDs = a vector of indices into original table of stock prices
 
 def genAllPtf(table, budget):
   subsets = [Ptf([0],[]) ] #the empty portfolio
@@ -22,14 +22,11 @@ def genAllPtf(table, budget):
     #pprint(subsets)
   
 def testPortfolio(table, budget=99): 
-  '''generate all subsets of a fixed table of stocks, subject to a budget
-  Each table entry's subscript is the stock's ID.
-  '''
   for p in genAllPtf(table, budget): print 'a subset -----> ', p
-def test1(orig):
-  growing = genShortestFirst(orig)
-  ret = genLongestFirst(orig, dummyFunc)
-  assert len(ret) == len(growing)
+
 def main():
   testPortfolio([77,11,22,33])
 if __name__ == '__main__': main()
+''' Req: generate all subsets of a fixed table of stock prices, subject to a budget
+Each table entry's subscript is the stock's ID.
+'''
