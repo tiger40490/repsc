@@ -34,5 +34,5 @@ def main():
   testPortfolio([77,11,22,33], expCntOfSubsets=10)
 if __name__ == '__main__': main()
 ''' Req: generate all subsets of a fixed table of stock prices, subject to a budget
-Each table entry's subscript is the stock's ID.
+Each table entry's subscript is the stock's ID. Therefore, sorting the table is questionable.
 '''
