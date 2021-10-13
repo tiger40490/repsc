@@ -1,5 +1,5 @@
 '''
-showcase yield
+showcase yield, which I used during the speed coding
 showcase namedtuple as a simple VO
 showcase deepcopy
 '''
@@ -23,7 +23,7 @@ def genAllPtf(table, budget):
     subsets.extend(newSubsets)
     #pprint(subsets)
   
-def testPortfolio(table, expCntOfSubsets, budget=99):
+def test1table(table, expCntOfSubsets, budget=99):
   cnt = 0 
   for p in genAllPtf(table, budget): 
     print 'a subset -----> ', p
@@ -31,8 +31,8 @@ def testPortfolio(table, expCntOfSubsets, budget=99):
   assert cnt == expCntOfSubsets
 
 def main():
-  testPortfolio([77,11,22,33], expCntOfSubsets=10)
+  test1table([77,11,22,33], expCntOfSubsets=10)
 if __name__ == '__main__': main()
-''' Req: generate all subsets of a fixed table of stock prices, subject to a budget
+''' Req: generate all subsets of a table of stock prices, subject to a budget for the subset
 Each table entry's subscript is the stock's ID. Therefore, sorting the table is questionable.
 '''
