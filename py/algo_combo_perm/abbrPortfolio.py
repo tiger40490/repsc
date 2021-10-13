@@ -7,7 +7,7 @@ from pprint import pprint
 from copy import deepcopy
 from collections import namedtuple
 
-Ptf = namedtuple('Ptf', ['totalCost', 'IDs']) #IDs = a vector of indices into original table of stock prices
+Ptf = namedtuple('Ptf', 'totalCost IDs') #IDs = a vector of indices into original table of stock prices
 
 def genAllPtf(table, budget):
   subsets = [  Ptf([0],[])  ] #the empty portfolio. The [0] is a mutable number inside an immutable tuple
