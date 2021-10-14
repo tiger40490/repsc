@@ -1,17 +1,21 @@
 '''
 showcase yield, which I used during the speed coding
-showcase namedtuple as a simple VO
+showcase namedtuple as a simple VO. long whitespace as delimiter between fieldnames
 showcase deepcopy
 '''
 from pprint import pprint
 from copy import deepcopy
 from collections import namedtuple
 
-Ptf = namedtuple('Ptf', 'totalCost IDs') #IDs = a vector of indices into original table of stock prices
+# this one-liner replaces about 10 lines of class definition
+Ptf = namedtuple('Ptf', 'totalCost   IDs') #IDs = a vector of indices into original table of stock prices
 
 def genAllPtf(table, budget):
-  subsets = [  Ptf([0],[])  ] #the empty portfolio. The [0] is a mutable number inside an immutable tuple
-  for i, val in enumerate(table):
+  emptyList = []
+  mutableNumberInImmutableTuple = [0] # clever use of a vector!
+  emptyPortfolioAsASubset = Ptf(mutableNumberInImmutableTuple, emptyList)
+  subsets = [ emptyPortfolioAsASubset ] # only one subset initially.
+  for i, val in enumerate(table): #val is used for totalCosts, not for generating subsets
     newSubsets = deepcopy(subsets) #shallow copy only duplicates references to each vector
     for p in newSubsets:
       p.IDs.append(i)
