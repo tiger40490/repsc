@@ -16,16 +16,18 @@ def genAllPtf(table, budget):
   emptyPortfolioAsASubset = Ptf(mutableNumberInImmutableTuple, emptyList)
   subsets = [ emptyPortfolioAsASubset ] # only one subset initially.
   for i, val in enumerate(table): #val is used for totalCosts, not for generating subsets
-    newSubsets = deepcopy(subsets) #shallow copy only duplicates references to each vector
-    for p in newSubsets:
+    for j in xrange(len(subsets)):
+      p = deepcopy(subsets[j]) #shallow copy only duplicates references to each vector
       p.IDs.append(i)
       p.totalCost[0] += val
       if p.totalCost[0] > budget: 
         #print p.IDs, ' --> :('
         continue
       yield p
-    subsets.extend(newSubsets)
+      subsets.append(p)
     #pprint(subsets)
+  print 'at end of table iteration, number of portfolios =', len(subsets)  
+  # return subsets[1:] # Alternative to yield
   
 def test1table(table, expCntOfSubsets, budget=99):
   cnt = 0 
