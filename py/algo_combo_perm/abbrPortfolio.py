@@ -11,8 +11,9 @@ from collections import namedtuple
 Ptf = namedtuple('Ptf', 'totalCost   IDs') #IDs = a vector of indices into original table of stock prices
 
 def genAllPtf(table, budget):
-  emptyList = []
+  emptyList = [] # empty list of stock IDs
   mutableNumberInTuple = [0] # clever use of a vector of one !
+  # above are the two fields of an initial Ptf.
   emptyPtfAsASubset = Ptf(mutableNumberInTuple, emptyList)
   subsets = [ emptyPtfAsASubset ] # only one subset initially.
   for i, val in enumerate(table): #val is used for totalCosts, not for generating subsets
@@ -38,6 +39,7 @@ def test1table(table, expCntOfSubsets, budget=99):
 
 def main():
   test1table([77,11,22,33], expCntOfSubsets=10)
+  test1table([10,11,22,33], expCntOfSubsets=15)
 if __name__ == '__main__': main()
 ''' Req: generate all subsets of a table of stock prices, subject to a budget for the subset
 Each table entry's subscript is the stock's ID. Therefore, sorting the table is questionable.
