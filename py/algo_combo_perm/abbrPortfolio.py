@@ -1,5 +1,5 @@
 '''
-showcase yield, which I used during the speed coding
+showcase yield, which I used during the speed coding, but not necessary if we maintain a proper collection.
 showcase namedtuple as a simple VO. long whitespace as delimiter between fieldnames
 showcase deepcopy
 '''
@@ -12,9 +12,9 @@ Ptf = namedtuple('Ptf', 'totalCost   IDs') #IDs = a vector of indices into origi
 
 def genAllPtf(table, budget):
   emptyList = []
-  mutableNumberInImmutableTuple = [0] # clever use of a vector!
-  emptyPortfolioAsASubset = Ptf(mutableNumberInImmutableTuple, emptyList)
-  subsets = [ emptyPortfolioAsASubset ] # only one subset initially.
+  mutableNumberInTuple = [0] # clever use of a vector of one !
+  emptyPtfAsASubset = Ptf(mutableNumberInTuple, emptyList)
+  subsets = [ emptyPtfAsASubset ] # only one subset initially.
   for i, val in enumerate(table): #val is used for totalCosts, not for generating subsets
     for j in xrange(len(subsets)):
       p = deepcopy(subsets[j]) #shallow copy only duplicates references to each vector
