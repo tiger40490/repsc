@@ -2,6 +2,12 @@
 showcase yield, which I used during the speed coding, but not necessary if we maintain a proper collection.
 showcase namedtuple as a simple VO. long whitespace as delimiter between fieldnames
 showcase deepcopy
+
+Interviewer hinted that recursive solution might be easier, but I always believe the iterative solution is usually superior
+* debugging
+* state tracking is easier
+* often more natural
+
 '''
 from pprint import pprint
 from copy import deepcopy
