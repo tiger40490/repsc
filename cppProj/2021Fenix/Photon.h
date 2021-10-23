@@ -32,6 +32,9 @@ struct Photon{
     ss<<"directHit \n";
     //Cell const & originalTarget = this->getTargetCell();
     assert( this->getTargetCell() == m.cell );
+    if (--m.ttl == 0){
+      grid.del1mirror(m);
+    }
     // need to adjust the photon to indicate Absorbed
     return 0;
   }
@@ -41,6 +44,14 @@ struct Photon{
     for (auto const & aMirror: vec){
       assert(1==distance(aMirror.cell, originalTarget));
     }
+    
+    // todo: update this->cur and next
+    
+    auto cnt = grid.mirrorCnt();
+    for (auto & aMirror: vec){
+      if (--aMirror.ttl == 0) grid.del1mirror(aMirror);
+    }
+    assert ( cnt-2 == grid.mirrorCnt() );
     return 0;
   }
 
@@ -51,6 +62,7 @@ struct Photon{
     
     // if one distance is 1, then break; otherwise collect those mirrors at distance 1.42 and pass them as a collection
     std::vector<Mirror> diagonalMirrors;
+    
     for (auto& aMirror: grid.survivors){
       float dist = distanceTo(aMirror);
       if (dist == 1){
