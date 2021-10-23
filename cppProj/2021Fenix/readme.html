@@ -1,13 +1,28 @@
-<h2> Assumptions </h2>
-Scenario (minor): If two adjacent edge cells both have mirrors ...
+Don't care about the hours taken.
 
-Scenario: if two adjacent cells (not edge cells) both have mirrors ..
+<h2> Assumptions </h2>
 
 Assumption: At any moment I (the photon) can be "affected" by at most 3 mirrors. Even though I can be "near" 8 mirrors...
 
 Assumption: Each cell is 1m by 1m.
 
-<h2> Design priorities </h2>
+<h2> Scenarios </h2>
+Scenario T: am not outside, and adjacent to a mirror, perhaps with 1 or 2 diagonal mirrors. All mirrors side by side.
+
+Scenario Y: am not outside, and diagonally adjacent to two symmetrical mirrors
+
+Scenario /: am not outside, and diagonally adjacent to exactly one mirror 
+Scenario (minor): If two adjacent edge cells both have mirrors ...
+
+<h2> Design (... priorities ...) </h2>
 At any snapshot moment, I (the photon) is in a particular cell, moving in one (of four possible) direction. 
 Every surviving mirror is some distance away. 
-If we compute those distances, there are only up to three mirrors within 1.42m. Together they will decide my next location.
+If we compute those distances, there are only up to three mirrors within 1.42m. 
+Together they decide my next Position (the cell and direction).
+
+This free-standing function can be tested independently. It requires my current cell (I will pass in a Position) and up to 3 mirror cells.
+If I'm outside the board, then the logic is slightly different. LGpp.
+
+A wrapper function would provide the entire survivingMirror population..
+
+A Position type includes my current cell and a direction. Direction can be a pair.. (1,0) means increase rowId...
