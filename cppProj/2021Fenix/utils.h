@@ -1,4 +1,5 @@
-/* 
+/*
+This class doesn't need Photon.h, Grid.h 
 */
 #pragma once
 #include "dumper.h" // needed for dumping pair<>

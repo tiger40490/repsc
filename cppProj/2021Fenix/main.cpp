@@ -15,7 +15,7 @@ void testMove1(){
   //ss<<photon.distanceTo(mirrors.back()); return;
   mirrors.push_back({{2,3},-1});
   ss<<mirrors;
-  photon.move();
+  photon.move1step();
 }
 
 int main(){

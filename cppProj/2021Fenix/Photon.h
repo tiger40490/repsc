@@ -24,7 +24,7 @@ struct Photon{
     ss<<ret<<" returned from getTargetCell()\n";
     return ret;
   }
-  char advance(){ // LG2: how to indicate leaving
+  char advance(){ // LG2: how to indicate exit
     this->cur = getTargetCell();
     return 0;
   }
@@ -44,7 +44,7 @@ struct Photon{
     return 0;
   }
 
-  char move(){
+  char move1step(){
     // what if the collection is empty?
     
     // handle the edge scenarios
