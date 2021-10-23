@@ -16,7 +16,7 @@ typedef uint16_t ColId;
 */
 
 typedef std::pair<RowId, ColId> Cell;
-typedef std::pair<RowId, ColId> Step; // One of the two values must be a zero; ther other a one.
+typedef std::pair<int, int> Step; // One of the two values must be a zero; ther other a +/-1.
 
 struct Mirror{ 
   Cell const cell;

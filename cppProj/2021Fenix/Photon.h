@@ -12,7 +12,16 @@ struct Photon{
   Step next;
   Grid & grid;
   friend std::ostream & operator<<(std::ostream & os, Photon const & c){
-    os<<"["<<c.cur<<"],<"<<c.next<<">"; return os;
+    static std::pair<int, int> const S = {1,0};
+    static std::pair<int, int> const N = {-1,0};
+    static std::pair<int, int> const E = {0,1};
+    static std::pair<int, int> const W = {0,-1};
+    os<<"["<<c.cur<<"], <"<<c.next<<">"; 
+    if (c.next == S) os<<"South";
+    if (c.next == N) os<<"North";
+    if (c.next == E) os<<"East";
+    if (c.next == W) os<<"West";
+    return os;
   }
   float distanceTo(Mirror const & m) const{ //check2
     return distance(m.cell, this->cur);
@@ -21,17 +30,23 @@ struct Photon{
     Cell ret = this->cur;
     ret.first += this->next.first;
     ret.second+= this->next.second;
-    ss<<ret<<" returned from getTargetCell()\n";
+    //ss<<ret<<" returned from getTargetCell()\n";
     return ret;
   }
   char advance(){ // LG2: how to indicate exit
     this->cur = getTargetCell();
     return 0;
   }
+  void reverse1step(){ //may exit the grid
+    next.first  *= -1;
+    next.second *= -1;
+    this->cur = getTargetCell();
+    ss<<*this<<" after reverse1step()\n";
+  }
   char directHit(MirrorIterator m){ 
     ss<<"directHit \n";
     //Cell const & originalTarget = this->getTargetCell();
-    assert( this->getTargetCell() == m->cell );
+    assert( getTargetCell() == m->cell );
     if (--m->ttl == 0){
       grid.del1mirror(m);
     }
@@ -40,19 +55,25 @@ struct Photon{
   }
   char indirectHit(std::vector<MirrorIterator> const & vec){ 
     ss<<"indirectHit \n";
-    Cell const & originalTarget = this->getTargetCell();
+    Cell const & originalTarget = getTargetCell();
     for (auto const & aMirror: vec){
-      assert(1==distance(aMirror->cell, originalTarget));
+      assert(1==distance(aMirror->cell, originalTarget) && 
+        "If no deflection, I would next land on a cell right next to Every mirror.");
     }
     
+    auto & mirrorA = vec[0]->cell;
     if (vec.size() == 2){
-          // todo: update this->cur and next
-      Mirror & mA = *vec[0];
-      Mirror & mB = *vec[1];
-      assert(2==distance(mA.cell, mB.cell));
-
+      auto & mirrorB = vec[1]->cell;
+      assert(2==distance(mirrorA, mirrorB));
+      this->reverse1step();
     }else{
-    }      
+      assert(vec.size()==1);
+          // todo: update this->next, based on mirrorA and originalTarget
+      this->next = {originalTarget.first - mirrorA.first, 
+                    originalTarget.second - mirrorA.second};
+      this->cur = getTargetCell();
+      ss<<*this<<" after deflection\n";
+    } // Now check expired mirrors
     for (auto & aMirror: vec){
         if (--aMirror->ttl == 0) grid.del1mirror(aMirror);
     }    
