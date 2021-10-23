@@ -22,7 +22,7 @@ struct Grid{
         ss<<mirrorCnt()<<" = new mirrorCnt after removing an expired mirror\n";
   }
   // above function is faster and called from Photon class more often than the slow function below !
-  void del1mirror(Mirror const & m){
+  void del1mirror_notInUse(Mirror const & m){
     assert(m.ttl == 0);
     for(auto itr = survivors.begin(); itr != survivors.end(); ++itr) {
       if (m.cell == itr->cell) del1mirror(itr);

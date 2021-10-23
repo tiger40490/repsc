@@ -38,23 +38,23 @@ struct Photon{
     // need to adjust the photon to indicate Absorbed
     return 0;
   }
-  char indirectHit(std::vector<Mirror> & vec){ 
+  char indirectHit(std::vector<MirrorIterator> const & vec){ 
     ss<<"indirectHit \n";
     Cell const & originalTarget = this->getTargetCell();
     for (auto const & aMirror: vec){
-      assert(1==distance(aMirror.cell, originalTarget));
+      assert(1==distance(aMirror->cell, originalTarget));
     }
     
-    // todo: update this->cur and next
-    //if (vec.size() == 2)
-    
-    
-    auto cnt = grid.mirrorCnt();
+    if (vec.size() == 2){
+          // todo: update this->cur and next
+
+
+    }else{
+    }      
     for (auto & aMirror: vec){
-      if (--aMirror.ttl == 0) grid.del1mirror(aMirror);
-    }
-    assert ( cnt-2 == grid.mirrorCnt() );
-    return 0;
+        if (--aMirror->ttl == 0) grid.del1mirror(aMirror);
+    }    
+	return 0;
   }
 
   char move1step(){
@@ -63,7 +63,7 @@ struct Photon{
     // handle the edge scenarios
     
     // if one distance is 1, then break; otherwise collect those mirrors at distance 1.42 and pass them as a collection
-    std::vector<Mirror> diagonalMirrors;
+    std::vector<MirrorIterator> diagonalMirrors;
     
     for(auto itr = grid.survivors.begin(); itr != grid.survivors.end(); ++itr) {
       float dist = distanceTo(*itr);
@@ -72,7 +72,7 @@ struct Photon{
         return this->directHit(itr);
       }
       if (isSqrt2(dist)){
-        diagonalMirrors.push_back(*itr);
+        diagonalMirrors.push_back(itr);
       }
     }
     if (diagonalMirrors.size() == 0){ return advance(); }
