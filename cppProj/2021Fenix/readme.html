@@ -1,50 +1,50 @@
-Don't care about the hours taken.
+<h2> How to build and test </h2>
+The bundled run.sh is a bash script tested in windows bash. See Assumptioni 1.
+<p/>
+I use GCC in c++17 mode. There's no tweak in my GCC.
+<p/>
+main() has a bunch of tests you can uncomment and run. I usally run each test by itself.  
+<p/>
+For the last test (using 2 files), full output is printed to stderr. You can filter out everything else:
+<pre>
+   ./a.out  1>/dev/null
+</pre>
+<h2> Assumptions </h2>
+<ul>
+<li> Assumption 1 -- (based on experience) -- linux would work. I have no linux access at home. My run.sh worked fine with g++ in windows bash. Based on my experience linux would work, too.
+<li> Assumption -- (based on mathematical reasoning): At any moment I (the photon) can be "affected" by at most 3 mirrors. Even though I can be "near" 8 mirrors.
+<li> Assumption -- Each cell is assumed to be 1 meter by 1 meter. This simplies all discussion/documentation.
+<li> Assumption -- a grid will have some mirrors, never empty.
+<li> Assumption -- the mirror locations are unique in the input file. No validation needed against duplication. Therefore a std::list or std::vector is good enough, rather than a set.
+<li> Assumption -- ascii file parsing is a commodity skill, not a differentiating skill of a c++ developer, and doesn't deserve lots of effort (hours) in this assignment. I have coded the minimum in terms of line parsing. Given more time, we could find a file parser utility to simplify this task.
+</ul>
+
+<h2> Scenarios, when I (the photon) get absorbed or deflected </h2>
+
+Each scenario has a runnable test in main.cpp.
+
+<ul>
+<li> Scenario T -- am inside the grid.. am directly adjacent to a mirror, perhaps with 1 or 2 diagonal mirrors. These mirrors face me like (Ameriican football) guard-center-guard. I will be make direct hit and get absorbed. Those diagonal mirrors are actually irrelevant (won't lose points).
+
+<li> Scenario Y -- am inside the grid... am diagonally adjacent to two mirrors symmetrically. Both would lose points.
+
+<li> Scenario / -- am inside the grid... am diagonally adjacent to exactly one mirror 
+
+<li> Scenario TOE (i.e. T-on-edge) -- am outside the edge, and facing three (or two) neighbouring edge cells lined up like Scenario T. Can be treated as Scenario T.
+
+<li> Scenario E -- am outside the edge, and making an entry right next to one (or two/ edge mirror. All relevant mirrors will lose points.
+<li> There's also the happy scenario -- am unaffected by any mirror, so I move forward one cell, keeping my momentum. Like in all scenarios, I may hit an exit cell.
+</ul>
+
+<h2> Algorithm </h2>
+At any snapshot moment, I (the photon) is in a particular cell, moving in one (of four possible) direction. 
+<p/>
+Every surviving mirror (i.e. not expired) is some distance away. If we compute those distances, there are only up to three mirrors within 1.4143 meter. Together they decide my next position (the cell and direction).
+<p/>
 
 -- todos:
-more asserts
-Q: do we need a Grid class to hold the list of mirrors and the size? It would require a Grid.h... Is it overkill?
-The mirror list and the dimension need to be accessible by the movement functions.
+blog about the experience -- project experience doesn't matter. Coding test is like another QQ skill
 
-main.cpp will need all of them.
-Photon methods use the mirrors and the dimension of the board
-Grid holds a list of surviving mirrors
-Mirror can exist without the board.
+docs... but simplification is the best readability boost, followed by assert messages
 
-Q: some test cases? but they take lots of cycles
-
-Q: ttl .. just remove that one mirror from the list. Easist would be a full scan after any hit. A non-trivial effort would call directHit etc, and then clean up the list
-
-Q: The edge scenarios
-
-Q: how do we indicate a ray is absorbed? Set this->next to (0,0), or simply return from the call stack? Let's leave this decision to later. Not hard.
-docs
-
-<h2> Assumptions </h2>
-
-Assumption: At any moment I (the photon) can be "affected" by at most 3 mirrors. Even though I can be "near" 8 mirrors...
-
-Assumption: Each cell is assumed to be 1 meter by 1 meter. This simplies the discussion/documentation.
-Assumption: a grid will have some mirrors, never empty.
-
-<h2> Scenarios </h2>
-Scenario T: am not on the edge, and adjacent to a mirror, perhaps with 1 or 2 diagonal mirrors. All mirrors side by side.
-
-Scenario Y: am not on the edge, and diagonally adjacent to two symmetrical mirrors
-
-Scenario /: am not on the edge, and diagonally adjacent to exactly one mirror 
-Scenario (minor): If two adjacent edge cells both have mirrors ...
-
-<h2> Design (... priorities ...) </h2>
-At any snapshot moment, I (the photon) is in a particular cell, moving in one (of four possible) direction. 
-Every surviving mirror is some distance away. 
-If we compute those distances, there are only up to three mirrors within 1.42m. 
-Together they decide my next Position (the cell and direction).
-
-This free-standing function can be a method (no need to return...), can be tested independently. It requires my current cell (I will pass in a Position) and up to 3 mirrors, and also the board dimension as a global var
-
-If I'm outside the board, then the logic is slightly different. LGpp.
-
-A wrapper function would provide the entire survivingMirror population..
-
-A Position type includes my current cell and a direction. Direction can be a pair.. (1,0) means increase rowId...
-
+commit, zip up and send
