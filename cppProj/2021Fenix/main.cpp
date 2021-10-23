@@ -4,17 +4,12 @@
 
 using namespace std;
 
-list<Mirror> mirrors; 
-/* list is good for erase.
-A global variable, needed by the directHit/indirectHit etc. Those function need to use this variable to remove expired mirrors.
-
-// need a way to populate it from the file
-*/
-//^^^^^^^^ part of the board class
+Grid grid = {5, {}};
 
 void testMove1(){
   Photon photon = {{1,2}, {1,0}}; // one photon
   ss<<photon<<endl;
+  list<Mirror> & mirrors = grid.survivors;
   mirrors.push_back({{2,1},-1});
   //mirrors.push_back({{2,2},-1});
   //ss<<photon.distanceTo(mirrors.back()); return;

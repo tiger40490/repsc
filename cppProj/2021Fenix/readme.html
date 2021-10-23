@@ -2,8 +2,7 @@ Don't care about the hours taken.
 
 -- todos:
 more asserts
-some test cases, but they take lots of cycles
-Q: do we need a Board class to hold the list of mirrors and the size? It would require a Board.h... Is it overkill?
+Q: do we need a Grid class to hold the list of mirrors and the size? It would require a Grid.h... Is it overkill?
 The mirror list and the dimension need to be accessible by the movement functions.
 
 I guess the board can be a static variable, reset before the simulation. A const pointer to it can be a field of the photon class.
@@ -12,8 +11,10 @@ In terms of header files, I hope utils.h can declare the board class in addition
 
 main.cpp will need all of them.
 Photon methods use the mirrors and the dimension of the board
-Board holds a list of surviving mirrors
+Grid holds a list of surviving mirrors
 Mirror can exist without the board.
+
+Q: some test cases? but they take lots of cycles
 
 Q: ttl .. just remove that one mirror from the list. Easist would be a full scan after any hit. A non-trivial effort would call directHit etc, and then clean up the list
 

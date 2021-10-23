@@ -9,13 +9,13 @@
 
 typedef uint16_t RowId;
 typedef uint16_t ColId; 
-/* 
+/* For both of the above,
 1 means lowest location on the board.
 0 means outside the lowest location.
 */
 
 typedef std::pair<RowId, ColId> Cell;
-typedef std::pair<RowId, ColId> Step; // two values must consist of a zero and a one.
+typedef std::pair<RowId, ColId> Step; // One of the two values must be a zero; ther other a one.
 
 struct Mirror{ 
   Cell const cell;
@@ -24,7 +24,8 @@ struct Mirror{
     os<<"["<<c.cell<<"]ttl="<<c.ttl; return os;
   }
 };
-bool isSqrt2(float f){  return 1.414 < f && f < 1.415; }
+bool isSqrt2(float f){  return 1.4142 < f && f < 1.4143; }
+
 float distance(Cell const & cellP, Cell const & cellQ){ //check2
     float aa = cellP.first - cellQ.first;
     float bb = cellP.second - cellQ.second;

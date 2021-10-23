@@ -1,8 +1,7 @@
 /* 
 */
 #pragma once
-#include "utils.h"
-#include "dumper.h" // needed for dumping pair<>
+#include "Grid.h"
 #include <list>
 //#include <cmath>
 //#include <iostream>
@@ -11,6 +10,7 @@
 struct Photon{ 
   Cell cur;
   Step next;
+  //Grid & grid;
   friend std::ostream & operator<<(std::ostream & os, Photon const & c){
     os<<"["<<c.cur<<"],<"<<c.next<<">"; return os;
   }
