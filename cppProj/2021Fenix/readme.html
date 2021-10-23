@@ -20,9 +20,11 @@ Every surviving mirror is some distance away.
 If we compute those distances, there are only up to three mirrors within 1.42m. 
 Together they decide my next Position (the cell and direction).
 
-This free-standing function can be tested independently. It requires my current cell (I will pass in a Position) and up to 3 mirror cells.
+This free-standing function can be a method (no need to return...), can be tested independently. It requires my current cell (I will pass in a Position) and up to 3 mirrors, and also the board dimension as a global var
+
 If I'm outside the board, then the logic is slightly different. LGpp.
 
 A wrapper function would provide the entire survivingMirror population..
 
 A Position type includes my current cell and a direction. Direction can be a pair.. (1,0) means increase rowId...
+
