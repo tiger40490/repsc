@@ -1,13 +1,33 @@
 Don't care about the hours taken.
 
-Q: do we need a Board class to hold the list of mirrors and the size? 
-It would require a Board.h... Is it overkill?
+-- todos:
+more asserts
+some test cases, but they take lots of cycles
+Q: do we need a Board class to hold the list of mirrors and the size? It would require a Board.h... Is it overkill?
+The mirror list and the dimension need to be accessible by the movement functions.
+
+I guess the board can be a static variable, reset before the simulation. A const pointer to it can be a field of the photon class.
+
+In terms of header files, I hope utils.h can declare the board class in addition to the Photon and Mirror classes. 
+
+main.cpp will need all of them.
+Photon methods use the mirrors and the dimension of the board
+Board holds a list of surviving mirrors
+Mirror can exist without the board.
+
+Q: ttl .. just remove that one mirror from the list. Easist would be a full scan after any hit. A non-trivial effort would call directHit etc, and then clean up the list
+
+Q: The edge scenarios
+
+Q: how do we indicate a ray is absorbed? Set this->next to (0,0), or simply return from the call stack? Let's leave this decision to later. Not hard.
+docs
 
 <h2> Assumptions </h2>
 
 Assumption: At any moment I (the photon) can be "affected" by at most 3 mirrors. Even though I can be "near" 8 mirrors...
 
 Assumption: Each cell is assumed to be 1 meter by 1 meter. This simplies the discussion/documentation.
+Assumption: a grid will have some mirrors, never empty.
 
 <h2> Scenarios </h2>
 Scenario T: am not on the edge, and adjacent to a mirror, perhaps with 1 or 2 diagonal mirrors. All mirrors side by side.
