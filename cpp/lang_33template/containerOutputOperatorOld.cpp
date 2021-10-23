@@ -1,4 +1,6 @@
 //todo: use enable_if or something else to disallow std::string
+// Showcase non-dummy-type template param min_width.
+// Note body of map ^ vector dumpers are identical, except some optional features.
 #include <map>
 #include <unordered_map>
 #include <set>
@@ -6,8 +8,6 @@
 #include <list>
 #include <vector>
 //
-// Showcase non-dummy-type template param min_width.
-// Note body of map ^ vector dumpers are identical, except some optional features.
 // Below is minimum code block for copy-paste.
 #include <iostream>
 #include <iomanip>
