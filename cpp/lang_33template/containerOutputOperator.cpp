@@ -2,6 +2,7 @@
 //showcase: templ-templ param
 //Showcase: non-dummy-type template param min_width.
 //showcase conditional compilation based on -std=c++17
+// Note body of map ^ vector dumpers can be identical, except some optional features.
 #include <map>
 #include <unordered_map>
 #include <set>
@@ -9,7 +10,6 @@
 #include <list>
 #include <vector>
 //
-// Note body of map ^ vector dumpers are identical, except some optional features.
 // Below is minimum code block for copy-paste.
 #include <iostream>
 #include <iomanip>
@@ -19,9 +19,9 @@
 using namespace std;
 
 template<typename K, typename V> ostream & operator<<(ostream & os, pair<K,V> const & p){
-   stringstream tmp2;
-   tmp2<<p.first<<":"<<p.second;
-   os<<tmp2.str();   
+   //stringstream tmp2;
+   os<<p.first<<":"<<p.second;
+   //os<<tmp2.str();   
    return os;
 }
 template<typename K, typename V, int min_width=8> ostream & operator<<(ostream & os,  Map<K,V> const & c){
@@ -44,7 +44,8 @@ std::ostream& operator<<(std::ostream& os, Container<V, Alloc> const& c){
    os<<endl;
    return os;
 }
-template<> std::ostream& operator<< <std::__cxx11::basic_string, char, char_traits<char> >(std::ostream& os, string const&) = delete; //Not effective :( because even deleted template-specialization can cause ambiguous overload under c++17
+
+//template<> std::ostream& operator<< <std::__cxx11::basic_string, char, char_traits<char> >(std::ostream& os, string const&) = delete; //Not effective :( because even deleted template-specialization can cause ambiguous overload under c++17
 
 int main(){
   list<double> li={3.1, 5,2,9};
