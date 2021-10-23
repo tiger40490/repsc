@@ -10,7 +10,7 @@
 struct Photon{ 
   Cell cur;
   Step next;
-  //Grid & grid;
+  Grid & grid;
   friend std::ostream & operator<<(std::ostream & os, Photon const & c){
     os<<"["<<c.cur<<"],<"<<c.next<<">"; return os;
   }
@@ -44,14 +44,14 @@ struct Photon{
     return 0;
   }
 
-  char move(std::list<Mirror> & survivingMirrors){
+  char move(){
     // what if the collection is empty?
     
     // handle the edge scenarios
     
     // if one distance is 1, then break; otherwise collect those mirrors at distance 1.42 and pass them as a collection
     std::vector<Mirror> diagonalMirrors;
-    for (auto& aMirror: survivingMirrors){
+    for (auto& aMirror: grid.survivors){
       float dist = distanceTo(aMirror);
       if (dist == 1){
         // assert this->next would coincide with this mirror

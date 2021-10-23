@@ -5,10 +5,6 @@ more asserts
 Q: do we need a Grid class to hold the list of mirrors and the size? It would require a Grid.h... Is it overkill?
 The mirror list and the dimension need to be accessible by the movement functions.
 
-I guess the board can be a static variable, reset before the simulation. A const pointer to it can be a field of the photon class.
-
-In terms of header files, I hope utils.h can declare the board class in addition to the Photon and Mirror classes. 
-
 main.cpp will need all of them.
 Photon methods use the mirrors and the dimension of the board
 Grid holds a list of surviving mirrors
