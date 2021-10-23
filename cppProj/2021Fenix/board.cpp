@@ -12,8 +12,11 @@ void testMove1(){
   Photon photon = {{1,2}, {1,0}}; // one photon
   ss<<photon<<endl;
   mirrors.push_back({{2,1},-1});
+  mirrors.push_back({{2,2},-1});
+  //ss<<photon.distanceTo(mirrors.back()); return;
   mirrors.push_back({{2,3},-1});
   ss<<mirrors;
+  photon.move(mirrors);
 }
 
 int main(){

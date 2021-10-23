@@ -3,6 +3,7 @@
 #pragma once
 #include "dumper.h" // needed for dumping pair<>
 #include <list>
+#include <cmath>
 #include <iostream>
 #include <cassert>
 
@@ -34,7 +35,10 @@ struct Photon{ // the photon's direction and current position
     os<<"["<<c.cur<<"],<"<<c.next<<">"; return os;
   }
   float distanceTo(Mirror const & m) const{
-    return 1;
+    float aa = m.cell.first - cur.first;
+    float bb = m.cell.second - cur.second;
+    float ret = sqrt(aa*aa + bb*bb);
+    return ret;
   }
   char advance(){
     //this->cur to be updated
