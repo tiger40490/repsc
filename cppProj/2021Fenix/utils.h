@@ -18,26 +18,38 @@ struct Mirror{
   Cell const cell;
   uint8_t ttl; //time to live in terms of remaining hits 
 };
+bool isSqrt2(float){
+  return 1.414 < float && float < 1.415
+}
 
-struct Photon{ // the photon's direction and current position
+class Photon{ // the photon's direction and current position
   Cell cur;
   Step next;
-// ctor, assignment ... LGpp
-  float distanceTo(Mirror const & m){
+  float distanceTo(Mirror const & m) const{
     return 1;
   }
-  void check(std::list<Mirror> survivingMirrors){
+  char advance(){
+    //this->cur to be updated
+  }
+  char move(std::list<Mirror> survivingMirrors){
     // what if the collection is empty?
     
-    // if one distance is 1, then break; otherwise collect those mirrors at distance 1.42 and pass them as a collection
-    for (auto const& i: survivingMirrors){
-      float dist = distanceTo(i);
-    }
-  }
-  void check3(Mirror m1, Mirror m2, Mirror m3){ // how to pass in the distances?
-    // compute 3 distances. If one of them is 1m, then that's it.
+    // handle the edge scenarios
     
+    // if one distance is 1, then break; otherwise collect those mirrors at distance 1.42 and pass them as a collection
+    list<Mirror> diagonalMirrors;
+    for (auto const& aMirror: survivingMirrors){
+      float dist = distanceTo(aMirror);
+      if (dist == 1){
+        // assert this->next would coincide with this mirror
+        return this->directHit(aMirror);
+      }
+      if (isSqrt2(dist)){
+        diagonalMirrors.push_back(aMirror);
+      }
+    }
+    if (diagonalMirrors.size() == 0){ return advance(); }
+    assert ( diagonalMirrors.size() < 3);
+    return indirectHit(diagonalMirrors);
   }
 };
-
-
