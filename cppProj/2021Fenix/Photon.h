@@ -28,11 +28,11 @@ struct Photon{
     this->cur = getTargetCell();
     return 0;
   }
-  char directHit(Mirror & m){ 
+  char directHit(MirrorIterator m){ 
     ss<<"directHit \n";
     //Cell const & originalTarget = this->getTargetCell();
-    assert( this->getTargetCell() == m.cell );
-    if (--m.ttl == 0){
+    assert( this->getTargetCell() == m->cell );
+    if (--m->ttl == 0){
       grid.del1mirror(m);
     }
     // need to adjust the photon to indicate Absorbed
@@ -46,6 +46,8 @@ struct Photon{
     }
     
     // todo: update this->cur and next
+    //if (vec.size() == 2)
+    
     
     auto cnt = grid.mirrorCnt();
     for (auto & aMirror: vec){
@@ -63,18 +65,18 @@ struct Photon{
     // if one distance is 1, then break; otherwise collect those mirrors at distance 1.42 and pass them as a collection
     std::vector<Mirror> diagonalMirrors;
     
-    for (auto& aMirror: grid.survivors){
-      float dist = distanceTo(aMirror);
+    for(auto itr = grid.survivors.begin(); itr != grid.survivors.end(); ++itr) {
+      float dist = distanceTo(*itr);
       if (dist == 1){
         // assert this->next would coincide with this mirror
-        return this->directHit(aMirror);
+        return this->directHit(itr);
       }
       if (isSqrt2(dist)){
-        diagonalMirrors.push_back(aMirror);
+        diagonalMirrors.push_back(*itr);
       }
     }
     if (diagonalMirrors.size() == 0){ return advance(); }
-    assert ( diagonalMirrors.size() < 3);
+    assert ( diagonalMirrors.size() < 3 && "3 or more diagonal mirrors ... are technically impossible" );
     return indirectHit(diagonalMirrors);
   }
 };

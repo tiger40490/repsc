@@ -11,7 +11,7 @@ void testMove1(){
   ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
   mirrors.push_back({{2,1},1});
-  //mirrors.push_back({{2,2},1});
+  mirrors.push_back({{2,2},1});
   //ss<<photon.distanceTo(mirrors.back()); return;
   mirrors.push_back({{2,3},1});
   ss<<mirrors;

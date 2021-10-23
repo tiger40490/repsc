@@ -25,6 +25,9 @@ struct Mirror{
     os<<"["<<c.cell<<"]ttl="<<c.ttl; return os;
   }
 };
+
+typedef std::list<Mirror>::iterator MirrorIterator;
+
 bool isSqrt2(float f){  return 1.4142 < f && f < 1.4143; }
 
 float distance(Cell const & cellP, Cell const & cellQ){ //check2
