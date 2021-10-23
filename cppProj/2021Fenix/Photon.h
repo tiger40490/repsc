@@ -4,19 +4,18 @@
 #include "Grid.h"
 #include <list>
 //#include <cmath>
-//#include <iostream>
 #include <cassert>
 
-struct Photon{ 
+struct Photon{ // should become a class if more time given
   Cell cur;
-  Step next;
-  Grid & grid;
+  Step next; //rename to nextStep?
+  Grid & grid; //rename to theGrid?
   friend std::ostream & operator<<(std::ostream & os, Photon const & c){
     static std::pair<int, int> const S = {1,0};
     static std::pair<int, int> const N = {-1,0};
     static std::pair<int, int> const E = {0,1};
     static std::pair<int, int> const W = {0,-1};
-    os<<"["<<c.cur<<"], <"<<c.next<<">"; 
+    os<<"{"<<c.cur<<"}, <"<<c.next<<">"; 
     if (c.next == S) os<<"South";
     if (c.next == N) os<<"North";
     if (c.next == E) os<<"East";
@@ -33,7 +32,7 @@ struct Photon{
     //ss<<ret<<" returned from getTargetCell()\n";
     return ret;
   }
-  char advance(){ // LG2: how to indicate exit
+  char advance(){ // rename advance1step? LG2: how to indicate exit
     this->cur = getTargetCell();
     return 0;
   }
@@ -101,5 +100,25 @@ struct Photon{
     if (diagonalMirrors.size() == 0){ return advance(); }
     assert ( diagonalMirrors.size() < 3 && "3 or more diagonal mirrors ... are technically impossible" );
     return indirectHit(diagonalMirrors);
+  }
+  bool isLeaving(){
+    if (1 == cur.first  && next.first == -1) return true;
+    if (1 == cur.second && next.second == -1) return true;
+    if (grid.length == cur.first  && next.first == 1) return true;
+    if (grid.length == cur.second && next.second == 1) return true;
+    return false;
+  }
+  std::string roundTrip(){ // returns the exit cell
+  // todo check initial edge senarios
+    while(true){
+      char status = this->move1step(); 
+      //if (status == ABSORBED){
+      //}
+      if (isLeaving()){
+        ss<<*this<<" <-- the last cell\n";
+        return "{"+std::to_string(cur.first)
+              +","+std::to_string(cur.second)+"}";
+      }
+    }
   }
 };

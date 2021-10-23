@@ -15,7 +15,7 @@
 #define ss if(1>0)std::cout //to mass-disable cout before uploading to hacker rank
 
 template<typename K, typename V> std::ostream & operator<<(std::ostream & os, std::pair<K,V> const & p){
-   os<<p.first<<":"<<p.second;
+   os<<p.first<<","<<p.second;
    return os;
 }
 template<typename K, typename V, int min_width=8> std::ostream & operator<<(std::ostream & os,  Map<K,V> const & c){
