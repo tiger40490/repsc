@@ -1,4 +1,4 @@
-/* reminder : no using namespace
+/* 
 */
 #pragma once
 #include <iostream>
@@ -16,10 +16,10 @@ typedef std::pair<RowId, ColId> Step; // two values must consist of a zero and a
 
 struct Mirror{ 
   Cell const cell;
-  uint8_t ttl; //time to live in terms of remaining hits 
+  int ttl; //time to live in terms of remaining hits. negative means forever.
 };
-bool isSqrt2(float){
-  return 1.414 < float && float < 1.415
+bool isSqrt2(float f){
+  return 1.414 < f && f < 1.415;
 }
 
 class Photon{ // the photon's direction and current position
@@ -30,15 +30,19 @@ class Photon{ // the photon's direction and current position
   }
   char advance(){
     //this->cur to be updated
+    return 0;
   }
-  char move(std::list<Mirror> survivingMirrors){
+  char directHit(Mirror & m){ return 0;}
+  char indirectHit(list<Mirror> & li){ return 0;}
+
+  char move(std::list<Mirror> & survivingMirrors){
     // what if the collection is empty?
     
     // handle the edge scenarios
     
     // if one distance is 1, then break; otherwise collect those mirrors at distance 1.42 and pass them as a collection
     list<Mirror> diagonalMirrors;
-    for (auto const& aMirror: survivingMirrors){
+    for (auto& aMirror: survivingMirrors){
       float dist = distanceTo(aMirror);
       if (dist == 1){
         // assert this->next would coincide with this mirror
