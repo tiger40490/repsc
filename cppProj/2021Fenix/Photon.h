@@ -47,7 +47,9 @@ struct Photon{
     
     if (vec.size() == 2){
           // todo: update this->cur and next
-
+      Mirror & mA = *vec[0];
+      Mirror & mB = *vec[1];
+      assert(2==distance(mA.cell, mB.cell));
 
     }else{
     }      
