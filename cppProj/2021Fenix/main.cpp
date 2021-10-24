@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Grid grid = {4, {}};
+Grid grid = {4};
 
 void test2deflections(){ // tested 1
   Photon photon = {{5,3}, {-1,0}, grid}; // one photon
@@ -74,10 +74,39 @@ void testScenario_E(){ //
   assert(lastCell == string("{2,4}")); //
   assert(grid.mirrorCnt() == 0);
 }
+std::string oneRay(std::string ray){
+      ss<<ray<<"\n";
+      size_t sz = ray.size();
+      char rc = ray[0];
+      char sign = ray[sz-1];
+      assert ( sign == '+'||'-' == sign);
+      Coordinate_t numA= sign=='+'? 0 : grid.length+1 ;
+      Coordinate_t numB= std::stoi(ray.substr(1, sz-2));
+      
+      if (rc=='C') std::swap(numA, numB);
+      Cell photonStart={numB, numA};
+      //ss<<numB<<"=num, rc="<<rc<<"\n";
+      //ss<<photonStart<<"\n";
+      
+      int intA=0;
+      int intB= sign=='+'? 1:-1;
+      if (rc=='C') std::swap(intA, intB);
+      Step firstStep={intA,intB};
+      Photon photon={photonStart,firstStep, grid};
+      ss<<photon<<"\n";
+      string const & lastCell = photon.roundTrip();
+      ss<<lastCell;
+      return lastCell;
+}
+
 void testParse(){
-  string mirrors ="\n#adsfa\n4\n3 2\n3 7\n6 4\n8 7 10";
+  string mirrors ="\n#adsfa\n8\n3 2\n3 7\n6 4\n8 7 10";
   string tests ="C7+\nC5+\nR5-";
   grid.parse2files(mirrors, tests);
+  for (auto & aPair: grid.fullOutputToPrint){
+    aPair.second = oneRay(aPair.first);
+  }
+  grid.dumpFullOutputToStdErr();
 }
 int main(){
   //testScenario_E(); 

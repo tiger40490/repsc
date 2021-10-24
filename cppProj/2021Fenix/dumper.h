@@ -28,6 +28,7 @@ template<typename T,             int min_width=2> std::ostream & operator<<(std:
    os<<std::endl;
    return os;
 }
+/*
 template<  template<typename,class> class Container, 
 typename V, class Alloc, int min_width=8>
 std::ostream& operator<<(std::ostream& os, Container<V, Alloc> const& c){
@@ -36,5 +37,17 @@ std::ostream& operator<<(std::ostream& os, Container<V, Alloc> const& c){
    os<<std::endl;
    //for(int i=0; i<c.size(); ++i){ os<<std::setw(min_width)<<i<<" "; }
    //os<<std::endl;
+   return os;
+}*/
+template<typename T,             int min_width=8> std::ostream & operator<<( std::ostream & os, std::vector<T> const & c){
+   for(auto it = c.begin(); it != c.end(); ++it){ os<<std::setw(min_width)<<*it<<" "; }
+   os<<std::endl;
+   for(int i=0; i<c.size(); ++i){ os<<std::setw(min_width)<<i<<" "; }
+   os<<std::endl;
+   return os;
+}
+template<typename T,             int min_width=2> std::ostream & operator<<( std::ostream & os, std::list<T> const & c){
+   for(auto const & it: c){ os<<std::setw(min_width)<<it<<" "; }
+   os<<std::endl;
    return os;
 }
