@@ -10,7 +10,7 @@ static char const ABSORBED = 'a';
 class Photon{ 
   Cell _cur;
   Step _next; //
-  Grid & _grid; //
+  Grid & _grid; // photons exist on a grid, but Grid class doesn't need a photon
   bool _isAtStart = true; 
   friend std::ostream & operator<<(std::ostream & os, Photon const & c){
     static std::pair<int, int> const S = {1,0};

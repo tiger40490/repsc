@@ -40,7 +40,7 @@ struct Grid{
       //ss<<line.c_str()<<"\n";
       if (++ln == 1) {
         this->length = std::stoi(line);
-        ss<<length<<" = the new grid dimension\n";
+        //ss<<length<<" = the new grid dimension\n";
         continue;
       }
       //split into 2 or 3 tokens
