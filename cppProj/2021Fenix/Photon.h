@@ -36,9 +36,11 @@ class Photon{
     //ss<<ret<<" returned from getTargetCell()\n";
     return ret;
   }
-  // ^^^^^^^^^ end of const member functions ^^^^^^^^^^
-  /* chokepoint for all movements of phton
-  return value not in use for now ... hard to propagate.
+  // ^^^^^^^^^ above are const member functions ^^^^^^^^^^
+  // ^^^^^^^^^ below are movement operations ^^^^^^^^^^
+  
+  /* updateCurLocation() is the chokepoint for all movements of the photon !
+  Note return value is not in use for now ... hard to propagate out.
   */
   bool updateCurLocation(){  
     if (isLeaving()) {
@@ -107,7 +109,7 @@ public:
   std::string roundTrip(){ // returns the exit cell name
   // todo handle initial edge senarios
     while(true){
-      ss<<*this<<" <-- before move1step\n";
+      //ss<<*this<<" <-- before move1step\n";
       char status = this->move1step(); 
       //if (status == ABSORBED) return "";
       if (isLeaving()){
