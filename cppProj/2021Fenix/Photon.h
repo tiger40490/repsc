@@ -45,7 +45,8 @@ struct Photon{ // should become a class if more time given
   char directHit(MirrorIterator m){ 
     ss<<"directHit \n";
     //Cell const & originalTarget = this->getTargetCell();
-    assert( getTargetCell() == m->cell );
+    assert( getTargetCell() == m->cell && 
+"by the rules, ONLY way to be 1-meter near a mirror is a direct hit!");
     if (--m->ttl == 0){
       grid.del1mirror(m);
     }
