@@ -25,16 +25,10 @@ class Photon{
     return os;
   }
   float distanceTo(Mirror const & m) const{ return distance(m.cell, _cur);} //check3
-  RowId minXY() const{
-    return std::min(_cur.first, _cur.second);
-  }
-  RowId maxXY() const{
-    return std::max(_cur.first, _cur.second);
-  }
   bool isLeaving(/*bool isStrict=true*/) const{
     //ss<<_isAtStart<<" = _isAtStart\n";
     if (!_isAtStart){
-      if (1 > minXY() || maxXY() > _grid.length ) 
+      if (1 > minXY(_cur) || maxXY(_cur) > _grid.length ) 
         throw std::runtime_error(
       "photon is NOT at the start but its current location is outside the grid. Programmer or data error");
     }
@@ -50,6 +44,25 @@ class Photon{
     ret.second+= _next.second;
     //ss<<ret<<" returned from getTargetCell()\n";
     return ret;
+  }
+  std::string checkEdgeMirrors() const{ // check ScenarioE
+    Cell const & entryCell = getTargetCell();
+    assert (  (minXY(entryCell) == 1 || maxXY(entryCell) == _grid.length) && "the first target cell must be on the edge");
+    
+    // collect any mirror 1.42 m away
+    std::vector<MirrorIterator> diagonalMirrors;
+    for(auto itr = _grid.survivors.begin(); itr != _grid.survivors.end(); ++itr) {
+      float dist = distanceTo(*itr);
+      if (isSqrt2(dist)) diagonalMirrors.push_back(itr); 
+    }
+    ss<<diagonalMirrors.size()<<" = initial count of diagonalMirrors\n";
+    if (diagonalMirrors.size() == 0) return "";
+    
+    for (auto & m: diagonalMirrors){
+        if (--(m->ttl) == 0) _grid.del1mirror(m);
+    }   
+    return "{"+std::to_string(entryCell.first)
+          +","+std::to_string(entryCell.second)+"}";
   }
   // ^^^^^^^^^ above are const member functions ^^^^^^^^^^
   // ^^^^^^^^^ below are movement operations ^^^^^^^^^^
@@ -128,12 +141,13 @@ class Photon{
     assert ( diagonalMirrors.size() < 3 && "3 or more diagonal mirrors ... are technically impossible" );
     return indirectHit( diagonalMirrors );
   }
+  
 public:  
   Photon(Cell const & c, Step const & n, Grid & g): _cur(c), _next(n), _grid(g){}
   std::string roundTrip(){ // returns the exit cell name
-  // todo handle initial edge senarios
-    //assert 
-  
+    std::string exitCell = checkEdgeMirrors();
+    if (exitCell.size() > 0) return exitCell;
+
     while(true){
       //ss<<*this<<" <-- before move1step\n";
       char status = this->move1step(); 

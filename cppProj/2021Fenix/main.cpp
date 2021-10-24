@@ -54,20 +54,20 @@ void testScenario_TOE(){ //
   ss<<lastCell.c_str();
 }
 void testScenario_E(){ // 
-  Photon photon = {{0,2}, {1,0}, grid}; // one photon
+  Photon photon = {{2,5}, {0,-1}, grid}; // one photon
   ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
   mirrors.clear();
-  mirrors.push_back({{1,1},1});
-  mirrors.push_back({{1,3},1});
+  mirrors.push_back({{1,4},1});
+  mirrors.push_back({{3,4},1});
   ss<<mirrors<<" ... are the initial mirrors\n";
   auto lastCell = photon.roundTrip();
   ss<<lastCell.c_str();
 }
 int main(){
-  //testScenario_E(); 
+  testScenario_E(); 
   //testScenario_TOE(); 
   //testScenario_T(); 
   //testScenario_Y();
-  test2deflections();
+  //test2deflections();
 }

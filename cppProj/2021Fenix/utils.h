@@ -11,8 +11,8 @@ This class doesn't need Photon.h, Grid.h
 typedef uint16_t RowId;
 typedef uint16_t ColId; 
 /* For both of the above,
-1 means lowest location on the board.
-0 means outside the lowest location.
+1 means an edge location on the grid.
+0 means outside the grid.
 */
 
 typedef std::pair<RowId, ColId> Cell;
@@ -35,4 +35,10 @@ float distance(Cell const & cellP, Cell const & cellQ){ //check2
     float bb = cellP.second - cellQ.second;
     float ret = sqrt(aa*aa + bb*bb); 
     return ret;
+}
+RowId minXY(Cell const & _cur) {
+    return std::min(_cur.first, _cur.second);
+}
+RowId maxXY(Cell const & _cur) {
+    return std::max(_cur.first, _cur.second);
 }
