@@ -17,6 +17,8 @@ void test2deflections(){ // tested 1
   ss<<mirrors<<" ... are the initial mirrors\n";
   auto lastCell = photon.roundTrip();
   ss<<lastCell.c_str();
+  assert(lastCell == string("{4,2}")); //
+  assert(grid.mirrorCnt() == 0);
 }
 void testScenario_Y(){ // tested 1
   Photon photon = {{0,2}, {1,0}, grid}; // one photon
@@ -25,9 +27,12 @@ void testScenario_Y(){ // tested 1
   mirrors.clear();
   mirrors.push_back({{2,1},1});
   mirrors.push_back({{2,3},1});
+  mirrors.push_back({{4,4},1}); // irrelelvant
   ss<<mirrors<<" ... are the initial mirrors\n";
   auto lastCell = photon.roundTrip();
   ss<<lastCell.c_str();
+  assert(lastCell == string("{1,2}")); //
+  assert(grid.mirrorCnt() == 1);
 }
 void testScenario_T(){ 
   Photon photon = {{0,2}, {1,0}, grid}; // one photon
@@ -40,8 +45,10 @@ void testScenario_T(){
   ss<<mirrors<<" ... are the initial mirrors\n";
   auto lastCell = photon.roundTrip();
   ss<<lastCell.c_str();
+  assert(lastCell == string("")); //absorbed
+  assert(grid.mirrorCnt() == 2);
 }
-void testScenario_TOE(){ // broken
+void testScenario_TOE(){ 
   Photon photon = {{0,2}, {1,0}, grid}; // one photon
   ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
@@ -53,6 +60,7 @@ void testScenario_TOE(){ // broken
   auto lastCell = photon.roundTrip();
   ss<<lastCell.c_str();
   assert(lastCell == string("")); //absorbed
+  assert(grid.mirrorCnt() == 1);
 }
 void testScenario_E(){ // 
   Photon photon = {{2,5}, {0,-1}, grid}; // one photon
@@ -64,11 +72,13 @@ void testScenario_E(){ //
   ss<<mirrors<<" ... are the initial mirrors\n";
   auto lastCell = photon.roundTrip();
   ss<<lastCell.c_str();
+  assert(lastCell == string("{2,4}")); //
+  assert(grid.mirrorCnt() == 0);
 }
 int main(){
   //testScenario_E(); 
-  testScenario_TOE(); 
+  //testScenario_TOE(); 
   //testScenario_T(); 
   //testScenario_Y();
-  //test2deflections();
+  test2deflections();
 }

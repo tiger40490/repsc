@@ -70,7 +70,8 @@ class Photon{
   // ^^^^^^^^^ below are movement operations ^^^^^^^^^^
   
   /* updateCurLocation() is the chokepoint for all movements of the photon !
-  Note return value is not in use for now ... hard to propagate out.
+  Note return value (true=updated) is not in use for now ... hard to propagate out.
+  Note we check the photon isLeaving() only before updating its location , not after! 
   */
   bool updateCurLocation(){  
     if (isLeaving()) {
@@ -87,7 +88,7 @@ class Photon{
     _next.first  *= -1;
     _next.second *= -1;
     this->updateCurLocation();
-    ss<<*this<<" after reverse1step()\n";
+    ss<<*this<<" after updateCurLocation(), at end of reverse1step()\n";
   }
   char directHit (MirrorIterator m){ 
     ss<<"directHit on "<<*m<<std::endl;
