@@ -15,7 +15,7 @@ class Photon{
     static std::pair<int, int> const N = {-1,0};
     static std::pair<int, int> const E = {0,1};
     static std::pair<int, int> const W = {0,-1};
-    os<<"{"<<c._cur<<"}, <"<<c._next<<">"; 
+    os<<"{"<<c._cur<<"}..<"<<c._next<<">"; 
     if (c._next == S) os<<"South";
     if (c._next == N) os<<"North";
     if (c._next == E) os<<"East";
