@@ -6,7 +6,9 @@ This class doesn't need Photon.h, Grid.h
 //#include <list>
 #include <cmath>
 #include <iostream>
+#include <sstream>
 #include <cassert>
+#include <cctype>
 
 typedef uint16_t RowId;
 typedef uint16_t ColId; 

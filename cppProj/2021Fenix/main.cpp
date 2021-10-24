@@ -74,10 +74,16 @@ void testScenario_E(){ //
   assert(lastCell == string("{2,4}")); //
   assert(grid.mirrorCnt() == 0);
 }
+void testParse(){
+  string mirrors ="\n#adsfa\n4\n3 2\n3 7\n6 4\n8 7 10";
+  string tests ="C7+\nC5+\nR5-";
+  grid.parse2files(mirrors, tests);
+}
 int main(){
   //testScenario_E(); 
   //testScenario_TOE(); 
   //testScenario_T(); 
   //testScenario_Y();
-  test2deflections();
+  //test2deflections();
+  testParse();
 }
