@@ -41,17 +41,18 @@ void testScenario_T(){
   auto lastCell = photon.roundTrip();
   ss<<lastCell.c_str();
 }
-void testScenario_TOE(){ // 
+void testScenario_TOE(){ // broken
   Photon photon = {{0,2}, {1,0}, grid}; // one photon
   ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
   mirrors.clear();
   mirrors.push_back({{1,1},1});
   mirrors.push_back({{1,2},1});
-  mirrors.push_back({{1,3},1});
+  //mirrors.push_back({{1,3},1});
   ss<<mirrors<<" ... are the initial mirrors\n";
   auto lastCell = photon.roundTrip();
   ss<<lastCell.c_str();
+  assert(lastCell == string("")); //absorbed
 }
 void testScenario_E(){ // 
   Photon photon = {{2,5}, {0,-1}, grid}; // one photon
@@ -65,8 +66,8 @@ void testScenario_E(){ //
   ss<<lastCell.c_str();
 }
 int main(){
-  testScenario_E(); 
-  //testScenario_TOE(); 
+  //testScenario_E(); 
+  testScenario_TOE(); 
   //testScenario_T(); 
   //testScenario_Y();
   //test2deflections();

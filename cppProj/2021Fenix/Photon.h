@@ -46,13 +46,15 @@ class Photon{
     return ret;
   }
   std::string checkEdgeMirrors() const{ // check ScenarioE
-    Cell const & entryCell = target();
-    assert (  (minXY(entryCell) == 1 || maxXY(entryCell) == _grid.length) && "the first target cell must be on the edge");
+    Cell const & entryCell = this->target();
+    assert( (minXY(entryCell)==1 || maxXY(entryCell)==_grid.length) 
+      && "the first target cell of a ray must be on the edge");
     
     // collect any mirror 1.42 m away
     std::vector<MirrorIterator> diagonalMirrors;
     for(auto itr = _grid.survivors.begin(); itr != _grid.survivors.end(); ++itr) {
       float dist = distanceTo(*itr);
+      if (dist == 1) return ""; // I prefer a single code path of move1step->directHit
       if (isSqrt2(dist)) diagonalMirrors.push_back(itr); 
     }
     ss<<diagonalMirrors.size()<<" = initial count of diagonalMirrors\n";
@@ -146,7 +148,7 @@ public:
   Photon(Cell const & c, Step const & n, Grid & g): _cur(c), _next(n), _grid(g){}
   std::string roundTrip(){ // returns the exit cell name
     std::string exitCell = checkEdgeMirrors();
-    if (exitCell.size() > 0) return exitCell;
+    if (exitCell.size() > 1) return exitCell;
 
     while(true){
       //ss<<*this<<" <-- before move1step\n";
