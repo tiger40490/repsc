@@ -5,6 +5,7 @@
 #include <list>
 #include <cassert>
 
+static char const ABSORBED='a';
 class Photon{ 
   Cell _cur;
   Step _next; //
@@ -57,12 +58,12 @@ class Photon{
     this->updateCurLocation();
     ss<<*this<<" after reverse1step()\n";
   }
-  char directHit(MirrorIterator m){ 
+  char directHit (MirrorIterator m){ 
     ss<<"directHit on "<<*m<<std::endl;
     assert( getTargetCell() == m->cell && 
 "by the rules, ONLY way to be 1-meter near a mirror is a direct hit!");
     if (--m->ttl == 0) _grid.del1mirror(m);
-    return 'a'; //absorbed
+    return ABSORBED; //absorbed
   }
   char indirectHit(std::vector<MirrorIterator> const & vec){ 
     ss<<"indirectHit \n";
@@ -90,8 +91,15 @@ class Photon{
 	  return 0;
   }
 
+  /* move1step() is another chokepoint. 
+  
+  We compute the distances to every mirror. 
+  if any distance is 1 meter, then we have a directHit and absorption.
+  otherwise collect those mirrors at distance 1.4142 meter, and pass them as a collection into indirectHit()
+  
+  Return value of 'a' indicates absorbed. All other return values not in use so far.
+  */
   char move1step(){        
-    // if any distance is 1m, then break; otherwise collect those mirrors at distance 1.42 and pass them as a collection
     std::vector<MirrorIterator> diagonalMirrors;
     for(auto itr = _grid.survivors.begin(); itr != _grid.survivors.end(); ++itr) {
       float dist = distanceTo(*itr);
@@ -111,9 +119,12 @@ public:
     while(true){
       //ss<<*this<<" <-- before move1step\n";
       char status = this->move1step(); 
-      //if (status == ABSORBED) return "";
+      if (status == ABSORBED) {
+        ss<<*this<<"   <-- photon absorbed\n" ;
+        return "";
+      }
       if (isLeaving()){
-        ss<<*this<<" <-- the last cell\n";
+        ss<<*this<<"   <-- the last cell\n";
         return "{"+std::to_string(_cur.first)
               +","+std::to_string(_cur.second)+"}";
       }
