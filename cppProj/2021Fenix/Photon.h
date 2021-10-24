@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <cassert>
 
-static char const ABSORBED='a';
+static char const ABSORBED = 'a';
 class Photon{ 
   Cell _cur;
   Step _next; //
@@ -38,15 +38,15 @@ class Photon{
     if (_grid.length == _cur.second && _next.second == 1) return true; // going out to east
     return false;
   }
-  Cell getTargetCell() const{ //check1 .. rename to target()
+  Cell target() const{ //check3
     Cell ret = _cur;
     ret.first += _next.first;
     ret.second+= _next.second;
-    //ss<<ret<<" returned from getTargetCell()\n";
+    //ss<<ret<<" returned from target()\n";
     return ret;
   }
   std::string checkEdgeMirrors() const{ // check ScenarioE
-    Cell const & entryCell = getTargetCell();
+    Cell const & entryCell = target();
     assert (  (minXY(entryCell) == 1 || maxXY(entryCell) == _grid.length) && "the first target cell must be on the edge");
     
     // collect any mirror 1.42 m away
@@ -75,7 +75,7 @@ class Photon{
       ss<<*this<<" is leaving, detected in updateCurLocation()\n";
       return false;
     }
-    _cur = getTargetCell();
+    _cur = target();
     _isAtStart = false;
     //ss<<*this<<"  <-- at end of updateCurLocation()\n";
     return true;
@@ -89,14 +89,14 @@ class Photon{
   }
   char directHit (MirrorIterator m){ 
     ss<<"directHit on "<<*m<<std::endl;
-    assert( getTargetCell() == m->cell && 
+    assert( target() == m->cell && 
 "by the rules, ONLY way to be 1-meter near a mirror is a direct hit!");
     if (--m->ttl == 0) _grid.del1mirror(m);
     return ABSORBED; //absorbed
   }
   char indirectHit(std::vector<MirrorIterator> const & vec){ 
     ss<<"indirectHit \n";
-    Cell const & originalTarget = getTargetCell();
+    Cell const & originalTarget = target();
     for (auto const & aMirror: vec){
       assert(1==distance(aMirror->cell, originalTarget) && 
         "If no deflection, I would _next land on a cell right _next to Every mirror passed to this function.");
