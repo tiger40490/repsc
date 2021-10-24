@@ -54,7 +54,7 @@ class Photon{
     std::vector<MirrorIterator> diagonalMirrors;
     for(auto itr = _grid.survivors.begin(); itr != _grid.survivors.end(); ++itr) {
       float dist = distanceTo(*itr);
-      if (dist == 1) return ""; // I prefer a single code path of move1step->directHit
+      if (dist == 1) return ""; // I prefer a single code path of move1step -> directHit
       if (isSqrt2(dist)) diagonalMirrors.push_back(itr); 
     }
     ss<<diagonalMirrors.size()<<" = initial count of diagonalMirrors\n";
@@ -69,26 +69,27 @@ class Photon{
   // ^^^^^^^^^ above are const member functions ^^^^^^^^^^
   // ^^^^^^^^^ below are movement operations ^^^^^^^^^^
   
-  /* updateCurLocation() is the chokepoint for all movements of the photon !
+  /* tryUpdateCurLocation() is the chokepoint for all movements of the photon !
+  
   Note return value (true=updated) is not in use for now ... hard to propagate out.
-  Note we check the photon isLeaving() only before updating its location , not after! 
+  
+  Note the design requires we check the photon isLeaving() only before updating its location , not after! 
   */
-  bool updateCurLocation(){  
+  bool tryUpdateCurLocation(){  
     if (isLeaving()) {
-      ss<<*this<<" is leaving, detected in updateCurLocation()\n";
+      ss<<*this<<" is leaving the grid, detected at start of tryUpdateCurLocation()\n";
       return false;
     }
     _cur = target();
     _isAtStart = false;
-    //ss<<*this<<"  <-- at end of updateCurLocation()\n";
+    //ss<<*this<<"  <-- at end of tryUpdateCurLocation()\n";
     return true;
   }
-  //char goStraight(){ return this->updateCurLocation();} // not in use
-  void reverse1step(){ //needed by ScenarioE
+  void reverse1step(){
     _next.first  *= -1;
     _next.second *= -1;
-    this->updateCurLocation();
-    ss<<*this<<" after updateCurLocation(), at end of reverse1step()\n";
+    this->tryUpdateCurLocation();
+    ss<<*this<<" after tryUpdateCurLocation(), at end of reverse1step()\n";
   }
   char directHit (MirrorIterator m){ 
     ss<<"directHit on "<<*m<<std::endl;
@@ -114,7 +115,7 @@ class Photon{
       assert(vec.size()==1);
       _next = {originalTarget.first  - mirrorA.first, 
                     originalTarget.second - mirrorA.second};
-      this->updateCurLocation();
+      this->tryUpdateCurLocation();
       ss<<*this<<" after deflection by Mirror at ["<< mirrorA<<"]\n";
     } // Now check expired mirrors
     for (auto & m: vec){
@@ -139,7 +140,7 @@ class Photon{
       if (isSqrt2(dist)) diagonalMirrors.push_back(itr); 
     }
     //ss<<diagonalMirrors.size()<<" = diagonalMirrors.size()\n";
-    if (diagonalMirrors.size() == 0) return updateCurLocation(); // one step forward
+    if (diagonalMirrors.size() == 0) return tryUpdateCurLocation(); // one step forward
     
     assert ( diagonalMirrors.size() < 3 && "3 or more diagonal mirrors ... are technically impossible" );
     return indirectHit( diagonalMirrors );
@@ -159,7 +160,7 @@ public:
         return "";
       }
       if (isLeaving()){
-        ss<<*this<<"   <-- the last cell\n";
+        //ss<<*this<<"   <-- the last cell\n";
         return "{"+std::to_string(_cur.first)
               +","+std::to_string(_cur.second)+"}";
       }

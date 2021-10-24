@@ -6,7 +6,6 @@ using namespace std;
 
 Grid grid = {4, {}};
 
-
 void test2deflections(){ // tested 1
   Photon photon = {{5,3}, {-1,0}, grid}; // one photon
   ss<<photon<<endl;
