@@ -5,34 +5,34 @@
 #include <list>
 #include <cassert>
 
-struct Photon{ // should become a class if more time given
-  Cell cur;
-  Step next; //rename to nextStep?
-  Grid & grid; //rename to theGrid?
+class Photon{ 
+  Cell _cur;
+  Step _next; //
+  Grid & _grid; //
   friend std::ostream & operator<<(std::ostream & os, Photon const & c){
     static std::pair<int, int> const S = {1,0};
     static std::pair<int, int> const N = {-1,0};
     static std::pair<int, int> const E = {0,1};
     static std::pair<int, int> const W = {0,-1};
-    os<<"{"<<c.cur<<"}, <"<<c.next<<">"; 
-    if (c.next == S) os<<"South";
-    if (c.next == N) os<<"North";
-    if (c.next == E) os<<"East";
-    if (c.next == W) os<<"West";
+    os<<"{"<<c._cur<<"}, <"<<c._next<<">"; 
+    if (c._next == S) os<<"South";
+    if (c._next == N) os<<"North";
+    if (c._next == E) os<<"East";
+    if (c._next == W) os<<"West";
     return os;
   }
-  float distanceTo(Mirror const & m) const{ return distance(m.cell, cur);} //check3
+  float distanceTo(Mirror const & m) const{ return distance(m.cell, _cur);} //check3
   bool isLeaving() const{
-    if (1 == cur.first  && next.first == -1) return true;
-    if (1 == cur.second && next.second == -1) return true;
-    if (grid.length == cur.first  && next.first == 1) return true;
-    if (grid.length == cur.second && next.second == 1) return true;
+    if (1 == _cur.first  && _next.first == -1) return true;
+    if (1 == _cur.second && _next.second == -1) return true;
+    if (_grid.length == _cur.first  && _next.first == 1) return true;
+    if (_grid.length == _cur.second && _next.second == 1) return true;
     return false;
   }
   Cell getTargetCell() const{ //check1 .. rename to target()
-    Cell ret = this->cur;
-    ret.first += this->next.first;
-    ret.second+= this->next.second;
+    Cell ret = this->_cur;
+    ret.first += this->_next.first;
+    ret.second+= this->_next.second;
     //ss<<ret<<" returned from getTargetCell()\n";
     return ret;
   }
@@ -45,13 +45,13 @@ struct Photon{ // should become a class if more time given
       ss<<*this<<" is leaving, detected in updateCurLocation()\n";
       return false;
     }
-    this->cur = getTargetCell();
+    this->_cur = getTargetCell();
     return true;
   }
   //char goStraight(){ return this->updateCurLocation();} // not in use
   void reverse1step(){ //needed by ScenarioE
-    next.first  *= -1;
-    next.second *= -1;
+    _next.first  *= -1;
+    _next.second *= -1;
     this->updateCurLocation();
     ss<<*this<<" after reverse1step()\n";
   }
@@ -59,7 +59,7 @@ struct Photon{ // should become a class if more time given
     ss<<"directHit on "<<*m<<std::endl;
     assert( getTargetCell() == m->cell && 
 "by the rules, ONLY way to be 1-meter near a mirror is a direct hit!");
-    if (--m->ttl == 0) grid.del1mirror(m);
+    if (--m->ttl == 0) _grid.del1mirror(m);
     return 'a'; //absorbed
   }
   char indirectHit(std::vector<MirrorIterator> const & vec){ 
@@ -67,7 +67,7 @@ struct Photon{ // should become a class if more time given
     Cell const & originalTarget = getTargetCell();
     for (auto const & aMirror: vec){
       assert(1==distance(aMirror->cell, originalTarget) && 
-        "If no deflection, I would next land on a cell right next to Every mirror passed to this function.");
+        "If no deflection, I would _next land on a cell right _next to Every mirror passed to this function.");
     }
     
     auto & mirrorA = vec[0]->cell;
@@ -77,13 +77,13 @@ struct Photon{ // should become a class if more time given
       this->reverse1step();
     }else{
       assert(vec.size()==1);
-      this->next = {originalTarget.first  - mirrorA.first, 
+      this->_next = {originalTarget.first  - mirrorA.first, 
                     originalTarget.second - mirrorA.second};
       this->updateCurLocation();
       ss<<*this<<" after deflection by Mirror at ["<< mirrorA<<"]\n";
     } // Now check expired mirrors
     for (auto & m: vec){
-        if (--(m->ttl) == 0) grid.del1mirror(m);
+        if (--(m->ttl) == 0) _grid.del1mirror(m);
     }    
 	  return 0;
   }
@@ -91,7 +91,7 @@ struct Photon{ // should become a class if more time given
   char move1step(){        
     // if any distance is 1m, then break; otherwise collect those mirrors at distance 1.42 and pass them as a collection
     std::vector<MirrorIterator> diagonalMirrors;
-    for(auto itr = grid.survivors.begin(); itr != grid.survivors.end(); ++itr) {
+    for(auto itr = _grid.survivors.begin(); itr != _grid.survivors.end(); ++itr) {
       float dist = distanceTo(*itr);
       if (dist == 1) return directHit(itr); 
       if (isSqrt2(dist)) diagonalMirrors.push_back(itr); 
@@ -102,7 +102,8 @@ struct Photon{ // should become a class if more time given
     assert ( diagonalMirrors.size() < 3 && "3 or more diagonal mirrors ... are technically impossible" );
     return indirectHit( diagonalMirrors );
   }
-  
+public:  
+  Photon(Cell const & c, Step const & n, Grid & g): _cur(c), _next(n), _grid(g){}
   std::string roundTrip(){ // returns the exit cell name
   // todo handle initial edge senarios
     while(true){
@@ -111,8 +112,8 @@ struct Photon{ // should become a class if more time given
       //if (status == ABSORBED) return "";
       if (isLeaving()){
         ss<<*this<<" <-- the last cell\n";
-        return "{"+std::to_string(cur.first)
-              +","+std::to_string(cur.second)+"}";
+        return "{"+std::to_string(_cur.first)
+              +","+std::to_string(_cur.second)+"}";
       }
     } // while
   } //function
