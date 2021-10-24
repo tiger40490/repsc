@@ -44,25 +44,24 @@ struct Grid{
         continue;
       }
       //split into 2 or 3 tokens
-      std::stringstream lstream(line);
-      std::vector<int> a;
+      std::stringstream lineStream(line);
+      std::vector<int> tokens;
       std::string token;
-      while(std::getline(lstream, token, ' ')){
-        a.push_back(std::stoi(token));
+      while(std::getline(lineStream, token, ' ')){
+        tokens.push_back(std::stoi(token));
       }
-      //ss<<a;
-      size_t const sz = a.size();
+      //ss<<tokens;
+      size_t const sz = tokens.size();
       assert (sz==2 || 3==sz);
-      Mirror m = {{a[0], a[1]},   sz==3? a[2]:-99};
-      ss<<m<<" is a new mirror from file input\n";
-      this->survivors.push_back(m);
+      this->survivors.push_back( 
+          {{tokens[0],tokens[1]},   sz==3? tokens[2]:-99} );
+      //ss<<this->survivors.back()<<" is a new mirror from file input\n";
     }//for
-    //ss<<survivors;
+    //ss<<survivors<<" ... are the initial mirrors created from file input\n";
     stream = std::stringstream(fT);
     for (; std::getline(stream, line); ){
       if (line.size() == 0) continue;
       if ( line[0] !='C' &&  line[0] !='R' ) continue; //anything unrecognized is assumed to be comment
-      //auto const & result = oneRay(line);
       fullOutputToPrint.push_back({line, "pending"});
     }
     //this->dumpFullOutputToStdErr();
