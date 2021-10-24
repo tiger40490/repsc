@@ -8,7 +8,7 @@ Grid grid = {4, {}};
 
 
 void test2deflections(){ // tested 1
-  Photon photon = {{0,2}, {1,0}, grid}; // one photon
+  Photon photon = {{5,3}, {-1,0}, grid}; // one photon
   ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
   mirrors.clear();
@@ -65,9 +65,9 @@ void testScenario_E(){ //
   ss<<lastCell.c_str();
 }
 int main(){
-  testScenario_E(); 
+  //testScenario_E(); 
   //testScenario_TOE(); 
   //testScenario_T(); 
   //testScenario_Y();
-  //test2deflections();
+  test2deflections();
 }

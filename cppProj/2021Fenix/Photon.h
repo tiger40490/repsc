@@ -3,6 +3,7 @@
 #pragma once
 #include "Grid.h"
 #include <list>
+#include <stdexcept>
 #include <cassert>
 
 static char const ABSORBED='a';
@@ -10,6 +11,7 @@ class Photon{
   Cell _cur;
   Step _next; //
   Grid & _grid; //
+  bool _isAtStart = true; 
   friend std::ostream & operator<<(std::ostream & os, Photon const & c){
     static std::pair<int, int> const S = {1,0};
     static std::pair<int, int> const N = {-1,0};
@@ -23,17 +25,29 @@ class Photon{
     return os;
   }
   float distanceTo(Mirror const & m) const{ return distance(m.cell, _cur);} //check3
-  bool isLeaving() const{
-    if (1 == _cur.first  && _next.first == -1) return true;
-    if (1 == _cur.second && _next.second == -1) return true;
-    if (_grid.length == _cur.first  && _next.first == 1) return true;
-    if (_grid.length == _cur.second && _next.second == 1) return true;
+  RowId minXY() const{
+    return std::min(_cur.first, _cur.second);
+  }
+  RowId maxXY() const{
+    return std::max(_cur.first, _cur.second);
+  }
+  bool isLeaving(/*bool isStrict=true*/) const{
+    //ss<<_isAtStart<<" = _isAtStart\n";
+    if (!_isAtStart){
+      if (1 > minXY() || maxXY() > _grid.length ) 
+        throw std::runtime_error(
+      "photon is NOT at the start but its current location is outside the grid. Programmer or data error");
+    }
+    if (1 == _cur.first  && _next.first == -1) return true; // going out to north
+    if (1 == _cur.second && _next.second == -1) return true; // going out to west
+    if (_grid.length == _cur.first  && _next.first == 1) return true; // going out to south
+    if (_grid.length == _cur.second && _next.second == 1) return true; // going out to east
     return false;
   }
   Cell getTargetCell() const{ //check1 .. rename to target()
-    Cell ret = this->_cur;
-    ret.first += this->_next.first;
-    ret.second+= this->_next.second;
+    Cell ret = _cur;
+    ret.first += _next.first;
+    ret.second+= _next.second;
     //ss<<ret<<" returned from getTargetCell()\n";
     return ret;
   }
@@ -48,7 +62,9 @@ class Photon{
       ss<<*this<<" is leaving, detected in updateCurLocation()\n";
       return false;
     }
-    this->_cur = getTargetCell();
+    _cur = getTargetCell();
+    _isAtStart = false;
+    //ss<<*this<<"  <-- at end of updateCurLocation()\n";
     return true;
   }
   //char goStraight(){ return this->updateCurLocation();} // not in use
@@ -80,7 +96,7 @@ class Photon{
       this->reverse1step();
     }else{
       assert(vec.size()==1);
-      this->_next = {originalTarget.first  - mirrorA.first, 
+      _next = {originalTarget.first  - mirrorA.first, 
                     originalTarget.second - mirrorA.second};
       this->updateCurLocation();
       ss<<*this<<" after deflection by Mirror at ["<< mirrorA<<"]\n";
@@ -106,7 +122,7 @@ class Photon{
       if (dist == 1) return directHit(itr); 
       if (isSqrt2(dist)) diagonalMirrors.push_back(itr); 
     }
-    
+    //ss<<diagonalMirrors.size()<<" = diagonalMirrors.size()\n";
     if (diagonalMirrors.size() == 0) return updateCurLocation(); // one step forward
     
     assert ( diagonalMirrors.size() < 3 && "3 or more diagonal mirrors ... are technically impossible" );
@@ -116,6 +132,8 @@ public:
   Photon(Cell const & c, Step const & n, Grid & g): _cur(c), _next(n), _grid(g){}
   std::string roundTrip(){ // returns the exit cell name
   // todo handle initial edge senarios
+    //assert 
+  
     while(true){
       //ss<<*this<<" <-- before move1step\n";
       char status = this->move1step(); 
