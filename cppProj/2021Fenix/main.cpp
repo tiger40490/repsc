@@ -11,7 +11,7 @@ struct BlockPrinter{
 };
 void test2deflections(){ // tested 1
   BlockPrinter p;
-  Photon photon = {{5,3}, {-1,0}, grid}; // one photon
+  Photon photon = {{5,3}, {-1,0}, grid}; // 
   ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
   mirrors.clear();
@@ -25,26 +25,33 @@ void test2deflections(){ // tested 1
 }
 void testScenario_Y(){ // tested 1
   BlockPrinter p;
-  Photon photon = {{0,2}, {1,0}, grid}; // one photon
+  Photon photon = {{0,2}, {1,0}, grid}; // 
   ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
   mirrors.clear();
-  mirrors.push_back({{2,1},1});
+  mirrors.push_back({{2,1},  2});
   mirrors.push_back({{2,3},1});
-  mirrors.push_back({{4,4},1}); // irrelelvant
+  mirrors.push_back({{1,4},2}); // irrelelvant now
   ss<<mirrors<<" ... are the initial mirrors\n";
   auto lastCell = photon.roundTrip();
   ss<<lastCell<<endl;
   assert(lastCell == string("{1,2}")); //
-  assert(grid.mirrorCnt() == 1);
+  assert(grid.mirrorCnt() == 2);
+  ///////////////
+  Photon photon2 = {{0,2}, {1,0}, grid}; //  same ray again, now 
+  ss<<mirrors<<" ... are the surviving mirrors\n";
+  lastCell = photon2.roundTrip();
+  ss<<lastCell<<endl;
+  assert(lastCell == string("")); //
+  assert(grid.mirrorCnt() == 1);  
 }
 void testScenario_T(){ 
   BlockPrinter p;
-  Photon photon = {{0,2}, {1,0}, grid}; // one photon
+  Photon photon = {{0,2}, {1,0}, grid}; // 
   ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
   mirrors.clear();
-  mirrors.push_back({{2,1},1});
+  mirrors.push_back({{2,1},  2});
   mirrors.push_back({{2,2},1});
   mirrors.push_back({{2,3},1});
   ss<<mirrors<<" ... are the initial mirrors\n";
@@ -52,14 +59,28 @@ void testScenario_T(){
   ss<<lastCell<<endl;
   assert(lastCell == string("")); //absorbed
   assert(grid.mirrorCnt() == 2);
+  /////////////
+  Photon photon2 = {{0,2}, {1,0}, grid}; // same ray again, now ScenarioY 
+  ss<<mirrors<<" ... are the surviving mirrors\n";
+  lastCell = photon2.roundTrip();
+  ss<<lastCell<<endl;
+  assert(lastCell == string("{1,2}")); // reversed
+  assert(grid.mirrorCnt() == 1); // last mirror had longest lifespan
+  /////////////
+  Photon photon3 = {{0,2}, {1,0}, grid}; // same ray again, now Scenario/
+  ss<<mirrors<<" ... are the surviving mirrors\n";
+  lastCell = photon3.roundTrip();
+  ss<<lastCell<<endl;
+  assert(lastCell == string("{1,4}")); // deflected
+  assert(grid.mirrorCnt() == 0); // 
 }
 void testScenario_TOE(){ 
   BlockPrinter p;
-  Photon photon = {{0,2}, {1,0}, grid}; // one photon
+  Photon photon = {{0,2}, {1,0}, grid}; // 
   ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
   mirrors.clear();
-  mirrors.push_back({{1,1},1});
+  mirrors.push_back({{1,1},111});
   mirrors.push_back({{1,2},1});
   //mirrors.push_back({{1,3},1});
   ss<<mirrors<<" ... are the initial mirrors\n";
@@ -67,10 +88,11 @@ void testScenario_TOE(){
   ss<<lastCell<<endl;
   assert(lastCell == string("")); //absorbed
   assert(grid.mirrorCnt() == 1);
+  assert(grid.survivors.front().ttl == 111 );
 }
 void testScenario_E(){ // 
   BlockPrinter p;
-  Photon photon = {{2,5}, {0,-1}, grid}; // one photon
+  Photon photon = {{2,5}, {0,-1}, grid}; // 
   ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
   mirrors.clear();
@@ -81,6 +103,13 @@ void testScenario_E(){ //
   ss<<lastCell<<endl;
   assert(lastCell == string("{2,4}")); //
   assert(grid.mirrorCnt() == 0);
+  //////////////
+  Photon photon2 = {{2,5}, {0,-1}, grid}; // same ray again, now ScenarioY 
+  ss<<mirrors<<" ... are the surviving mirrors\n";
+  lastCell = photon2.roundTrip();
+  ss<<lastCell<<endl;
+  assert(lastCell == string("{2,1}")); // unobstructed
+  assert(grid.mirrorCnt() == 0);  
 }
 std::string parse1ray(std::string ray){
       //ss<<ray<<"\n";
@@ -124,10 +153,10 @@ void test2files(){
   grid.dumpFullOutputToStdErr();
 }
 int main(){
-  test2deflections();
+  testScenario_TOE(); //return 0;
+  testScenario_Y(); //return 0;
+  testScenario_T(); //return 0;
   testScenario_E(); 
-  testScenario_TOE(); 
-  testScenario_T(); 
-  testScenario_Y();
+  test2deflections();
   test2files();
 }
