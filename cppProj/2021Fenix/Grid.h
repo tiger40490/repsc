@@ -1,6 +1,8 @@
 /* 
+showcase member typedef
 
-This class doesn't need Photon.h
+This class logically doesn't need Photon.h. 
+Logical simplicity, but implementation complexity
 */
 #pragma once
 #include "utils.h"
@@ -9,9 +11,9 @@ This class doesn't need Photon.h
 #include <cassert>
 
 struct Grid{ 
-  Coordinate_t length; //todo: should be a const
+  Coordinate_t const length; //
   std::list<Mirror> survivors; //the mirrors not yet erased
-  
+  /// 
   typedef std::string RayDescriptor;
   typedef std::string TestResult;
   typedef std::pair<RayDescriptor, TestResult> TestCase;
@@ -28,16 +30,19 @@ struct Grid{
       std::cerr<<record.first<<" -> "<<record.second<<"\n";
     }      
   }
-  void parse2files(std::string const & fM /*mirrors*/, std::string const & fT /*tests*/){
+  // factory method
+  static Grid* parse2files(std::string const & fM /*mirrors*/, std::string const & fT /*tests*/){
     std::string line;
     std::stringstream stream(fM); //stringstream works like a filestream.
+    Grid * ret;
     for (size_t ln=0; std::getline(stream, line); ){
       //if (line[0] == '#') continue;
       if (line.size() == 0) continue;
       if ( !std::isdigit(line[0]) ) continue; //ignore any line not started with a digit
       //ss<<line.c_str()<<"\n";
       if (++ln == 1) {
-        this->length = std::stoi(line);
+        ret = new Grid{ (Coordinate_t) std::stoi(line)};
+        //ret->length = ;
         //ss<<length<<" = the new grid dimension\n";
         continue;
       }
@@ -51,17 +56,19 @@ struct Grid{
       //ss<<tokens;
       size_t const sz = tokens.size();
       assert (sz==2 || 3==sz);
-      this->survivors.push_back( 
+      ret->survivors.push_back( 
           {{tokens[0],tokens[1]},   sz==3? tokens[2]:-99} );
-      //ss<<this->survivors.back()<<" is a new mirror from file input\n";
+      //ss<<ret->survivors.back()<<" is a new mirror from file input\n";
     }//for
     //ss<<survivors<<" ... are the initial mirrors created from file input\n";
     stream = std::stringstream(fT);
     for (; std::getline(stream, line); ){
       if (line.size() == 0) continue;
       if ( line[0] !='C' &&  line[0] !='R' ) continue; //anything unrecognized is assumed to be comment
-      fullOutputToPrint.push_back({line, "pending"});
+      ret->fullOutputToPrint.push_back({line, "pending"});
     }
-    //this->dumpFullOutputToStdErr();
+    //ret->dumpFullOutputToStdErr();
+    assert(ret && "return value must not be nullptr");
+    return ret;
   }//function
 };

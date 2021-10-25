@@ -145,13 +145,13 @@ std::string parse1ray(std::string ray, Grid & grid){
 
 void test2files(){
   RAIIBoundaryPrinter p;
-  Grid grid; //... 
+  //Grid grid; //... 
 
   string mirrorsFileContent ="\n#adsfa\n8\n3 2\n3 7\n6 4\n8 7 10"; 
   string testsFileContent ="C7+\nC5+\nR5-";
   // Above are test data that can be two files, but for a quick test I prefer string literals.
   
-  grid.parse2files(mirrorsFileContent, testsFileContent);
+  Grid & grid = *Grid::parse2files(mirrorsFileContent, testsFileContent);
   for (auto & aPair: grid.fullOutputToPrint){
     aPair.second // test result
       = parse1ray(aPair.first, grid);

@@ -1,16 +1,17 @@
 /*
+showcase layers of self-documenting typedef's, in the c++ library tradition
+
 This class doesn't need Photon.h, Grid.h 
 */
 #pragma once
 #include "dumper.h" // needed for dumping pair<>
-//#include <list>
 #include <cmath>
 #include <iostream>
 #include <sstream>
 #include <cassert>
 #include <cctype>
 
-typedef uint16_t Coordinate_t;
+typedef uint16_t Coordinate_t; // grid dimension won't exceed 16-bit int
 typedef Coordinate_t RowId;
 typedef Coordinate_t ColId; 
 /* For both of the above,
