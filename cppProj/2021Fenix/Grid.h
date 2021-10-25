@@ -1,6 +1,4 @@
 /* 
-todo: populare from the file
-todo: remove unused function
 
 This class doesn't need Photon.h
 */
