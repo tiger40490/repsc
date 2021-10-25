@@ -6,9 +6,6 @@ Logical simplicity, but implementation complexity
 */
 #pragma once
 #include "utils.h"
-//#include "dumper.h" // needed for ?
-#include <list>
-#include <cassert>
 
 struct Grid{ 
   Coordinate_t const length; //

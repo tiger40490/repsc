@@ -4,9 +4,7 @@ showcase RAIIBoundaryPrinter
 #include "Photon.h"
 #include "utils.h"
 #include "dumper.h"
-
 using namespace std;
-
 
 struct RAIIBoundaryPrinter{
   RAIIBoundaryPrinter() { ss<<"\t vvvvvvvvv   new test  vvvvvvvvvvv \n"; }
