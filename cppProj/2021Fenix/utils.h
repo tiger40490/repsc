@@ -1,7 +1,7 @@
 /*
 showcase layers of self-documenting typedef's, in the c++ library tradition
 
-This class doesn't need Photon.h, Grid.h 
+This class is at the base level, and doesn't need Photon.h, Grid.h 
 */
 #pragma once
 #include "dumper.h" // needed for dumping pair<>
@@ -9,7 +9,6 @@ This class doesn't need Photon.h, Grid.h
 #include <iostream>
 #include <sstream>
 #include <cassert>
-#include <cctype>
 
 typedef uint16_t Coordinate_t; // grid dimension won't exceed 16-bit int
 typedef Coordinate_t RowId;
@@ -23,10 +22,10 @@ typedef std::pair<RowId, ColId> Cell;
 typedef std::pair<int, int> Step; // One of the two values must be a zero; ther other a +/-1.
 
 struct Mirror{ 
-  Cell const cell;
+  Cell const address;
   int ttl; //time to live in terms of remaining hits. negative means forever.
   friend std::ostream & operator<<(std::ostream & os, Mirror const & c){
-    os<<"["<<c.cell<<"]ttl="<<c.ttl; return os;
+    os<<"["<<c.address<<"]ttl="<<c.ttl; return os;
   }
 };
 

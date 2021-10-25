@@ -24,7 +24,7 @@ class Photon{
     if (c._next == W) os<<"West";
     return os;
   }
-  float distanceTo(Mirror const & m) const{ return distance(m.cell, _cur);} //check3
+  float distanceTo(Mirror const & m) const{ return distance(m.address, _cur);} //check3
   bool isLeaving(/*bool isStrict=true*/) const{
     //ss<<_isAtStart<<" = _isAtStart\n";
     if (!_isAtStart){
@@ -93,7 +93,7 @@ class Photon{
   }
   char directHit (MirrorIterator m){ 
     ss<<"directHit on "<<*m<<std::endl;
-    assert( target() == m->cell && 
+    assert( target() == m->address && 
 "by the rules, ONLY way to be 1-meter near a mirror is a direct hit!");
     if (--m->ttl == 0) _grid.del1mirror(m);
     return ABSORBED; //absorbed
@@ -102,13 +102,13 @@ class Photon{
     ss<<"indirectHit \n";
     Cell const & originalTarget = target();
     for (auto const & aMirror: vec){
-      assert(1==distance(aMirror->cell, originalTarget) && 
+      assert(1==distance(aMirror->address, originalTarget) && 
         "If no deflection, I would _next land on a cell right _next to Every mirror passed to this function.");
     }
     
-    auto & mirrorA = vec[0]->cell;
+    auto & mirrorA = vec[0]->address;
     if (vec.size() == 2){
-      auto & mirrorB = vec[1]->cell;
+      auto & mirrorB = vec[1]->address;
       assert(2==distance(mirrorA, mirrorB) && "The two mirrors in Scenario Y should be 2-meter apart");
       this->reverse1step();
     }else{
@@ -121,7 +121,7 @@ class Photon{
     for (auto & m: vec){
         if (--(m->ttl) == 0) _grid.del1mirror(m);
     }    
-	  return 0;
+    return 0;
   }
 
   /* move1step() is another chokepoint. 
