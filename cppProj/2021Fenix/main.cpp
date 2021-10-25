@@ -1,16 +1,19 @@
+/*
+showcase RAIIBoundaryPrinter
+*/
 #include "Photon.h"
 #include "utils.h"
 #include "dumper.h"
 
 using namespace std;
 
-Grid grid = {4};
-struct BlockPrinter{
-  BlockPrinter() { ss<<"\t vvvvvvvvv   new test  vvvvvvvvvvv \n"; }
-  ~BlockPrinter(){ ss<<"\t ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ \n"; }
+Grid grid = {4}; // global singleton object
+struct RAIIBoundaryPrinter{
+  RAIIBoundaryPrinter() { ss<<"\t vvvvvvvvv   new test  vvvvvvvvvvv \n"; }
+  ~RAIIBoundaryPrinter(){ ss<<"\t ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ \n"; }
 };
 void test2deflections(){ // tested 1
-  BlockPrinter p;
+  RAIIBoundaryPrinter p;
   Photon photon = {{5,3}, {-1,0}, grid}; // 
   ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
@@ -24,7 +27,7 @@ void test2deflections(){ // tested 1
   assert(grid.mirrorCnt() == 0);
 }
 void testScenario_Y(){ // tested 1
-  BlockPrinter p;
+  RAIIBoundaryPrinter p;
   Photon photon = {{0,2}, {1,0}, grid}; // 
   ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
@@ -46,7 +49,7 @@ void testScenario_Y(){ // tested 1
   assert(grid.mirrorCnt() == 1);  
 }
 void testScenario_T(){ 
-  BlockPrinter p;
+  RAIIBoundaryPrinter p;
   Photon photon = {{0,2}, {1,0}, grid}; // 
   ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
@@ -75,7 +78,7 @@ void testScenario_T(){
   assert(grid.mirrorCnt() == 0); // 
 }
 void testScenario_TOE(){ 
-  BlockPrinter p;
+  RAIIBoundaryPrinter p;
   Photon photon = {{0,2}, {1,0}, grid}; // 
   ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
@@ -91,7 +94,7 @@ void testScenario_TOE(){
   assert(grid.survivors.front().ttl == 111 );
 }
 void testScenario_E(){ // 
-  BlockPrinter p;
+  RAIIBoundaryPrinter p;
   Photon photon = {{2,5}, {0,-1}, grid}; // 
   ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
@@ -111,6 +114,8 @@ void testScenario_E(){ //
   assert(lastCell == string("{2,1}")); // unobstructed
   assert(grid.mirrorCnt() == 0);  
 }
+/* This function was moved out of Grid class, in order to ensure Grid doesn't depend on Photon i.e. cross-dependency.
+*/
 std::string parse1ray(std::string ray){
       //ss<<ray<<"\n";
       size_t sz = ray.size();
@@ -139,7 +144,7 @@ std::string parse1ray(std::string ray){
 }
 
 void test2files(){
-  BlockPrinter p;
+  RAIIBoundaryPrinter p;
   grid.survivors.clear();
   string mirrorsFileContent ="\n#adsfa\n8\n3 2\n3 7\n6 4\n8 7 10"; 
   string testsFileContent ="C7+\nC5+\nR5-";
