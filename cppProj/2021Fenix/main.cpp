@@ -7,17 +7,17 @@ showcase RAIIBoundaryPrinter
 
 using namespace std;
 
-Grid grid = {4}; // global singleton object
+
 struct RAIIBoundaryPrinter{
   RAIIBoundaryPrinter() { ss<<"\t vvvvvvvvv   new test  vvvvvvvvvvv \n"; }
   ~RAIIBoundaryPrinter(){ ss<<"\t ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ \n"; }
 };
 void test2deflections(){ // tested 1
   RAIIBoundaryPrinter p;
+  Grid grid = {4}; 
   Photon photon = {{5,3}, {-1,0}, grid}; // 
   ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
-  mirrors.clear();
   mirrors.push_back({{2,1},1});
   mirrors.push_back({{2,4},1});
   ss<<mirrors<<" ... are the initial mirrors\n";
@@ -28,10 +28,10 @@ void test2deflections(){ // tested 1
 }
 void testScenario_Y(){ // tested 1
   RAIIBoundaryPrinter p;
+  Grid grid = {4}; 
   Photon photon = {{0,2}, {1,0}, grid}; // 
   ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
-  mirrors.clear();
   mirrors.push_back({{2,1},  2});
   mirrors.push_back({{2,3},1});
   mirrors.push_back({{1,4},2}); // irrelelvant now
@@ -50,10 +50,10 @@ void testScenario_Y(){ // tested 1
 }
 void testScenario_T(){ 
   RAIIBoundaryPrinter p;
+  Grid grid = {4}; 
   Photon photon = {{0,2}, {1,0}, grid}; // 
   ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
-  mirrors.clear();
   mirrors.push_back({{2,1},  2});
   mirrors.push_back({{2,2},1});
   mirrors.push_back({{2,3},1});
@@ -79,10 +79,10 @@ void testScenario_T(){
 }
 void testScenario_TOE(){ 
   RAIIBoundaryPrinter p;
+  Grid grid = {4}; 
   Photon photon = {{0,2}, {1,0}, grid}; // 
   ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
-  mirrors.clear();
   mirrors.push_back({{1,1},111});
   mirrors.push_back({{1,2},1});
   //mirrors.push_back({{1,3},1});
@@ -95,10 +95,10 @@ void testScenario_TOE(){
 }
 void testScenario_E(){ // 
   RAIIBoundaryPrinter p;
+  Grid grid = {4}; 
   Photon photon = {{2,5}, {0,-1}, grid}; // 
   ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
-  mirrors.clear();
   mirrors.push_back({{1,4},1});
   mirrors.push_back({{3,4},1});
   ss<<mirrors<<" ... are the initial mirrors\n";
@@ -116,7 +116,7 @@ void testScenario_E(){ //
 }
 /* This function was moved out of Grid class, in order to ensure Grid doesn't depend on Photon i.e. cross-dependency.
 */
-std::string parse1ray(std::string ray){
+std::string parse1ray(std::string ray, Grid & grid){
       //ss<<ray<<"\n";
       size_t sz = ray.size();
       char rc = ray[0];
@@ -145,7 +145,8 @@ std::string parse1ray(std::string ray){
 
 void test2files(){
   RAIIBoundaryPrinter p;
-  grid.survivors.clear();
+  Grid grid; //... 
+
   string mirrorsFileContent ="\n#adsfa\n8\n3 2\n3 7\n6 4\n8 7 10"; 
   string testsFileContent ="C7+\nC5+\nR5-";
   // Above are test data that can be two files, but for a quick test I prefer string literals.
@@ -153,7 +154,7 @@ void test2files(){
   grid.parse2files(mirrorsFileContent, testsFileContent);
   for (auto & aPair: grid.fullOutputToPrint){
     aPair.second // test result
-      = parse1ray(aPair.first);
+      = parse1ray(aPair.first, grid);
   }
   grid.dumpFullOutputToStdErr();
 }
