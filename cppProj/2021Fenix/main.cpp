@@ -91,7 +91,7 @@ void testScenario_TOE(){
   assert(grid.mirrorCnt() == 1);
   assert(grid.survivors.front().ttl == 111 );
 }
-void testScenario_E(){ // 
+void testScenario_E(){ // Scenario Edge, but not T-on-Edge 
   RAIIBoundaryPrinter p;
   Grid grid = {4}; 
   Photon photon = {{2,5}, {0,-1}, grid}; // 
@@ -112,7 +112,7 @@ void testScenario_E(){ //
   assert(lastCell == string("{2,1}")); // unobstructed
   assert(grid.mirrorCnt() == 0);  
 }
-/* This function was moved out of Grid class, in order to ensure Grid doesn't depend on Photon i.e. cross-dependency.
+/* This function does not logically belong to any class... was moved out of Grid class, in order to remove Grid dependency on Photon i.e. cross-dependency.
 */
 std::string parse1ray(std::string ray, Grid & grid){
       //ss<<ray<<"\n";
