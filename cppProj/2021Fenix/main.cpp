@@ -110,6 +110,7 @@ void testScenario_E(){ // Scenario Edge, but not T-on-Edge
   assert(lastCell == string("{2,4}")); //
   assert(grid.mirrorCnt() == 0);
   //////////////
+  ss<<"same ray again ...\n";
   Photon photon2 = {{2,5}, {0,-1}, grid}; // same ray again, now ScenarioY 
   ss<<mirrors<<" ... are the surviving mirrors\n";
   lastCell = photon2.roundTrip();
@@ -163,9 +164,9 @@ void test2files(){
 }
 int main(){
   //testScenario_TOE(); return 0;
-  testScenario_Y(); return 0;
-  //testScenario_T(); return 0;
-  //testScenario_E(); 
+  //testScenario_Y(); return 0;
+  ///testScenario_T(); return 0;
+  testScenario_E(); return 0;
   test2deflections(); //return 0;
   //test2files();
 }
