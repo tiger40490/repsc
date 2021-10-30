@@ -7,6 +7,7 @@ Logical simplicity, but implementation complexity
 #pragma once
 #include "utils.h"
 
+static char const EMPTY_CELL=' ';
 struct Grid{ 
   Coordinate_t const length; //
   std::list<Mirror> survivors; //the mirrors not yet erased
@@ -21,6 +22,8 @@ struct Grid{
   void del1mirror(MirrorIterator const it){ //tested 1x
         assert(it->ttl == 0);
         survivors.erase(it); // list::erase() does NOT invalidate other iterators to be erased :)
+        Cell const & addr = it->address;
+        printable[addr.first][addr.second] = EMPTY_CELL;
         ss<<mirrorCnt()<<" = mirrorCnt after removing one expired mirror\n";
   }
   void dumpFullOutputToStdErr() const{ 
@@ -28,11 +31,37 @@ struct Grid{
       std::cerr<<record.first<<" -> "<<record.second<<"\n";
     }      
   }
-  Grid(Coordinate_t len): length(len){
+  void printGrid() const{
+    std::stringstream ret;
+    ret<<"\n-----------------------\n | ";
+    for (int c=0; c<=length+1; ++c) ret<<' '<<c;
+    
+    for (int r=0; r<=length+1; ++r){
+      ret<<"\n"<<r<<"| ";
+      for (int c=0; c<=length+1; ++c){
+        ret<<' '<<printable[r][c];
+      }
+    }
+    ret<<"\n | ";
+    for (int c=0; c<=length+1; ++c) ret<<' '<<c;
+    ret<<"\n-----------------------\n";
+    ss<<ret.str();
+    return;
+  }
+  void leaveBreadcrumb(){
+      
+  }
+  void initPrintable(){
       printable = std::vector<std::vector<char> >(
-        length, 
-        std::vector<char>(length, ' ')
+        length+2, 
+        std::vector<char>(length+2, EMPTY_CELL)
       );
+      for (auto const & m: survivors){
+        Cell const & addr = m.address;
+        assert(maxXY(addr) <= length);
+        printable[addr.first][addr.second] = 'm';
+      }
+      printGrid();
   }
   // factory method
   static Grid* parse2files(std::string const & fM /*mirrors*/, std::string const & fT /*tests*/){
@@ -64,6 +93,7 @@ struct Grid{
           {{tokens[0],tokens[1]},   sz==3? tokens[2]:-99} );
       //ss<<ret->survivors.back()<<" is a new mirror from file input\n";
     }//for
+    ret->initPrintable();
     //ss<<survivors<<" ... are the initial mirrors created from file input\n";
     stream = std::stringstream(fT);
     for (; std::getline(stream, line); ){

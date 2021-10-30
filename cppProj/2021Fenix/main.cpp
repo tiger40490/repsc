@@ -18,6 +18,7 @@ void test2deflections(){ // tested 1
   list<Mirror> & mirrors = grid.survivors;
   mirrors.push_back({{2,1},1});
   mirrors.push_back({{2,4},1});
+  grid.initPrintable();
   ss<<mirrors<<" ... are the initial mirrors\n";
   auto lastCell = photon.roundTrip();
   ss<<lastCell<<endl;
@@ -157,10 +158,10 @@ void test2files(){
   grid.dumpFullOutputToStdErr();
 }
 int main(){
-  testScenario_TOE(); //return 0;
+  /*testScenario_TOE(); //return 0;
   testScenario_Y(); //return 0;
   testScenario_T(); //return 0;
-  testScenario_E(); 
-  test2deflections();
+  testScenario_E(); */
+  test2deflections(); //return 0;
   test2files();
 }
