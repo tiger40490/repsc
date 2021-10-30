@@ -43,7 +43,7 @@ void testScenario_Y(){ // tested 1
   delete p;
   ///////////////
   RAIIBoundaryPrinter p2;
-  grid.clearBreadcrumb();
+  grid.clearBreadcrumb(true);
   //ss<<"same ray again\n";
   Photon photon2 = {{2,0}, {0,1}, grid}; //  same ray again, now 
   ss<<mirrors<<" ... are the "<<mirrors.size()<<" surviving mirrors\n";
@@ -70,7 +70,7 @@ void testScenario_T(){
   delete p;
   /////////////
   p = new RAIIBoundaryPrinter;
-  grid.clearBreadcrumb();
+  grid.clearBreadcrumb(true);
   Photon photon2 = {{0,2}, {1,0}, grid}; // same ray again, now ScenarioY 
   ss<<mirrors<<" ... are the "<<mirrors.size()<<" surviving mirrors\n";
   lastCell = photon2.roundTrip();
@@ -80,7 +80,7 @@ void testScenario_T(){
   delete p;
   /////////////
   RAIIBoundaryPrinter p2;
-  grid.clearBreadcrumb();
+  grid.clearBreadcrumb(true);
   Photon photon3 = {{0,2}, {1,0}, grid}; // same ray again, now Scenario/
   ss<<mirrors<<" ... are the "<<mirrors.size()<<" surviving mirrors\n";
   lastCell = photon3.roundTrip();
@@ -158,8 +158,19 @@ std::string parse1ray(std::string ray, Grid & grid){
       //string const & lastCell = photon.roundTrip();
       return photon.roundTrip();
 }
-
 void test2files(){
+  RAIIBoundaryPrinter p;
+
+  string mirrorsFileContent ="\n10\n3 3 1\n3 4 1\n3 5 1\n4 5 1\n6 5 1\n7 7 1\n5 1 1\n9 2 1\n3 8 1\n1 7 1\n6 4 1\n8 3 1"; 
+  string testsFileContent ="C7+\nC5+\nR5-\nC6-\nR1+\nR5-";
+  
+  Grid & grid = *Grid::parse2files(mirrorsFileContent, testsFileContent);
+  for (auto & aPair: grid.fullOutputToPrint){
+    aPair.second // test result
+      = parse1ray(aPair.first, grid);
+  }
+}
+void test2filesPDF(){
   RAIIBoundaryPrinter p;
   //Grid grid; //... 
 
@@ -180,5 +191,6 @@ int main(){
   //test2deflections(); return 0;
   //testScenario_E(); return 0;
   //testScenario_TOE(); return 0;
+  //test2filesPDF(); return 0
   test2files();
 }

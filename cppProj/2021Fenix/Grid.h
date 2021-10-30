@@ -10,7 +10,7 @@ Logical simplicity, but implementation complexity
 static char const EMPTY_CELL  ='.';
 static char const OUTSIDE_GRID=' ';
 static char const MIRROR_CELL   ='M';
-static char const MIRROR_EXPIRED='m';
+static char const MIRROR_EXPIRED='e';
 
 struct Grid{ 
   Coordinate_t const length; //
@@ -38,18 +38,18 @@ struct Grid{
   ////////// below: printable Grid
   void printGrid() const{
     std::stringstream ret;
-    ret<<"\n-----------------------\n | ";
+    ret<<"\n------------------------------\n  | ";
     for (int c=0; c<=length+1; ++c) ret<<' '<<c;
     
     for (int r=0; r<=length+1; ++r){
-      ret<<"\n"<<r<<"| ";
+      ret<<"\n"<<std::setw(2)<<r<<"| ";
       for (int c=0; c<=length+1; ++c){
         ret<<' '<<printable[r][c];
       }
     }
-    ret<<"\n | ";
+    ret<<"\n  | ";
     for (int c=0; c<=length+1; ++c) ret<<' '<<c;
-    ret<<"\n-----------------------\n";
+    ret<<"\n------------------------------\n";
     ss<<ret.str();
     return;
   }
@@ -82,13 +82,14 @@ struct Grid{
     }
     printGrid();
   }
-  void clearBreadcrumb(){
+  void clearBreadcrumb(bool isExpiredKept=false){
     //ss<<"clearBreadcrumb\n";
     for (int r=0; r<=length+1; ++r){
       for (int c=0; c<=length+1; ++c){
         char & t = printable[r][c];
-        if (t == MIRROR_CELL ||
-            t == MIRROR_EXPIRED) continue;
+        if (t == MIRROR_CELL) continue;
+        if (t == MIRROR_EXPIRED && isExpiredKept) continue;
+            
         if (1<=r && 1<=c && c<=length && r<=length)
             t = EMPTY_CELL;
         else t = OUTSIDE_GRID;
