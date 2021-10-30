@@ -101,6 +101,7 @@ void testScenario_TOE(){
   ss<<mirrors<<" ... are the initial mirrors\n";
   auto lastCell = photon.roundTrip();
   ss<<lastCell<<endl;
+  grid.printGrid();
   assert(lastCell == string("")); //absorbed
   assert(grid.mirrorCnt() == 1);
   assert(grid.survivors.front().ttl == 111 );
@@ -173,10 +174,10 @@ void test2files(){
   grid.dumpFullOutputToStdErr();
 }
 int main(){
-  //testScenario_TOE(); return 0;
   //testScenario_Y(); return 0;
-  testScenario_T(); return 0;
-  testScenario_E(); return 0;
-  test2deflections(); //return 0;
+  //testScenario_T(); return 0;
+  //test2deflections(); return 0;
+  //testScenario_E(); return 0;
+  testScenario_TOE(); return 0;
   //test2files();
 }

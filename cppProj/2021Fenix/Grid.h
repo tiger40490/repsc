@@ -25,7 +25,7 @@ struct Grid{
         assert(it->ttl == 0);
         survivors.erase(it); // list::erase() does NOT invalidate other iterators to be erased :)
         Cell const & addr = it->address;
-        printable[addr.first][addr.second] = EMPTY_CELL;
+        printable[addr.first][addr.second] = 'e'; //expired mirror
         ss<<mirrorCnt()<<" = mirrorCnt after removing one expired mirror\n";
   }
   void dumpFullOutputToStdErr() const{ 
@@ -33,6 +33,7 @@ struct Grid{
       std::cerr<<record.first<<" -> "<<record.second<<"\n";
     }      
   }
+  ////////// below: printable Grid
   void printGrid() const{
     std::stringstream ret;
     ret<<"\n-----------------------\n | ";
