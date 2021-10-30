@@ -142,6 +142,7 @@ class Photon{
     for (auto & m: vec){
         if (--(m->ttl) == 0) _grid.del1mirror(m);
     }    
+    if (vec.size() == 2) _grid.printGrid();
     return 0;
   }
 
