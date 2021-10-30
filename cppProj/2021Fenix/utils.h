@@ -10,6 +10,8 @@ This class is at the base level, and doesn't need Photon.h, Grid.h
 #include <sstream>
 #include <cassert>
 
+static char const REVERSE = 'r';
+
 typedef uint16_t Coordinate_t; // grid dimension won't exceed 16-bit int
 typedef Coordinate_t RowId;
 typedef Coordinate_t ColId; 

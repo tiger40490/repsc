@@ -7,7 +7,6 @@
 #include <cassert>
 
 static char const ABSORBED = 'a';
-static char const REVERSE = 'r';
     static std::pair<int, int> const S = {1,0};
     static std::pair<int, int> const N = {-1,0};
     static std::pair<int, int> const E = {0,1};
@@ -97,11 +96,7 @@ class Photon{
 
     //char prevDirection = convertDirectiontoArrow();
     _cur = target();
-    char dir = convertDirectiontoArrow();
-    // update dir
-    
-    
-    _grid.leaveBreadcrumb(_cur, dir);
+    _grid.leaveBreadcrumb(_cur, convertDirectiontoArrow());
     _isAtStart = false;
     //ss<<*this<<"  <-- at end of tryUpdateCurLocation()\n";
     return true;
@@ -142,7 +137,6 @@ class Photon{
     for (auto & m: vec){
         if (--(m->ttl) == 0) _grid.del1mirror(m);
     }    
-    if (vec.size() == 2) _grid.printGrid();
     return 0;
   }
 

@@ -63,7 +63,7 @@ struct Grid{
   }
   void leaveBreadcrumb(Cell const & photonLocation, char arrow){
     updatePrintable(photonLocation, arrow);
-    printGrid();
+    printGrid(); // if arrow == REVERSE, this could be scenario_E, so printGrid() need
   }
   void initPrintable(){
     printable = std::vector<std::vector<char> >(
