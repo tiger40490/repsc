@@ -48,8 +48,17 @@ struct Grid{
     ss<<ret.str();
     return;
   }
-  void leaveBreadcrumb(){
-      
+  void updatePrintable(Cell const & addr, char ch){
+    assert(maxXY(addr) <= length);
+    char & existing = printable[addr.first][addr.second];
+        
+    if     (existing + ch == '^' + 'v') existing = '|';
+    else if(existing + ch == '>' + '<') existing = '=';
+    else                                existing = ch;
+  }
+  void leaveBreadcrumb(Cell const & photonLocation, char arrow){
+    updatePrintable(photonLocation, arrow);
+    printGrid();
   }
   void initPrintable(){
       printable = std::vector<std::vector<char> >(
@@ -58,8 +67,7 @@ struct Grid{
       );
       for (auto const & m: survivors){
         Cell const & addr = m.address;
-        assert(maxXY(addr) <= length);
-        printable[addr.first][addr.second] = 'm';
+        updatePrintable(addr, 'M');
       }
       printGrid();
   }

@@ -28,19 +28,20 @@ void test2deflections(){ // tested 1
 void testScenario_Y(){ // tested 1
   RAIIBoundaryPrinter p;
   Grid grid = {4}; 
-  Photon photon = {{0,2}, {1,0}, grid}; // 
+  Photon photon = {{2,0}, {0,1}, grid}; 
   ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
-  mirrors.push_back({{2,1},  2});
-  mirrors.push_back({{2,3},1});
-  mirrors.push_back({{1,4},2}); // irrelelvant now
+  mirrors.push_back({{1,3},  2});
+  mirrors.push_back({{3,3},1});
+  mirrors.push_back({{4,2},2}); // irrelelvant now
+  grid.initPrintable();
   ss<<mirrors<<" ... are the initial mirrors\n";
   auto lastCell = photon.roundTrip();
   ss<<lastCell<<endl;
-  assert(lastCell == string("{1,2}")); //
+  assert(lastCell == string("{2,1}")); //
   assert(grid.mirrorCnt() == 2);
   ///////////////
-  Photon photon2 = {{0,2}, {1,0}, grid}; //  same ray again, now 
+  Photon photon2 = {{2,0}, {0,1}, grid}; //  same ray again, now 
   ss<<mirrors<<" ... are the surviving mirrors\n";
   lastCell = photon2.roundTrip();
   ss<<lastCell<<endl;
@@ -56,6 +57,7 @@ void testScenario_T(){
   mirrors.push_back({{2,1},  2});
   mirrors.push_back({{2,2},1});
   mirrors.push_back({{2,3},1});
+  grid.initPrintable();
   ss<<mirrors<<" ... are the initial mirrors\n";
   auto lastCell = photon.roundTrip();
   ss<<lastCell<<endl;
@@ -85,6 +87,7 @@ void testScenario_TOE(){
   mirrors.push_back({{1,1},111});
   mirrors.push_back({{1,2},1});
   //mirrors.push_back({{1,3},1});
+  grid.initPrintable();
   ss<<mirrors<<" ... are the initial mirrors\n";
   auto lastCell = photon.roundTrip();
   ss<<lastCell<<endl;
@@ -100,6 +103,7 @@ void testScenario_E(){ // Scenario Edge, but not T-on-Edge
   list<Mirror> & mirrors = grid.survivors;
   mirrors.push_back({{1,4},1});
   mirrors.push_back({{3,4},1});
+  grid.initPrintable();
   ss<<mirrors<<" ... are the initial mirrors\n";
   auto lastCell = photon.roundTrip();
   ss<<lastCell<<endl;
@@ -158,10 +162,10 @@ void test2files(){
   grid.dumpFullOutputToStdErr();
 }
 int main(){
-  /*testScenario_TOE(); //return 0;
-  testScenario_Y(); //return 0;
-  testScenario_T(); //return 0;
-  testScenario_E(); */
+  //testScenario_TOE(); return 0;
+  testScenario_Y(); return 0;
+  //testScenario_T(); return 0;
+  //testScenario_E(); 
   test2deflections(); //return 0;
-  test2files();
+  //test2files();
 }

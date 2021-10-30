@@ -7,16 +7,17 @@
 #include <cassert>
 
 static char const ABSORBED = 'a';
+    static std::pair<int, int> const S = {1,0};
+    static std::pair<int, int> const N = {-1,0};
+    static std::pair<int, int> const E = {0,1};
+    static std::pair<int, int> const W = {0,-1};
+
 class Photon{ 
   Cell _cur;
   Step _next; //
   Grid & _grid; // photons exist on a grid, but Grid class doesn't need a photon
   bool _isAtStart = true; 
   friend std::ostream & operator<<(std::ostream & os, Photon const & c){
-    static std::pair<int, int> const S = {1,0};
-    static std::pair<int, int> const N = {-1,0};
-    static std::pair<int, int> const E = {0,1};
-    static std::pair<int, int> const W = {0,-1};
     os<<"{"<<c._cur<<"}..<"<<c._next<<">"; 
     if (c._next == S) os<<"South";
     if (c._next == N) os<<"North";
@@ -66,6 +67,15 @@ class Photon{
     return "{"+std::to_string(entryCell.first)
           +","+std::to_string(entryCell.second)+"}";
   }
+  char convertDirectiontoArrow() const{
+    if (_next == S) return 'v';
+    if (_next == N) return '^';
+    if (_next == E) return '>';
+    if (_next == W) return '<';
+    assert(false && "should never reach here");
+    return ' ';
+  }
+  //char 
   // ^^^^^^^^^ above are const member functions ^^^^^^^^^^
   // ^^^^^^^^^ below are movement operations ^^^^^^^^^^
   
@@ -80,7 +90,13 @@ class Photon{
       ss<<*this<<" is leaving the grid, detected at start of tryUpdateCurLocation()\n";
       return false;
     }
+    //char prevDirection = convertDirectiontoArrow();
     _cur = target();
+    char dir = convertDirectiontoArrow();
+    // update dir
+    
+    
+    _grid.leaveBreadcrumb(_cur, dir);
     _isAtStart = false;
     //ss<<*this<<"  <-- at end of tryUpdateCurLocation()\n";
     return true;
