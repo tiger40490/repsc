@@ -26,7 +26,7 @@ void test2deflections(){ // tested 1
   assert(grid.mirrorCnt() == 0);
 }
 void testScenario_Y(){ // tested 1
-  RAIIBoundaryPrinter p;
+  RAIIBoundaryPrinter* p=new RAIIBoundaryPrinter;
   Grid grid = {4}; 
   Photon photon = {{2,0}, {0,1}, grid}; 
   ss<<photon<<endl;
@@ -40,7 +40,11 @@ void testScenario_Y(){ // tested 1
   ss<<lastCell<<endl;
   assert(lastCell == string("{2,1}")); //
   assert(grid.mirrorCnt() == 2);
+  delete p;
   ///////////////
+  RAIIBoundaryPrinter p2;
+  grid.clearBreadcrumb();
+  //ss<<"same ray again\n";
   Photon photon2 = {{2,0}, {0,1}, grid}; //  same ray again, now 
   ss<<mirrors<<" ... are the surviving mirrors\n";
   lastCell = photon2.roundTrip();
@@ -164,7 +168,7 @@ void test2files(){
 }
 int main(){
   //testScenario_TOE(); return 0;
-  //testScenario_Y(); return 0;
+  testScenario_Y(); return 0;
   ///testScenario_T(); return 0;
   testScenario_E(); return 0;
   test2deflections(); //return 0;

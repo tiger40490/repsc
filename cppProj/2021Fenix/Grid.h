@@ -8,6 +8,8 @@ Logical simplicity, but implementation complexity
 #include "utils.h"
 
 static char const EMPTY_CELL=' ';
+static char const MIRROR_CELL='M';
+
 struct Grid{ 
   Coordinate_t const length; //
   std::list<Mirror> survivors; //the mirrors not yet erased
@@ -49,7 +51,7 @@ struct Grid{
     return;
   }
   void updatePrintable(Cell const & addr, char ch){
-    assert(maxXY(addr) <= length);
+    assert(maxXY(addr) <= length+1);
     char & existing = printable[addr.first][addr.second];
         
     if     (existing + ch == '^' + 'v') existing = '|';
@@ -67,9 +69,17 @@ struct Grid{
       );
       for (auto const & m: survivors){
         Cell const & addr = m.address;
-        updatePrintable(addr, 'M');
+        updatePrintable(addr, MIRROR_CELL);
       }
       printGrid();
+  }
+  void clearBreadcrumb(){
+    for (int r=0; r<=length+1; ++r){
+      for (int c=0; c<=length+1; ++c){
+        if (printable[r][c] != MIRROR_CELL)
+            printable[r][c] = EMPTY_CELL;
+      }
+    }      
   }
   // factory method
   static Grid* parse2files(std::string const & fM /*mirrors*/, std::string const & fT /*tests*/){

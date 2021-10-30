@@ -7,6 +7,7 @@
 #include <cassert>
 
 static char const ABSORBED = 'a';
+static char const REVERSE = 'r';
     static std::pair<int, int> const S = {1,0};
     static std::pair<int, int> const N = {-1,0};
     static std::pair<int, int> const E = {0,1};
@@ -64,6 +65,7 @@ class Photon{
     for (auto & m: diagonalMirrors){
         if (--(m->ttl) == 0) _grid.del1mirror(m);
     }   
+    _grid.leaveBreadcrumb(_cur, REVERSE);
     return "{"+std::to_string(entryCell.first)
           +","+std::to_string(entryCell.second)+"}";
   }
@@ -85,11 +87,17 @@ class Photon{
   
   Note the design requires we check the photon isLeaving() only before updating its location , not after! 
   */
-  bool tryUpdateCurLocation(){  
+  bool tryUpdateCurLocation(char dirChange=0){  
     if (isLeaving()) {
       ss<<*this<<" is leaving the grid, detected at start of tryUpdateCurLocation()\n";
       return false;
     }
+    //if (_isAtStart)
+      //_grid.leaveBreadcrumb(_cur, convertDirectiontoArrow());
+  
+    if (dirChange != 0)
+      _grid.leaveBreadcrumb(_cur, dirChange);
+
     //char prevDirection = convertDirectiontoArrow();
     _cur = target();
     char dir = convertDirectiontoArrow();
@@ -104,7 +112,7 @@ class Photon{
   void reverse1step(){
     _next.first  *= -1;
     _next.second *= -1;
-    this->tryUpdateCurLocation();
+    this->tryUpdateCurLocation(REVERSE);
     ss<<*this<<" after tryUpdateCurLocation(), at end of reverse1step()\n";
   }
   char directHit (MirrorIterator m){ 
@@ -165,6 +173,7 @@ class Photon{
 public:  
   Photon(Cell const & c, Step const & n, Grid & g): _cur(c), _next(n), _grid(g){}
   std::string roundTrip(){ // returns the exit cell name
+    _grid.leaveBreadcrumb(_cur, convertDirectiontoArrow());
     std::string exitCell = checkEdgeMirrors();
     if (exitCell.size() > 1) return exitCell;
 
