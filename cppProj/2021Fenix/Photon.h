@@ -59,7 +59,7 @@ class Photon{
       if (dist == 1) return ""; // I prefer a single code path of move1step -> directHit
       if (isSqrt2(dist)) diagonalMirrors.push_back(itr); 
     }
-    ss<<diagonalMirrors.size()<<" = initial count of diagonalMirrors\n";
+    //ss<<diagonalMirrors.size()<<" = initial count of diagonalMirrors\n";
     if (diagonalMirrors.size() == 0) return "";
     
     for (auto & m: diagonalMirrors){
@@ -136,7 +136,7 @@ class Photon{
       assert(vec.size()==1);
       _next = {originalTarget.first  - mirrorA.first, 
                     originalTarget.second - mirrorA.second};
-      this->tryUpdateCurLocation();
+      this->tryUpdateCurLocation('o');
       ss<<*this<<" after deflection by Mirror at ["<< mirrorA<<"]\n";
     } // Now check expired mirrors
     for (auto & m: vec){

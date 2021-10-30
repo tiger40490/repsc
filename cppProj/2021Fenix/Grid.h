@@ -7,8 +7,10 @@ Logical simplicity, but implementation complexity
 #pragma once
 #include "utils.h"
 
-static char const EMPTY_CELL=' ';
-static char const MIRROR_CELL='M';
+static char const EMPTY_CELL  ='.';
+static char const OUTSIDE_GRID=' ';
+static char const MIRROR_CELL   ='M';
+static char const MIRROR_EXPIRED='m';
 
 struct Grid{ 
   Coordinate_t const length; //
@@ -25,7 +27,7 @@ struct Grid{
         assert(it->ttl == 0);
         survivors.erase(it); // list::erase() does NOT invalidate other iterators to be erased :)
         Cell const & addr = it->address;
-        printable[addr.first][addr.second] = 'e'; //expired mirror
+        printable[addr.first][addr.second] = MIRROR_EXPIRED; //expired mirror
         ss<<mirrorCnt()<<" = mirrorCnt after removing one expired mirror\n";
   }
   void dumpFullOutputToStdErr() const{ 
@@ -64,21 +66,32 @@ struct Grid{
     printGrid();
   }
   void initPrintable(){
-      printable = std::vector<std::vector<char> >(
+    printable = std::vector<std::vector<char> >(
         length+2, 
-        std::vector<char>(length+2, EMPTY_CELL)
+        std::vector<char>(length+2, OUTSIDE_GRID)
       );
-      for (auto const & m: survivors){
+    for (int r=1; r<=length; ++r){
+      for (int c=1; c<=length; ++c){
+            printable[r][c] = EMPTY_CELL;
+      }
+    }      
+
+    for (auto const & m: survivors){
         Cell const & addr = m.address;
         updatePrintable(addr, MIRROR_CELL);
-      }
-      printGrid();
+    }
+    printGrid();
   }
   void clearBreadcrumb(){
+    //ss<<"clearBreadcrumb\n";
     for (int r=0; r<=length+1; ++r){
       for (int c=0; c<=length+1; ++c){
-        if (printable[r][c] != MIRROR_CELL)
-            printable[r][c] = EMPTY_CELL;
+        char & t = printable[r][c];
+        if (t == MIRROR_CELL ||
+            t == MIRROR_EXPIRED) continue;
+        if (1<=r && 1<=c && c<=length && r<=length)
+            t = EMPTY_CELL;
+        else t = OUTSIDE_GRID;
       }
     }      
   }

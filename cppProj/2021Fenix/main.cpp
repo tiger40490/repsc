@@ -21,7 +21,7 @@ void test2deflections(){ // tested 1
   grid.initPrintable();
   ss<<mirrors<<" ... are the initial mirrors\n";
   auto lastCell = photon.roundTrip();
-  ss<<lastCell<<endl;
+  ss<<lastCell<<" is the exitCell\n";
   assert(lastCell == string("{4,2}")); //
   assert(grid.mirrorCnt() == 0);
 }
@@ -37,7 +37,7 @@ void testScenario_Y(){ // tested 1
   grid.initPrintable();
   ss<<mirrors<<" ... are the initial mirrors\n";
   auto lastCell = photon.roundTrip();
-  ss<<lastCell<<endl;
+  ss<<lastCell<<" is the exitCell\n";
   assert(lastCell == string("{2,1}")); //
   assert(grid.mirrorCnt() == 2);
   delete p;
@@ -46,9 +46,9 @@ void testScenario_Y(){ // tested 1
   grid.clearBreadcrumb();
   //ss<<"same ray again\n";
   Photon photon2 = {{2,0}, {0,1}, grid}; //  same ray again, now 
-  ss<<mirrors<<" ... are the surviving mirrors\n";
+  ss<<mirrors<<" ... are the "<<mirrors.size()<<" surviving mirrors\n";
   lastCell = photon2.roundTrip();
-  ss<<lastCell<<endl;
+  ss<<lastCell<<" is the exitCell\n";
   assert(lastCell == string("")); //
   assert(grid.mirrorCnt() == 1);  
 }
@@ -64,7 +64,7 @@ void testScenario_T(){
   grid.initPrintable();
   ss<<mirrors<<" ... are the initial mirrors\n";
   auto lastCell = photon.roundTrip();
-  ss<<lastCell<<endl;
+  ss<<lastCell<<" is the exitCell\n";
   assert(lastCell == string("")); //absorbed
   assert(grid.mirrorCnt() == 2);
   delete p;
@@ -72,9 +72,9 @@ void testScenario_T(){
   p = new RAIIBoundaryPrinter;
   grid.clearBreadcrumb();
   Photon photon2 = {{0,2}, {1,0}, grid}; // same ray again, now ScenarioY 
-  ss<<mirrors<<" ... are the surviving mirrors\n";
+  ss<<mirrors<<" ... are the "<<mirrors.size()<<" surviving mirrors\n";
   lastCell = photon2.roundTrip();
-  ss<<lastCell<<endl;
+  ss<<lastCell<<" is the exitCell\n";
   assert(lastCell == string("{1,2}")); // reversed
   assert(grid.mirrorCnt() == 1); // last mirror had longest lifespan
   delete p;
@@ -82,9 +82,9 @@ void testScenario_T(){
   RAIIBoundaryPrinter p2;
   grid.clearBreadcrumb();
   Photon photon3 = {{0,2}, {1,0}, grid}; // same ray again, now Scenario/
-  ss<<mirrors<<" ... are the surviving mirrors\n";
+  ss<<mirrors<<" ... are the "<<mirrors.size()<<" surviving mirrors\n";
   lastCell = photon3.roundTrip();
-  ss<<lastCell<<endl;
+  ss<<lastCell<<" is the exitCell\n";
   assert(lastCell == string("{1,4}")); // deflected
   assert(grid.mirrorCnt() == 0); // 
 }
@@ -100,7 +100,7 @@ void testScenario_TOE(){
   grid.initPrintable();
   ss<<mirrors<<" ... are the initial mirrors\n";
   auto lastCell = photon.roundTrip();
-  ss<<lastCell<<endl;
+  ss<<lastCell<<" is the exit cell (value should be empty)\n";
   grid.printGrid();
   assert(lastCell == string("")); //absorbed
   assert(grid.mirrorCnt() == 1);
@@ -117,15 +117,15 @@ void testScenario_E(){ // Scenario Edge, but not T-on-Edge
   grid.initPrintable();
   ss<<mirrors<<" ... are the initial mirrors\n";
   auto lastCell = photon.roundTrip();
-  ss<<lastCell<<endl;
+  ss<<lastCell<<" is the exitCell\n";
   assert(lastCell == string("{2,4}")); //
   assert(grid.mirrorCnt() == 0);
   //////////////
   ss<<"same ray again ...\n";
   Photon photon2 = {{2,5}, {0,-1}, grid}; // same ray again, now ScenarioY 
-  ss<<mirrors<<" ... are the surviving mirrors\n";
+  ss<<mirrors<<" ... are the "<<mirrors.size()<<" surviving mirrors\n";
   lastCell = photon2.roundTrip();
-  ss<<lastCell<<endl;
+  ss<<lastCell<<" is the exitCell\n";
   assert(lastCell == string("{2,1}")); // unobstructed
   assert(grid.mirrorCnt() == 0);  
 }
