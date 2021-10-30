@@ -146,7 +146,7 @@ void test2files(){
   //Grid grid; //... 
 
   string mirrorsFileContent ="\n#adsfa\n8\n3 2\n3 7\n6 4\n8 7 10"; 
-  string testsFileContent ="C7+\nC5+\nR5-";
+  string testsFileContent ="C7+\nC5+\nR5-\nC6-\nR1+";
   // Above are test data that can be two files, but for a quick test I prefer string literals.
   
   Grid & grid = *Grid::parse2files(mirrorsFileContent, testsFileContent);
