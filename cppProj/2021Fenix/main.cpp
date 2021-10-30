@@ -154,6 +154,7 @@ std::string parse1ray(std::string ray, Grid & grid){
       // now construct the photon
       Photon photon = {photonStart, firstStep, grid};
       ss<<"   vvv   "<<ray<<"   vvv  "<<photon<<"\n";
+      grid.clearBreadcrumb();
       //string const & lastCell = photon.roundTrip();
       return photon.roundTrip();
 }
@@ -178,6 +179,6 @@ int main(){
   //testScenario_T(); return 0;
   //test2deflections(); return 0;
   //testScenario_E(); return 0;
-  testScenario_TOE(); return 0;
-  //test2files();
+  //testScenario_TOE(); return 0;
+  test2files();
 }
