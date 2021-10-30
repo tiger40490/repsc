@@ -10,6 +10,7 @@ Logical simplicity, but implementation complexity
 struct Grid{ 
   Coordinate_t const length; //
   std::list<Mirror> survivors; //the mirrors not yet erased
+  std::vector<std::vector<char> > printable; //visualization
   /// 
   typedef std::string RayDescriptor;
   typedef std::string TestResult;
@@ -26,6 +27,12 @@ struct Grid{
     for (auto const & record: fullOutputToPrint){
       std::cerr<<record.first<<" -> "<<record.second<<"\n";
     }      
+  }
+  Grid(Coordinate_t len): length(len){
+      printable = std::vector<std::vector<char> >(
+        length, 
+        std::vector<char>(length, ' ')
+      );
   }
   // factory method
   static Grid* parse2files(std::string const & fM /*mirrors*/, std::string const & fT /*tests*/){
