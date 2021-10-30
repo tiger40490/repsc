@@ -53,7 +53,7 @@ void testScenario_Y(){ // tested 1
   assert(grid.mirrorCnt() == 1);  
 }
 void testScenario_T(){ 
-  RAIIBoundaryPrinter p;
+  RAIIBoundaryPrinter * p = new RAIIBoundaryPrinter;
   Grid grid = {4}; 
   Photon photon = {{0,2}, {1,0}, grid}; // 
   ss<<photon<<endl;
@@ -67,14 +67,20 @@ void testScenario_T(){
   ss<<lastCell<<endl;
   assert(lastCell == string("")); //absorbed
   assert(grid.mirrorCnt() == 2);
+  delete p;
   /////////////
+  p = new RAIIBoundaryPrinter;
+  grid.clearBreadcrumb();
   Photon photon2 = {{0,2}, {1,0}, grid}; // same ray again, now ScenarioY 
   ss<<mirrors<<" ... are the surviving mirrors\n";
   lastCell = photon2.roundTrip();
   ss<<lastCell<<endl;
   assert(lastCell == string("{1,2}")); // reversed
   assert(grid.mirrorCnt() == 1); // last mirror had longest lifespan
+  delete p;
   /////////////
+  RAIIBoundaryPrinter p2;
+  grid.clearBreadcrumb();
   Photon photon3 = {{0,2}, {1,0}, grid}; // same ray again, now Scenario/
   ss<<mirrors<<" ... are the surviving mirrors\n";
   lastCell = photon3.roundTrip();
@@ -168,8 +174,8 @@ void test2files(){
 }
 int main(){
   //testScenario_TOE(); return 0;
-  testScenario_Y(); return 0;
-  ///testScenario_T(); return 0;
+  //testScenario_Y(); return 0;
+  testScenario_T(); return 0;
   testScenario_E(); return 0;
   test2deflections(); //return 0;
   //test2files();

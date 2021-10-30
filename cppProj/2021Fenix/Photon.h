@@ -88,15 +88,12 @@ class Photon{
   Note the design requires we check the photon isLeaving() only before updating its location , not after! 
   */
   bool tryUpdateCurLocation(char dirChange=0){  
+    if (dirChange != 0)
+      _grid.leaveBreadcrumb(_cur, dirChange);
     if (isLeaving()) {
       ss<<*this<<" is leaving the grid, detected at start of tryUpdateCurLocation()\n";
       return false;
     }
-    //if (_isAtStart)
-      //_grid.leaveBreadcrumb(_cur, convertDirectiontoArrow());
-  
-    if (dirChange != 0)
-      _grid.leaveBreadcrumb(_cur, dirChange);
 
     //char prevDirection = convertDirectiontoArrow();
     _cur = target();
