@@ -161,8 +161,8 @@ std::string parse1ray(std::string ray, Grid & grid){
 void test2files(){
   RAIIBoundaryPrinter p;
 
-  string mirrorsFileContent ="\n10\n3 3 1\n3 4\n3 5 1\n4 5 1\n6 5 1\n7 7 1\n5 1 1\n9 2 1\n3 8 1\n1 8 1\n6 4 1\n8 3 1"; 
-  string testsFileContent ="C7+\nC5+\nR5-\nC6-\nR1+\nR5-\nR8-";
+  string mirrorsFileContent ="\n10\n3 3 1\n3 4\n3 5 1\n4 5 1\n6 5 1\n7 7 1\n5 1 1\n9 2 1\n3 8 1\n1 8 1\n6 4 1\n8 3 1\n10 10 1"; 
+  string testsFileContent ="C9-\nC7+\nC5+\nR5-\nC6-\nR1+\nR5-\nR8-";
   
   Grid & grid = *Grid::parse2files(mirrorsFileContent, testsFileContent);
   for (auto & aPair: grid.fullOutputToPrint){
