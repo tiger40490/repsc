@@ -8,13 +8,14 @@ using namespace std;
 
 struct RAIIBoundaryPrinter{
   RAIIBoundaryPrinter() { ss<<"\t vvvvvvvvv   new test  vvvvvvvvvvv \n"; }
+      
   ~RAIIBoundaryPrinter(){ ss<<"\t ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ \n"; }
 };
 void test2deflections(){ // tested 1
   RAIIBoundaryPrinter p;
   Grid grid = {4}; 
   Photon photon = {{5,3}, {-1,0}, grid}; // 
-  ss<<photon<<endl;
+  //ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
   mirrors.push_back({{2,1},1});
   mirrors.push_back({{2,4},1});
@@ -56,7 +57,7 @@ void testScenario_T(){
   RAIIBoundaryPrinter * p = new RAIIBoundaryPrinter;
   Grid grid = {4}; 
   Photon photon = {{0,2}, {1,0}, grid}; // 
-  ss<<photon<<endl;
+  //ss<<photon<<endl;
   list<Mirror> & mirrors = grid.survivors;
   mirrors.push_back({{2,1},  2});
   mirrors.push_back({{2,2},1});
@@ -76,7 +77,7 @@ void testScenario_T(){
   lastCell = photon2.roundTrip();
   ss<<lastCell<<" is the exitCell\n";
   assert(lastCell == string("{1,2}")); // reversed
-  assert(grid.mirrorCnt() == 1); // last mirror had longest lifespan
+  assert(grid.mirrorCnt() == 1); // last mirror was born with longest lifespan
   delete p;
   /////////////
   RAIIBoundaryPrinter p2;
@@ -169,10 +170,10 @@ void test2files(){
     aPair.second // test result
       = parse1ray(aPair.first, grid);
   }
+  grid.dumpFullOutputToStdErr();
 }
 void test2filesPDF(){
   RAIIBoundaryPrinter p;
-  //Grid grid; //... 
 
   string mirrorsFileContent ="\n#adsfa\n8\n3 2\n3 7\n6 4\n8 7 10"; 
   string testsFileContent ="C7+\nC5+\nR5-\nC6-\nR1+";
