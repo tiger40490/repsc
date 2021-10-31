@@ -164,7 +164,16 @@ void test2files(){
 
   string mirrorsFileContent ="\n10\n3 3 1\n3 4\n3 5 1\n4 5 1\n6 5 1\n7 7 1\n5 1 1\n9 2 1\n3 8 1\n1 8 1\n6 4 1\n8 3 1\n10 10 1"; 
   string testsFileContent ="C9-\nC7+\nC5+\nR5-\nC6-\nR1+\nR5-\nR8-";
-  
+  /*
+C9- -> {10,9}
+C7+ -> {1,7}
+C5+ ->
+R5- -> {5,10}
+C6- ->
+R1+ -> {1,10}
+R5- -> {10,7}
+R8- ->  
+  */
   Grid & grid = *Grid::parse2files(mirrorsFileContent, testsFileContent);
   for (auto & aPair: grid.fullOutputToPrint){
     aPair.second // test result
@@ -178,7 +187,13 @@ void test2filesPDF(){
   string mirrorsFileContent ="\n#adsfa\n8\n3 2\n3 7\n6 4\n8 7 10"; 
   string testsFileContent ="C7+\nC5+\nR5-\nC6-\nR1+";
   // Above are test data that can be two files, but for a quick test I prefer string literals.
-  
+  /*
+C7+ ->
+C5+ -> {5,8}
+R5- -> {1,5}
+C6- -> {8,6}
+R1+ -> {1,8}  
+  */
   Grid & grid = *Grid::parse2files(mirrorsFileContent, testsFileContent);
   for (auto & aPair: grid.fullOutputToPrint){
     aPair.second // test result
