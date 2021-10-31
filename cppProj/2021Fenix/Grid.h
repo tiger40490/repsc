@@ -28,7 +28,7 @@ struct Grid{
         survivors.erase(it); // list::erase() does NOT invalidate other iterators to be erased :)
         Cell const & addr = it->address;
         printable[addr.first][addr.second] = MIRROR_EXPIRED; //expired mirror
-        ss<<mirrorCnt()<<" = mirrorCnt after removing one expired mirror\n";
+        //ss<<mirrorCnt()<<" = mirrorCnt after removing one expired mirror\n";
   }
   void dumpFullOutputToStdErr() const{ 
     for (auto const & record: fullOutputToPrint){
@@ -50,6 +50,7 @@ struct Grid{
     ret<<"\n  | ";
     for (int c=0; c<=length+1; ++c) ret<<' '<<c;
     ret<<"\n------------------------------\n";
+    ret<<"Legend o:corner_turn e:expired_mirror r:reversal\n";
     ss<<ret.str();
     return;
   }

@@ -105,7 +105,7 @@ class Photon{
     _next.first  *= -1;
     _next.second *= -1;
     this->tryUpdateCurLocation(REVERSE);
-    ss<<*this<<" after tryUpdateCurLocation(), at end of reverse1step()\n";
+    //ss<<*this<<" after tryUpdateCurLocation(), at end of reverse1step()\n";
   }
   char directHit (MirrorIterator m){ 
     ss<<"directHit on "<<*m<<std::endl;
@@ -115,7 +115,7 @@ class Photon{
     return ABSORBED; //absorbed
   }
   char indirectHit(std::vector<MirrorIterator> const & vec){ 
-    ss<<"indirectHit \n";
+    //ss<<"indirectHit \n";
     Cell const & originalTarget = target();
     for (auto const & aMirror: vec){
       assert(1==distance(aMirror->address, originalTarget) && 
@@ -132,7 +132,7 @@ class Photon{
       _next = {originalTarget.first  - mirrorA.first, 
                     originalTarget.second - mirrorA.second};
       this->tryUpdateCurLocation('o');
-      ss<<*this<<" after deflection by Mirror at ["<< mirrorA<<"]\n";
+      //ss<<*this<<" after deflection by Mirror at ["<< mirrorA<<"]\n";
     } // Now check expired mirrors
     for (auto & m: vec){
         if (--(m->ttl) == 0) _grid.del1mirror(m);
@@ -173,7 +173,7 @@ public:
       //ss<<*this<<" <-- before move1step\n";
       char status = this->move1step(); 
       if (status == ABSORBED) {
-        ss<<*this<<"   <-- photon absorbed\n" ;
+        //ss<<*this<<"   <-- photon absorbed\n" ;
         return "";
       }
       if (isLeaving()){

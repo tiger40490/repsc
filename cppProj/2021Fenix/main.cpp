@@ -154,7 +154,7 @@ std::string parse1ray(std::string ray, Grid & grid){
       
       // now construct the photon
       Photon photon = {photonStart, firstStep, grid};
-      ss<<"   vvv   "<<ray<<"   vvv  "<<photon<<"\n";
+      ss<<"\n   vvv   "<<ray<<"   vvv  "<</*photon<<*/"\n";
       grid.clearBreadcrumb();
       //string const & lastCell = photon.roundTrip();
       return photon.roundTrip();
@@ -184,7 +184,7 @@ R8- ->
 void test2filesPDF(){
   RAIIBoundaryPrinter p;
 
-  string mirrorsFileContent ="\n#adsfa\n8\n3 2\n3 7\n6 4\n8 7 10"; 
+  string mirrorsFileContent ="\n8\n3 2\n3 7\n6 4\n8 7 10"; 
   string testsFileContent ="C7+\nC5+\nR5-\nC6-\nR1+";
   // Above are test data that can be two files, but for a quick test I prefer string literals.
   /*
@@ -207,6 +207,6 @@ int main(){
   //test2deflections(); return 0;
   //testScenario_E(); return 0;
   //testScenario_TOE(); return 0;
-  //test2filesPDF(); return 0;
+  test2filesPDF(); return 0;
   test2files();
 }
