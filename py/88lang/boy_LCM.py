@@ -14,7 +14,6 @@ def LCM(*args):
   print args, '<-- are the remaining inputs. Tony will pick first two inputs\n ', args[0],args[1],' and compute their LCM: ',
   tmp = lcm2(args[0], args[1])
   print tmp
-  li = [tmp]; li.extend(args[2:])
-  return LCM(*li)  
+  return LCM(tmp, *args[2:])  # asterisk turns li into scalars 
   
 LCM(10,20,30,40,50)
