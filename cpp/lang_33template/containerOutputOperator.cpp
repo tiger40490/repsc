@@ -42,7 +42,7 @@ std::ostream& operator<<(std::ostream& os, Container<V, Alloc> const& c){
    os<<std::endl;
    return os;
 }
-// The above template affects std::string. You may have to use cout<<std::string("abc").c_str()
+// The above template affects std::string in c++17 or later, so you may have to use cout<<std::string("abc").c_str()
 //template<> std::ostream& operator<< <std::__cxx11::basic_string, char, char_traits<char> >(std::ostream& os, string const&) = delete; //Not effective :( because even deleted template-specialization can cause ambiguous overload under c++17
 
 int main(){
@@ -52,11 +52,11 @@ int main(){
   std::vector<float> vec={3.5, 1.9, 0.8};
 #else  
   std::vector<std::string> vec={"dabao", "meimei", "princess"}; //works under g++ -std=c++14 but not c++17
+  ss<<std::string("works in c++14\n"); 
 #endif
   Map<int, bool> tm={{11,true}, {22,false}};
   ss<<vec<<tm;
   ss<<" <-- vector and map; list and set -->\n";
   ss<<li<<myset;
   ss<<__cplusplus <<" = __cplusplus \n";
-  //ss<<std::string("dummy"); // broken 
 }
