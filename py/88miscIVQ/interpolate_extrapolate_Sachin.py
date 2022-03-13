@@ -53,7 +53,7 @@ def test1(expected, n, ins, price):
 
 test1("54.25", 2, [10,25,50,100,500], [0, 0, 0, 0, 54.25])
 
-# singular, with bad data
+# singular DB, with bad data
 test1("5.00", 20, [50,5555], [5, 0])
 
 # too high
@@ -65,5 +65,7 @@ test1("5.20", 20, [25,50,100], [5,4,3])
 # in-between
 test1("3.50", 75, [25,50,100], [5,4,3])
 
-#exact match:
+# exact match:
 test1("2.46", 10, [10,25,50,100,500], [2.46, 2.58,2.0, 2.25, 3.0])
+'''Req not easy to describe because this is not a typical algo question. As such, it doesn't deserve so much review.
+'''
