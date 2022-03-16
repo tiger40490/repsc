@@ -86,4 +86,6 @@ def main():
 if __name__ == '__main__': main()
 ''' Req: generate all subsets of a table of stock prices, subject to a budget for the subset
 Each table entry's subscript is the stock's ID. Therefore, sorting the table is questionable.
+
+https://btv-gz.dreamhosters.com/wp-admin/post.php?post=19251&action=edit
 '''
