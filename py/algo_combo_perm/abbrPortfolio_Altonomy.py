@@ -8,6 +8,8 @@ Interviewer hinted that recursive solution might be easier, but I always believe
 * state tracking is easier
 * often more natural
 
+In this case, many would say iterative is easier
+
 '''
 from pprint import pprint
 from copy import deepcopy
@@ -16,12 +18,15 @@ from collections import namedtuple
 # this one-liner replaces about 10 lines of class definition. Note totalCost and IDs are the field names.
 Ptf = namedtuple('Ptf', 'totalCost   IDs') #IDs = a vector of indices into original table of stock prices
 
-def iterative(table, budget):
+def makeEmptyPtf():
   emptyList = [] # empty list of stock IDs
   mutableNumberInTuple = [0] # clever use of a vector of one !
   # above are the two fields of an initial Ptf.
   emptyPtfAsASubset = Ptf(mutableNumberInTuple, emptyList)
-  subsets = [ emptyPtfAsASubset ] # only one subset initially.
+  return emptyPtfAsASubset
+
+def iterative(table, budget): #botUp
+  subsets = [ makeEmptyPtf() ] # only one subset initially.
   for i, val in enumerate(table): #val is used for totalCosts, not for generating subsets
     for j in xrange(len(subsets)):
       p = deepcopy(subsets[j]) #shallow copy only duplicates references to each vector
@@ -35,18 +40,45 @@ def iterative(table, budget):
     #pprint(subsets)
   print 'at end of table iteration, number of portfolios =', len(subsets)  
   # return subsets[1:] # Alternative to yield
-def recur():
-  ''' each time we bring out one stock from the table, we will see if we can add it to the existing portfolios. The portfolio count could double.
+
+###### recursive solution
+subsets = list() # for recursive I always prefer global vars over locals
+table = list()
+budget=0
+def recurWrapper(newtable, newbudget):
+  global budget; budget=newbudget
+  del subsets[:]
+  subsets.append (makeEmptyPtf())
+  del table[:]
+  table.extend(newtable)
+  recur(len(table)-1)
+  print 'at end of recurWrapper, newest ptf:', subsets[-1]
+  return subsets[1:] # Alternative to yield
+
+def recur(id): #this recursion care about only the left portion of the table up to id
+  ''' returns nothing
   '''
-  pass
-def genAllPtf(table, budget):
-  return iterative(table, budget)  
+  if id>0: recur(id-1)
+
+  #for each ptf in the subset, try to add the last stock into the ptf and add the ptf into new
+  new = list()
+  for ptf in subsets:
+    bigger = deepcopy(ptf)
+    bigger.totalCost[0] += table[id]
+    if bigger.totalCost[0] > budget: continue
+    bigger.IDs.append(id);
+    new.append(bigger)
+  subsets.extend(new)
+  #print id, '= id, now adding this many new portfolios:', len(new)
+
 def test1table(table, expCntOfSubsets, budget=99):
   cnt = 0 
-  for p in genAllPtf(table, budget): 
+  for p in iterative(table, budget): 
     print 'a subset -----> ', p
     cnt += 1
   assert cnt == expCntOfSubsets
+  recurWrapper(table, budget)
+  assert  len(subsets)-1 == expCntOfSubsets
 
 def main():
   test1table([77,11,22,33], expCntOfSubsets=10)
