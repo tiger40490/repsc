@@ -13,10 +13,10 @@ from pprint import pprint
 from copy import deepcopy
 from collections import namedtuple
 
-# this one-liner replaces about 10 lines of class definition
+# this one-liner replaces about 10 lines of class definition. Note totalCost and IDs are the field names.
 Ptf = namedtuple('Ptf', 'totalCost   IDs') #IDs = a vector of indices into original table of stock prices
 
-def genAllPtf(table, budget):
+def iterative(table, budget):
   emptyList = [] # empty list of stock IDs
   mutableNumberInTuple = [0] # clever use of a vector of one !
   # above are the two fields of an initial Ptf.
@@ -35,7 +35,12 @@ def genAllPtf(table, budget):
     #pprint(subsets)
   print 'at end of table iteration, number of portfolios =', len(subsets)  
   # return subsets[1:] # Alternative to yield
-  
+def recur():
+  ''' each time we bring out one stock from the table, we will see if we can add it to the existing portfolios. The portfolio count could double.
+  '''
+  pass
+def genAllPtf(table, budget):
+  return iterative(table, budget)  
 def test1table(table, expCntOfSubsets, budget=99):
   cnt = 0 
   for p in genAllPtf(table, budget): 
