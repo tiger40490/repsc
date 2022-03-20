@@ -7,10 +7,19 @@ if Z cuts into lineCtr on the left, then there will be no lineAbove
 if Z is 0, then special handling?
 '''
 
+def lineA(S,Y,Z, vec):
+  # print lineAbove 
+  # what if markerA is -999?
+  if markerA < 0: return #nothing to print for lineAbove
+  ret = S[max(markerP, Y-Z) : markerA+1]
+  print ret[:-1] + '<-- lineA'
+  vec.append(ret)
+
 def lineB(S,Y,Z, vec):
 # what if markerB is -999999?
   if markerB < 0: return # nothing to print for lineBelow
-  #print 'in lineB()', markerB, Y+Z
+  print 'in lineB()', markerC, Y+Z
+  if Y+Z <= markerC: return # the Z chars afer Y is before or up to the newline
   ret = S[markerC+1 : 1+min(markerB, Y+Z)]
   print ret[:-1] + '<-- lineB'
   vec.append(ret)
@@ -38,13 +47,19 @@ def lineC(S,Y,Z, vec):
       vec.append(  (' ' *min(Y,Z)) + '^\n' )
       
     print vec[-2]+vec[-1]
-def lineA(S,Y,Z, vec):
-  # print lineAbove 
-  # what if markerA is -999?
-  if markerA < 0: return #nothing to print for lineAbove
-  ret = S[max(markerP, Y-Z) : markerA+1]
-  print ret[:-1] + '<-- lineA'
-  vec.append(ret)
+
+def testAll():
+  originalTestCases()
+  
+  # Z cuts into original lineC
+  ret = solution('abcde\nfghij1234\nklmno\n', 8, 3)
+  assert ret == ['\n', 'fghij1', '\n  ^\n']
+
+  # Z cuts into 
+  ret = solution('abcde\nfghij\nklmno\n', 8, 3)
+  assert ret == ['\n', 'fghij\n', '  ^\n']
+  quit()
+  ret = solution('0abc',2, 33)
 
 def originalTestCases():
   ret = solution('// comment\nint main() {\n    return 0\n}\n', 36, 126)
@@ -58,12 +73,6 @@ def originalTestCases():
   ret = solution('123',1,0)
   assert ret == ['2\n', '^\n']
 
-def testAll():
-  originalTestCases()
-  ret = solution('abcde\nfghij1234\nklmno\n', 8, 3)
-  quit()
-  ret = solution('0abc',2, 33)
-
 def solution(S,Y,Z):
   vec = list()
   find3markers(S,Y)
@@ -75,7 +84,7 @@ def solution(S,Y,Z):
 
 def find3markers(S,Y):
   global markerP, markerC, markerA, markerB
-  markerP = markerA = markerC = markerB = -999999
+  markerP = markerA = markerC = markerB = -999
   # locate the 3 nlMarkers and find the distance to Y
   if S[-1] != '\n': S=S+'\n'
   newlines = list()
