@@ -1,7 +1,7 @@
 '''
 todo mark original test cases
-add more tests
-
+todo: add more tests
+todo: reorg code
 if Z is beyond lineAbove, then that line is printed.
 if Z cust into part of lineAbove, then ... look at the eg
 if Z cuts into lineCtr on the left, then there will be no lineAbove
@@ -46,18 +46,18 @@ def lineA(S,Y,Z, vec):
 
 def originalTestCases():
   ret = solution('// comment\nint main() {\n    return 0\n}\n', 36, 126)
-  assert ret == ['\nint main() {\n', '    return 0\n', '            ^\n', '}\n']
-  quit()
+  assert ret == ['\nint main() {\n', ' '*4+'return 0\n', ' '*12+'^\n', '}\n']
   ret = solution('abcde\nfghij\nklmno\n', 8, 5)
-  assert ret == ['de\n', 'fghij\n', '  ^\n', 'kl']
+  assert ret == ['de\n', 'fghij\n', ' '*2+'^\n', 'kl']
+  quit()
+
   # Z==0
   ret = solution('123',1,0)
   assert ret == ['2\n', '^\n']
 
 def testAll():
   originalTestCases()
-  #solution('abcde\nfghij1234\nklmno\n', 8, 3)
-  
+  #ret = solution('abcde\nfghij1234\nklmno\n', 8, 3)
   ret = solution('0abc',2, 33)
 
 def solution(S,Y,Z):
