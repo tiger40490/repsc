@@ -1,5 +1,4 @@
 '''
-todo: add more tests
 todo: reorg code
 if Z is beyond lineAbove, then that line is printed.
 if Z cust into part of lineAbove, then ... look at the eg
@@ -30,22 +29,25 @@ def lineC(S,Y,Z, vec):
     distA = abs(Y-markerA) 
     distC = abs(Y-markerC)
     #print 'distA,distC ..', distA,distC
-    if Z >= distA and Z >= distC: # 
-      vec.append( S[markerA+1: markerC+1] ) #, 'case 11'
+    if Z >= distA and Z >= distC: 
+      vec.append( S[markerA+1: markerC+1] )
       vec.append(  (' ' * (distA-1)) + '^\n' )
     if Z >= distA and Z < distC:
       print 22222222
-      vec.append(  S[markerA+1 : Z+Y+1] )#, 'case 22'
-      assert vec[-1] != '\n'
+      vec.append(  S[markerA+1 : Z+Y+1] )
+      assert vec[-1][-1] != '\n'
       vec.append(  '\n'+ (' '* (distA-1)) + '^\n' )
     if Z < distA and Z < distC:
       print 3333333
-      vec.append(  S[Y-Z: Y+Z+1]+'\n' )#, 'case 33'
+      vec.append(  S[Y-Z: Y+Z+1]+'\n' )
       vec.append(  (' ' *Z) + '^\n' )
     if Z < distA and Z >= distC:
-      vec.append(  S[Y-Z: markerC+1] )#, 'case 44'
-      vec.append(  (' ' *min(Y,Z)) + '^\n' )
-      
+      print 4444444
+      print markerC+1
+      vec.append(  S[Y-Z: markerC+1] )
+      tmp = (' ' *min(Y,Z)) + '^\n'
+      if vec[-1][-1] != '\n': tmp = '\n'+tmp
+      vec.append(tmp)
     print vec[-2]+vec[-1]
 
 def testAll():
@@ -55,11 +57,13 @@ def testAll():
   ret = solution('abcde\nfghij1234\nklmno\n', 8, 3)
   assert ret == ['\n', 'fghij1', '\n  ^\n']
 
-  # Z cuts into 
+  # Z includes the newline of lineC
   ret = solution('abcde\nfghij\nklmno\n', 8, 3)
   assert ret == ['\n', 'fghij\n', '  ^\n']
-  quit()
-  ret = solution('0abc',2, 33)
+
+  #large Z
+  ret = solution('0abc',2, 9)
+  assert ret == ['0abc', '\n  ^\n']
 
 def originalTestCases():
   ret = solution('// comment\nint main() {\n    return 0\n}\n', 36, 126)
