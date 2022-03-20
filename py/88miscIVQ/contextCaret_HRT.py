@@ -1,9 +1,9 @@
 '''
 todo: reorg code
-if Z is beyond lineAbove, then that line is printed.
-if Z cust into part of lineAbove, then ... look at the eg
-if Z cuts into lineCtr on the left, then there will be no lineAbove
-if Z is 0, then special handling?
+
+The requirement has too many edge cases. Requires a lot of foresight and organization.
+
+Initially I thought of using symmetry, so the same logic for lineBelow is reused for lineAbove. Now I think it's too complicated.
 '''
 
 def lineA(multiLineCode,errPos,Z, vec):
