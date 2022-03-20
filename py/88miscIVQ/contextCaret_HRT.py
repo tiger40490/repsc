@@ -48,7 +48,7 @@ def lineC(multiLineCode,errPos,Z, vec):
       vec.append(  (' ' *Z) + '^\n' )
     if Z < distA and Z >= distC:
       print 4444444
-      print markerC+1
+      #print markerC+1
       vec.append(  multiLineCode[errPos-Z: markerC+1] )
       if vec[-1][-1] != '\n': vec[-1] +='\n'
       vec.append((' ' *min(errPos,Z)) + '^\n')
