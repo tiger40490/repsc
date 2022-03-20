@@ -1,4 +1,7 @@
 '''
+todo mark original test cases
+add more tests
+
 if Z is beyond lineAbove, then that line is printed.
 if Z cust into part of lineAbove, then ... look at the eg
 if Z cuts into lineCtr on the left, then there will be no lineAbove
@@ -10,7 +13,7 @@ def lineB(S,Y,Z, vec):
   if markerB < 0: return # nothing to print for lineBelow
   #print 'in lineB()', markerB, Y+Z
   ret = S[markerC+1 : 1+min(markerB, Y+Z)]
-  print ret
+  print ret[:-1] + '<-- lineB'
   vec.append(ret)
 
 def lineC(S,Y,Z, vec):
@@ -31,23 +34,31 @@ def lineC(S,Y,Z, vec):
     if Z < distA and Z >= distC:
       vec.append(  S[Y-Z: markerC+1] )#, 'case 44'
       vec.append(  (' ' *min(Y,Z)) + '^\n' )
+      
+    print vec[-2]+vec[-1]
 def lineA(S,Y,Z, vec):
   # print lineAbove 
   # what if markerA is -999?
   if markerA < 0: return #nothing to print for lineAbove
   ret = S[max(markerP, Y-Z) : markerA+1]
-  print ret
+  print ret[:-1] + '<-- lineA'
   vec.append(ret)
 
-def test():
+def originalTestCases():
   ret = solution('// comment\nint main() {\n    return 0\n}\n', 36, 126)
   assert ret == ['\nint main() {\n', '    return 0\n', '            ^\n', '}\n']
+  quit()
   ret = solution('abcde\nfghij\nklmno\n', 8, 5)
   assert ret == ['de\n', 'fghij\n', '  ^\n', 'kl']
-  #solution('abcde\nfghij1234\nklmno\n', 8, 3)
+  # Z==0
   ret = solution('123',1,0)
   assert ret == ['2\n', '^\n']
-  #solution('0abc',2, 33)
+
+def testAll():
+  originalTestCases()
+  #solution('abcde\nfghij1234\nklmno\n', 8, 3)
+  
+  ret = solution('0abc',2, 33)
 
 def solution(S,Y,Z):
   vec = list()
@@ -79,6 +90,6 @@ def find3markers(S,Y):
   print 'no newline at all!'
   return 0
 
-test()
+testAll()
 ''' req: https://btv-gz.dreamhosters.com/3005/careterrorwithcontext-sachin-hrt/
 '''
