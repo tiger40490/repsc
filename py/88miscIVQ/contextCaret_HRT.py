@@ -8,9 +8,10 @@ if Z is 0, then special handling?
 
 def lineA(multiLineCode,errPos,Z, vec):
   # print lineAbove 
-  # what if markerA is -999?
+  # what if markerP is -999?
   if markerA < 0: return #nothing to print for lineAbove
   ret = multiLineCode[max(markerP, errPos-Z) : markerA+1]
+  if len(ret) == 0: return
   print ret[:-1] + '<-- lineA'
   vec.append(ret)
 
@@ -20,6 +21,7 @@ def lineB(multiLineCode,errPos,Z, vec):
   print 'in lineB()', markerC, errPos+Z
   if errPos+Z <= markerC: return # the Z chars afer errPos is before or up to the newline
   ret = multiLineCode[markerC+1 : 1+min(markerB, errPos+Z)]
+  if len(ret) == 0: return  
   print ret[:-1] + '<-- lineB'
   vec.append(ret)
 
@@ -30,8 +32,11 @@ def lineC(multiLineCode,errPos,Z, vec):
     distC = abs(errPos-markerC)
     #print 'distA,distC ..', distA,distC
     if Z >= distA and Z >= distC: 
+      print 11111111
       vec.append( multiLineCode[markerA+1: markerC+1] )
-      vec.append(  (' ' * (distA-1)) + '^\n' )
+      tmp = (' ' * (distA-1)) + '^\n'
+      if vec[-1][-1] != '\n': tmp = '\n'+tmp
+      vec.append(tmp)
     if Z >= distA and Z < distC:
       print 22222222
       vec.append(  multiLineCode[markerA+1 : Z+errPos+1] )
@@ -65,6 +70,13 @@ def testAll():
   ret = solution('0abc',2, 9)
   assert ret == ['0abc', '\n  ^\n']
 
+  ret = solution('012345678\n012c4',13, 5)
+  assert ret == ['8\n', '012c4', '\n   ^\n']
+  
+  ret = solution('012345678\n012c4',13, 2)
+  assert ret == ['12c4', '\n  ^\n']
+  
+
 def originalTestCases():
   ret = solution('// comment\nint main() {\n    return 0\n}\n', 36, 126)
   assert ret == ['\nint main() {\n', ' '*4+'return 0\n', ' '*12+'^\n', '}\n']
@@ -88,7 +100,7 @@ def solution(multiLineCode,errPos,Z):
 
 def find3markers(multiLineCode,errPos):
   global markerP, markerC, markerA, markerB
-  markerP = markerA = markerC = markerB = -999
+  markerP = markerA = markerC = markerB = -999999999
   # locate the 3 nlMarkers and find the distance to errPos
   if multiLineCode[-1] != '\n': multiLineCode=multiLineCode+'\n'
   newlines = list()
@@ -104,7 +116,7 @@ def find3markers(multiLineCode,errPos):
         print 'returning with markerP, markerA, markerC, markerB .. ', markerP, markerA, markerC, markerB
         return 3
       newlines.append(pos)
-  raise Exception('Since we append a missing newline, we should definitely have a markerC.')
+  raise Exception('Since the final char is always newline, we should definitely have a markerC.')
 
 testAll()
 ''' req: https://btv-gz.dreamhosters.com/3005/careterrorwithcontext-sachin-hrt/
