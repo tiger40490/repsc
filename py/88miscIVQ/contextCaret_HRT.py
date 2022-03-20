@@ -8,15 +8,16 @@ Initially I thought of using symmetry, so the same logic for lineBelow is reused
 
 def lineA(multiLineCode,errPos,Z, vec):
   # print lineAbove 
-  # what if markerP is -999?
+  # what if markerP or markerA is -999999?
   if markerA < 0: return #nothing to print for lineAbove
   ret = multiLineCode[max(markerP, errPos-Z) : markerA+1]
   if len(ret) == 0: return
   print ret[:-1] + '<-- lineA'
+  assert ret[-1] == '\n'
   vec.append(ret)
 
 def lineB(multiLineCode,errPos,Z, vec):
-# what if markerB is -999999?
+  # what if markerB is -999999?
   if markerB < 0: return # nothing to print for lineBelow
   print 'in lineB()', markerC, errPos+Z
   if errPos+Z <= markerC: return # the Z chars afer errPos is before or up to the newline
@@ -34,14 +35,13 @@ def lineC(multiLineCode,errPos,Z, vec):
     if Z >= distA and Z >= distC: 
       print 11111111
       vec.append( multiLineCode[markerA+1: markerC+1] )
-      tmp = (' ' * (distA-1)) + '^\n'
-      if vec[-1][-1] != '\n': tmp = '\n'+tmp
-      vec.append(tmp)
+      if vec[-1][-1] != '\n': vec[-1] +='\n'
+      vec.append((' ' * (distA-1)) + '^\n')
     if Z >= distA and Z < distC:
       print 22222222
-      vec.append(  multiLineCode[markerA+1 : Z+errPos+1] )
-      assert vec[-1][-1] != '\n'
-      vec.append(  '\n'+ (' '* (distA-1)) + '^\n' )
+      vec.append(  multiLineCode[markerA+1 : Z+errPos+1] +'\n')
+      assert vec[-1][-2] != '\n'
+      vec.append(  (' '* (distA-1)) + '^\n' )
     if Z < distA and Z < distC:
       print 3333333
       vec.append(  multiLineCode[errPos-Z: errPos+Z+1]+'\n' )
@@ -50,9 +50,8 @@ def lineC(multiLineCode,errPos,Z, vec):
       print 4444444
       print markerC+1
       vec.append(  multiLineCode[errPos-Z: markerC+1] )
-      tmp = (' ' *min(errPos,Z)) + '^\n'
-      if vec[-1][-1] != '\n': tmp = '\n'+tmp
-      vec.append(tmp)
+      if vec[-1][-1] != '\n': vec[-1] +='\n'
+      vec.append((' ' *min(errPos,Z)) + '^\n')
     print vec[-2]+vec[-1]
 
 def testAll():
@@ -60,7 +59,7 @@ def testAll():
   
   # Z cuts into original lineC
   ret = solution('abcde\nfghij1234\nklmno\n', 8, 3)
-  assert ret == ['\n', 'fghij1', '\n  ^\n']
+  assert ret == ['\n', 'fghij1\n', '  ^\n']
 
   # Z includes the newline of lineC
   ret = solution('abcde\nfghij\nklmno\n', 8, 3)
@@ -68,13 +67,13 @@ def testAll():
 
   #large Z
   ret = solution('0abc',2, 9)
-  assert ret == ['0abc', '\n  ^\n']
+  assert ret == ['0abc\n', '  ^\n']
 
   ret = solution('012345678\n012c4',13, 5)
-  assert ret == ['8\n', '012c4', '\n   ^\n']
+  assert ret == ['8\n', '012c4\n', '   ^\n']
   
   ret = solution('012345678\n012c4',13, 2)
-  assert ret == ['12c4', '\n  ^\n']
+  assert ret == ['12c4\n', '  ^\n']
   
 
 def originalTestCases():
