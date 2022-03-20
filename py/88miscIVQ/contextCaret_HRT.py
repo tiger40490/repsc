@@ -98,12 +98,12 @@ def solution(multiLineCode,errPos,Z):
   return vec
 
 def find3markers(multiLineCode,errPos):
+  # locate the 3+1 line-ending Markers
   global markerP, markerC, markerA, markerB
   markerP = markerA = markerC = markerB = -999999999
-  # locate the 3 nlMarkers and find the distance to errPos
   if multiLineCode[-1] != '\n': multiLineCode=multiLineCode+'\n'
   newlines = list()
-  for pos,char in enumerate(multiLineCode):
+  for pos,char in enumerate(multiLineCode): #simpler than bisect
     if char == '\n': 
       sz = len(newlines)
       if pos >= errPos: # 
