@@ -1,9 +1,6 @@
 '''
 todo: reorg code
 
-The requirement has too many edge cases. Requires a lot of foresight and organization.
-
-Initially I thought of using symmetry, so the same logic for lineBelow is reused for lineAbove. Now I think it's too complicated.
 '''
 
 def lineA(multiLineCode,errPos,Z, vec):
@@ -19,11 +16,11 @@ def lineA(multiLineCode,errPos,Z, vec):
 def lineB(multiLineCode,errPos,Z, vec):
   # what if markerB is -999999?
   if markerB < 0: return # nothing to print for lineBelow
-  print 'in lineB()', markerC, errPos+Z
-  if errPos+Z <= markerC: return # the Z chars afer errPos is before or up to the newline
+  #print 'in lineB()', markerC, errPos+Z
+  #if errPos+Z <= markerC: return # the Z chars afer errPos is before or up to the newline on lineC. This scenario will result in ret==''
   ret = multiLineCode[markerC+1 : 1+min(markerB, errPos+Z)]
   if len(ret) == 0: return  
-  print ret[:-1] + '<-- lineB'
+  print ret[:-1] + '<-- lineB' #last char may not be newline
   vec.append(ret)
 
 def lineC(multiLineCode,errPos,Z, vec):
