@@ -1,0 +1,498 @@
+/* High level assumptions for the entire order book problem.
+
+Assumption: If a new limit or market order triggers an execution,
+exchange always, always broadcasts a Trade message.
+If we see such an incoming order but don't see the expected Trade message,
+that means exchange has, for any reason, suppressed the execution,
+so the orderbook will reflect this incoming order, but not any
+predicted/presumed execution.
+
+Assumption: partial fill is possible. A Trade message could have
+a small size, reducing one (or both) of the orders identified.
+
+Assumption: for a given name, there might be absolutely no
+bid or no ask in the order book, but not "nothing at all".
+
+Assumption: in orderId string, the digits after dot are not
+important for now.
+
+Assumption: at the same price level, bid orders queue up. Any of
+them can be cancelled, including the first, or last. (Fully tested)
+*/
+
+#include <cstdlib>
+#include <cstdio>
+#include <cmath>
+#include <string.h>
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+#include <iterator>
+#include <sstream>
+#include <vector>
+#include <map>
+#include <list>
+#include <string>
+#include <assert.h>
+
+# 1 "main.cpp"
+# 1 "<built-in>"
+# 1 "<ÃüÁîÐÐ>"
+# 1 "main.cpp"
+# 1 "FeedHandler.h" 1
+
+
+
+# 1 "OrdBookFor1Name.h" 1
+
+
+
+# 1 "LimitOrder.h" 1
+
+
+
+# 1 "LimOrdImpl.h" 1
+
+
+
+# 1 "Util.h" 1
+# 23 "Util.h"
+using namespace std;
+
+void dumpDTO(vector<char const *> const & v) {
+ cout<<"\nDTO:";
+ copy(v.begin(), v.end(), ostream_iterator<char const *> (cout, "|"));
+ cout << endl;
+}
+# 5 "LimOrdImpl.h" 2
+
+class LimOrdImpl {
+public:
+ enum BuySellEnum {
+  B = 'B', S = 'S', BAD_FORMAT
+ };
+ static BuySellEnum const lookupBuySell(const char b_or_s) {
+  if (b_or_s == 'B')
+   return B;
+  if (b_or_s == 'S')
+   return S;
+  return BAD_FORMAT;
+ }
+ LimOrdImpl(const char * const _id, const char _bs, const char * const _qty,
+   const char * const _px) :
+  id(atoll(_id)),
+  bs(lookupBuySell(_bs)), px(atof(_px)), qty(
+    atoi(_qty)) { }
+ ~LimOrdImpl() {
+
+ }
+ unsigned int const getqty() const{
+  return qty;
+ }
+ friend ostream & operator <<(ostream & os, const LimOrdImpl & p);
+ friend class LimitOrder;
+ const unsigned long long id;
+ const BuySellEnum bs;
+ const long px;
+private:
+ unsigned int qty;
+};
+ostream & operator<<(ostream &os, LimOrdImpl::BuySellEnum const& p) {
+ if (p == LimOrdImpl::B)
+  os << "Buy ";
+ if (p == LimOrdImpl::S)
+  os << "Sell";
+ return os;
+}
+# 5 "LimitOrder.h" 2
+
+class LimitOrder;
+typedef list<LimitOrder*> ListType;
+typedef ListType::iterator ListItrType;
+
+class LimitOrder {
+public:
+ enum OrderStateEnum {
+  LIVE, BAD_FORMAT, REMOVED
+ };
+ LimitOrder(char const * const id, char const bs, char const * const qty,
+   char const * const px) :
+  impl(new LimOrdImpl(id, bs, qty, px)) {
+  if (impl->id <= 0 || impl->qty <= 0 || impl->px <= 0 || impl->bs
+    == LimOrdImpl::BAD_FORMAT) {
+   orderState = BAD_FORMAT;
+  } else {
+   orderState = LIVE;
+  }
+ }
+ const unsigned long long id() const {
+  return impl->id;
+ }
+ const LimOrdImpl::BuySellEnum buySell() const {
+  return impl->bs;
+ }
+ const long px() const {
+  return impl->px;
+ }
+ const unsigned int qty() const {
+  return impl->getqty();
+ }
+ void qty(unsigned int const qty) {
+  impl->qty = qty;
+ }
+ const OrderStateEnum status() const {
+  return orderState;
+ }
+ bool isLive() const {
+  return orderState == LIVE;
+ }
+ bool isDead() const {
+  return orderState != LIVE;
+ }
+ void remove() {
+  delete this->impl;
+  this->orderState = REMOVED;
+  this->homeList->erase(homePosition);
+ }
+ void pushInto(ListType& tmpList){
+  tmpList.push_back(this);
+  this->homePosition = --(tmpList.end());
+  this->homeList = &tmpList;
+ }
+private:
+ LimOrdImpl * const impl;
+ OrderStateEnum orderState;
+
+
+ ListType * homeList;
+ ListItrType homePosition;
+};
+ostream & operator<<(ostream &os, LimitOrder const& p) {
+ if (p.isLive()) {
+  os << "(Ord-" << p.id() << " " << p.buySell() << " " << p.qty()
+    << " @ $" << p.px() << ")";
+ } else if (p.status() == LimitOrder::REMOVED) {
+  os << "(Removed)";
+ }
+ return os;
+}
+ostream & operator<<(ostream &os, LimitOrder const * const p) {
+ if (p != NULL) {
+  os << *p;
+ }
+ return os;
+}
+struct OrdLocator{
+ const char * str;
+ unsigned long long id;
+ LimitOrder * ord;
+public:
+ OrdLocator():str(NULL),id(0), ord(NULL){}
+};
+# 5 "OrdBookFor1Name.h" 2
+
+typedef map<long, ListType> MapType;
+
+class OrdBookFor1Name {
+ MapType bidSide, askSide;
+ void print(MapType & bidOrAskBook) const {
+
+  MapType::reverse_iterator ri;
+  for (ri = bidOrAskBook.rbegin(); ri != bidOrAskBook.rend(); ++ri) {
+
+   ListType & li = ri->second;
+   if (li.empty()) continue;
+   cout << "At $" << ri->first << "(" << li.size() << ")\t";
+   for (ListItrType liItr = li.begin(); liItr != li.end(); ++liItr) {
+    cout << *liItr << " ";
+   }
+   cout << endl;
+  }
+
+ }
+public:
+ void removeEmptyPxLevels() {
+  MapType::iterator it =bidSide.begin();
+  while (it != bidSide.end()) {
+   long px = it->first;
+
+   ListType & li = it->second;
+
+   if (li.empty()){
+       bidSide.erase(it++);
+    if (false) cout<<"$"<<px<<" bid px removed"<<endl;
+   }else{
+        ++it;
+   }
+  }
+  it = askSide.begin();
+  while (it != askSide.end()) {
+   long px = it->first;
+
+   ListType & li = it->second;
+
+   if (li.empty()){
+       askSide.erase(it++);
+    if (false) cout<<"$"<<px<<" ask px removed"<<endl;
+   }else{
+        ++it;
+   }
+  }
+ }
+ ListType & get1QueueInOrderBook(LimOrdImpl::BuySellEnum const buySellEnum,
+   long const px) {
+  if (buySellEnum == LimOrdImpl::B) {
+   return bidSide[px];
+  }
+  if (buySellEnum == LimOrdImpl::S) {
+   return askSide[px];
+  }
+  throw new exception;
+ }
+
+ void printOrderBook4col(int const howManyToPrint){
+  MapType::reverse_iterator bidItr=bidSide.rbegin();
+  MapType::iterator askItr=askSide.begin();
+  bool hasBids = true, hasAsks = true;
+  const int max2=max(bidSide.size(), askSide.size());
+  for (int i=0; i<min(max2,howManyToPrint);++i){
+   if (bidItr == bidSide.rend()){
+    hasBids = false;
+   }
+   if (askItr == askSide.end()){
+    hasAsks = false;
+   }
+
+   int bidQty = 0, askQty=0;
+   long bidPx=0, askPx=0;
+   if (hasBids){
+    bidPx = bidItr->first;
+    ListType & li = bidItr->second;
+    for (ListItrType liItr = li.begin(); liItr != li.end(); ++liItr) {
+     bidQty += (*liItr)->qty();
+    }
+   }
+   if (hasAsks){
+    askPx = askItr->first;
+    ListType & li = askItr->second;
+    for (ListItrType liItr = li.begin(); liItr != li.end(); ++liItr) {
+     askQty += (*liItr)->qty();
+    }
+   }
+   if (i) cout<<",";
+   cout<<bidQty<<","<<bidPx<<","<<askPx<<","<<askQty;
+   if (hasBids) ++bidItr;
+   if (hasAsks) ++askItr;
+  }
+ }
+ void printOrderBook2_debug(){
+  print(askSide);
+  print(bidSide);
+ }
+};
+# 5 "FeedHandler.h" 2
+# 1 "OrdLookup.h" 1
+
+
+
+class LimitOrder;
+
+unsigned int const howManyOrders = 99999;
+# 44 "OrdLookup.h"
+
+
+/*This class implements fast lookup by orderId, using array of pointers (or vector of shared_ptr)
+ Assumption 1 -- Exchanges generates auto-incrementing orderID's. Here's my reasoning. OrderID's are unique, as stated in the question. If orderID generation isn't continuous, then the generator has 2 choices about the inevitable gap between 2 used numbers. It can keep them forever wasted, or somehow "go back" into a gap and pick a number therein as a new orderID. To do the latter it must keep track of what numbers are already used -- time and space inefficient. There are proven in-memory algorithms to generate auto-increment identity numbers. I assume an exchange would use them. Auto-increment numbers make a good candidate as array index, but what about the total number range?
+
+ Assumption 2 -- each day the number range has an upper limit. Exchange must agree with clients on the format of the orderID. It's likely to be 32 bits, 64 bits etc and won't be a million bits.
+
+ Question 1: Can the exchange use OrderID 98761234 on 2 stocks on the same day? I don't know and i feel it doesn't matter. Here's the reason.
+
+ Case 1: suppose exchange uses an *independent* auto-increment generator for each stock. So IBM and MSFT generators can both generate 98761234. My design would use one array for IBM and one for MSFT. For basket orders, other generator instances might be needed.
+
+ Case 2: suppose exchange uses an independent auto-increment generator for each stock, but each stock uses a non-overlap number range. 98761234 will fall into IBM number range. My design would need to know the number range so as to convert orderID to array index and conserve memory.
+
+ Case 3: suppose exchange uses a singleton auto-increment generator across all stocks. This might be a bottleneck inside the exchange. My design would use a large array. Given Assumption 1, the numbers would be quasi-continuous rather than sparse --for eg less than 50% of the numbers in the range are unused. Suppose the range is S+1, S+2 ... S+N, then my array would be allocated N elements. There's a limit on N in reality. Every system is designed for a finite N -- no system can handle 10^9999 (that's one followed by ten thousand zeros) orders in a day. Each array element is a pointer. For a 64-bit machine, N elements take 64N bits or 8N bytes. If I have 640GB memory, N can be 80 billion but not higher. To scale out horizontally, we would hope Case 1 or 2 is the case.
+
+ Therefore the answer to Question 1 shows array of pointer is feasible for the purpose of lookup by orderID. In a real system hash table is likely to be time/space efficient. Tree based map has logN time complexity.
+ */
+
+class OrdLookup {
+ unsigned long long const idBase;
+ vector<LimitOrder*> orderLookup;
+public:
+ OrdLookup() : idBase(1000000000000240),
+  orderLookup( howManyOrders, NULL ) {}
+
+ ~OrdLookup() {
+
+
+ }
+ void save(LimitOrder * const newOrder) {
+
+  orderLookup[newOrder->id() - idBase] = newOrder;
+ }
+ void nullify(unsigned int id) {
+  orderLookup[id - idBase] = NULL;
+ }
+ LimitOrder* operator[](unsigned long long const id) const {
+  LimitOrder * ret = orderLookup[id - idBase];
+  if (false) cout<<ret<<endl;
+  return ret;
+ }
+ void dump() const {
+  cout << "---- orderLookupAcrossSymbols ----\n";
+  for (unsigned int i = 0; i < howManyOrders; ++i) {
+   if (orderLookup[i])
+    cout << *orderLookup[i] << endl;
+  }
+  cout << "--------\n";
+ }
+};
+# 6 "FeedHandler.h" 2
+
+
+bool checkHasText(char const* c) {
+ for (; *c; ++c)
+  if (!isspace(*c))
+   break;
+ return *c;
+}
+class FeedHandler {
+ OrdLookup orderLookupAcrossNames;
+ OrdBookFor1Name book;
+
+ void add1Order(const vector<const char*> & dto){
+        const char *ordId = dto[2];
+        LimitOrder *const newOrder = new LimitOrder(ordId, dto[5][0], dto[4], dto[3]);
+
+        if(newOrder->isDead())
+            return;
+
+        ListType & tmpList = book.get1QueueInOrderBook(newOrder->buySell(), newOrder->px());
+        newOrder->pushInto(tmpList);
+        orderLookupAcrossNames.save(newOrder);
+    }
+ const OrdLocator locateOrd(const char * ordId){
+  OrdLocator ret;
+  ret.str = ordId;
+  ret.id = atoll(ordId);
+  if(ret.id <= 0){
+   ret.id=0;
+     }else{
+      ret.ord = orderLookupAcrossNames[ret.id];
+     }
+     if (ret.ord == NULL) {
+      if (false) cout<<ordId<<" .. unknown order id"<<endl;
+     }
+     return ret;
+ }
+ void processTradeMsg(const vector<const char*> & dto){
+  for (int i = 2; i<=3; ++i){
+   OrdLocator loc = locateOrd(dto[i]);
+   if (!loc.ord) continue;
+            const int newQty =loc.ord->qty() - atoi(dto[5]);
+    if (newQty < 0){
+    continue;
+   }else if (newQty > 0){
+    loc.ord->qty(newQty);
+
+   }else {
+    remove1OrdId(dto[i]);
+   }
+  }
+    }
+    void remove1OrdId(const char *ordId){
+     OrdLocator loc = locateOrd(ordId);
+     if (loc.ord){
+   loc.ord ->remove();
+   delete loc.ord;
+   orderLookupAcrossNames.nullify(loc.id);
+   book.removeEmptyPxLevels();
+  }
+    }
+    void processMod(const vector<const char*> & dto){
+     OrdLocator loc = locateOrd(dto[2]);
+     if (!loc.ord){
+      if (loc.id) add1Order(dto);
+      return;
+     }
+        const long newPx = atol(dto[3]);
+        if (abs(loc.ord->px()-newPx)<0.001){
+            const unsigned int qty = atoi(dto[4]);
+         loc.ord->qty(qty);
+         return;
+        }else{
+         remove1OrdId(dto[2]);
+         add1Order(dto);
+        }
+    }
+public:
+    void printOrdBookTop(int count=5)
+    {
+        book.printOrderBook4col(count);
+    }
+
+    void printOrdBook2()
+    {
+        book.printOrderBook2_debug();
+    }
+
+    bool process1Msg(const char *ccstr)
+    {
+     char * cstr = const_cast<char*>(ccstr);
+
+
+
+        char *commStart = strstr(cstr, "//");
+        if(commStart){
+            *commStart = '\0';
+            if(!checkHasText(cstr)){
+
+                return false;
+            }
+        }
+        else{
+            if(!checkHasText(cstr)) return false;
+        }
+        const char * pattern = ",";
+  char copy[strlen(cstr) + 1];
+  strcpy(copy, cstr);
+  vector<const char*> dto;
+  int i = 0;
+  for (char * tok = strtok(copy, pattern); tok;
+    tok = strtok(0, pattern), ++i) {
+   if (i==2){
+    tok[strlen(tok) - 7] = 0;
+   }
+   dto.push_back(tok);
+  }
+  if (false) dumpDTO(dto);
+
+  if (dto[1][0] == 'N') {
+   add1Order(dto);
+  } else if (dto[1][0] == 'M') {
+   processMod(dto);
+  } else if (dto[1][0] == 'X') {
+   remove1OrdId(dto[2]);
+  } else if (dto[1][0] == 'T') {
+   processTradeMsg(dto);
+  }
+  return true;
+ }
+
+};
+# 2 "main.cpp" 2
+
+int main(int, char**) {
+ FeedHandler feed;
+    ifstream in2("src/exchange_feed.txt");
+    //cin.rdbuf(in2.rdbuf());
+ string line;
+ while (std::getline(std::cin, line)){
+  if (feed.process1Msg(line.c_str())){
+   if (false) feed.printOrdBook2();
+  }
+ }
+ feed.printOrdBookTop();
+}

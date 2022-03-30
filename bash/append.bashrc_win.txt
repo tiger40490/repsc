@@ -1,0 +1,89 @@
+sigtrap(){
+  echo Interrupted
+  #trap - INT # reset to default
+  trap #show acive traps
+}
+
+trap 'sigtrap' INT # ignore ctrl-C
+
+alias m='less -N'
+
+# above are experimental features to be added to github
+alias ..='cd .. ; ls1page'
+alias cp='cp -i'  # defuse
+alias d='df -h /c'
+alias git-diffn=' git diff --name-status' #can take arguments like gitRef
+alias hgi='history |grep -v hgi|grep -i '
+alias l=ls1page
+alias mv='mv -i'  # defuse
+alias nn='git commit -a --amend --no-edit; gg 1 ' #useful while standing in train
+alias py='winpty /c/python27/python.exe'
+alias python='echo python command breaks in git-bash.. Disable this alias if you must.'
+alias s-='  source  $HOME/.bashrc  '
+alias s+='    vi $HOME/append.bashrc_win.txt '
+alias t='ls1page -t'
+alias
+
+0copy(){ 
+  blog=`echo $prj`
+ #cp -v /d/20030221_0.txt $blog/misc/0.txt
+  cp -v /d/20030221*.txt  $blog/misc || \
+  cp -v /e/20030221*.txt  $blog/misc
+  # pw files not to be checked in. Also, previous copies should be removed promptly.
+  # cp-u means iFF-newer but my git-checkout would update timestamp :(
+}
+gd2(){ #mastered in repo1
+  cd $repo1
+  git checkout -q py || return
+  set -x
+  git rev-parse --verify --quiet master  > /dev/null && git branch -v -d master
+  git rev-parse --verify --quiet tmp2del > /dev/null && git branch -v -d tmp2del
+# the 2 branches susceptible to conflict
+  git branch
+  { set +x; } 2>/dev/null
+}
+gg(){ 
+  cnt=3
+  branch=$1
+  if [[ "$1" =~ ^[0-9]+$ ]]; then # note no quote around regex
+    cnt=$1 #by default shows that many commits
+    branch=$2
+  fi
+  git log -$cnt $branch
+}
+git-showtool(){
+  ref=${1:-HEAD}
+  git show --name-status $ref
+  set -x
+  git difftool $ref~  $ref
+  { set +x; } 2>/dev/null
+}
+ls1page(){
+  ls -ahlF --color=always $*
+}
+pp(){ #by default does a  traditiona pp
+ set -x
+ for arg; do
+   git checkout $arg
+   git pull
+ done
+ git pull;  git push --all -v
+ set +x
+ df -h --output=avail / 
+ 
+ # this winup folder gets filled every few hour. Not sure how to stop it
+ winupDir=/c/Windows/SoftwareDistribution/Download/ 
+ /bin/rm -rf $winupDir/* 2>/dev/null
+ du -hs $winupDir
+}
+run(){
+  g++ -std=c++17 $1 && ./a.exe
+}
+sav(){
+  fn=$1
+  cp -pv $fn $fn.$RANDOM
+}
+git config core.whitespace -trailing-space # complains if not in a git repo directory
+g++ --version |grep g++.exe
+py --version
+printf "done sourcing append.bashrc_win.txt at SHLVL = $SHLVL\n"
