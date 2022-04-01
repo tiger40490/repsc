@@ -14,9 +14,15 @@ for k,v in di.items(): print k,v
 di={1:'j', 3+2:'a'}; # supports computed key
 for k,v in di.items(): print k,v
 print di.keys(), di.values()
+
+print 'vvvvvvvvvvvvvvvvv defaultdict'
 from collections import defaultdict as ddict
 di=ddict(lambda: [[2,3],[5,4]])
 print di['invalidKey']
+
+di=ddict(lambda: 0) # similar to defaultdict(int)?
+print 23 in di
+print di[23]
 
 ## matrix
 width,height=3,2
