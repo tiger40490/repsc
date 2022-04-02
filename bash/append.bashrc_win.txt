@@ -34,7 +34,7 @@ alias
 }
 gd2(){ #mastered in repo1
   cd $repo1
-  git checkout -q py || return
+  git checkout -q py || return #use a branch "dummy"
   set -x
   git rev-parse --verify --quiet master  > /dev/null && git branch -v -d master
   git rev-parse --verify --quiet tmp2del > /dev/null && git branch -v -d tmp2del
