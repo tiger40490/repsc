@@ -32,9 +32,10 @@ alias
   # pw files not to be checked in. Also, previous copies should be removed promptly.
   # cp-u means iFF-newer but my git-checkout would update timestamp :(
 }
-gd2(){ #mastered in repo1
+gd2(){ #mastered in repsc/bash
   cd $repo1
-  git checkout -q py || return #use a branch "dummy"
+  tmp=${gd2br:-py}
+  git checkout -q $tmp || return
   set -x
   git rev-parse --verify --quiet master  > /dev/null && git branch -v -d master
   git rev-parse --verify --quiet tmp2del > /dev/null && git branch -v -d tmp2del
