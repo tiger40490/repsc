@@ -13,6 +13,7 @@ alias ..='cd .. ; ls1page'
 alias cp='cp -i'  # defuse
 alias d='df -h /c'
 alias git-diffn=' git diff --name-status' #can take arguments like gitRef
+alias git-shown=' git show --name-status' #can take arguments like gitRef
 alias hgi='history |grep -v hgi|grep -i '
 alias l=ls1page
 alias mv='mv -i'  # defuse
