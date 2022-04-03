@@ -8,11 +8,12 @@
 # showcase bash string regex.. No quote please.
 
 hn=`hostname`
-[[ $hn == 'acer156' ]] && prefix='a95'
-[[ $hn == 'acer299' ]] && prefix='299' #Acer$299 
-[[ $hn == 'DSIOTE10077' ]]     && prefix='mlp'
-[[ $hn == 'LAPTOP-3U2UKQPB' ]] && prefix='hp '
-[[ $hn == 'L36' ]]             && prefix='L36'
+case "$hn" in
+  acer156     ) prefix='a95' ;;
+  DSIOTE10077 ) prefix='mlp' ;;
+  LAPTOP-3U2UKQPB ) prefix='hp ' ;;
+  *           ) prefix="$hn" ;; #default
+esac
 # prefix should be space-saving, fairly unique
 orig=`cat $1`
 
