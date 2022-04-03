@@ -9,9 +9,10 @@
 
 hn=`hostname`
 [[ $hn == 'acer156' ]] && prefix='a95'
-[[ $hn == 'LAPTOP-3U2UKQPB' ]] && prefix='hp '
 [[ $hn == 'acer299' ]] && prefix='299' #Acer$299 
 [[ $hn == 'DSIOTE10077' ]]     && prefix='mlp'
+[[ $hn == 'LAPTOP-3U2UKQPB' ]] && prefix='hp '
+[[ $hn == 'L36' ]]             && prefix='L36'
 # prefix should be space-saving, fairly unique
 orig=`cat $1`
 
