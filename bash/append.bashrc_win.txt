@@ -65,7 +65,7 @@ ls1page(){
 pp(){ #by default does a  traditiona pp
  set -x
  for arg; do
-   git checkout $arg
+   git checkout $arg -- # trailing double-dash to ignore ./$arg if it exists
    git pull
  done
  git pull;  git push --all -v
