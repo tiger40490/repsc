@@ -1,5 +1,6 @@
 #!/bin/sh
 # Tested in win10 gitbash, this script is triggered after commit-msg and before the console message of commit confirmation.
+# Note the post-commit.sample may not exist among the bundled samples
 ############################
 # localBranch=$(git symbolic-ref -q --short HEAD)
 
