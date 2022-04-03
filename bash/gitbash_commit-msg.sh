@@ -11,7 +11,6 @@ hn=`hostname`
 case "$hn" in
   acer156     ) prefix='a95' ;;
   DSIOTE10077 ) prefix='mlp' ;;
-  #LAPTOP-3U2UKQPB ) prefix='h71' ;;
   *           ) prefix="$hn" ;; #default
 esac
 # prefix should be space-saving, fairly unique
