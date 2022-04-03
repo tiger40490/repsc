@@ -19,10 +19,13 @@ head=$(git rev-parse -q --verify HEAD) || exit 0
 # upstream is the hash of remote tip
 #https://stackoverflow.com/questions/19474577/what-does-the-argument-u-mean-in-git explains @{u}
 upstream=$(git rev-parse -q --verify @{u}) || exit 0
-printf "FYI\n  $upstream = upstream\n  $head = head\n"
-[[ "$upstream" = "$head" ]] && exit 0
 
-if git merge-base --is-ancestor HEAD $upstream; then
+# git merge-base --is-ancestor <possible-ancestor-commit> <commit>
+if git merge-base --is-ancestor $upstream HEAD; then
+  exit 0
+fi
+
+  printf "FYI\n  $upstream = upstream\n  $head = head\n"
   printf "Amending || appending on $localBranch branch-tip while original commit is on remote upstream?\n"
   printf "( Tip 1: Once inside commit-msg editor, you will have one more chance to cancel this commit via :cq )\n"
   printf "( Tip 2: Successful commit always print details to console. If you don't see them then nothing committed. )\n"
@@ -30,5 +33,4 @@ if git merge-base --is-ancestor HEAD $upstream; then
   exec < /dev/tty # without this, pre-commit hook ignores stdin :(
   read $REPLY
   [ "$REPLY" = "y" ] || exit 40490
-fi
 exit 0
