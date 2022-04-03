@@ -20,6 +20,7 @@ head=$(git rev-parse -q --verify HEAD) || exit 0
 #https://stackoverflow.com/questions/19474577/what-does-the-argument-u-mean-in-git explains @{u}
 upstream=$(git rev-parse -q --verify @{u}) || exit 0
 printf "FYI\n  $upstream = upstream\n  $head = head\n"
+[[ "$upstream" = "$head" ]] && exit 0
 
 if git merge-base --is-ancestor HEAD $upstream; then
   printf "Amending || appending on $localBranch branch-tip while original commit is on remote upstream?\n"
