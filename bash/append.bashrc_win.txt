@@ -35,7 +35,7 @@ alias
 }
 gd2(){ #mastered in repsc/bash
   cd $repo1
-  tmp=${gd2br:-py}
+  tmp=${gd2br:-main}
   git checkout -q $tmp || return
   set -x
   git rev-parse --verify --quiet master  > /dev/null && git branch -v -d master
