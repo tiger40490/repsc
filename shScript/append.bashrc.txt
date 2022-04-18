@@ -98,6 +98,7 @@ egi(){ # proven since 2010
 ls1page(){
   /bin/ls -ahlF --color=always $*
 }
+unalias l # in case
 l(){ # can't be completely replaced by 'cd_l' or ']', because "cd_l -tr dir1" is confusing and should be avoided
  ls1page $* |$PAGERE -r # -r will interpret the --color
 }
