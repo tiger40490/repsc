@@ -1,5 +1,6 @@
+# todo: remove the shell alias/functions that are no longer required
+
 # script to be run normally i.e. in a subsehll, not sourced
-set -x
 git config --global alias.alias 'config --get-regexp alias'
 git config --global alias.comit   'commit'
 git config --global alias.commmit 'commit'
