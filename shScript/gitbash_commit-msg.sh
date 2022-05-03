@@ -21,7 +21,7 @@ orig=`cat $1`
  printf "vvv-- commit-msg --> q[$prefix] is already a prefix in the user-supplied commit msg\n" >&2
  exit 0
 } 
-[[ $orig =~ ^new$|^minor$|^major$|^inter$ ]] && {
+[[ $orig =~ ^new$|^minor$|^major$|^inter$|^intra$|^pub$ ]] && {
   suffix="_$RANDOM"
   # printf "suffix = $suffix\n" >&2
 }
