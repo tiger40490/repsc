@@ -3,8 +3,12 @@ sigtrap(){
   #trap - INT # reset to default
   trap #show acive traps
 }
-
 trap 'sigtrap' INT # ignore ctrl-C
+
+export     HISTSIZE=999
+export HISTFILESIZE=999
+export HISTTIMEFORMAT='%F %T '
+export HISTIGNORE="history:" #ignore frequent n noisy commands
 
 alias m='less -N'
 
