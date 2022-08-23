@@ -18,7 +18,8 @@ export EDITOR=vi # primarily for sqlplus
 export EXINIT=$VIMINIT # ignored if .vimrc found!
 LESS="--ignore-case"
 export TMOUT=987654; [ $root ] && export TMOUT=100600
-HISTSIZE=900
+export HISTSIZE=900
+export HISTTIMEFORMAT='%F %T '
 set -o emacs
 set +o nounset
 export PATH=/usr/bin:/usr/xpg4/bin:$PATH; [ $(id -u) = 0 ] && root=yesur
