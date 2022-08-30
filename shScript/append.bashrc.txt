@@ -96,6 +96,7 @@ egi(){ # proven since 2010
   needle=` echo $1 | perl -pe 's/-/_/g' ` # replace dash
   export |grep -i $needle
 }
+
 ls1page(){
   /bin/ls -ahlF --color=always $*
 }
