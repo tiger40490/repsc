@@ -61,6 +61,10 @@ gg(){
 git-rmme(){ # "removeMe". This script will live in append.bashrc_win only
   op=${1:--d} # input validation? not now
   br=$(git rev-parse --abbrev-ref HEAD)
+
+  # if your repo has no "main" branch, then you can create a dummy branch. 
+  # note this branch should never have uncommitted changes
+
   git checkout main || return
   echo + git branch $op $br 
   if             git branch $op $br; then
