@@ -58,16 +58,16 @@ gg(){
   fi
   git log -$cnt $branch
 }
-git-rmme(){ # "removeMe". This script will live in append.bashrc_win only
+defaultbr=master
+git-rmme(){ # "removeMe", mastered in append.bashrc.txt
   op=${1:--d} # input validation? not now
   br=$(git rev-parse --abbrev-ref HEAD)
 
-  # if your repo has no "main" branch, then you can create a dummy branch. 
-  # note this branch should never have uncommitted changes
+  git checkout $defaultbr	|| return
 
-  git checkout main || return
+	### "+..." immitates set-x 
   echo + git branch $op $br 
-  if             git branch $op $br; then
+  if     git branch $op $br; then
     printf "Here are the remaining branches:\n"
   else	
     git checkout $br
