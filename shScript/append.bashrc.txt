@@ -96,7 +96,7 @@ egi(){ # proven since 2010
   needle=` echo $1 | perl -pe 's/-/_/g' ` # replace dash
   export |grep -i $needle
 }
-defaultbr=master
+defaultbr=master #This variable could be saved in the physical directory, but not for now.
 git-rmme(){ # "removeMe", mastered in append.bashrc.txt
   op=${1:--d} # input validation? not now
   br=$(git rev-parse --abbrev-ref HEAD)
