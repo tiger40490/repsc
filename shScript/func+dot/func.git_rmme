@@ -2,13 +2,21 @@
 # I extracted this function into a dedicated file because it is shared between append.bashrc_win and the unix versions.
 #
 # 
-defaultbr=master #To overwrite this variable 1) reset it after sourcing this script, 2) we could be saved in the physical directory, but not for now. 
+# showcase $myStr == "" is more versatile than string length checkout
+# showcase local var=$1
+# showcase passing arg to a function defBr, though unnecessary
+
+### defaultbr=master #To overwrite this variable 1) reset it after sourcing this script, 2) we could be saved in the physical directory, but not for now.
+
 git-rmme(){ # "removeMe", mastered in append.bashrc.txt
   # this function could be useful on the rare occasions when gd2() doesn't work.
   
   op=${1:--d} # input validation? not now
   br=$(git rev-parse --abbrev-ref HEAD)
 
+	defBr $(pwd); defaultbr=$retval
+	#printf "return value is __$defaultbr __\n"; return
+	
   git checkout $defaultbr	|| return
 
 	### "+..." immitates set-x 
@@ -19,4 +27,20 @@ git-rmme(){ # "removeMe", mastered in append.bashrc.txt
     git checkout $br
   fi
   git branch
+}
+defBr(){
+  #printf "arg is $1\n"
+  local path=$1
+	[[ $path == "" ]] && path=$(pwd)
+  #printf "path is $path\n"
+	
+	if [[ "$path" == *gs_sor* ]] ; then
+	  retval=dev
+	elif [[ "$path" == *@(repo1|repsc)* ]] ; then
+	  retval=main
+	else #catch-all
+	  retval=master
+	fi
+	
+	#printf "for unit-testing, retval is $retval\n"
 }
