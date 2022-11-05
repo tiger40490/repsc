@@ -96,8 +96,10 @@ egi(){ # proven since 2010
   needle=` echo $1 | perl -pe 's/-/_/g' ` # replace dash
   export |grep -i $needle
 }
-defaultbr=master #This variable could be saved in the physical directory, but not for now.
+defaultbr=master #To overwrite this variable 1) reset it after sourcing this script, 2) we could be saved in the physical directory, but not for now. 
 git-rmme(){ # "removeMe", mastered in append.bashrc.txt
+  # this function could be useful on the rare occasions when gd2() doesn't work.
+  
   op=${1:--d} # input validation? not now
   br=$(git rev-parse --abbrev-ref HEAD)
 
