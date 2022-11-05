@@ -2,6 +2,7 @@
 source $HOME/append.bashrc_win.txt
 #source $HOME/append.bashrc_XYZ.txt
 source $HOME/.func.exa.txt
+source $HOME/.func.git-rmme.txt
 
 gd2br=main
 
