@@ -58,22 +58,6 @@ gg(){
   fi
   git log -$cnt $branch
 }
-defaultbr=master
-git-rmme(){ # "removeMe", mastered in append.bashrc.txt
-  op=${1:--d} # input validation? not now
-  br=$(git rev-parse --abbrev-ref HEAD)
-
-  git checkout $defaultbr	|| return
-
-	### "+..." immitates set-x 
-  echo + git branch $op $br 
-  if     git branch $op $br; then
-    printf "Here are the remaining branches:\n"
-  else	
-    git checkout $br
-  fi
-  git branch
-}
 git-showtool(){
   ref=${1:-HEAD}
   git show --name-status $ref
