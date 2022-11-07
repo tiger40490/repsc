@@ -30,7 +30,7 @@ alias t='ls1page -t'
 alias
 
 0copy(){ 
-  blog=`echo $prj`
+  local blog=`echo $prj`
  #cp -v /d/20030221_0.txt $blog/misc/0.txt
   cp -v /d/20030221*.txt  $blog/misc || \
   cp -v /e/20030221*.txt  $blog/misc
@@ -68,6 +68,13 @@ git-showtool(){
 ls1page(){
   ls -ahlF --color=always $*
 }
+blog(){
+ [[ $(git branch --show-current) == master ]] || return # not master
+ # the trailing .*$ is only for demo
+ [[ $(pwd) =~ ^(.*repo1).*$ ]] || return # not repo1
+ printf "pwd is ${BASH_REMATCH[0]} .. changing to ${BASH_REMATCH[1]}/blog\n"
+ cd ${BASH_REMATCH[1]}/blog
+}
 pp(){ #by default does a  traditiona pp
  set -x
  for arg; do
@@ -75,7 +82,8 @@ pp(){ #by default does a  traditiona pp
    git pull
  done
  git pull;  git push --all -v
- set +x
+ { set +x; } 2>/dev/null
+ blog 
  df -h --output=avail / 
  
  # this winup folder gets filled every few hour. Not sure how to stop it
