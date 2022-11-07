@@ -68,7 +68,7 @@ git-showtool(){
 ls1page(){
   ls -ahlF --color=always $*
 }
-blog(){
+cdblog(){
  [[ $(git branch --show-current) == master ]] || return # not master
  # the trailing .*$ is only for demo
  [[ $(pwd) =~ ^(.*repo1).*$ ]] || return # not repo1
@@ -83,7 +83,7 @@ pp(){ #by default does a  traditiona pp
  done
  git pull;  git push --all -v
  { set +x; } 2>/dev/null
- blog 
+ cdblog 
  df -h --output=avail / 
  
  # this winup folder gets filled every few hour. Not sure how to stop it
