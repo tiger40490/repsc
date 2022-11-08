@@ -1,3 +1,5 @@
+# showcase bash regex capture
+
 sigtrap(){
   echo Interrupted
   #trap - INT # reset to default
@@ -68,11 +70,13 @@ git-showtool(){
 ls1page(){
   ls -ahlF --color=always $*
 }
-cdblog(){
+cdblog(){ #avoid name conflict with "alias blog"
  [[ $(git branch --show-current) == master ]] || return # not master
+
  # the trailing .*$ is only for demo
  [[ $(pwd) =~ ^(.*repo1).*$ ]] || return # not repo1
- printf "pwd is ${BASH_REMATCH[0]} .. changing to ${BASH_REMATCH[1]}/blog\n"
+
+ printf "pwd is ${BASH_REMATCH[0]} .. chdir to ${BASH_REMATCH[1]}/blog\n"
  cd ${BASH_REMATCH[1]}/blog
 }
 pp(){ #by default does a  traditiona pp
