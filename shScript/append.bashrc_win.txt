@@ -80,7 +80,13 @@ cdblog(){ #avoid name conflict with "alias blog"
  cd ${BASH_REMATCH[1]}/blog
 }
 pingg(){ #prefix a timestamp to each output line
-  ping "$@" | while read line; do echo $(date +%T) $line; done
+  rounds=${pingRounds:-99}
+	printf "Repeating $rounds rounds: ping $* ...\n"
+	for i in $(seq $rounds); do
+	  printf "Round #$i of $rounds (sleeping first) ...\n"
+    [[ "$i" = "1" ]] || sleep 60
+		ping "$@" | while read line; do echo $(date +%T) $line; done
+	done
 }
 pp(){ #by default does a  traditiona pp
  set -x
