@@ -1,14 +1,15 @@
 '''
-showcase yield, which I used during the speed coding, but not necessary if we maintain a proper collection.
-showcase namedtuple as a simple VO. long whitespace as delimiter between fieldnames
+showcase yield, which I used during this speed coding, but not necessary if we use (and maintain) a proper collection.
 showcase deepcopy
+showcase namedtuple as a simple VO. long whitespace as delimiter between fieldnames
 
 Interviewer hinted that recursive solution might be easier, but I always believe the iterative solution is usually superior
 * debugging
 * state tracking is easier
 * often more natural
+* no stack size  limitation
 
-In this case, many would say iterative is easier
+In this case, many would say iterative is easier.
 
 '''
 from pprint import pprint
@@ -28,7 +29,7 @@ def makeEmptyPtf():
 def iterative(table, budget): #botUp
   subsets = [ makeEmptyPtf() ] # only one subset initially.
   for i, val in enumerate(table): #val is used for totalCosts, not for generating subsets
-    for j in xrange(len(subsets)):
+    for j in xrange(len(subsets)): # iterate over the ORIGINAL vector items, while appending to the vector !
       p = deepcopy(subsets[j]) #shallow copy only duplicates references to each vector
       p.IDs.append(i)
       p.totalCost[0] += val
@@ -84,8 +85,8 @@ def main():
   test1table([77,11,22,33], expCntOfSubsets=10)
   test1table([10,11,22,33], expCntOfSubsets=15)
 if __name__ == '__main__': main()
-''' Req: generate all subsets of a table of stock prices, subject to a budget for the subset
-Each table entry's subscript is the stock's ID. Therefore, sorting the table is questionable.
+''' Req: generate all portfolios (i.e. subsets) of a table of stock prices (subject to a max budget)
+Each table entry's subscript is the stock's ID. Therefore, sorting the table is questionable, but you are free to convert the array into a dict.
 
 https://btv-gz.dreamhosters.com/wp-admin/post.php?post=19251&action=edit
 '''
