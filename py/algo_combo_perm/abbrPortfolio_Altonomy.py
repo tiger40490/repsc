@@ -86,7 +86,7 @@ def main():
   test1table([10,11,22,33], expCntOfSubsets=15)
 if __name__ == '__main__': main()
 ''' Req: generate all portfolios (i.e. subsets) of a table of stock prices (subject to a max budget)
-Each table entry's subscript is the stock's ID. Therefore, sorting the table is questionable, but you are free to convert the array into a dict.
+Each table entry's subscript is the stock's ID. Therefore, sorting the table is questionable, but you are free to convert the array into a dict, if the array is restrictive. I think converting to dict is an additional O(N) procedure.
 
 https://btv-gz.dreamhosters.com/wp-admin/post.php?post=19251&action=edit
 '''
