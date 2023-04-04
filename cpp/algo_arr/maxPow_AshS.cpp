@@ -17,25 +17,29 @@ std::ostream& operator<<(std::ostream& os, Container<V, Alloc> const& c){
    return os;
 }
 typedef int num_t; 
-typedef size_t pos_t; //index into the num_t array
+typedef size_t pos_t; //subscript into the num_t array
 
-/* A more efficient version of this function will use the last 3 params to remember previous calculations and avoid revisiting the middle elements of arr.
-*/
 num_t sliceSum(pos_t L, pos_t R, vector<num_t> const & arr, 
   num_t previousSubArraySum, pos_t previousLeftEnd, pos_t previousRightEnd){
   num_t ret=0;
-  cout<<previousLeftEnd<<" = previousLeftEnd; previousRightEnd = "<<previousRightEnd<<endl;
+  //cout<<previousLeftEnd<<" = previousLeftEnd; previousRightEnd = "<<previousRightEnd<<endl;
   
-  for (pos_t i = L; i<=R; ++i){
-    ret += arr[i];
+  if (previousLeftEnd >= previousRightEnd) {
+    for (pos_t i = L; i<=R; ++i) ret += arr[i];
+  }else{
+    ret = previousSubArraySum;
+    for (pos_t i= L; i<previousLeftEnd; ++i) ret += arr[i];
+    for (pos_t i= R; i>previousRightEnd; --i) ret += arr[i];
   }
   cout<<ret<<" returned from sliceSum() ^^^^^^^^^^^^^^^^^^ \n";
   return ret;
 }
+
 num_t solution(vector<num_t> const & arr, vector<pos_t> const & _indices){
   vector<pos_t> p=_indices; sort(p.begin(), p.end());
   size_t const K = p.size();
   num_t thePower = 0, lastSliceSum=0;
+  cout<<arr<<endl;
   for (size_t j=K/2; j<K; ++j){
     size_t i = K-j-1;
     cout<<p[i]<<" <- i; j -> "<<p[j]<<endl;
@@ -45,6 +49,7 @@ num_t solution(vector<num_t> const & arr, vector<pos_t> const & _indices){
   return thePower;
 }
 int main(){
+  assert(14==solution({3,5,6,0,7}, {3,0}) );
   assert(25==solution({3,5,6,0,7}, {3,1,0,2}) );
   assert(39==solution({3,5,6,0,7}, {3,1,0,2,3,0}) );
 }
