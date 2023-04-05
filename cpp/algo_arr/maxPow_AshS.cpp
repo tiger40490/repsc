@@ -16,10 +16,10 @@ std::ostream& operator<<(std::ostream& os, Container<V, Alloc> const& c){
    //os<<endl;
    return os;
 }
-typedef int num_t; 
+typedef float num_t; 
 typedef size_t pos_t; //subscript into the num_t array
 
-num_t sliceSum(pos_t L, pos_t R, vector<num_t> const & arr, 
+num_t sliceSum(pos_t L, pos_t R, vector<num_t> const & arr, // the remaining parameters are for efficiency only
   num_t previousSubArraySum, pos_t previousLeftEnd, pos_t previousRightEnd){
   num_t ret=0;
   //cout<<previousLeftEnd<<" = previousLeftEnd; previousRightEnd = "<<previousRightEnd<<endl;
@@ -31,7 +31,7 @@ num_t sliceSum(pos_t L, pos_t R, vector<num_t> const & arr,
     for (pos_t i= L; i<previousLeftEnd; ++i) ret += arr[i];
     for (pos_t i= R; i>previousRightEnd; --i) ret += arr[i];
   }
-  cout<<ret<<" returned from sliceSum() ^^^^^^^^^^^^^^^^^^ \n";
+  cout<<ret<<" produced by sliceSum() ^^^^^^^^^^^^^^^^^^ \n";
   return ret;
 }
 
@@ -50,6 +50,7 @@ num_t solution(vector<num_t> const & arr, vector<pos_t> const & _indices){
 }
 int main(){
   assert(14==solution({3,5,6,0,7}, {3,0}) );
+  assert(28==solution({3,5,6,0,7}, {3,0,0,3}) );
   assert(25==solution({3,5,6,0,7}, {3,1,0,2}) );
   assert(39==solution({3,5,6,0,7}, {3,1,0,2,3,0}) );
 }
