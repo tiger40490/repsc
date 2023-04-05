@@ -16,8 +16,8 @@ std::ostream& operator<<(std::ostream& os, Container<V, Alloc> const& c){
    //os<<endl;
    return os;
 }
-typedef float num_t; 
-typedef size_t pos_t; //subscript into the num_t array
+using num_t = float;
+using pos_t = size_t; //subscript into the num_t array
 
 num_t sliceSum(pos_t L, pos_t R, vector<num_t> const & arr, // the remaining parameters are for efficiency only
   num_t previousSubArraySum, pos_t previousLeftEnd, pos_t previousRightEnd){
