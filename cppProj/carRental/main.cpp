@@ -91,7 +91,7 @@ public:
       return itr->second;
     }
   }
-  AvailableCount addCar(Car & aCar){
+  AvailableCount addCar(Car const & aCar){
 	Car & newCar = const_cast<Car&>(aCar);
     shared_ptr<Car> ptr{&newCar};
     this->freeCars.insert(ptr);
