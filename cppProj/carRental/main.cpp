@@ -8,6 +8,7 @@
 #include <string>
 #include <iostream>
 #include <map>
+#include <memory> //shared_ptr
 using namespace std;
 enum class Brand {BMW, Honda};
 
@@ -35,12 +36,12 @@ public:
   Sedan(        string const & p, Brand const & b, bool sp): car(5, p, b), isSportPackageAdded(sp){}
 };
 class CarRental {
-  map<string, car const*> inventory; //plate -> car
+  map<string, shared_ptr<car> > inventory; //plate -> car
   size_t available;
 public:
   CarRental(): available(0) {}
   size_t getCount(){return this->available; }
-  car const * getByPlate(string const & plate){
+  shared_ptr<car> getByPlate(string const & plate){
     if (inventory.find(plate) == inventory.end()){
       return nullptr;
     }else{
