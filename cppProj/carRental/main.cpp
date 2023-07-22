@@ -46,7 +46,7 @@ class CarRental {
   unordered_set<shared_ptr<car> > available;
 public:
   CarRental() {}
-  size_t getCount(){return this->available.size(); }
+  size_t getFreeCnt(){return this->available.size(); }
   shared_ptr<car> findCarByPlate(string const & plate){
     if (inventory.find(plate) == inventory.end()){
       return nullptr;
@@ -54,7 +54,26 @@ public:
       return inventory[plate];
     }
   }
-  void endRental(string const & plate){/*to be implemented*/}
+  size_t addCar(car & newCar){
+    shared_ptr<car> ptr{&newCar};
+    this->available.insert(ptr);
+    string const & plate = newCar.getPlate();
+    this->inventory[plate] = ptr;
+    return this->getFreeCnt();
+  }
+  void endRental(string const & plate){
+    auto car = findCarByPlate(plate);
+    if (car) {
+      if (car->getStatus()){
+        cout<<plate<<" is already in our garage, not rented out!\n";
+       }else{
+        car->markAvailable();
+        this->available.erase(car);
+      }
+    }else{
+      cout<<plate<<" is not our car\n";
+    }    
+  }
   void startRental(string const & plate){
     auto car = findCarByPlate(plate);
     if (car) {
