@@ -31,7 +31,7 @@ public:
   string const & getPlate()   const{ return this->plate; } 
   Brand          getBrand()   const{ return this->brand; }
   bool           isFree()  const{ return this->_isAvailable; }
-  virtual size_t getSeatCnt() const{ return 5; }
+  virtual size_t getSeatCnt() const = 0;
   void markAvailable()   {this->_isAvailable = true; }
   void markUnAvailable() {this->_isAvailable = false; }  
   //friend ostream & operator<<(ostream &os, Car const& s){  }
@@ -75,6 +75,7 @@ class Sedan: public Car{
   bool const isSPAdded; //sports package
 public:
   Sedan(string const & p, Brand const & b, bool sp): Car(p, b), isSPAdded(sp){}
+  size_t getSeatCnt() const{ return 5; }  
 };
 
 class CarRental {
@@ -91,11 +92,11 @@ public:
       return itr->second;
     }
   }
-  AvailableCount acquireCar(Car const & aCar){
-	Car & newCar = const_cast<Car&>(aCar);
-    shared_ptr<Car> ptr{&newCar};
+  AvailableCount acquireCar(Car const & aCar){ 
+  //"Car const& " parameter type is better when pointer can be null
+    shared_ptr<Car> ptr{ const_cast<Car*> (&aCar) };
     this->freeCars.insert(ptr);
-    string const & plate = newCar.getPlate();
+    string const & plate = ptr->getPlate();
     this->inventory[plate] = ptr; // simpler than insert(pair)
     return this->getFreeCnt();
   }
@@ -130,10 +131,15 @@ public:
 };
 
 int main(){
-  // populate the inventory
+  CarRental inst;
+  Car * aCar {new SUV("NJ40490", Brand::BMW, true)};
+  inst.acquireCar(*aCar);
+  aCar = new Sedan{"NY310155", Brand::Ford, true};
+  inst.acquireCar(*aCar);
+  
   // start rental
   // check setCnt
   // end rental
   // print trips
-  cout<<"done\n";
+  cout<<"All car objects should be destructed after this point.\n";
 }
