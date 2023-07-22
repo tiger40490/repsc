@@ -1,5 +1,8 @@
-// g++ -c this.file
+// todo: more tests
+
 //showcase: c++11 enum class
+//showcase: c++ type alias
+//showcase: map and set of shared_ptr
 #include <assert.h>
 #include <unistd.h>
 #include <string>
@@ -9,7 +12,7 @@
 #include <memory> //shared_ptr
 using namespace std;
 using AvailableCount = size_t; //same as typedef
-enum class Brand {BMW, Honda};
+enum class Brand {BMW, Ford};
 
 class car{ //
   string const plate; //license
@@ -32,27 +35,27 @@ public:
   SUV(string const & p, Brand const & b, bool r3): car(p, b), isRow3Up(r3){}
   void addRow3()   { this->isRow3Up = true;}
   void removeRow3(){ this->isRow3Up = false;}
-  bool checkRow3() const{ return this->isRow3Up;}
-  size_t getSeatCnt() const{
-    return this->isRow3Up? 8:5;
-  }
+  bool checkRow3()    const{ return this->isRow3Up;}
+  size_t getSeatCnt() const{ return this->isRow3Up? 8:5; }
 };
 class Sedan: public car{
   bool isSportPackageAdded;
 public:
   Sedan(string const & p, Brand const & b, bool sp): car(p, b), isSportPackageAdded(sp){}
 };
+
 class CarRental {
   unordered_map<string, shared_ptr<car> > inventory; //plate -> car
-  unordered_set<shared_ptr<car> > available;
+  unordered_set        <shared_ptr<car> > available;
 public:
   CarRental() {}
-  AvailableCount getFreeCnt(){return this->available.size(); }
-  shared_ptr<car> findCarByPlate(string const & plate){
-    if (inventory.find(plate) == inventory.end()){
+  AvailableCount getFreeCnt() const {return this->available.size(); }
+  shared_ptr<car> findCarByPlate(string const & plate) const{
+    auto const itr = inventory.find(plate);
+    if (itr == inventory.end()){
       return nullptr;
     }else{
-      return inventory[plate];
+      return itr->second;
     }
   }
   AvailableCount addCar(car & newCar){
@@ -93,5 +96,9 @@ public:
 };
 
 int main(){
+  // populate the inventory
+  // start rental
+  // check setCnt
+  // end rental
   cout<<"done\n";
 }
