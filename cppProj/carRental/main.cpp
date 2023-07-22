@@ -1,58 +1,75 @@
 // g++ -c this.file
-//showcase: c++11 type alias, same as typedef
 //showcase: c++11 enum class
-//showcase: deleting while iterating a set
-#include <cassert>
-#include <time.h>
+#include <assert.h>
 #include <unistd.h>
 #include <string>
 #include <iostream>
-#include <map>
+#include <unordered_map>
+#include <unordered_set>
 #include <memory> //shared_ptr
 using namespace std;
 enum class Brand {BMW, Honda};
 
 class car{ //
   string const plate; //license
-  Brand const brand;
+  Brand  const brand;
+  bool isAvailable;
 public:
-  size_t capacity; //can be increased by subclass
-  car(size_t c, string const & p, Brand const & b): capacity(c), plate(p), brand(b){
+  car(string const & p, Brand const & b): plate(p), brand(b), isAvailable(true){
     assert (this->plate.size() > 0 && "plate must be non-empty");
   }
-  size_t getCapacity(){ return this->capacity; }
+  string const & getPlate()   const{ return this->plate; } 
+  Brand          getBrand()   const{ return this->brand; }
+  bool           getStatus()  const{ return this->isAvailable; }
+  virtual size_t getSeatCnt() const{ return 5; }
+  void markAvailable()   {this->isAvailable = true; }
+  void markUnAvailable() {this->isAvailable = false; }  
 };
-//using Fleet = vector<car const*>; //same as typedef
 class SUV: public car{
-  bool isRow3added;
+  bool isRow3Up;
 public:
-  SUV(          string const & p, Brand const & b, bool r3): car{5, p, b}, isRow3added(r3){
-    this->capacity += isRow3added? 3:0;
+  SUV(string const & p, Brand const & b, bool r3): car(p, b), isRow3Up(r3){}
+  void addRow3()   { this->isRow3Up = true;}
+  void removeRow3(){ this->isRow3Up = false;}
+  bool checkRow3() const{ return this->isRow3Up;}
+  size_t getSeatCnt() const{
+    return this->isRow3Up? 8:5;
   }
 };
 class Sedan: public car{
   bool isSportPackageAdded;
 public:
-  Sedan(        string const & p, Brand const & b, bool sp): car(5, p, b), isSportPackageAdded(sp){}
+  Sedan(string const & p, Brand const & b, bool sp): car(p, b), isSportPackageAdded(sp){}
 };
 class CarRental {
-  map<string, shared_ptr<car> > inventory; //plate -> car
-  size_t available;
+  unordered_map<string, shared_ptr<car> > inventory; //plate -> car
+  unordered_set<shared_ptr<car> > available;
 public:
-  CarRental(): available(0) {}
-  size_t getCount(){return this->available; }
-  shared_ptr<car> getByPlate(string const & plate){
+  CarRental() {}
+  size_t getCount(){return this->available.size(); }
+  shared_ptr<car> findCarByPlate(string const & plate){
     if (inventory.find(plate) == inventory.end()){
       return nullptr;
     }else{
       return inventory[plate];
     }
   }
-  void endRental(car const * aCar){/*to be implemented*/}
-  void startRental(car const * aCar){/*to be implemented*/}
+  void endRental(string const & plate){/*to be implemented*/}
+  void startRental(string const & plate){
+    auto car = findCarByPlate(plate);
+    if (car) {
+      if (car->getStatus()){
+        car->markUnAvailable();
+        this->available.insert(car);
+      }else{
+        cout<<plate<<" is unavailable\n";
+      }
+    }else{
+      cout<<plate<<" is not our car\n";
+    }
+  }
 };
 
 int main(){
   cout<<"done\n";
 }
-//Requirement 
