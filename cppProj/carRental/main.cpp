@@ -91,7 +91,7 @@ public:
       return itr->second;
     }
   }
-  AvailableCount addCar(Car const & aCar){
+  AvailableCount acquireCar(Car const & aCar){
 	Car & newCar = const_cast<Car&>(aCar);
     shared_ptr<Car> ptr{&newCar};
     this->freeCars.insert(ptr);
@@ -99,7 +99,7 @@ public:
     this->inventory[plate] = ptr; // simpler than insert(pair)
     return this->getFreeCnt();
   }
-  AvailableCount startRental(string const & plate){
+  AvailableCount startLease(string const & plate){
     auto carPtr = findCarByPlate(plate);
     if (carPtr) {
       if (carPtr->isFree()){
@@ -113,7 +113,7 @@ public:
     cout<<plate<<" is not our Car\n";
     return this->getFreeCnt();
   }
-  AvailableCount endRental(string const & plate){
+  AvailableCount endLease(string const & plate){
     auto carPtr = findCarByPlate(plate);
     if (carPtr) {
       if (carPtr->isFree()){
