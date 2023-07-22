@@ -9,6 +9,7 @@
 #include <string>
 #include <chrono>
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
@@ -17,11 +18,11 @@ using namespace std;
 using AvailableCount = size_t; //same as typedef
 enum class Brand {BMW, Ford};
 
-template<typename K, typename V, int min_width=8> std::ostream & operator<<(std::ostream & os,  Map<K,V> const & c){
+/*template<typename K, typename V, int min_width=8> std::ostream & operator<<(std::ostream & os,  unordered_map<K,V> const & c){
    for(auto it = c.begin(); it != c.end(); ++it){ os<<std::setw(min_width)<<*it<<" "; }
    os<<std::endl;
    return os;
-}
+}*/
 class car{ //
   string const plate; //license
   Brand  const brand;
@@ -38,27 +39,28 @@ public:
   virtual size_t getSeatCnt() const{ return 5; }
   void markAvailable()   {this->isAvailable = true; }
   void markUnAvailable() {this->isAvailable = false; }  
+  //friend ostream & operator<<(ostream &os, car const& s){  }
   void startRepair() {
-    std::time_t tmp3 = std::time(0);
+    time_t tmp3 = time(0);
     this->repairs.push_back("repair_started at " + string{ctime(&tmp3)});
     this->markUnAvailable();
   }  
   void endRepair() {
-    std::time_t tmp3 = std::time(0);
+    time_t tmp3 = time(0);
     this->repairs.push_back("returned at " + string{ctime(&tmp3)});
     this->markAvailable();
   }
   void startTrip() {
-    std::time_t tmp3 = std::time(0);
+    time_t tmp3 = time(0);
     this->trips.push_back("trip_started at " + string{ctime(&tmp3)});
     this->markUnAvailable();
   }  
   void endTrip() {
-    std::time_t tmp3 = std::time(0);
+    time_t tmp3 = time(0);
     this->trips.push_back("returned at " + string{ctime(&tmp3)});
     this->markAvailable();
   }
-  void printTrips() const { cout<<this->trips<<end; }
+  //void printTrips() const { cout<<this->trips<<endl; }
 };
 class SUV: public car{
   bool isRow3Up;
