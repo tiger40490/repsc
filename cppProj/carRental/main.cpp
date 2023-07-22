@@ -17,6 +17,11 @@ using namespace std;
 using AvailableCount = size_t; //same as typedef
 enum class Brand {BMW, Ford};
 
+template<typename K, typename V, int min_width=8> std::ostream & operator<<(std::ostream & os,  Map<K,V> const & c){
+   for(auto it = c.begin(); it != c.end(); ++it){ os<<std::setw(min_width)<<*it<<" "; }
+   os<<std::endl;
+   return os;
+}
 class car{ //
   string const plate; //license
   Brand  const brand;
@@ -53,6 +58,7 @@ public:
     this->trips.push_back("returned at " + string{ctime(&tmp3)});
     this->markAvailable();
   }
+  void printTrips() const { cout<<this->trips<<end; }
 };
 class SUV: public car{
   bool isRow3Up;
@@ -125,5 +131,6 @@ int main(){
   // start rental
   // check setCnt
   // end rental
+  // print trips
   cout<<"done\n";
 }
