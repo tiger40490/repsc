@@ -1,5 +1,4 @@
 // todo: more tests
-
 //showcase: get current time as string
 //showcase: c++11 enum class
 //showcase: c++ type alias
@@ -18,28 +17,24 @@ using namespace std;
 using AvailableCount = size_t; //same as typedef
 enum class Brand {BMW, Ford};
 
-/*template<typename K, typename V, int min_width=8> std::ostream & operator<<(std::ostream & os,  unordered_map<K,V> const & c){
-   for(auto it = c.begin(); it != c.end(); ++it){ os<<std::setw(min_width)<<*it<<" "; }
-   os<<std::endl;
-   return os;
-}*/
-class car{ //
+class Car{ //
   string const plate; //license
   Brand  const brand;
-  bool isAvailable; // not in workshop or rented out
+  bool _isAvailable; // not in workshop or rented out
   vector<string> trips; 
   vector<string> repairs; // not in use
 public:
-  car(string const & p, Brand const & b): plate(p), brand(b), isAvailable(true){
+  Car(string const & p, Brand const & b): plate(p), brand(b), _isAvailable(true){
     assert (this->plate.size() > 0 && "plate must be non-empty");
   }
+  virtual ~Car(){cout<<this->plate<<" dtor called\n"; }
   string const & getPlate()   const{ return this->plate; } 
   Brand          getBrand()   const{ return this->brand; }
-  bool           getStatus()  const{ return this->isAvailable; }
+  bool           isFree()  const{ return this->_isAvailable; }
   virtual size_t getSeatCnt() const{ return 5; }
-  void markAvailable()   {this->isAvailable = true; }
-  void markUnAvailable() {this->isAvailable = false; }  
-  //friend ostream & operator<<(ostream &os, car const& s){  }
+  void markAvailable()   {this->_isAvailable = true; }
+  void markUnAvailable() {this->_isAvailable = false; }  
+  //friend ostream & operator<<(ostream &os, Car const& s){  }
   void startRepair() {
     time_t tmp3 = time(0);
     this->repairs.push_back("repair_started at " + string{ctime(&tmp3)});
@@ -60,30 +55,35 @@ public:
     this->trips.push_back("returned at " + string{ctime(&tmp3)});
     this->markAvailable();
   }
-  //void printTrips() const { cout<<this->trips<<endl; }
+  void printTrips() const { 
+    for(auto it = trips.begin(); it != trips.end(); ++it){ 
+	  cout<<*it<<" "; 
+	}
+    cout<<std::endl;
+  }
 };
-class SUV: public car{
+class SUV: public Car{
   bool isRow3Up;
 public:
-  SUV(string const & p, Brand const & b, bool r3): car(p, b), isRow3Up(r3){}
+  SUV(string const & p, Brand const & b, bool r3): Car(p, b), isRow3Up(r3){}
   void addRow3()   { this->isRow3Up = true;}
   void removeRow3(){ this->isRow3Up = false;}
   bool checkRow3()    const{ return this->isRow3Up;}
   size_t getSeatCnt() const{ return this->isRow3Up? 8:5; }
 };
-class Sedan: public car{
-  bool isSportPackageAdded;
+class Sedan: public Car{
+  bool const isSPAdded; //sports package
 public:
-  Sedan(string const & p, Brand const & b, bool sp): car(p, b), isSportPackageAdded(sp){}
+  Sedan(string const & p, Brand const & b, bool sp): Car(p, b), isSPAdded(sp){}
 };
 
 class CarRental {
-  unordered_map<string, shared_ptr<car> > inventory; //plate -> car
-  unordered_set        <shared_ptr<car> > available;
+  unordered_map<string, shared_ptr<Car> > inventory; //plate -> Car
+  unordered_set<        shared_ptr<Car> > freeCars;
 public:
   CarRental() {}
-  AvailableCount getFreeCnt() const {return this->available.size(); }
-  shared_ptr<car> findCarByPlate(string const & plate) const{
+  AvailableCount getFreeCnt() const {return this->freeCars.size(); }
+  shared_ptr<Car> findCarByPlate(string const & plate) const{
     auto const itr = inventory.find(plate);
     if (itr == inventory.end()){
       return nullptr;
@@ -91,35 +91,36 @@ public:
       return itr->second;
     }
   }
-  AvailableCount addCar(car & newCar){
-    shared_ptr<car> ptr{&newCar};
-    this->available.insert(ptr);
+  AvailableCount addCar(Car & aCar){
+	Car & newCar = const_cast<Car&>(aCar);
+    shared_ptr<Car> ptr{&newCar};
+    this->freeCars.insert(ptr);
     string const & plate = newCar.getPlate();
-    this->inventory[plate] = ptr;
+    this->inventory[plate] = ptr; // simpler than insert(pair)
     return this->getFreeCnt();
   }
   AvailableCount startRental(string const & plate){
-    auto car = findCarByPlate(plate);
-    if (car) {
-      if (car->getStatus()){
-        car->startTrip();
-        this->available.insert(car);
+    auto carPtr = findCarByPlate(plate);
+    if (carPtr) {
+      if (carPtr->isFree()){
+        carPtr->startTrip();
+        this->freeCars.insert(carPtr);
       }else{
         cout<<plate<<" is unavailable\n";
       }
       return this->getFreeCnt();
     }
-    cout<<plate<<" is not our car\n";
+    cout<<plate<<" is not our Car\n";
     return this->getFreeCnt();
   }
   AvailableCount endRental(string const & plate){
-    auto car = findCarByPlate(plate);
-    if (car) {
-      if (car->getStatus()){
+    auto carPtr = findCarByPlate(plate);
+    if (carPtr) {
+      if (carPtr->isFree()){
         cout<<plate<<" is already in our garage, not rented out!\n";
        }else{
-        car->endTrip();
-        this->available.erase(car);
+        carPtr->endTrip();
+        this->freeCars.erase(carPtr);
       }
       return this->getFreeCnt();
     }
