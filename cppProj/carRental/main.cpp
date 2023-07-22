@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <string>
 #include <iostream>
-#include <vector>
+#include <map>
 using namespace std;
 enum class Brand {BMW, Honda};
 
@@ -34,12 +34,19 @@ class Sedan: public car{
 public:
   Sedan(        string const & p, Brand const & b, bool sp): car(5, p, b), isSportPackageAdded(sp){}
 };
-class CarRental{
-  vector<car const*> inventory{};
+class CarRental {
+  map<string, car const*> inventory; //plate -> car
   size_t available;
 public:
   CarRental(): available(0) {}
   size_t getCount(){return this->available; }
+  car const * getByPlate(string const & plate){
+    if (inventory.find(plate) == inventory.end()){
+      return nullptr;
+    }else{
+      return inventory[plate];
+    }
+  }
   void endRental(car const * aCar){/*to be implemented*/}
   void startRental(car const * aCar){/*to be implemented*/}
 };
