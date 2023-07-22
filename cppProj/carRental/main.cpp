@@ -1,11 +1,13 @@
 // todo: more tests
 
+//showcase: get current time as string
 //showcase: c++11 enum class
 //showcase: c++ type alias
 //showcase: map and set of shared_ptr. Use temp variables to separate construction and insert
 #include <assert.h>
 #include <unistd.h>
 #include <string>
+#include <chrono>
 #include <iostream>
 #include <vector>
 #include <unordered_map>
@@ -32,19 +34,23 @@ public:
   void markAvailable()   {this->isAvailable = true; }
   void markUnAvailable() {this->isAvailable = false; }  
   void startRepair() {
-    this->repairs.push_back("repair_started");
+    std::time_t tmp3 = std::time(0);
+    this->repairs.push_back("repair_started at " + string{ctime(&tmp3)});
     this->markUnAvailable();
   }  
   void endRepair() {
-    this->repairs.push_back("returned");
+    std::time_t tmp3 = std::time(0);
+    this->repairs.push_back("returned at " + string{ctime(&tmp3)});
     this->markAvailable();
   }
   void startTrip() {
-    this->trips.push_back("trip_started");
+    std::time_t tmp3 = std::time(0);
+    this->trips.push_back("trip_started at " + string{ctime(&tmp3)});
     this->markUnAvailable();
   }  
   void endTrip() {
-    this->trips.push_back("returned");
+    std::time_t tmp3 = std::time(0);
+    this->trips.push_back("returned at " + string{ctime(&tmp3)});
     this->markAvailable();
   }
 };
@@ -88,7 +94,7 @@ public:
     auto car = findCarByPlate(plate);
     if (car) {
       if (car->getStatus()){
-        car->markUnAvailable();
+        car->startTrip();
         this->available.insert(car);
       }else{
         cout<<plate<<" is unavailable\n";
@@ -104,7 +110,7 @@ public:
       if (car->getStatus()){
         cout<<plate<<" is already in our garage, not rented out!\n";
        }else{
-        car->markAvailable();
+        car->endTrip();
         this->available.erase(car);
       }
       return this->getFreeCnt();
