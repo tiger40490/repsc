@@ -2,11 +2,12 @@
 
 //showcase: c++11 enum class
 //showcase: c++ type alias
-//showcase: map and set of shared_ptr
+//showcase: map and set of shared_ptr. Use temp variables to separate construction and insert
 #include <assert.h>
 #include <unistd.h>
 #include <string>
 #include <iostream>
+#include <vector>
 #include <unordered_map>
 #include <unordered_set>
 #include <memory> //shared_ptr
@@ -17,7 +18,9 @@ enum class Brand {BMW, Ford};
 class car{ //
   string const plate; //license
   Brand  const brand;
-  bool isAvailable;
+  bool isAvailable; // not in workshop or rented out
+  vector<string> trips; 
+  vector<string> repairs; // not in use
 public:
   car(string const & p, Brand const & b): plate(p), brand(b), isAvailable(true){
     assert (this->plate.size() > 0 && "plate must be non-empty");
@@ -28,6 +31,22 @@ public:
   virtual size_t getSeatCnt() const{ return 5; }
   void markAvailable()   {this->isAvailable = true; }
   void markUnAvailable() {this->isAvailable = false; }  
+  void startRepair() {
+    this->repairs.push_back("repair_started");
+    this->markUnAvailable();
+  }  
+  void endRepair() {
+    this->repairs.push_back("returned");
+    this->markAvailable();
+  }
+  void startTrip() {
+    this->trips.push_back("trip_started");
+    this->markUnAvailable();
+  }  
+  void endTrip() {
+    this->trips.push_back("returned");
+    this->markAvailable();
+  }
 };
 class SUV: public car{
   bool isRow3Up;
