@@ -84,7 +84,7 @@ class CarRental {
 public:
   CarRental() {}
   AvailableCount getFreeCnt() const {return this->freeCars.size(); }
-  shared_ptr<Car> findCarByPlate(string const & plate) const{
+  shared_ptr<Car> lookupCar(string const & plate) const{
     auto const itr = inventory.find(plate);
     if (itr == inventory.end()){
       return nullptr;
@@ -100,7 +100,7 @@ public:
     return this->getFreeCnt();
   }
   AvailableCount startLease(string const & plate){
-    auto carPtr = findCarByPlate(plate);
+    auto carPtr = lookupCar(plate);
     if (carPtr) {
       if (carPtr->isFree()){
         carPtr->startTrip();
@@ -115,7 +115,7 @@ public:
     return this->getFreeCnt();
   }
   AvailableCount endLease(string const & plate){
-    auto carPtr = findCarByPlate(plate);
+    auto carPtr = lookupCar(plate);
     if (carPtr) {
       if (carPtr->isFree()){
         cout<<plate<<" is already in our garage, not rented out :( \n";
@@ -139,6 +139,7 @@ int main(){
 	inst.startLease("NJ40490xxxx");
 	inst.startLease("NJ40490");
 	inst.startLease("NJ40490"); //should fail
+	auto const ptr = inst.lookupCar("NJ40490");
 	
   // check setCnt
   // end rental
