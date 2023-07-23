@@ -1,7 +1,8 @@
+//showcase: map and set of shared_ptr. Use temp variables to separate construction and insert
+//showcase: shared_ptr<base> down cast to ptr to derived
 //showcase: get current time as string
 //showcase: c++11 enum class
 //showcase: c++ type alias
-//showcase: map and set of shared_ptr. Use temp variables to separate construction and insert
 #include <assert.h>
 #include <unistd.h>
 #include <string>
@@ -155,7 +156,10 @@ int main(){
   assert (freeCnt == 2);
 	inst.endLease("NY310155");
 
-	auto howManyEvents = inst.lookupCar("NJ40490")->printTrips();
+  auto ptr = dynamic_cast<SUV*>(inst.lookupCar("NJ40490").get());
+	ptr->removeRow3();
+	auto howManyEvents = ptr ->printTrips();
 	assert (howManyEvents == 2 && "two events expected in trip history");
+	assert (ptr->getSeatCnt() == 5);
   cout<<"\nExiting main()... All car objects should be destructed after this point.\n";
 }
