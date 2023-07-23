@@ -34,7 +34,11 @@ public:
   virtual size_t getSeatCnt() const = 0;
   void markAvailable()   {this->_isAvailable = true; }
   void markUnAvailable() {this->_isAvailable = false; }  
-  //friend ostream & operator<<(ostream &os, Car const& s){  }
+  friend ostream & operator<<(ostream &os, Car const& s){
+		auto const & status{s.isFree()? " free":" unavailable"};
+		os<<"[ "<<s.plate<<status<<" with capacity="<<s.getSeatCnt()<<" ]";
+		return os;
+  }
   void startRepair() {
     time_t tmp3 = time(0);
     this->repairs.push_back("repair_started at " + string{ctime(&tmp3)});
@@ -139,10 +143,11 @@ int main(){
 	inst.startLease("NJ40490xxxx");
 	inst.startLease("NJ40490");
 	inst.startLease("NJ40490"); //should fail
-	auto const ptr = inst.lookupCar("NJ40490");
-	
-  // check setCnt
+	cout<<*(inst.lookupCar("NJ40490"))<<endl;
+	cout<<*(inst.lookupCar("NY310155"))<<endl;
   // end rental
+	inst.endLease("NJ40490");
+	inst.endLease("NY310155");
   // print trips
   cout<<"Exiting main()... All car objects should be destructed after this point.\n";
 }
