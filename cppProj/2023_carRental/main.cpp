@@ -1,4 +1,3 @@
-// todo: more tests
 //showcase: get current time as string
 //showcase: c++11 enum class
 //showcase: c++ type alias
@@ -46,7 +45,7 @@ public:
   }  
   void endRepair() {
     time_t tmp3 = time(0);
-    this->repairs.push_back("returned at " + string{ctime(&tmp3)});
+    this->repairs.push_back("repair_ended at " + string{ctime(&tmp3)});
     this->markAvailable();
   }
   void startTrip() {
@@ -56,14 +55,16 @@ public:
   }  
   void endTrip() {
     time_t tmp3 = time(0);
-    this->trips.push_back("returned at " + string{ctime(&tmp3)});
+    this->trips.push_back("trip_ended at " + string{ctime(&tmp3)});
     this->markAvailable();
   }
-  void printTrips() const { 
+  size_t printTrips() const { 
+	  cout<<*this<<" trip history:\n";
     for(auto it = trips.begin(); it != trips.end(); ++it){ 
-	  cout<<*it<<" "; 
-	}
+	    cout<<*it<<""; 
+	  }
     cout<<std::endl;
+		return trips.size();
   }
 };
 class SUV: public Car{
@@ -107,9 +108,9 @@ public:
     auto carPtr = lookupCar(plate);
     if (carPtr) {
       if (carPtr->isFree()){
-        carPtr->startTrip();
-        this->freeCars.insert(carPtr);
         cout<<plate<<" driving off .. rented\n";
+        carPtr->startTrip();
+        this->freeCars.erase(carPtr);
       }else{
         cout<<plate<<" is unavailable :( \n";
       }
@@ -124,8 +125,9 @@ public:
       if (carPtr->isFree()){
         cout<<plate<<" is already in our garage, not rented out :( \n";
        }else{
+        cout<<plate<<" lease ending\n";
         carPtr->endTrip();
-        this->freeCars.erase(carPtr);
+        this->freeCars.insert(carPtr);
       }
       return this->getFreeCnt();
     }
@@ -139,15 +141,21 @@ int main(){
   inst.acquireCar(new SUV{"NJ40490", Brand::BMW, true});
   inst.acquireCar(new Sedan{"NY310155", Brand::Ford, true});
   
-  // start rental
-	inst.startLease("NJ40490xxxx");
-	inst.startLease("NJ40490");
+	auto freeCnt = inst.startLease("NJ40490");
+	cout<<freeCnt<<" cars available\n";
+	assert (freeCnt == 1);
 	inst.startLease("NJ40490"); //should fail
+	inst.startLease("NJ40490xxxx");
+
 	cout<<*(inst.lookupCar("NJ40490"))<<endl;
 	cout<<*(inst.lookupCar("NY310155"))<<endl;
-  // end rental
-	inst.endLease("NJ40490");
+
+	freeCnt = inst.endLease("NJ40490");
+	cout<<freeCnt<<" cars available\n";
+  assert (freeCnt == 2);
 	inst.endLease("NY310155");
-  // print trips
-  cout<<"Exiting main()... All car objects should be destructed after this point.\n";
+
+	auto howManyEvents = inst.lookupCar("NJ40490")->printTrips();
+	assert (howManyEvents == 2 && "two events expected in trip history");
+  cout<<"\nExiting main()... All car objects should be destructed after this point.\n";
 }
