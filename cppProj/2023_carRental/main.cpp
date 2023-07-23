@@ -92,9 +92,8 @@ public:
       return itr->second;
     }
   }
-  AvailableCount acquireCar(Car const & aCar){ 
-  //"Car const& " parameter type is better when pointer can be null
-    shared_ptr<Car> ptr{ const_cast<Car*> (&aCar) };
+  AvailableCount acquireCar(Car * heapPtr){ 
+    shared_ptr<Car> ptr{ heapPtr };
     this->freeCars.insert(ptr);
     string const & plate = ptr->getPlate();
     this->inventory[plate] = ptr; // simpler than insert(pair)
@@ -106,40 +105,43 @@ public:
       if (carPtr->isFree()){
         carPtr->startTrip();
         this->freeCars.insert(carPtr);
+        cout<<plate<<" driving off .. rented\n";
       }else{
-        cout<<plate<<" is unavailable\n";
+        cout<<plate<<" is unavailable :( \n";
       }
       return this->getFreeCnt();
     }
-    cout<<plate<<" is not our Car\n";
+    cout<<plate<<" is not our Car :( \n";
     return this->getFreeCnt();
   }
   AvailableCount endLease(string const & plate){
     auto carPtr = findCarByPlate(plate);
     if (carPtr) {
       if (carPtr->isFree()){
-        cout<<plate<<" is already in our garage, not rented out!\n";
+        cout<<plate<<" is already in our garage, not rented out :( \n";
        }else{
         carPtr->endTrip();
         this->freeCars.erase(carPtr);
       }
       return this->getFreeCnt();
     }
-    cout<<plate<<" is not our car\n";
+    cout<<plate<<" is not our Car :( \n";
     return this->getFreeCnt();
   }
 };
 
 int main(){
   CarRental inst;
-  Car * aCar {new SUV("NJ40490", Brand::BMW, true)};
-  inst.acquireCar(*aCar);
-  aCar = new Sedan{"NY310155", Brand::Ford, true};
-  inst.acquireCar(*aCar);
+  inst.acquireCar(new SUV{"NJ40490", Brand::BMW, true});
+  inst.acquireCar(new Sedan{"NY310155", Brand::Ford, true});
   
   // start rental
+	inst.startLease("NJ40490xxxx");
+	inst.startLease("NJ40490");
+	inst.startLease("NJ40490"); //should fail
+	
   // check setCnt
   // end rental
   // print trips
-  cout<<"All car objects should be destructed after this point.\n";
+  cout<<"Exiting main()... All car objects should be destructed after this point.\n";
 }
