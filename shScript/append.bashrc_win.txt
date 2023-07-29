@@ -24,6 +24,7 @@ alias hgi='history |grep -v hgi|grep -i '
 alias l=ls1page
 alias mv='mv -i'  # defuse
 alias nn='git amend -a --no-edit; gg 1 ' #useful while standing in train
+alias path="  echo \$PATH |perl -pe 's/:/\n/g' "
 alias py='winpty /c/python27/python.exe'
 alias python='echo python command breaks in git-bash.. Disable this alias if you must.'
 alias s-='  source  $HOME/.bashrc  '
