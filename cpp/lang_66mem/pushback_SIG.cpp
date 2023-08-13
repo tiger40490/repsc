@@ -63,8 +63,8 @@ public:
 	}
 	void push_back(T const & t){
 		size_t const sz=size();
-		if (sz == capacity() || sz==0){
-			size_t newcap = sz==0? 1:sz*2;
+		if (sz == capacity()){
+			size_t newcap = capacity()*2;
 			cerr<<newcap<<" <--- will allocate to this capacity\n";
 			T* const tmp = this->arr;
 			if      (this->mode==AllocMode::DC)
