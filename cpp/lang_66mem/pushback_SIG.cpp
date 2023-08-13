@@ -13,12 +13,12 @@ showcase scoped enum
 using namespace std;
 
 enum class AllocMode{DC, PN};
-template<typename T> struct MyVec{
+template<typename T> struct Vec{
 	size_t sz, cap; //2 fields needed
 	AllocMode mode;
-	T* arr;
-	size_t size()    {return sz;}
-	size_t capacity(){return cap;}
+	T* arr; // underlying array
+	size_t size()    const {return sz;}
+	size_t capacity()const {return cap;}
 	void uninit (AllocMode const m){ //leave raw memory uninitialized
 		this->mode=m;
 		size_t const cnt1=1;
@@ -80,7 +80,7 @@ Below (efficient) uses placement new followed by copy-construct.
 	}
 };
 int main(){
-	MyVec<int> v;
+	Vec<int> v;
 	for (int m=0; m<2; ++m){
 		v.uninit(static_cast<AllocMode>(m));
 		for (int i =0; i<5/*9 is good*/; ++i) v.push_back(i+10);
