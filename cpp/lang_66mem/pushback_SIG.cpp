@@ -23,7 +23,7 @@ template<typename T> class Vec{
 		  = make_unique<T[]>(newcap); //Step 1: default-construct this many instances of T
     
 		std::copy(arr, arr+sz, newArr.get()); //Step 2: one-by-one assign from original arr to new array
-		cout<<"Returning from alloc11111\n";
+		//cout<<"Returning from alloc11111\n";
 		return newArr.release();
 	}
 /*Above (inefficient) uses default ctor on raw memory, followed by copy-assignment. For simple types of int, this inefficiency is tolerable.
@@ -49,13 +49,13 @@ Below (efficient) uses placement new followed by copy-construct.
 	void dump(string const & headline){
 		//cout<<"---- "<<headline<<" -----\n";
 		for (int i=0; i<sz; ++i){
-			cout<<i<<":"<<*(arr+i)<<" | ";
+			cout<<i<<":"<<*(arr+i)<<"|";
 		}cout<<endl;
 	}
 public:
 	size_t size()    const {return sz;}
 	size_t capacity()const {return cap;}
-	Vec (AllocMode const m){ //leave raw memory uninitialized
+	Vec (AllocMode const m=AllocMode::PN){ //leave raw memory uninitialized
 		this->mode=m;
 		this->sz=0;
 		this->cap=1;
@@ -75,18 +75,19 @@ public:
 			delete[] tmp;
 			this->cap=newcap;
 		}
-		*(this->arr+sz) = t; //assignment without calling the ctor?? I think PN mode needs another PN
+		*(this->arr+sz) = t; //assignment without calling the ctor?? I think PN mode may need another PN
 		this->sz++;
 		dump("leaving push_back");
 	}};
-void test(){
+void myOwnTest(){
 	for (int m=0; m<2; ++m){
 		Vec<int> v{static_cast<AllocMode>(m)};
 		for (int i =0; i<5; ++i) v.push_back(i+10);
 	}
 }
 int main(){
-	test();
+	Vec<int> v;
+	for (int i=0; i<100; ++i) v.push_back(i);
 }
 /*Requirement: implement vector push_back().
 */
