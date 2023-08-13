@@ -13,19 +13,10 @@ showcase scoped enum
 using namespace std;
 
 enum class AllocMode{DC, PN};
-template<typename T> struct Vec{
+template<typename T> class Vec{
 	size_t sz, cap; //2 fields needed
 	AllocMode mode;
 	T* arr; // underlying array
-	size_t size()    const {return sz;}
-	size_t capacity()const {return cap;}
-	Vec (AllocMode const m){ //leave raw memory uninitialized
-		this->mode=m;
-		size_t const cnt1=1;
-		arr = new T[cnt1];
-		cap=cnt1;
-		sz=0;
-	}
 	T* alloc1(size_t const newcap){
 		assert(this->mode == AllocMode::DC); //DC = DefaultConstruct
 		unique_ptr<T[]> newArr //need to ensure delete[] is called
@@ -35,7 +26,8 @@ template<typename T> struct Vec{
 		cout<<"Returning from alloc11111\n";
 		return newArr.release();
 	}
-/*Above (inefficient) uses default ctor on raw memory, followed by op=(). For simple types of int, this inefficiency is tolerable.
+/*Above (inefficient) uses default ctor on raw memory, followed by copy-assignment. For simple types of int, this inefficiency is tolerable.
+
 Below (efficient) uses placement new followed by copy-construct.
 */
 	T* alloc2(size_t const newcap){//tested
@@ -57,8 +49,17 @@ Below (efficient) uses placement new followed by copy-construct.
 	void dump(string const & headline){
 		//cout<<"---- "<<headline<<" -----\n";
 		for (int i=0; i<sz; ++i){
-			cout<<i<<":"<<*(arr+i)<<"|";
+			cout<<i<<":"<<*(arr+i)<<" | ";
 		}cout<<endl;
+	}
+public:
+	size_t size()    const {return sz;}
+	size_t capacity()const {return cap;}
+	Vec (AllocMode const m){ //leave raw memory uninitialized
+		this->mode=m;
+		this->sz=0;
+		this->cap=1;
+		this->arr = new T[cap];
 	}
 	void push_back(T const & t){
 		size_t const sz=size();
@@ -77,13 +78,15 @@ Below (efficient) uses placement new followed by copy-construct.
 		*(this->arr+sz) = t; //assignment without calling the ctor?? I think PN mode needs another PN
 		this->sz++;
 		dump("leaving push_back");
-	}
-};
-int main(){
+	}};
+void test(){
 	for (int m=0; m<2; ++m){
 		Vec<int> v{static_cast<AllocMode>(m)};
-		for (int i =0; i<5/*9 is good*/; ++i) v.push_back(i+10);
+		for (int i =0; i<5; ++i) v.push_back(i+10);
 	}
+}
+int main(){
+	test();
 }
 /*Requirement: implement vector push_back().
 */
