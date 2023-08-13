@@ -23,7 +23,7 @@ template<typename T> class Vec{
 		  = make_unique<T[]>(newcap); //Step 1: default-construct this many instances of T
     
 		std::copy(arr, arr+sz, newArr.get()); //Step 2: one-by-one assign from original arr to new array
-		//cout<<"Returning from alloc11111\n";
+		cout<<"Returning from alloc11111\n";
 		return newArr.release();
 	}
 /*Above (inefficient) uses default ctor on raw memory, followed by copy-assignment. For simple types of int, this inefficiency is tolerable.
@@ -86,8 +86,7 @@ void myOwnTest(){
 	}
 }
 int main(){
-	Vec<int> v;
-	for (int i=0; i<100; ++i) v.push_back(i);
+  myOwnTest();
 }
 /*Requirement: implement vector push_back().
 */
