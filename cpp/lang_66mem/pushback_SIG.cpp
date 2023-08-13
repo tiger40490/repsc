@@ -17,7 +17,7 @@ template<typename T> class Vec{
 	size_t sz, cap; //2 fields needed
 	AllocMode mode;
 	T* arr; // underlying array
-	T* alloc1(size_t const newcap){
+	T* allocDefaultConstruct(size_t const newcap){
 		assert(this->mode == AllocMode::DC); //DC = DefaultConstruct
 		unique_ptr<T[]> newArr //need to ensure delete[] is called
 		  = make_unique<T[]>(newcap); //Step 1: default-construct this many instances of T
@@ -30,7 +30,7 @@ template<typename T> class Vec{
 
 Below (efficient) uses placement new followed by copy-construct.
 */
-	T* alloc2(size_t const newcap){//tested
+	T* allocPlacementNew(size_t const newcap){//tested
 		assert(this->mode == AllocMode::PN);	//PlacementNew
 		
 		/* Step 1: allocate raw memory.
@@ -68,9 +68,9 @@ public:
 			cerr<<newcap<<" <--- will allocate to this capacity\n";
 			T* const tmp = this->arr;
 			if      (this->mode==AllocMode::DC)
-  			  this->arr = alloc1(newcap);
+  			  this->arr = allocDefaultConstruct(newcap);
 			else if (this->mode==AllocMode::PN)
-  			  this->arr = alloc2(newcap);
+  			  this->arr = allocPlacementNew(newcap);
 		  
 			delete[] tmp;
 			this->cap=newcap;
