@@ -41,7 +41,8 @@ Below (efficient) uses placement new followed by copy-construct.
 		);
     
 		for(int i=0; i<sz; ++i){ //Step 2: in-place copy-construct
-			new (raw.get()+i*sizeof(T)) T( *(arr+i) ); //what if throws? unique_ptr should free all memory
+			T && rvr = move(*(arr+i));
+			new (raw.get()+i*sizeof(T)) T( rvr ); //what if throws? unique_ptr should free all memory
 		}
 		cout<<"Returning from alloc22222\n";
 		return (T*)raw.release();
