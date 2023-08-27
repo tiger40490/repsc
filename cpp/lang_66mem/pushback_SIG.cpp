@@ -1,4 +1,5 @@
 /*
+showcase move() passed to ctor to invite mv-ctor (if available)
 showcase copy-construct on heap but not allocating -- by placement-new!
 showcase make_unique<T[]> array-form
 showcase casting uninitialized heap ptr to char-ptr
@@ -23,7 +24,7 @@ template<typename T> class Vec{
 		  = make_unique<T[]>(newcap); //Step 1: default-construct this many instances of T
     
 		std::copy(arr, arr+sz, newArr.get()); //Step 2: one-by-one assign from original arr to new array
-		cout<<"Returning from alloc11111\n";
+		cout<<"Returning from alloc_DC\n";
 		return newArr.release();
 	}
 /*Above (inefficient) uses default ctor on raw memory, followed by copy-assignment. For simple types of int, this inefficiency is tolerable.
@@ -44,7 +45,7 @@ Below (efficient) uses placement new followed by copy-construct.
 			T && rvr = move(*(arr+i));
 			new (raw.get()+i*sizeof(T)) T( rvr ); //what if throws? unique_ptr should free all memory
 		}
-		cout<<"Returning from alloc22222\n";
+		cout<<"Returning from alloc_PN\n";
 		return (T*)raw.release();
 	}
 	void dump(string const & headline){
