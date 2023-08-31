@@ -12,8 +12,9 @@ showcase scoped enum
 #include <memory> //unique_ptr
 #include <assert.h>
 using namespace std;
-
+constexpr size_t INITIAL_CAPACITY = 1;
 enum class AllocMode{PN, DC};
+
 template<typename T> class Vec{
   size_t sz, cap; //2 fields needed
   AllocMode mode;
@@ -70,7 +71,7 @@ public:
   Vec (AllocMode const m=AllocMode::PN){ //leave raw memory uninitialized
     this->mode=m;
     this->sz=0;
-    this->cap=1;
+    this->cap=INITIAL_CAPACITY;
     this->arr = new T[cap];
   }
   void push_back(T const & incoming){
@@ -84,12 +85,13 @@ public:
       else if (this->mode==AllocMode::PN)
           this->arr = allocPlacementNew(newcap);
 
-      cerr<<"deleting old array\n";
-      if      (this->mode==AllocMode::DC){
-        delete[] oldArray; // seg fault for PlacementNew + vector<string>
+      if      (this->mode==AllocMode::DC || this->cap == INITIAL_CAPACITY){
+        cerr<<"deleting old array\n";
+        delete[] oldArray;
       }
-      else if (this->mode==AllocMode::PN && 1==0){
+      else if (this->mode==AllocMode::PN){
         // need to call dtor on each object then 
+        cerr<<"freeing old array\n"; // no problem with int
         free(oldArray);
       }
 
@@ -115,6 +117,6 @@ void testStrings(){
   }
 }
 int main(){
-  testInts();
+  //testInts();
   testStrings();
 }
