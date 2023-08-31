@@ -1,5 +1,6 @@
 /*
 showcase move() passed to ctor to invite mv-ctor (if available)
+showcase calling dtor directly for objects created via placement-new
 showcase copy-construct on heap but not allocating -- by placement-new!
 showcase make_unique<T[]> array-form
 showcase casting uninitialized heap ptr to char-ptr
@@ -45,7 +46,7 @@ Below (efficient) uses placement new followed by copy-construct.
       cerr<<"malloc failed\n";
       return nullptr;
     }
-    //cerr<<bytes<<" bytes allocated via malloc: "<<rawPtr<<endl;
+    cerr<<bytes<<" bytes allocated via malloc: "<<rawPtr<<endl;
     
     unique_ptr<char> raw(
       static_cast<char*>(rawPtr)
@@ -68,11 +69,11 @@ Below (efficient) uses placement new followed by copy-construct.
 public:
   size_t size()    const {return sz;}
   size_t capacity()const {return cap;}
-  Vec (AllocMode const m=AllocMode::PN){ //leave raw memory uninitialized
+  Vec (AllocMode const m=AllocMode::PN){
     this->mode=m;
     this->sz=0;
     this->cap=INITIAL_CAPACITY;
-    this->arr = new T[cap];
+    this->arr = new T[cap]; // use AllocMode::DC for this allocation
   }
   void push_back(T const & incoming){
     size_t const sz=size();
@@ -90,8 +91,12 @@ public:
         delete[] oldArray;
       }
       else if (this->mode==AllocMode::PN){
-        // need to call dtor on each object then 
-        cerr<<"freeing old array\n"; // no problem with int
+        cerr<<"destroying objects in old array\n";
+        for (size_t i=0; i< this->cap; ++i){
+          T* tgt = oldArray+i;
+          tgt->~T(); 
+        }
+        cerr<<"   freeing old array\n"; // no problem with int
         free(oldArray);
       }
 
@@ -116,7 +121,31 @@ void testStrings(){
     for (int i =0; i<5; ++i) vs.push_back(to_string(i+10));
   }
 }
+struct MyType{
+  MyType(){cout<<"MyType no-arg called\n"; }
+  MyType(int i): payload(i) {}//cout<<i<<" passed into MyType(int)\n";}
+  MyType(MyType const & rhs): payload(rhs.payload) {cout<<"MyType copier called for payload = "<<payload<<endl; }
+  ~MyType(){cout<<"~MyType() called for payload = "<<payload<<endl; }
+  MyType & operator=(MyType const & rhs){
+    this->payload = rhs.payload;
+    cout<<"op=() called with payload = "<<payload<<endl;
+    return *this;
+  }  
+  friend ostream & operator<<(ostream & os, MyType const & p){
+    os<<p.payload;
+    return os;
+  }
+private: int payload;
+};
+void testStruct(){
+  cout<<"    v  v  v   testing with vector<MyType>....  v  v  v\n";
+  for (int m=0; m<2; ++m){
+    Vec<MyType> vi{static_cast<AllocMode>(m)};
+    for (int i =0; i<5; ++i) vi.push_back(i+10); 
+  }
+}
 int main(){
-  //testInts();
+  testInts();
   testStrings();
+  testStruct();
 }
