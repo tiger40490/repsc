@@ -91,9 +91,9 @@ pp(){ #by default does a  traditiona pp
  set -x
  for arg; do
    git checkout $arg -- # trailing double-dash to ignore ./$arg if it exists
-   git pull
+   git pull --rebase
  done
- git pull;  git push --all -v
+ git pull --rebase;  git push --all -v
  { set +x; } 2>/dev/null
  cdblog 
  df -h --output=avail / 
