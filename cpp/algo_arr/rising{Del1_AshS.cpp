@@ -123,8 +123,8 @@ bool solFromBothEnds(vector<payload> const & arr){
 	
     if (i == sz -1) return true; 
     payload dd=arr[i+1];
-    if (aa >= dd) return false; //immediate game over
-    assert (aa<dd);
+    if     (aa>=dd) return false; //immediate game over
+    assert (aa< dd);
     bool isOK = (aa < bb && bb < dd) || (aa < cc && cc < dd);
 	//bool isOK = !(aa>=cc && bb>=dd); // broken
     cout<<"aa="<<aa<<", bb="<<bb<<", cc="<<cc<<", dd="<<dd<<", isOK="<<isOK<<"\n";
@@ -140,34 +140,36 @@ bool solFromBothEnds(vector<payload> const & arr){
 bool solAshS(vector<int> arr) {
   cout<<"--- input arr to solAshS() ---\n"<<arr<<"\n";
   size_t sz = arr.size();
-  if (sz <= 2) return true; //no need to traverse and save some instructions for the CPU.
+  if (sz <= 2) return true;
   bool isIntact = true; // no removal yet
-  for (size_t i = 0; i < (sz - 1); i++) { //bb go go from 0th to 2nd last
+  for (size_t i = 0; i < (sz - 1); i++) { //bb go from 0th to 2nd last
     int bb=arr[i], cc=arr[i + 1];
-    if (bb >= cc) { // bb >= cc
+    if (bb >= cc) {
       if (!isIntact){
         cout<<i<<" = i (bb) when we found a 2nd offender :(\n";
         return false;
       }
       isIntact = false;
       
-      int aa = i == 0 ? INT16_MIN : arr[i - 1]; //aa
+      int aa = i==0? INT16_MIN : arr[i - 1]; //aa
       if (i + 2 > sz -1) return true;
       int dd = arr[i + 2]; //dd
       bool isOK=!(aa >= cc && bb >= dd);
       cout<<"aa="<<aa<<", bb="<<bb<<", cc="<<cc<<", dd="<<dd<<", isOK="<<isOK<<"\n";
 
       if (!isOK) {
-      // aa >= cc && bb >= dd so cc must go && bb must go
+      // aa >= cc && bb >= dd so both bb and cc must go
       // This aa/bb/cc/dd section is beyond repair
         return false;
-      }//else continue the loop
+      }//else continue the loop, but which element to kill?
     }
   }
   return true;
 }
 bool almostIncreasingSequence(vector<payload> const & arr){
   //return solAshS(arr);
+	
+	// test all 4 solutions:
   bool   ret  = solABCD(arr);
   assert (ret == sol2kill(arr));
   assert (ret == solAshS(arr));
