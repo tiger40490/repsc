@@ -41,6 +41,7 @@ bool isStrictlyRising(vector<payload> const & v, payload prev, size_t i=1){
 * aa: the level of arr[i-2] i.e. Ancestor
 * bb: the level of arr[i-1] i.e. Before
 * cc: the level of arr[i] i.e. Current
+* dd: the level of arr[i+1] i.e. Descendent
 */
 bool solABCD(vector<payload> const & arr){
   cout<<"--- input arr ---\n"<<arr<<"\n";
