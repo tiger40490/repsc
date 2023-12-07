@@ -125,8 +125,8 @@ bool solFromBothEnds(vector<payload> const & arr){
     payload dd=arr[i+1];
     if     (aa>=dd) return false; //immediate game over
     assert (aa< dd);
-    bool isOK = (aa < bb && bb < dd) || (aa < cc && cc < dd);
-	//bool isOK = !(aa>=cc && bb>=dd); // broken
+    bool isOK = (aa < bb && bb < dd)  // kill cc
+		         || (aa < cc && cc < dd); // kill bb
     cout<<"aa="<<aa<<", bb="<<bb<<", cc="<<cc<<", dd="<<dd<<", isOK="<<isOK<<"\n";
 
     if (!isOK) return false;
