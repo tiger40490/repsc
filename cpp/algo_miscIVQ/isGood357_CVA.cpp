@@ -1,25 +1,24 @@
-// todo: recognize that good numbers are increasing sparse. Any way to skip ahead in the scan?
-
 #include <iostream>
 #include <sstream>
 #include <assert.h>
 using namespace std;
+// Good = has no other factor beside 3,5,7
 bool isGood(unsigned int k){
-	stringstream sstr;
+  stringstream sstr;
   cout<<"\nChecking "<<k<<" ..\t";
   while(1){
     if (k%3 == 0){
-			sstr<<3<<' ';
+      sstr<<3<<' ';
       k = k/3;
       continue;
     }// now no more 3's in k
     if (k%5 == 0){
-			sstr<<5<<' ';
+      sstr<<5<<' ';
       k = k/5;
       continue;
     }
     if (k%7 == 0){
-			sstr<<7<<' ';
+      sstr<<7<<' ';
       k = k/7;
       continue;
     }
@@ -29,18 +28,19 @@ bool isGood(unsigned int k){
   }
 }
 void findLowestGoodNumbers(size_t count, int upTo){
-  for (unsigned int cand=1; cand<upTo; cand+=2){
+  int num=1; 
+  for (unsigned int cand=1; cand<upTo; cand+=2){ //CANDidate
     if (isGood(cand)){
-			count--;
-			if (count == 0) return;
-		}
-  }	
+      cerr<<num++<<": "<<cand<<endl; //you can filter out stdout 
+      if (num > count) return;
+    }
+  }  
 }
 int main(){
   assert (!isGood(30));
   assert (isGood(15));
-  findLowestGoodNumbers(44, 99999);
+  findLowestGoodNumbers(99, 99999);
 }
 /* Requirement(CVA): return true if k has no other factors beside 3,5 or 7. 
-Full interview is described in https://bintanvictor.wordpress.com/2018/04/05/cva-c-iv-2/
+See https://btv-gz.dreamhosters.com/45049/all-products-of-357-cva/
 */
