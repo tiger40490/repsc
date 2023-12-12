@@ -44,11 +44,11 @@ bool isStrictlyRising(vector<payload> const & v, payload prev, size_t i=1){
 * dd: the level of arr[i+1] i.e. Descendent
 */
 bool solABCD(vector<payload> const & arr){
-  cout<<"--- input arr ---\n"<<arr<<"\n";
+  cout<<"--- input arr to solABCD ---\n"<<arr<<"\n";
   size_t sz = arr.size(), lastPos = sz-1;
   if (sz <=2 ) return true;
   bool ret=true;
-  if (arr[0] >= arr[1]){// first element must disappear
+  if (arr[0] >= arr[1]){// better remove first element
     ret = isStrictlyRising(arr, INT_MIN, 1);
     cout<<ret<<" .. returned due to isStrictlyRising() # case 0 \n";
     return ret;
@@ -92,7 +92,7 @@ bool solABCD(vector<payload> const & arr){
 }
 // At the first roadblock, there are only two choice items we could kill. Try killing BB then try killing CC. We know right there if the array is fixable.
 bool sol2kill(vector<payload> const & arr){
-  cout<<"--- input arr ---\n"<<arr<<"\n";
+  cout<<"--- input arr to sol2kill ---\n"<<arr<<"\n";
   size_t sz = arr.size();
   if (sz <=2 ) return true;
 
