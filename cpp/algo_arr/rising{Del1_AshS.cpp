@@ -156,10 +156,10 @@ bool solAshS(vector<int> arr) {
       int aa = i==0? INT16_MIN : arr[i - 1]; //aa
       if (i + 2 > sz -1) return true;
       int dd = arr[i + 2]; //dd
-      bool isOK=!(aa >= cc && bb >= dd);
-      cout<<"aa="<<aa<<", bb="<<bb<<", cc="<<cc<<", dd="<<dd<<", isOK="<<isOK<<"\n";
+      bool is1stOffenderTooBad=!(aa >= cc && bb >= dd);
+      cout<<"aa="<<aa<<", bb="<<bb<<", cc="<<cc<<", dd="<<dd<<", is1stOffenderTooBad="<<is1stOffenderTooBad<<"\n";
 
-      if (!isOK) {
+      if (!is1stOffenderTooBad) {
       // aa >= cc && bb >= dd so both bb and cc must go
       // This aa/bb/cc/dd section is beyond repair
         return false;
