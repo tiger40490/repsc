@@ -91,6 +91,7 @@ bool solABCD(vector<payload> const & arr){
   }
   return true;
 }
+// sol2kill doesn't require ABCD analysis :)
 // At the first roadblock, there are only two choice items we could kill. Try killing BB then try killing CC. We know right there if the array is fixable.
 bool sol2kill(vector<payload> const & arr){
   cout<<"--- input arr to sol2kill ---\n"<<arr<<"\n";
