@@ -48,11 +48,12 @@ bool solABCD(vector<payload> const & arr){
   size_t sz = arr.size(), lastPos = sz-1;
   if (sz <=2 ) return true;
   bool ret=true;
+	/* This special check may be unnecessary
   if (arr[0] >= arr[1]){// better remove first element
     ret = isStrictlyRising(arr, INT_MIN, 1);
     cout<<ret<<" .. returned due to isStrictlyRising() # case 0 \n";
     return ret;
-  }
+  }*/
   for (size_t i=1; i<sz; ++i){
     payload bb = arr[i-1], cc = arr[i];
     if (bb < cc) continue;
