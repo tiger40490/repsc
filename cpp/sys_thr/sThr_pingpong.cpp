@@ -3,6 +3,8 @@ showcase: uniform random int
 showcase: wrap cout in lock guard to prevent interleaved printing
 showcase: friend function
 showcase: mutex as private static field 
+showcase: atomic<>
+showcase: problem solving without wait/notify
 */
 #include <thread>
 #include <mutex>
